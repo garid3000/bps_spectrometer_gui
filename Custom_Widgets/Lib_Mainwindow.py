@@ -3,9 +3,9 @@
 # import sys
 #import numpy as np
 #import numpy.typing as npt
-#import cv2 as cv  # import cmap
 import os
 import logging
+import cv2 as cv  # import cmap
 
 
 from PySide6.QtWidgets import  (
@@ -14,6 +14,7 @@ from PySide6.QtWidgets import  (
 # , QtCore
 from Custom_UIs.UI_Mainwindow import Ui_MainWindow
 from Custom_Libs.Lib_DataDirTree import DataDirTree
+from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import JpegProcessor
 
 logging.basicConfig(
     filename="/tmp/app.log",  # this need to change according to OS
@@ -35,6 +36,7 @@ dbg_ddir: str = os.path.join(    # this contains selected path string
 class TheMainWindow(QMainWindow):
     dir_path : str        = dbg_ddir
     ddtree   :DataDirTree = DataDirTree()
+    jp       :JpegProcessor = JpegProcessor()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super(TheMainWindow, self).__init__(parent)
@@ -70,4 +72,6 @@ class TheMainWindow(QMainWindow):
         self.ui.cob_jpeg_selector.addItems(self.ddtree.jpegFnames)
         self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
         self.ui.tb_data_dir_tree.setText(self.ddtree.directory_structure())
+        # =============================================================================
+        self.ui.limg_webcam.show_np_img(cv.imread(self.ddtree.webcamFP))
         return

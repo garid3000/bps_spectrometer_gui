@@ -40,6 +40,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
+from Custom_Libs.Lib_QLabelClick_Widget_NoUI import QLabelClick
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow: QMainWindow) -> None:
@@ -149,7 +151,7 @@ class Ui_MainWindow(object):
         self.gp_webcam_meta.setObjectName("gp_webcam_meta")
         self.verticalLayout = QVBoxLayout(self.gp_webcam_meta)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.limg_webcam = QLabel(self.gp_webcam_meta)
+        self.limg_webcam = QLabelClick(self.gp_webcam_meta)
         self.limg_webcam.setObjectName("limg_webcam")
 
         self.verticalLayout.addWidget(self.limg_webcam)
@@ -175,17 +177,17 @@ class Ui_MainWindow(object):
         self.tab_1.setObjectName("tab_1")
         self.verticalLayout_3 = QVBoxLayout(self.tab_1)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.limg_bayer_full = QLabel(self.tab_1)
+        self.limg_bayer_full = QLabelClick(self.tab_1)
         self.limg_bayer_full.setObjectName("limg_bayer_full")
 
         self.verticalLayout_3.addWidget(self.limg_bayer_full)
 
-        self.limg_bayer_gray = QLabel(self.tab_1)
+        self.limg_bayer_gray = QLabelClick(self.tab_1)
         self.limg_bayer_gray.setObjectName("limg_bayer_gray")
 
         self.verticalLayout_3.addWidget(self.limg_bayer_gray)
 
-        self.limg_bayer_obje = QLabel(self.tab_1)
+        self.limg_bayer_obje = QLabelClick(self.tab_1)
         self.limg_bayer_obje.setObjectName("limg_bayer_obje")
 
         self.verticalLayout_3.addWidget(self.limg_bayer_obje)
@@ -198,7 +200,7 @@ class Ui_MainWindow(object):
         self.tab_2.setObjectName("tab_2")
         self.verticalLayout_4 = QVBoxLayout(self.tab_2)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
-        self.limg_raw_spectrum = QLabel(self.tab_2)
+        self.limg_raw_spectrum = QLabelClick(self.tab_2)
         self.limg_raw_spectrum.setObjectName("limg_raw_spectrum")
 
         self.verticalLayout_4.addWidget(self.limg_raw_spectrum)
@@ -208,7 +210,7 @@ class Ui_MainWindow(object):
         self.tab_3.setObjectName("tab_3")
         self.verticalLayout_5 = QVBoxLayout(self.tab_3)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
-        self.limg_refl_spectrum = QLabel(self.tab_3)
+        self.limg_refl_spectrum = QLabelClick(self.tab_3)
         self.limg_refl_spectrum.setObjectName("limg_refl_spectrum")
 
         self.verticalLayout_5.addWidget(self.limg_refl_spectrum)
@@ -279,7 +281,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget.setCurrentIndex(0)
 
         QMetaObject.connectSlotsByName(MainWindow)
 
