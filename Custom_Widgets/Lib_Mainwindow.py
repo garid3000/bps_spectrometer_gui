@@ -13,6 +13,7 @@ from PySide6.QtWidgets import  (
 )
 # , QtCore
 from Custom_UIs.UI_Mainwindow import Ui_MainWindow
+from Custom_Libs.Lib_DataDirTree import DataDirTree
 
 logging.basicConfig(
     filename="/tmp/app.log",  # this need to change according to OS
@@ -32,7 +33,8 @@ dbg_ddir: str = os.path.join(    # this contains selected path string
 
 
 class TheMainWindow(QMainWindow):
-    dir_path: str = ""   # selected directory
+    dir_path : str        = dbg_ddir
+    ddtree   :DataDirTree = DataDirTree()
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super(TheMainWindow, self).__init__(parent)
@@ -61,5 +63,11 @@ class TheMainWindow(QMainWindow):
         self.dir_path = tmpDir if os.path.isdir(tmpDir) else self.dir_path
         self.ui.le_data_dir.setText(self.dir_path)
         logging.debug(f"{self.__repr__()}: call_btnDirSelect, end: {self.dir_path}")
-        #$lblDirSelect.setText(self.dir_path)
 
+        # =============================================================================
+        self.ddtree.set_ddir(self.dir_path)
+        self.ui.cob_jpeg_selector.clear()        # clear jpeg
+        self.ui.cob_jpeg_selector.addItems(self.ddtree.jpegFnames)
+        self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
+        self.ui.tb_data_dir_tree.setText(self.ddtree.directory_structure())
+        return

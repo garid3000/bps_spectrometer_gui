@@ -14,6 +14,9 @@ from PySide6.QtCore import (
     QRect,
     Qt,
 )
+from PySide6.QtGui import (
+    QFont,
+)
 from PySide6.QtWidgets import (
     QCheckBox,
     QComboBox,
@@ -153,6 +156,9 @@ class Ui_MainWindow(object):
 
         self.tb_meta_json = QTextBrowser(self.gp_webcam_meta)
         self.tb_meta_json.setObjectName("tb_meta_json")
+        font = QFont()
+        font.setFamilies(["Monospace"])
+        self.tb_meta_json.setFont(font)
 
         self.verticalLayout.addWidget(self.tb_meta_json)
 
@@ -236,10 +242,11 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.cob_jpeg_selector, 2, 0, 1, 1)
 
-        self.textBrowser = QTextBrowser(self.gb_dir_panel)
-        self.textBrowser.setObjectName("textBrowser")
+        self.tb_data_dir_tree = QTextBrowser(self.gb_dir_panel)
+        self.tb_data_dir_tree.setObjectName("tb_data_dir_tree")
+        self.tb_data_dir_tree.setFont(font)
 
-        self.gridLayout_3.addWidget(self.textBrowser, 3, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.tb_data_dir_tree, 3, 0, 1, 1)
 
         self.verticalSpacer = QSpacerItem(
             20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding

@@ -129,7 +129,13 @@
             </widget>
            </item>
            <item>
-            <widget class="QTextBrowser" name="tb_meta_json"/>
+            <widget class="QTextBrowser" name="tb_meta_json">
+             <property name="font">
+              <font>
+               <family>Monospace</family>
+              </font>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
@@ -228,7 +234,13 @@
         <widget class="QComboBox" name="cob_jpeg_selector"/>
        </item>
        <item row="3" column="0">
-        <widget class="QTextBrowser" name="textBrowser"/>
+        <widget class="QTextBrowser" name="tb_data_dir_tree">
+         <property name="font">
+          <font>
+           <family>Monospace</family>
+          </font>
+         </property>
+        </widget>
        </item>
        <item row="4" column="0">
         <spacer name="verticalSpacer">
