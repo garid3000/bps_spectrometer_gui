@@ -1,10 +1,11 @@
 #from typing import List
 
 # import sys
-import numpy as np
-#import numpy.typing as npt
 import os
 import logging
+import numpy as np
+#import numpy.typing as npt
+import matplotlib.pyplot as plt
 import cv2 as cv  # import cmap
 
 
@@ -112,7 +113,7 @@ class TheMainWindow(QMainWindow):
                               : 
                               ] // 4
                  ).astype(np.uint8),
-            outwidth = 1000
+            outwidth = 800
         )
         
 
@@ -124,9 +125,54 @@ class TheMainWindow(QMainWindow):
                               : 
                               ]// 4
                  ).astype(np.uint8),
-            outwidth = 1000
+            outwidth = 800
         )
+        #= visuals ====================================================================
+        fig, ax = plt.subplots()
+        #ax.plot([1, 2, 3, 4], [1, 4, 2, 3])
+        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan0_r"], "--", color="red",   label="red")
+        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan1_g"], "--", color="green", label="green")
+        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan2_G"], "--", color="black", label="green2")
+        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan3_b"], "--", color="blue",  label="blue")
 
+        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan0_r"], color="red",   label="red")
+        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan1_g"], color="green", label="green")
+        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan2_G"], color="black", label="green2")
+        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan3_b"], color="blue",  label="blue")
+        print(self.jp.xwave)
+
+        #ax.vlines(192*2, 0, 1024, linestyles='dashdot')
+        ax.vlines(759, 0, 1024, linestyles='dashdot')
+        ax.legend()
+
+        fig.canvas.draw()
+        img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8)
+        img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+        #cv2_img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+        self.ui.limg_raw_spectrum.show_np_img( arr = img, outwidth= 640)
+
+        #= visuals ====================================================================
+        fig, ax = plt.subplots()
+        #ax.plot([1, 2, 3, 4], [1, 4, 2, 3])
+        ax.plot(self.jp.xwave, self.jp.ref_fancy, color="black",   label="reflectance")
+        ax.legend()
+
+        fig.canvas.draw()
+        img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8)
+        img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+        #cv2_img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+        self.ui.limg_refl_spectrum.show_np_img( arr = img, outwidth= 640)
 
 
         print("ok")
+
+        print("ok")
+
+
+
+
+
+
+
+
+
