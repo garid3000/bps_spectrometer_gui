@@ -1,3 +1,6 @@
+pull_sub_module:
+	git submodule update --init --recursive
+
 convert:
 	find UI -name "*.ui" | cut -d/ -f2 | cut -d. -f1 | xargs -I {} pyside6-uic "UI/{}.ui" -o "Custom_UIs/{}.py"
 	#pyside6-uic UI/Single_4BC.ui                  -o Custom_UIs/Single_4BC.py
