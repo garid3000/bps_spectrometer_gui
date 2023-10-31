@@ -58,6 +58,9 @@ class Ui_MainWindow(object):
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.sb_obje_top_pxl = QSpinBox(self.gb_control_panel)
         self.sb_obje_top_pxl.setObjectName("sb_obje_top_pxl")
+        self.sb_obje_top_pxl.setMinimum(500)
+        self.sb_obje_top_pxl.setMaximum(2000)
+        self.sb_obje_top_pxl.setValue(1200)
 
         self.gridLayout_2.addWidget(self.sb_obje_top_pxl, 4, 1, 1, 1)
 
@@ -68,6 +71,9 @@ class Ui_MainWindow(object):
 
         self.sb_horx_left_pxl = QSpinBox(self.gb_control_panel)
         self.sb_horx_left_pxl.setObjectName("sb_horx_left_pxl")
+        self.sb_horx_left_pxl.setMinimum(900)
+        self.sb_horx_left_pxl.setMaximum(1700)
+        self.sb_horx_left_pxl.setValue(1350)
 
         self.gridLayout_2.addWidget(self.sb_horx_left_pxl, 0, 1, 1, 1)
 
@@ -95,6 +101,9 @@ class Ui_MainWindow(object):
 
         self.sb_obje_bot_pxl = QSpinBox(self.gb_control_panel)
         self.sb_obje_bot_pxl.setObjectName("sb_obje_bot_pxl")
+        self.sb_obje_bot_pxl.setMinimum(500)
+        self.sb_obje_bot_pxl.setMaximum(2000)
+        self.sb_obje_bot_pxl.setValue(1250)
 
         self.gridLayout_2.addWidget(self.sb_obje_bot_pxl, 4, 2, 1, 1)
 
@@ -110,16 +119,25 @@ class Ui_MainWindow(object):
 
         self.sb_gray_bot_pxl = QSpinBox(self.gb_control_panel)
         self.sb_gray_bot_pxl.setObjectName("sb_gray_bot_pxl")
+        self.sb_gray_bot_pxl.setMinimum(500)
+        self.sb_gray_bot_pxl.setMaximum(2000)
+        self.sb_gray_bot_pxl.setValue(1100)
 
         self.gridLayout_2.addWidget(self.sb_gray_bot_pxl, 3, 2, 1, 1)
 
         self.sb_gray_top_pxl = QSpinBox(self.gb_control_panel)
         self.sb_gray_top_pxl.setObjectName("sb_gray_top_pxl")
+        self.sb_gray_top_pxl.setMinimum(500)
+        self.sb_gray_top_pxl.setMaximum(2000)
+        self.sb_gray_top_pxl.setValue(1050)
 
         self.gridLayout_2.addWidget(self.sb_gray_top_pxl, 3, 1, 1, 1)
 
         self.sb_horx_frau_pxl = QSpinBox(self.gb_control_panel)
         self.sb_horx_frau_pxl.setObjectName("sb_horx_frau_pxl")
+        self.sb_horx_frau_pxl.setEnabled(False)
+        self.sb_horx_frau_pxl.setMaximum(9999)
+        self.sb_horx_frau_pxl.setValue(190)
 
         self.gridLayout_2.addWidget(self.sb_horx_frau_pxl, 1, 1, 1, 1)
 
@@ -146,6 +164,7 @@ class Ui_MainWindow(object):
         self.gridLayout_5.setObjectName("gridLayout_5")
         self.splitter = QSplitter(self.groupBox_3)
         self.splitter.setObjectName("splitter")
+        self.splitter.setLineWidth(2)
         self.splitter.setOrientation(Qt.Orientation.Horizontal)
         self.gp_webcam_meta = QGroupBox(self.splitter)
         self.gp_webcam_meta.setObjectName("gp_webcam_meta")
