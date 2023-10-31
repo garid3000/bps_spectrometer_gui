@@ -1,0 +1,3 @@
+[submodule "bps_raw_jpeg_processer"]
+	path = bps_raw_jpeg_processer
+	url = git@github.com:garid3000/bps_raw_jpeg_processer.git
