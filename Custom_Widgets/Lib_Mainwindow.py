@@ -26,8 +26,6 @@ logging.basicConfig(
 )
 
 
-#from Custom_Widgets.Lib_ImagePrepperWidget import ImagePrepperWidget
-#from Custom_Widgets.Lib_IndexCalcShowerGroupBox import IndexCalcShowerGroupBox
 dbg_ddir: str = os.path.join(    # this contains selected path string
             "/home", "garid", "data_dump_badmasflash_2023_0117",
             "Data_cp_20230117_092825", "20230117_092051")
@@ -46,6 +44,7 @@ class TheMainWindow(QMainWindow):
 
         self.dir_path = dbg_ddir
         self.ui.pb_data_dir.clicked.connect(self.call_btnDirSelect)
+        self.ui.actionOpen_Directory.triggered.connect(self.call_btnDirSelect)
         self.ui.pb_refresh.clicked.connect(self.call_btnRefresh)
         self.ui.cob_jpeg_selector.textActivated.connect(self.refresh_plots)
 
@@ -128,6 +127,8 @@ class TheMainWindow(QMainWindow):
             outwidth = 800
         )
         #= visuals ====================================================================
+        fig: plt.Figure
+        ax: plt.Axes
         fig, ax = plt.subplots()
         #ax.plot([1, 2, 3, 4], [1, 4, 2, 3])
         ax.plot(self.jp.xwave, self.jp.gray4_mean["chan0_r"], "--", color="red",   label="red")
@@ -162,17 +163,4 @@ class TheMainWindow(QMainWindow):
         img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
         #cv2_img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         self.ui.limg_refl_spectrum.show_np_img( arr = img, outwidth= 640)
-
-
-        print("ok")
-
-        print("ok")
-
-
-
-
-
-
-
-
 
