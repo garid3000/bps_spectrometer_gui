@@ -351,7 +351,7 @@
         <item row="0" column="0" colspan="3">
          <widget class="QTabWidget" name="tabWidget">
           <property name="currentIndex">
-           <number>0</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="tab_1">
            <attribute name="title">
@@ -421,14 +421,14 @@
            </attribute>
            <layout class="QVBoxLayout" name="verticalLayout_5">
             <item>
-             <widget class="QLabelClick" name="limg_refl_spectrum">
+             <widget class="QLabelClick" name="limg_ref_spectrum">
               <property name="text">
                <string>....</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QToolButton" name="tbtn_relf_spectrum_config">
+             <widget class="QToolButton" name="tbtn_ref_spectrum_config">
               <property name="text">
                <string>Plot Config (Ctrl+P)</string>
               </property>

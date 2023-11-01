@@ -10,7 +10,7 @@ from matplotlib.figure import Figure
 from matplotlib.axes   import Axes
 import cv2 as cv
 
-from PySide6.QtWidgets import QMainWindow,  QWidget,   QFileSystemModel
+from PySide6.QtWidgets import QDialogButtonBox, QMainWindow,  QWidget,   QFileSystemModel
 #, QDialogButtonBox
 from PySide6.QtGui     import QKeySequence, QShortcut, QColor
 from PySide6.QtCore    import QModelIndex,  QDir, Qt
@@ -88,14 +88,26 @@ class TheMainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+        # dialogs
         self.ex_type_dialog  = ExportTypeDialog()
         self.raw_pcon_dialog = PlotConfigDialog()
         self.ref_pcon_dialog = PlotConfigDialog()
-        self.init_raw_n_ref_dialog()
+        self.set_def_val_raw_ref_dialog()
+        self.ui.tbtn_raw_spectrum_config.clicked.connect(self.raw_pcon_dialog.exec)
+        self.ui.tbtn_ref_spectrum_config.clicked.connect(self.ref_pcon_dialog.exec)
+        self.raw_pcon_dialog.ui.btn_box.accepted.connect(self.call_btnRefresh)
+        self.ref_pcon_dialog.ui.btn_box.accepted.connect(self.call_btnRefresh)
+        self.raw_pcon_dialog.ui.btn_box.button(QDialogButtonBox.StandardButton.Reset).clicked.connect(self.set_def_val_raw_ref_dialog)
+        self.ref_pcon_dialog.ui.btn_box.button(QDialogButtonBox.StandardButton.Reset).clicked.connect(self.set_def_val_raw_ref_dialog)
+        # self.raw_pcon_dialog.ui.btn_box.rejected.connect(self.test)
+        # self.ref_pcon_dialog.ui.btn_box.rejected.connect(self.test)
+        # button( QDialogButtonBox.Reset )
+        #self.ref_pcon_dialog.ui.btn_box. #accepted.connect(self.call_btnRefresh)
 
         self.ui.pb_refresh.clicked.connect(self.call_btnRefresh)
         self.ui.pb_conf_export.clicked.connect(self.ex_type_dialog.exec)
         self.ui.pb_export.clicked.connect(self.call_export_data)
+
 
         # -----------------------------------------------------------------------------
         self.fsmodel = FileSystemModel()            # self.fsmodel = QFileSystemModel()
@@ -111,8 +123,7 @@ class TheMainWindow(QMainWindow):
         self.init_keyboard_bindings()
         self.init_actions()
 
-
-    def init_raw_n_ref_dialog(self):
+    def set_def_val_raw_ref_dialog(self):
         self.raw_pcon_dialog.ui.le_title.setText("Raw Digital Value")
         self.raw_pcon_dialog.ui.le_x_label.setText("Wavelength (nm)")
         self.raw_pcon_dialog.ui.le_y_label.setText("Digital Value (background removed)")
@@ -129,9 +140,6 @@ class TheMainWindow(QMainWindow):
         self.ref_pcon_dialog.ui.sb_y_range_min.setValue(0)
         self.ref_pcon_dialog.ui.sb_y_range_max.setValue(2)
 
-        #self.raw_pcon_dialog.ui.buttonBox.button()
-        self.raw_pcon_dialog.ui.btn_box.accepted.connect(self.call_btnRefresh)
-        self.ref_pcon_dialog.ui.btn_box.accepted.connect(self.call_btnRefresh)
         
 
     def toggle_filetype_visiblity(self, a: int) -> None:
@@ -180,10 +188,6 @@ class TheMainWindow(QMainWindow):
         self.ui.action_tabs_show_tab1.triggered.connect(lambda: self.ui.tabWidget.setCurrentIndex(0))
         self.ui.action_tabs_show_tab2.triggered.connect(lambda: self.ui.tabWidget.setCurrentIndex(1))
         self.ui.action_tabs_show_tab3.triggered.connect(lambda: self.ui.tabWidget.setCurrentIndex(2))
-        # QShortcut(QKeySequence("Ctrl+P"),          self).activated.connect(self.ref_pcon_dialog.exec)
-        # QShortcut(QKeySequence("Ctrl+Shift+P"),    self).activated.connect(self.raw_pcon_dialog.exec)
-
-        #self.ui.action_about.triggered.connect(self.open_about_page)
 
     def open_help_page(self):
         open_a_file("/home/garid/Projects/psm/bps_spectrometer_gui/docs/help.html")
@@ -326,6 +330,9 @@ class TheMainWindow(QMainWindow):
             bottom=self.raw_pcon_dialog.ui.sb_y_range_min.value(),
             top=self.raw_pcon_dialog.ui.sb_y_range_max.value(),
         )
+        ax.set_title(self.raw_pcon_dialog.ui.le_title.text())
+        ax.set_xlabel(self.raw_pcon_dialog.ui.le_x_label.text())
+        ax.set_ylabel(self.raw_pcon_dialog.ui.le_y_label.text())
 
         fig.canvas.draw()
         img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8) # type: ignore
@@ -349,11 +356,15 @@ class TheMainWindow(QMainWindow):
             bottom=self.ref_pcon_dialog.ui.sb_y_range_min.value(),
             top=self.ref_pcon_dialog.ui.sb_y_range_max.value(),
         )
+        ax.set_title(self.ref_pcon_dialog.ui.le_title.text())
+        ax.set_xlabel(self.ref_pcon_dialog.ui.le_x_label.text())
+        ax.set_ylabel(self.ref_pcon_dialog.ui.le_y_label.text())
+
 
         fig.canvas.draw()
         img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8) # type: ignore
         img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
-        self.ui.limg_refl_spectrum.show_np_img(arr = img, outwidth= 640)
+        self.ui.limg_ref_spectrum.show_np_img(arr = img, outwidth= 640)
 
     def call_export_data(self) -> None:
         """Exports"""

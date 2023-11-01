@@ -342,15 +342,15 @@ class Ui_MainWindow(object):
         self.tab_3.setObjectName("tab_3")
         self.verticalLayout_5 = QVBoxLayout(self.tab_3)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
-        self.limg_refl_spectrum = QLabelClick(self.tab_3)
-        self.limg_refl_spectrum.setObjectName("limg_refl_spectrum")
+        self.limg_ref_spectrum = QLabelClick(self.tab_3)
+        self.limg_ref_spectrum.setObjectName("limg_ref_spectrum")
 
-        self.verticalLayout_5.addWidget(self.limg_refl_spectrum)
+        self.verticalLayout_5.addWidget(self.limg_ref_spectrum)
 
-        self.tbtn_relf_spectrum_config = QToolButton(self.tab_3)
-        self.tbtn_relf_spectrum_config.setObjectName("tbtn_relf_spectrum_config")
+        self.tbtn_ref_spectrum_config = QToolButton(self.tab_3)
+        self.tbtn_ref_spectrum_config.setObjectName("tbtn_ref_spectrum_config")
 
-        self.verticalLayout_5.addWidget(self.tbtn_relf_spectrum_config)
+        self.verticalLayout_5.addWidget(self.tbtn_ref_spectrum_config)
 
         self.tabWidget.addTab(self.tab_3, "")
 
@@ -414,7 +414,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
 
         QMetaObject.connectSlotsByName(MainWindow)
 
@@ -569,10 +569,10 @@ class Ui_MainWindow(object):
             self.tabWidget.indexOf(self.tab_2),
             QCoreApplication.translate("MainWindow", "Spectrum-Raw (Ctrl+2)", None),
         )
-        self.limg_refl_spectrum.setText(
+        self.limg_ref_spectrum.setText(
             QCoreApplication.translate("MainWindow", "....", None)
         )
-        self.tbtn_relf_spectrum_config.setText(
+        self.tbtn_ref_spectrum_config.setText(
             QCoreApplication.translate("MainWindow", "Plot Config (Ctrl+P)", None)
         )
         self.tabWidget.setTabText(
