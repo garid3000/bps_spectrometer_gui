@@ -162,7 +162,7 @@ class TheMainWindow(QMainWindow):
         QShortcut(QKeySequence("Space"),        self).activated.connect(self.short_cut_preview_raw_jpeg)
         QShortcut(QKeySequence("Ctrl+E"),       self).activated.connect(self.short_cut_export_raw_jpeg)
         QShortcut(QKeySequence("Ctrl+O"),       self).activated.connect(self.short_cut_open_at_point)
-        QShortcut(QKeySequence("Ctrl+Shift+E"), self).activated.connect(self.ex_type_dialog.exec)
+        #QShortcut(QKeySequence("Ctrl+Shift+E"), self).activated.connect(self.ex_type_dialog.exec)
         QShortcut(QKeySequence("Ctrl+H"),       self).activated.connect(self.open_help_page)
         QShortcut(QKeySequence("Ctrl+F"),       self).activated.connect(self.ui.cb_ft_filter.toggle)
         QShortcut(QKeySequence("Ctrl+R"),       self).activated.connect(self.call_btnRefresh)
