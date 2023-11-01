@@ -31,6 +31,7 @@ from PySide6.QtWidgets import (
     QMainWindow,
     QMenu,
     QMenuBar,
+    QProgressBar,
     QPushButton,
     QScrollArea,
     QSizePolicy,
@@ -52,7 +53,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow: QMainWindow) -> None:
         if not MainWindow.objectName():
             MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(956, 521)
+        MainWindow.resize(1004, 521)
         self.actionOpen_Directory = QAction(MainWindow)
         self.actionOpen_Directory.setObjectName("actionOpen_Directory")
         self.action_cur_jpeg_export = QAction(MainWindow)
@@ -243,6 +244,12 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self._line_2, 5, 0, 1, 3)
 
+        self.pb_redraw_progress = QProgressBar(self.gb_control_panel)
+        self.pb_redraw_progress.setObjectName("pb_redraw_progress")
+        self.pb_redraw_progress.setValue(0)
+
+        self.gridLayout_2.addWidget(self.pb_redraw_progress, 6, 0, 1, 1)
+
         self.gridLayout_2.setColumnStretch(1, 1)
         self.gridLayout_2.setColumnStretch(2, 1)
 
@@ -284,11 +291,11 @@ class Ui_MainWindow(object):
 
         self.gridLayout_4.addWidget(self.pb_export, 2, 2, 1, 1)
 
-        self.checkBox_6 = QCheckBox(self.gp_spectral_panel)
-        self.checkBox_6.setObjectName("checkBox_6")
-        self.checkBox_6.setChecked(True)
+        self.cb_export_numerical_vals = QCheckBox(self.gp_spectral_panel)
+        self.cb_export_numerical_vals.setObjectName("cb_export_numerical_vals")
+        self.cb_export_numerical_vals.setChecked(True)
 
-        self.gridLayout_4.addWidget(self.checkBox_6, 2, 1, 1, 1)
+        self.gridLayout_4.addWidget(self.cb_export_numerical_vals, 2, 1, 1, 1)
 
         self.horizontalSpacer = QSpacerItem(
             40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
@@ -301,7 +308,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 353, 444))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, -66, 353, 444))
         self.formLayout = QFormLayout(self.scrollAreaWidgetContents)
         self.formLayout.setObjectName("formLayout")
         self.label = QLabel(self.scrollAreaWidgetContents)
@@ -358,10 +365,12 @@ class Ui_MainWindow(object):
 
         self.formLayout.setWidget(6, QFormLayout.SpanningRole, self.limg_bayer_obje)
 
-        self.checkBox_4 = QCheckBox(self.scrollAreaWidgetContents)
-        self.checkBox_4.setObjectName("checkBox_4")
+        self.cb_rawspect_export_plot = QCheckBox(self.scrollAreaWidgetContents)
+        self.cb_rawspect_export_plot.setObjectName("cb_rawspect_export_plot")
 
-        self.formLayout.setWidget(17, QFormLayout.LabelRole, self.checkBox_4)
+        self.formLayout.setWidget(
+            17, QFormLayout.LabelRole, self.cb_rawspect_export_plot
+        )
 
         self.tbtn_raw_spectrum_config = QToolButton(self.scrollAreaWidgetContents)
         self.tbtn_raw_spectrum_config.setObjectName("tbtn_raw_spectrum_config")
@@ -370,20 +379,20 @@ class Ui_MainWindow(object):
             17, QFormLayout.FieldRole, self.tbtn_raw_spectrum_config
         )
 
-        self.checkBox_2 = QCheckBox(self.scrollAreaWidgetContents)
-        self.checkBox_2.setObjectName("checkBox_2")
+        self.cb_rawbayer_export_npy = QCheckBox(self.scrollAreaWidgetContents)
+        self.cb_rawbayer_export_npy.setObjectName("cb_rawbayer_export_npy")
 
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.checkBox_2)
+        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.cb_rawbayer_export_npy)
 
-        self.checkBox = QCheckBox(self.scrollAreaWidgetContents)
-        self.checkBox.setObjectName("checkBox")
+        self.cb_rawbayer_export_tif = QCheckBox(self.scrollAreaWidgetContents)
+        self.cb_rawbayer_export_tif.setObjectName("cb_rawbayer_export_tif")
 
-        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.checkBox)
+        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.cb_rawbayer_export_tif)
 
-        self.checkBox_3 = QCheckBox(self.scrollAreaWidgetContents)
-        self.checkBox_3.setObjectName("checkBox_3")
+        self.cb_rawbayer_export_mat = QCheckBox(self.scrollAreaWidgetContents)
+        self.cb_rawbayer_export_mat.setObjectName("cb_rawbayer_export_mat")
 
-        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.checkBox_3)
+        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.cb_rawbayer_export_mat)
 
         self.verticalSpacer = QSpacerItem(
             20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
@@ -404,10 +413,12 @@ class Ui_MainWindow(object):
             26, QFormLayout.FieldRole, self.tbtn_ref_spectrum_config
         )
 
-        self.checkBox_5 = QCheckBox(self.scrollAreaWidgetContents)
-        self.checkBox_5.setObjectName("checkBox_5")
+        self.cb_refspect_export_plot = QCheckBox(self.scrollAreaWidgetContents)
+        self.cb_refspect_export_plot.setObjectName("cb_refspect_export_plot")
 
-        self.formLayout.setWidget(26, QFormLayout.LabelRole, self.checkBox_5)
+        self.formLayout.setWidget(
+            26, QFormLayout.LabelRole, self.cb_refspect_export_plot
+        )
 
         self.limg_ref_spectrum = QLabelClick(self.scrollAreaWidgetContents)
         self.limg_ref_spectrum.setObjectName("limg_ref_spectrum")
@@ -443,7 +454,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName("menubar")
-        self.menubar.setGeometry(QRect(0, 0, 956, 19))
+        self.menubar.setGeometry(QRect(0, 0, 1004, 19))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
         self.menuDirectory_operations = QMenu(self.menuFile)
@@ -610,7 +621,7 @@ class Ui_MainWindow(object):
         self.pb_export.setText(
             QCoreApplication.translate("MainWindow", "Export (Ctrl+E)", None)
         )
-        self.checkBox_6.setText(
+        self.cb_export_numerical_vals.setText(
             QCoreApplication.translate(
                 "MainWindow", "Export Numerical Values  (CSV)", None
             )
@@ -635,25 +646,25 @@ class Ui_MainWindow(object):
         self.limg_bayer_obje.setText(
             QCoreApplication.translate("MainWindow", "....", None)
         )
-        self.checkBox_4.setText(
+        self.cb_rawspect_export_plot.setText(
             QCoreApplication.translate("MainWindow", "Export Plot (PNG)", None)
         )
         self.tbtn_raw_spectrum_config.setText(
             QCoreApplication.translate("MainWindow", "Plot Config (Ctrl+Shift+P)", None)
         )
-        self.checkBox_2.setText(
-            QCoreApplication.translate("MainWindow", "Export (Bayer as NPY)", None)
+        self.cb_rawbayer_export_npy.setText(
+            QCoreApplication.translate("MainWindow", "Export Raw-Bayer (.NPY)", None)
         )
-        self.checkBox.setText(
-            QCoreApplication.translate("MainWindow", "Export (Bayer as TIF)", None)
+        self.cb_rawbayer_export_tif.setText(
+            QCoreApplication.translate("MainWindow", "Export Raw-Bayer (.TIF)", None)
         )
-        self.checkBox_3.setText(
-            QCoreApplication.translate("MainWindow", "Export (Bayer as MAT)", None)
+        self.cb_rawbayer_export_mat.setText(
+            QCoreApplication.translate("MainWindow", "Export Raw-Bayer (.MAT)", None)
         )
         self.tbtn_ref_spectrum_config.setText(
             QCoreApplication.translate("MainWindow", "Plot Config (Ctrl+P)", None)
         )
-        self.checkBox_5.setText(
+        self.cb_refspect_export_plot.setText(
             QCoreApplication.translate("MainWindow", "Export Plot (PNG)", None)
         )
         self.limg_ref_spectrum.setText(

@@ -10,6 +10,8 @@ import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.axes   import Axes
 import cv2 as cv
+from numpy._typing import NDArray
+from scipy.io import savemat
 
 # GUI packages
 from PySide6.QtWidgets import QDialogButtonBox, QMainWindow, QWidget, QFileSystemModel
@@ -82,6 +84,9 @@ class TheMainWindow(QMainWindow):
     #ex_type_dialog  : ExportTypeDialog # cant initialize Q widget an instance here.
     raw_pcon_dialog : PlotConfigDialog # cant initialize Q widget an instance here.
     ref_pcon_dialog : PlotConfigDialog # cant initialize Q widget an instance here.
+
+    raw_plot_as_npimg : NDArray[np.uint8] = np.zeros((10, 10, 3), dtype=np.uint8)
+    ref_plot_as_npimg : NDArray[np.uint8] = np.zeros((10, 10, 3), dtype=np.uint8)
 
 
     def __init__(self, parent: QWidget | None = None) -> None:
@@ -427,9 +432,9 @@ class TheMainWindow(QMainWindow):
         fig.set_dpi(self.raw_pcon_dialog.ui.sb_fig_dpi.value())
 
         fig.canvas.draw()
-        img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8) # type: ignore
-        img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
-        self.ui.limg_raw_spectrum.show_np_img( arr = img, outwidth= 480)
+        self.raw_plot_as_npimg = np.fromstring(
+                fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,)) # type: ignore
+        self.ui.limg_raw_spectrum.show_np_img(arr = self.raw_plot_as_npimg, outwidth= 480)
 
     def update_visual_3_ref_spectrum_section(self) -> None:
         fig, ax = plt.subplots()
@@ -459,9 +464,9 @@ class TheMainWindow(QMainWindow):
         fig.set_dpi(self.ref_pcon_dialog.ui.sb_fig_dpi.value())
 
         fig.canvas.draw()
-        img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8) # type: ignore
-        img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
-        self.ui.limg_ref_spectrum.show_np_img(arr = img, outwidth= 480)
+        self.ref_plot_as_npimg = np.fromstring(
+                fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,)) # type: ignore
+        self.ui.limg_ref_spectrum.show_np_img(arr = self.ref_plot_as_npimg, outwidth= 480)
 
     def refresh_plots(self) -> None:
         self.update_jp_numerical_vals()
@@ -471,30 +476,26 @@ class TheMainWindow(QMainWindow):
 
     def call_export_data(self) -> None:
         """Exports"""
-        os.makedirs(os.path.join(self.ddtree.ddir, "output") , exist_ok=True)
-        #if self.ex_type_dialog.ui.cb_numerical.isChecked():
-        #    # saving cropping regions
-        #    # ymdhmr = datetime.now().strftime("%Y%m%d_%H%M%S")
-        #    # json_path = self.jpeg_path.replace('.jpeg', f'_crop_region{ymdhmr}.json')
-        #    # self.jp.save_cropping_regions(json_path)
+        self.export_output_dir = os.path.join(self.ddtree.ddir, "output")
+        self.export_output_file_template = os.path.join(
+                self.ddtree.ddir, "output", os.path.basename(self.jpeg_path).replace(".jpeg", ""))
 
-        #    # saving actual export tabels
-        #    csv_path = os.path.join(
-        #        os.path.dirname(self.jpeg_path), 
-        #        "output", 
-        #        os.path.basename(self.jpeg_path).replace(".jpeg", "_output.csv")
-        #    )
-        #    self.jp.get_table(csvfname=csv_path)
-        #if self.ex_type_dialog.ui.cb_tif_1layer.isChecked():
-        #    tmp_path = os.path.join(
-        #        os.path.dirname(self.jpeg_path), "output", 
-        #        os.path.basename(self.jpeg_path).replace(".jpeg", ".tiff")
-        #    )
-        #    cv.imwrite(tmp_path, self.jp.data)
+        os.makedirs(self.export_output_dir, exist_ok=True)
 
-        #if self.ex_type_dialog.ui.cb_npy_1layer.isChecked():
-        #    tmp_path = os.path.join(
-        #        os.path.dirname(self.jpeg_path), "output", 
-        #        os.path.basename(self.jpeg_path).replace(".jpeg", ".npy")
-        #    )
-        #    np.save(tmp_path, self.jp.data)
+        if self.ui.cb_rawbayer_export_npy.isChecked():
+            np.save(self.export_output_file_template + ".npy", self.jp.data)
+
+        if self.ui.cb_rawbayer_export_tif.isChecked():
+            cv.imwrite(self.export_output_file_template + ".tif", self.jp.data)
+
+        if self.ui.cb_rawbayer_export_mat.isChecked():
+            savemat(
+                self.export_output_file_template + ".mat", 
+                {"rawbayer": self.jp.data}
+            )
+
+        if self.ui.cb_rawspect_export_plot.isChecked():
+            cv.imwrite(self.export_output_file_template + "_raw.png", self.raw_plot_as_npimg)
+
+        if self.ui.cb_refspect_export_plot.isChecked():
+            cv.imwrite(self.export_output_file_template + "_ref.png", self.ref_plot_as_npimg)

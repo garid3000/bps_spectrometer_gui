@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>956</width>
+    <width>1004</width>
     <height>521</height>
    </rect>
   </property>
@@ -275,6 +275,13 @@
              </property>
             </widget>
            </item>
+           <item row="6" column="0">
+            <widget class="QProgressBar" name="pb_redraw_progress">
+             <property name="value">
+              <number>0</number>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
@@ -329,7 +336,7 @@
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QCheckBox" name="checkBox_6">
+         <widget class="QCheckBox" name="cb_export_numerical_vals">
           <property name="text">
            <string>Export Numerical Values  (CSV)</string>
           </property>
@@ -360,7 +367,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>0</y>
+             <y>-66</y>
              <width>353</width>
              <height>444</height>
             </rect>
@@ -442,7 +449,7 @@
              </widget>
             </item>
             <item row="17" column="0">
-             <widget class="QCheckBox" name="checkBox_4">
+             <widget class="QCheckBox" name="cb_rawspect_export_plot">
               <property name="text">
                <string>Export Plot (PNG)</string>
               </property>
@@ -456,23 +463,23 @@
              </widget>
             </item>
             <item row="2" column="0">
-             <widget class="QCheckBox" name="checkBox_2">
+             <widget class="QCheckBox" name="cb_rawbayer_export_npy">
               <property name="text">
-               <string>Export (Bayer as NPY)</string>
+               <string>Export Raw-Bayer (.NPY)</string>
               </property>
              </widget>
             </item>
             <item row="2" column="1">
-             <widget class="QCheckBox" name="checkBox">
+             <widget class="QCheckBox" name="cb_rawbayer_export_tif">
               <property name="text">
-               <string>Export (Bayer as TIF)</string>
+               <string>Export Raw-Bayer (.TIF)</string>
               </property>
              </widget>
             </item>
             <item row="3" column="0">
-             <widget class="QCheckBox" name="checkBox_3">
+             <widget class="QCheckBox" name="cb_rawbayer_export_mat">
               <property name="text">
-               <string>Export (Bayer as MAT)</string>
+               <string>Export Raw-Bayer (.MAT)</string>
               </property>
              </widget>
             </item>
@@ -510,7 +517,7 @@
              </widget>
             </item>
             <item row="26" column="0">
-             <widget class="QCheckBox" name="checkBox_5">
+             <widget class="QCheckBox" name="cb_refspect_export_plot">
               <property name="text">
                <string>Export Plot (PNG)</string>
               </property>
@@ -560,7 +567,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>956</width>
+     <width>1004</width>
      <height>19</height>
     </rect>
    </property>
