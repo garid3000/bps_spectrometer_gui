@@ -23,6 +23,6 @@ class ExportTypeDialog(QDialog):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    Dialog = ExportTypeDialog
+    Dialog = ExportTypeDialog()
     Dialog.show()
     sys.exit(app.exec())

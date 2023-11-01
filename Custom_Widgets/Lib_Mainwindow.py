@@ -7,6 +7,8 @@ import numpy as np
 #import numpy.typing as npt
 import matplotlib.pyplot as plt
 import cv2 as cv  # import cmap
+#from datetime import datetime
+
 
 
 from PySide6.QtWidgets import  (
@@ -38,6 +40,7 @@ class TheMainWindow(QMainWindow):
     ddtree         :DataDirTree      = DataDirTree()
     jp             :JpegProcessor    = JpegProcessor()
     ex_type_dialog :ExportTypeDialog # = ExportTypeDialog() # cannot initialize here due to lib.
+    jpeg_path      : str
 
 
     def __init__(self, parent: QWidget | None = None) -> None:
@@ -53,7 +56,9 @@ class TheMainWindow(QMainWindow):
         self.ui.actionOpen_Directory.triggered.connect(self.call_btnDirSelect)
         self.ui.pb_refresh.clicked.connect(self.call_btnRefresh)
         self.ui.cob_jpeg_selector.textActivated.connect(self.refresh_plots)
+
         self.ui.pb_conf_export.clicked.connect(self.ex_type_dialog.exec)
+        self.ui.pb_export.clicked.connect(self.call_export)
 
         
     def call_btnDirSelect(self) -> None:
@@ -95,10 +100,12 @@ class TheMainWindow(QMainWindow):
         self.refresh_plots("hi")
 
     def refresh_plots(self, atgivenjpeg: str) -> None:
-        print(atgivenjpeg)
+        self.jpeg_path = os.path.join(self.dir_path, atgivenjpeg)
+        #print(atgivenjpeg)
 
         #= ===========================================================================
-        self.jp.load_file(os.path.join(self.dir_path, atgivenjpeg))
+        #self.jp.load_file(os.path.join(self.dir_path, atgivenjpeg))
+        self.jp.load_file(self.jpeg_path)
         self.jp.get_bayer()
         self.jp.get_spectrums_channels_rgb()
         self.jp.calc_shift_pixel_length()
@@ -170,4 +177,23 @@ class TheMainWindow(QMainWindow):
         img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
         #cv2_img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         self.ui.limg_refl_spectrum.show_np_img( arr = img, outwidth= 640)
+
+
+
+    def call_export(self) -> None:
+        """Exports"""
+        os.makedirs(os.path.join(self.ddtree.ddir, "output") , exist_ok=True)
+        if self.ex_type_dialog.ui.cb_numerical.isChecked():
+            self.jp.get_table
+            # saving cropping regions
+            #ymdhmr = datetime.now().strftime("%Y%m%d_%H%M%S")
+            #json_path = self.jpeg_path.replace('.jpeg', f'_crop_region{ymdhmr}.json')
+            #self.jp.save_cropping_regions(json_path)
+
+            # saving actual export tabels
+            csv_path = self.jpeg_path.replace('.jpeg', '_output.csv')
+            self.jp.get_table(csvfname=csv_path)
+            #self.btnExport.setText('Done')
+            #self.open_a_file(csv_path)
+
 
