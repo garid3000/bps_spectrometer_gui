@@ -301,7 +301,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 321, 412))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 353, 444))
         self.formLayout = QFormLayout(self.scrollAreaWidgetContents)
         self.formLayout.setObjectName("formLayout")
         self.label = QLabel(self.scrollAreaWidgetContents)
@@ -335,13 +335,13 @@ class Ui_MainWindow(object):
         self.line_2.setFrameShape(QFrame.Shape.HLine)
         self.line_2.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.formLayout.setWidget(21, QFormLayout.SpanningRole, self.line_2)
+        self.formLayout.setWidget(23, QFormLayout.SpanningRole, self.line_2)
 
         self.label_3 = QLabel(self.scrollAreaWidgetContents)
         self.label_3.setObjectName("label_3")
         self.label_3.setFont(font3)
 
-        self.formLayout.setWidget(23, QFormLayout.SpanningRole, self.label_3)
+        self.formLayout.setWidget(25, QFormLayout.SpanningRole, self.label_3)
 
         self.limg_bayer_full = QLabelClick(self.scrollAreaWidgetContents)
         self.limg_bayer_full.setObjectName("limg_bayer_full")
@@ -361,13 +361,13 @@ class Ui_MainWindow(object):
         self.checkBox_4 = QCheckBox(self.scrollAreaWidgetContents)
         self.checkBox_4.setObjectName("checkBox_4")
 
-        self.formLayout.setWidget(16, QFormLayout.LabelRole, self.checkBox_4)
+        self.formLayout.setWidget(17, QFormLayout.LabelRole, self.checkBox_4)
 
         self.tbtn_raw_spectrum_config = QToolButton(self.scrollAreaWidgetContents)
         self.tbtn_raw_spectrum_config.setObjectName("tbtn_raw_spectrum_config")
 
         self.formLayout.setWidget(
-            16, QFormLayout.FieldRole, self.tbtn_raw_spectrum_config
+            17, QFormLayout.FieldRole, self.tbtn_raw_spectrum_config
         )
 
         self.checkBox_2 = QCheckBox(self.scrollAreaWidgetContents)
@@ -395,34 +395,39 @@ class Ui_MainWindow(object):
             20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
         )
 
-        self.formLayout.setItem(20, QFormLayout.SpanningRole, self.verticalSpacer_3)
+        self.formLayout.setItem(22, QFormLayout.SpanningRole, self.verticalSpacer_3)
 
         self.tbtn_ref_spectrum_config = QToolButton(self.scrollAreaWidgetContents)
         self.tbtn_ref_spectrum_config.setObjectName("tbtn_ref_spectrum_config")
 
         self.formLayout.setWidget(
-            24, QFormLayout.FieldRole, self.tbtn_ref_spectrum_config
+            26, QFormLayout.FieldRole, self.tbtn_ref_spectrum_config
         )
 
         self.checkBox_5 = QCheckBox(self.scrollAreaWidgetContents)
         self.checkBox_5.setObjectName("checkBox_5")
 
-        self.formLayout.setWidget(24, QFormLayout.LabelRole, self.checkBox_5)
+        self.formLayout.setWidget(26, QFormLayout.LabelRole, self.checkBox_5)
 
         self.limg_ref_spectrum = QLabelClick(self.scrollAreaWidgetContents)
         self.limg_ref_spectrum.setObjectName("limg_ref_spectrum")
 
-        self.formLayout.setWidget(25, QFormLayout.SpanningRole, self.limg_ref_spectrum)
+        self.formLayout.setWidget(27, QFormLayout.SpanningRole, self.limg_ref_spectrum)
 
         self.limg_raw_spectrum = QLabelClick(self.scrollAreaWidgetContents)
         self.limg_raw_spectrum.setObjectName("limg_raw_spectrum")
 
-        self.formLayout.setWidget(17, QFormLayout.SpanningRole, self.limg_raw_spectrum)
+        self.formLayout.setWidget(19, QFormLayout.SpanningRole, self.limg_raw_spectrum)
 
         self.cb_bayer_show_geometry = QCheckBox(self.scrollAreaWidgetContents)
         self.cb_bayer_show_geometry.setObjectName("cb_bayer_show_geometry")
 
         self.formLayout.setWidget(1, QFormLayout.LabelRole, self.cb_bayer_show_geometry)
+
+        self.cb_raw_show_bg = QCheckBox(self.scrollAreaWidgetContents)
+        self.cb_raw_show_bg.setObjectName("cb_raw_show_bg")
+
+        self.formLayout.setWidget(16, QFormLayout.LabelRole, self.cb_raw_show_bg)
 
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
@@ -658,7 +663,10 @@ class Ui_MainWindow(object):
             QCoreApplication.translate("MainWindow", "....", None)
         )
         self.cb_bayer_show_geometry.setText(
-            QCoreApplication.translate("MainWindow", "Draw Geometry", None)
+            QCoreApplication.translate("MainWindow", "Show Geometry", None)
+        )
+        self.cb_raw_show_bg.setText(
+            QCoreApplication.translate("MainWindow", "Show Backgroud Estimation", None)
         )
         self.menuFile.setTitle(
             QCoreApplication.translate("MainWindow", "Operation", None)

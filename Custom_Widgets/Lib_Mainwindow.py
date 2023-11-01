@@ -26,7 +26,7 @@ from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import JpegProcessor
 system_str = platform.system()
 
 logging.basicConfig(
-    filename="/tmp/app.log",  
+    filename=f"app.{1}.log",   # TODO
     format="%(asctime)s %(levelname)-8s %(message)s",
     level=logging.DEBUG,
     # this need to change according to OS
@@ -114,6 +114,7 @@ class TheMainWindow(QMainWindow):
         #self.ui.cb_ft_filter.stateChanged.connect(self.fsmodel.setNameFilterDisables)
         self.ui.cb_ft_filter.stateChanged.connect(self.toggle_filetype_visiblity)
         self.ui.cb_bayer_show_geometry.stateChanged.connect(self.update_visual_1_rawbayer_img_section)
+        self.ui.cb_raw_show_bg.stateChanged.connect(self.update_visual_2_raw_spectrum_section)
         # -----------------------------------------------------------------------------
         self.init_keyboard_bindings()
         self.init_actions()
@@ -389,6 +390,18 @@ class TheMainWindow(QMainWindow):
         ax.plot(self.jp.xwave, self.jp.obje4_mean["chan1_g"], "g-", label="green")
         ax.plot(self.jp.xwave, self.jp.obje4_mean["chan3_b"], "b-", label="blue")
         print(self.jp.xwave)
+
+        if self.ui.cb_raw_show_bg.isChecked():
+            ax.plot(self.jp.xwave, self.jp.bg_gray4["chan0_r"], "r--") #, label="red")
+            ax.plot(self.jp.xwave, self.jp.bg_gray4["chan2_G"], "k--") #, label="green2")
+            ax.plot(self.jp.xwave, self.jp.bg_gray4["chan1_g"], "g--") #, label="green")
+            ax.plot(self.jp.xwave, self.jp.bg_gray4["chan3_b"], "b--") #, label="blue")
+
+            ax.plot(self.jp.xwave, self.jp.bg_obje4["chan0_r"], "r-") #, label="red")
+            ax.plot(self.jp.xwave, self.jp.bg_obje4["chan2_G"], "k-") #, label="green2")
+            ax.plot(self.jp.xwave, self.jp.bg_obje4["chan1_g"], "g-") #, label="green")
+            ax.plot(self.jp.xwave, self.jp.bg_obje4["chan3_b"], "b-") #, label="blue")
+
 
         ax.vlines(759, 0, 1024) # the 759nm
         if self.raw_pcon_dialog.ui.cb_legend.isChecked():
