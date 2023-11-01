@@ -1,48 +1,53 @@
-#from typing import List
-
-# import sys
 import os
 import logging
 import numpy as np
-#import numpy.typing as npt
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
-from matplotlib.axes import Axes
+from matplotlib.axes   import Axes
+import cv2 as cv
 
-import cv2 as cv  # import cmap
-#from datetime import datetime
+from PySide6.QtWidgets import QMainWindow,  QWidget,   QFileSystemModel
+from PySide6.QtGui     import QKeySequence, QShortcut, QColor
+from PySide6.QtCore    import QModelIndex,  QDir, Qt
 
-from PySide6.QtWidgets import  (
-    QMainWindow, QWidget,  QFileSystemModel 
-)
-from PySide6.QtGui import QKeySequence, QShortcut
-from PySide6.QtCore import QModelIndex, QDir #, pyqtSlot
-
-from Custom_UIs.UI_Mainwindow import Ui_MainWindow
-from Custom_Libs.Lib_DataDirTree import DataDirTree
+from Custom_UIs.UI_Mainwindow            import Ui_MainWindow
+from Custom_Libs.Lib_DataDirTree         import DataDirTree
 from Custom_Widgets.Lib_ExportTypeDialog import ExportTypeDialog
 from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import JpegProcessor
 
 logging.basicConfig(
-    filename="/tmp/app.log",  # this need to change according to OS
-    #encoding="utf-8",
+    filename="/tmp/app.log",  
     format="%(asctime)s %(levelname)-8s %(message)s",
     level=logging.DEBUG,
-    #datefmt='%Y-%m-%d %H:%M:%S'
+    # this need to change according to OS
+    # encoding="utf-8",
+    # datefmt='%Y-%m-%d %H:%M:%S'
 )
 
 
-dbg_ddir: str = os.path.join(    # this contains selected path string
-            "/home", "garid", "data_dump_badmasflash_2023_0117",
-            "Data_cp_20230117_092825", "20230117_092051")
+class FileSystemModel(QFileSystemModel): 
+    # read from https://stackoverflow.com/a/40455027/14696853
+    def __init__(self, *args, **kwargs):
+        super(FileSystemModel, self).__init__(*args, **kwargs)
 
+    def data(self, index, role=Qt.ItemDataRole.DisplayRole):
+        if role == Qt.ItemDataRole.ForegroundRole:
+            text = index.data(Qt.ItemDataRole.DisplayRole)
+            if (".jpeg" in text) and (text.count("_")==3):
+                return QColor("#58cd1c")
+
+            elif (text.count("_")==1 and 
+                  (len(text) == 15) and 
+                  text.replace("_", "").isnumeric()):
+                return QColor("#288d4c")
+        return super(FileSystemModel, self).data(index, role)
 
 
 class TheMainWindow(QMainWindow):
-    dir_path       : str             = dbg_ddir
-    ddtree         :DataDirTree      = DataDirTree()
-    jp             :JpegProcessor    = JpegProcessor()
-    ex_type_dialog :ExportTypeDialog # cant initialize an instance here.
+    dir_path       : str              = QDir.homePath()
+    ddtree         :DataDirTree       = DataDirTree()
+    jp             :JpegProcessor     = JpegProcessor()
+    ex_type_dialog :ExportTypeDialog  # cant initialize an instance here.
     jpeg_path      : str
 
 
@@ -51,17 +56,14 @@ class TheMainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-
         self.ex_type_dialog   = ExportTypeDialog()
-
-        self.dir_path = dbg_ddir
         self.ui.pb_refresh.clicked.connect(self.call_btnRefresh)
-
         self.ui.pb_conf_export.clicked.connect(self.ex_type_dialog.exec)
         self.ui.pb_export.clicked.connect(self.call_export)
 
         # -----------------------------------------------------------------------------
-        self.fsmodel = QFileSystemModel()
+        #self.fsmodel = QFileSystemModel()
+        self.fsmodel = FileSystemModel()
         #self.fsmodel.setRootPath(QDir.homePath()) # TODO
         #self.fsmodel.setRootPath("/tmp/") # TODO
 
@@ -69,79 +71,44 @@ class TheMainWindow(QMainWindow):
         self.ui.tv_dir.setModel(self.fsmodel)
         self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath(QDir.homePath()))
         #self.ui.tv_dir.setAnimated()
-        self.ui.tv_dir.setIndentation(10)
+        self.ui.tv_dir.setIndentation(20)
         self.ui.tv_dir.setSortingEnabled(True)
-        #self.ui.tv_dir.setStyle
-        #self.ui.tv_dir.setHeader
-        #self.ui.tv_dir.clicked.connect()
-        #self.ui.tv_dir.clicked.connect(self.call_tv_onItemClicked)
         self.ui.tv_dir.doubleClicked.connect(self.call_tv_onItemClicked)
-        ##self.ui.tv_dir.pressed.connect(self.adsf)
         # ------------------------------------------------------------------------------
-        self.shortcut = QShortcut(QKeySequence("Ctrl+B"), self)
-        self.shortcut.activated.connect(self.on_adsf)
+        #self.shortcut =
+        #self.shortcut
+        QShortcut(QKeySequence("Ctrl+B"),    self).activated.connect(self.short_cut_goto_parent_dir)
+        QShortcut(QKeySequence("Backspace"), self).activated.connect(self.short_cut_goto_parent_dir)
+        QShortcut(QKeySequence("Return"),    self).activated.connect(self.short_cut_goto_selected_child_dir)
 
+    def short_cut_goto_parent_dir(self):
+        print("goto parent")
+        cur_root_index = self.ui.tv_dir.rootIndex()
+        parent_of_cur_root_index = self.fsmodel.parent(cur_root_index)
+        print("cur  index", self.fsmodel.filePath(cur_root_index))
+        print("par index", self.fsmodel.filePath(parent_of_cur_root_index))
+        self.ui.tv_dir.setRootIndex(parent_of_cur_root_index)
 
-
-    def on_adsf(self):
-        print("on asdf")
-        #ci = self.ui.tv_dir.currentIndex()
-        cri = self.ui.tv_dir.rootIndex()
-        print("cri", self.fsmodel.filePath(cri))
-        pri = self.fsmodel.parent(cri)
-        print("pri", self.fsmodel.filePath(pri))
-        self.ui.tv_dir.setRootIndex(pri)
-
+    def short_cut_goto_selected_child_dir(self):
+        selectedindex = self.ui.tv_dir.currentIndex()
+        print(selectedindex)
+        self.ui.tv_dir.setRootIndex(selectedindex)
+        #self.ui.tv_dir.focusNextChild()
         
     #@QtCore.pyqtSlot(QTreeWidgetItem, int)
     def call_tv_onItemClicked(self, v: QModelIndex):
         tmp  = self.fsmodel.filePath(v)
         if os.path.isdir(tmp):
             print(tmp)
-            #self.fsmodel.setRootPath(tmp)
             self.ui.tv_dir.setRootIndex(v)
             print(self.fsmodel.rootPath())
         else:
-            #print(type(v), v)
-            #tmp = self.fsmodel.data(v)
             self.jpeg_path = self.fsmodel.filePath(v)
             self.dir_path = os.path.dirname(self.jpeg_path)
             print(self.dir_path, self.jpeg_path)
             self.ddtree.set_ddir(self.dir_path)
             self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
             self.ui.limg_webcam.show_np_img(cv.imread(self.ddtree.webcamFP).astype(np.uint8))
-
-
-        
-    #def call_btnDirSelect(self) -> None:
-    #    """
-    #    Opens file-dialog in order to select data directory.
-    #    if:   self.dir_path exists in system, open that directory
-    #    else: open at home directory
-    #    """
-    #    logging.debug(f"{self.__repr__()}: call_btnDirSelect, starting")
-    #    if os.path.isdir(self.dir_path):
-    #        tmpDir = QFileDialog.getExistingDirectory(
-    #                self, "Choose Directory", self.dir_path) 
-    #        logging.debug(f"{self.__repr__()}:call_btnDirSelect, opening at old point")
-    #    else:
-    #        tmpDir = QFileDialog.getExistingDirectory(self, "Choose Directory", "")
-    #        logging.debug(f"{self.__repr__()}:call_btnDirSelect, opening at new point")
-
-    #    # checks user if cancelled
-    #    self.dir_path = tmpDir if os.path.isdir(tmpDir) else self.dir_path
-    #    self.ui.le_data_dir.setText(self.dir_path)
-    #    logging.debug(f"{self.__repr__()}: call_btnDirSelect, end: {self.dir_path}")
-
-    #    # =============================================================================
-    #    self.ddtree.set_ddir(self.dir_path)
-    #    #self.ui.cob_jpeg_selector.clear()        # clear jpeg
-    #    #self.ui.cob_jpeg_selector.addItems(self.ddtree.jpegFnames)
-    #    self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
-    #    #self.ui.tb_data_dir_tree.setText(self.ddtree.directory_structure())
-    #    # =============================================================================
-    #    self.ui.limg_webcam.show_np_img(cv.imread(self.ddtree.webcamFP).astype(np.ui8))
-    #    return
     
     def call_btnRefresh(self) -> None:
         self.jp.set_xWaveRng( int(self.ui.sb_horx_left_pxl.text()) )
@@ -152,11 +119,6 @@ class TheMainWindow(QMainWindow):
         self.refresh_plots()
 
     def refresh_plots(self) -> None:
-        #self.jpeg_path = os.path.join(self.dir_path, atgivenjpeg)
-        #print(atgivenjpeg)
-
-        #= ===========================================================================
-        #self.jp.load_file(os.path.join(self.dir_path, atgivenjpeg))
         self.jp.load_file(self.jpeg_path)
         self.jp.get_bayer()
         self.jp.get_spectrums_channels_rgb()
@@ -167,7 +129,7 @@ class TheMainWindow(QMainWindow):
         #= visuals ====================================================================
         self.ui.limg_bayer_full.show_np_img(
             arr=(self.jp.rgb // 4).astype(np.uint8),
-            outwidth = 1000
+            outwidth = 600
         )
 
         self.ui.limg_bayer_gray.show_np_img(
@@ -196,60 +158,47 @@ class TheMainWindow(QMainWindow):
         fig: Figure
         ax: Axes
         fig, ax = plt.subplots()
-        #reveal_type(fig)
-        #ax.plot([1, 2, 3, 4], [1, 4, 2, 3])
-        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan0_r"], "--", c="red",   label="red") 
-        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan1_g"], "--", c="green", label="green")
-        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan2_G"], "--", c="black", label="green2")
-        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan3_b"], "--", c="blue",  label="blue")
 
-        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan0_r"], c="red",   label="red")
-        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan1_g"], c="green", label="green")
-        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan2_G"], c="black", label="green2")
-        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan3_b"], c="blue",  label="blue")
+        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan0_r"], "r--", label="red")    
+        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan2_G"], "k--", label="green2")
+        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan1_g"], "g--", label="green")
+        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan3_b"], "b--", label="blue")
+
+        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan0_r"], "r-", label="red")
+        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan2_G"], "k-", label="green2")
+        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan1_g"], "g-", label="green")
+        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan3_b"], "b-", label="blue")
         print(self.jp.xwave)
 
-        #ax.vlines(192*2, 0, 1024, linestyles='dashdot')
-        ax.vlines(759, 0, 1024, linestyles="dashdot")
+        ax.vlines(759, 0, 1024,  "k-") # the 759nm
         ax.legend()
 
         fig.canvas.draw()
-        img = np.fromstring(
-                fig.canvas.tostring_rgb(), # type: ignore
-                dtype=np.uint8
-                )
+        img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8) # type: ignore
         img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
-        #cv2_img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
         self.ui.limg_raw_spectrum.show_np_img( arr = img, outwidth= 640)
 
         #= visuals ====================================================================
         fig, ax = plt.subplots()
-        #ax.plot([1, 2, 3, 4], [1, 4, 2, 3])
         ax.plot(self.jp.xwave, self.jp.ref_fancy, color="black",   label="reflectance")
         ax.legend()
 
         fig.canvas.draw()
         img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8) # type: ignore
-        #img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8)
         img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
-        #cv2_img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-        self.ui.limg_refl_spectrum.show_np_img( arr = img, outwidth= 640)
-
-
+        self.ui.limg_refl_spectrum.show_np_img(arr = img, outwidth= 640)
 
     def call_export(self) -> None:
         """Exports"""
         os.makedirs(os.path.join(self.ddtree.ddir, "output") , exist_ok=True)
         if self.ex_type_dialog.ui.cb_numerical.isChecked():
             # saving cropping regions
-            #ymdhmr = datetime.now().strftime("%Y%m%d_%H%M%S")
-            #json_path = self.jpeg_path.replace('.jpeg', f'_crop_region{ymdhmr}.json')
-            #self.jp.save_cropping_regions(json_path)
+            # ymdhmr = datetime.now().strftime("%Y%m%d_%H%M%S")
+            # json_path = self.jpeg_path.replace('.jpeg', f'_crop_region{ymdhmr}.json')
+            # self.jp.save_cropping_regions(json_path)
 
             # saving actual export tabels
             csv_path = self.jpeg_path.replace(".jpeg", "_output.csv")
             self.jp.get_table(csvfname=csv_path)
-            #self.btnExport.setText('Done')
-            #self.open_a_file(csv_path)
-
-
+            # self.btnExport.setText('Done')
+            # self.open_a_file(csv_path)

@@ -76,12 +76,12 @@ class Ui_MainWindow(object):
         self.splitter = QSplitter(self.centralwidget)
         self.splitter.setObjectName("splitter")
         self.splitter.setOrientation(Qt.Orientation.Horizontal)
-        self.widget = QWidget(self.splitter)
-        self.widget.setObjectName("widget")
-        self.verticalLayout_2 = QVBoxLayout(self.widget)
+        self.layoutWidget = QWidget(self.splitter)
+        self.layoutWidget.setObjectName("layoutWidget")
+        self.verticalLayout_2 = QVBoxLayout(self.layoutWidget)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.gb_dir_panel = QGroupBox(self.widget)
+        self.gb_dir_panel = QGroupBox(self.layoutWidget)
         self.gb_dir_panel.setObjectName("gb_dir_panel")
         self.gridLayout_3 = QGridLayout(self.gb_dir_panel)
         self.gridLayout_3.setObjectName("gridLayout_3")
@@ -89,7 +89,9 @@ class Ui_MainWindow(object):
         self.tv_dir.setObjectName("tv_dir")
         font = QFont()
         font.setFamilies(["Monospace"])
+        font.setPointSize(10)
         self.tv_dir.setFont(font)
+        self.tv_dir.setSortingEnabled(False)
 
         self.gridLayout_3.addWidget(self.tv_dir, 2, 0, 1, 1)
 
@@ -111,7 +113,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_2.addWidget(self.gb_dir_panel)
 
-        self.gb_control_panel = QGroupBox(self.widget)
+        self.gb_control_panel = QGroupBox(self.layoutWidget)
         self.gb_control_panel.setObjectName("gb_control_panel")
         self.gridLayout_2 = QGridLayout(self.gb_control_panel)
         self.gridLayout_2.setObjectName("gridLayout_2")
@@ -212,7 +214,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_2.addWidget(self.gb_control_panel)
 
-        self.splitter.addWidget(self.widget)
+        self.splitter.addWidget(self.layoutWidget)
         self.gp_webcam_meta = QGroupBox(self.splitter)
         self.gp_webcam_meta.setObjectName("gp_webcam_meta")
         self.verticalLayout = QVBoxLayout(self.gp_webcam_meta)
@@ -224,7 +226,9 @@ class Ui_MainWindow(object):
 
         self.tb_meta_json = QTextBrowser(self.gp_webcam_meta)
         self.tb_meta_json.setObjectName("tb_meta_json")
-        self.tb_meta_json.setFont(font)
+        font1 = QFont()
+        font1.setFamilies(["Monospace"])
+        self.tb_meta_json.setFont(font1)
 
         self.verticalLayout.addWidget(self.tb_meta_json)
 

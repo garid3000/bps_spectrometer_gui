@@ -20,7 +20,7 @@
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
          <widget class="QGroupBox" name="gb_dir_panel">
@@ -33,7 +33,11 @@
              <property name="font">
               <font>
                <family>Monospace</family>
+               <pointsize>10</pointsize>
               </font>
+             </property>
+             <property name="sortingEnabled">
+              <bool>false</bool>
              </property>
             </widget>
            </item>
