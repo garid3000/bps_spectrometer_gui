@@ -102,6 +102,7 @@ class TheMainWindow(QMainWindow):
         self.ui.cb_ft_filter.stateChanged.connect(self.toggle_filetype_visiblity)
         # -----------------------------------------------------------------------------
         self.init_keyboard_bindings()
+        self.init_actions()
 
     def toggle_filetype_visiblity(self, a: int) -> None:
         if a:
@@ -112,15 +113,20 @@ class TheMainWindow(QMainWindow):
 
 
     def init_keyboard_bindings(self) -> None:
-        QShortcut(QKeySequence("Ctrl+B"),    self).activated.connect(self.short_cut_goto_parent_dir)
-        QShortcut(QKeySequence("Backspace"), self).activated.connect(self.short_cut_goto_parent_dir)
-        QShortcut(QKeySequence("Return"),    self).activated.connect(self.short_cut_goto_selected_child_dir)
-        QShortcut(QKeySequence("Space"),     self).activated.connect(self.short_cut_preview_raw_jpeg)
-        QShortcut(QKeySequence("Ctrl+E"),    self).activated.connect(self.short_cut_export_raw_jpeg)
-        QShortcut(QKeySequence("Ctrl+O"),    self).activated.connect(self.short_cut_open_at_point)
+        QShortcut(QKeySequence("Ctrl+B"),          self).activated.connect(self.short_cut_goto_parent_dir)
+        QShortcut(QKeySequence("Backspace"),       self).activated.connect(self.short_cut_goto_parent_dir)
+        QShortcut(QKeySequence("Return"),          self).activated.connect(self.short_cut_goto_selected_child_dir)
+        QShortcut(QKeySequence("Space"),           self).activated.connect(self.short_cut_preview_raw_jpeg)
+        QShortcut(QKeySequence("Ctrl+E"),          self).activated.connect(self.short_cut_export_raw_jpeg)
+        QShortcut(QKeySequence("Ctrl+O"),          self).activated.connect(self.short_cut_open_at_point)
         QShortcut(QKeySequence("Ctrl+Shift+E"),    self).activated.connect(self.ex_type_dialog.exec)
+        QShortcut(QKeySequence("Ctrl+H"),          self).activated.connect(self.open_help_page)
 
+    def init_actions(self) -> None:
+        self.ui.actionRead_Tutorial.triggered.connect(self.open_help_page)
 
+    def open_help_page(self):
+        open_a_file("/home/garid/Projects/psm/bps_spectrometer_gui/docs/help.html")
 
     def short_cut_goto_parent_dir(self):
         print("goto parent")
