@@ -24,7 +24,6 @@ from PySide6.QtWidgets import (
     QGridLayout,
     QGroupBox,
     QLabel,
-    QLineEdit,
     QMainWindow,
     QMenu,
     QMenuBar,
@@ -91,25 +90,20 @@ class Ui_MainWindow(object):
         font.setFamilies(["Monospace"])
         font.setPointSize(10)
         self.tv_dir.setFont(font)
-        self.tv_dir.setSortingEnabled(False)
+        self.tv_dir.setSortingEnabled(True)
 
-        self.gridLayout_3.addWidget(self.tv_dir, 2, 0, 1, 1)
-
-        self.pb_data_dir = QPushButton(self.gb_dir_panel)
-        self.pb_data_dir.setObjectName("pb_data_dir")
-
-        self.gridLayout_3.addWidget(self.pb_data_dir, 1, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.tv_dir, 1, 0, 1, 1)
 
         self.verticalSpacer_3 = QSpacerItem(
             20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
         )
 
-        self.gridLayout_3.addItem(self.verticalSpacer_3, 5, 0, 1, 1)
+        self.gridLayout_3.addItem(self.verticalSpacer_3, 4, 0, 1, 1)
 
-        self.le_data_dir = QLineEdit(self.gb_dir_panel)
-        self.le_data_dir.setObjectName("le_data_dir")
+        self.cb_ft_filter = QCheckBox(self.gb_dir_panel)
+        self.cb_ft_filter.setObjectName("cb_ft_filter")
 
-        self.gridLayout_3.addWidget(self.le_data_dir, 0, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.cb_ft_filter, 0, 0, 1, 1)
 
         self.verticalLayout_2.addWidget(self.gb_dir_panel)
 
@@ -363,7 +357,7 @@ class Ui_MainWindow(object):
             )
         )
         self.actionRead_Tutorial.setText(
-            QCoreApplication.translate("MainWindow", "Open Manual", None)
+            QCoreApplication.translate("MainWindow", "Help", None)
         )
         self.actionRead_Dependencies.setText(
             QCoreApplication.translate("MainWindow", "Read Dependencies", None)
@@ -380,8 +374,8 @@ class Ui_MainWindow(object):
         self.gb_dir_panel.setTitle(
             QCoreApplication.translate("MainWindow", "Directory Control Panel", None)
         )
-        self.pb_data_dir.setText(
-            QCoreApplication.translate("MainWindow", "Set root directory ???", None)
+        self.cb_ft_filter.setText(
+            QCoreApplication.translate("MainWindow", "Show All File Types", None)
         )
         self.gb_control_panel.setTitle(
             QCoreApplication.translate("MainWindow", "Geometry control panel", None)
@@ -405,7 +399,7 @@ class Ui_MainWindow(object):
             QCoreApplication.translate("MainWindow", "Calibrate", None)
         )
         self.gp_webcam_meta.setTitle(
-            QCoreApplication.translate("MainWindow", "Webcam + Meta Data", None)
+            QCoreApplication.translate("MainWindow", "Webcam + Meta Data Panel", None)
         )
         self.limg_webcam.setText(QCoreApplication.translate("MainWindow", "....", None))
         self.gp_spectral_panel.setTitle(

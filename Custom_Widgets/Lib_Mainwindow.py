@@ -1,5 +1,6 @@
 import os
 import logging
+#from os.path import isfile
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
@@ -29,6 +30,9 @@ class FileSystemModel(QFileSystemModel):
     # read from https://stackoverflow.com/a/40455027/14696853
     def __init__(self, *args, **kwargs):
         super(FileSystemModel, self).__init__(*args, **kwargs)
+        self.setNameFilters( (["*.jpeg", "*.jpg", "*.json"]))
+        #  , "*.tiff", "*.npy", "*.mat", "*.png"]))
+        self.setNameFilterDisables(False)
 
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
         if role == Qt.ItemDataRole.ForegroundRole:
@@ -68,6 +72,8 @@ class TheMainWindow(QMainWindow):
         self.ui.tv_dir.setModel(self.fsmodel)
         self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath(QDir.homePath()))
         self.ui.tv_dir.doubleClicked.connect(self.call_tv_onItemClicked)
+
+        self.ui.cb_ft_filter.stateChanged.connect(self.fsmodel.setNameFilterDisables)
         # -----------------------------------------------------------------------------
         self.init_keyboard_bindings()
 
@@ -76,6 +82,7 @@ class TheMainWindow(QMainWindow):
         QShortcut(QKeySequence("Ctrl+B"),    self).activated.connect(self.short_cut_goto_parent_dir)
         QShortcut(QKeySequence("Backspace"), self).activated.connect(self.short_cut_goto_parent_dir)
         QShortcut(QKeySequence("Return"),    self).activated.connect(self.short_cut_goto_selected_child_dir)
+        QShortcut(QKeySequence("Space"),    self).activated.connect(self.short_cut_select_raw_jpeg)
 
 
     def short_cut_goto_parent_dir(self):
@@ -83,7 +90,7 @@ class TheMainWindow(QMainWindow):
         cur_root_index           = self.ui.tv_dir.rootIndex()          # get .
         parent_of_cur_root_index = self.fsmodel.parent(cur_root_index) # get ..
         self.ui.tv_dir.setRootIndex(parent_of_cur_root_index)          # set ..
-        self.ui.tv_dir.setCurrentIndex(parent_of_cur_root_index)       # idk why this needed
+        self.ui.tv_dir.setCurrentIndex(parent_of_cur_root_index)   # idk why this needed
 
     def short_cut_goto_selected_child_dir(self):
         sel_m_index = self.ui.tv_dir.currentIndex()    # get
@@ -91,6 +98,26 @@ class TheMainWindow(QMainWindow):
             self.ui.tv_dir.setRootIndex(sel_m_index)
         else:
             pass                                       # need to update jpeg_path here 
+
+    def short_cut_select_raw_jpeg(self):
+        sel_m_index = self.ui.tv_dir.currentIndex()
+        tmppath = self.fsmodel.filePath(sel_m_index)
+        basename = os.path.basename(tmppath)
+        print("space press", tmppath)
+        if not os.path.isfile(tmppath):
+            pass
+        if (".jpeg" in basename) and (basename.count("_")==3):
+            self.jpeg_path = tmppath
+            self.dir_path  = os.path.dirname(self.jpeg_path)
+            self.ddtree.set_ddir(self.dir_path)
+            self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
+            self.ui.limg_webcam.show_np_img(
+                    cv.imread(self.ddtree.webcamFP).astype(np.uint8) 
+                    if os.path.isfile(self.ddtree.webcamFP)
+                    else np.zeros((10, 10, 3), dtype=np.uint8)
+            )
+            self.refresh_plots()
+            pass
         
     #@QtCore.pyqtSlot(QTreeWidgetItem, int)
     def call_tv_onItemClicked(self, v: QModelIndex):
@@ -106,6 +133,7 @@ class TheMainWindow(QMainWindow):
             self.ddtree.set_ddir(self.dir_path)
             self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
             self.ui.limg_webcam.show_np_img(cv.imread(self.ddtree.webcamFP).astype(np.uint8))
+            self.refresh_plots()
     
     def call_btnRefresh(self) -> None:
         self.jp.set_xWaveRng( int(self.ui.sb_horx_left_pxl.text()) )
@@ -137,7 +165,7 @@ class TheMainWindow(QMainWindow):
                               : 
                               ] // 4
                  ).astype(np.uint8),
-            outwidth = 800
+            outwidth = 600
         )
         
 
@@ -149,7 +177,7 @@ class TheMainWindow(QMainWindow):
                               : 
                               ]// 4
                  ).astype(np.uint8),
-            outwidth = 800
+            outwidth = 600
         )
         #= visuals ====================================================================
         fig: Figure
@@ -167,7 +195,7 @@ class TheMainWindow(QMainWindow):
         ax.plot(self.jp.xwave, self.jp.obje4_mean["chan3_b"], "b-", label="blue")
         print(self.jp.xwave)
 
-        ax.vlines(759, 0, 1024,  "k-") # the 759nm
+        ax.vlines(759, 0, 1024) # the 759nm
         ax.legend()
 
         fig.canvas.draw()
