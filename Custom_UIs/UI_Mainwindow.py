@@ -68,6 +68,26 @@ class Ui_MainWindow(object):
         self.actionAbout.setObjectName("actionAbout")
         self.actionContact = QAction(MainWindow)
         self.actionContact.setObjectName("actionContact")
+        self.actionPreview_Current_Selected_JPEG_Space = QAction(MainWindow)
+        self.actionPreview_Current_Selected_JPEG_Space.setObjectName(
+            "actionPreview_Current_Selected_JPEG_Space"
+        )
+        self.actionGo_to_Parent_Directory_Backspace = QAction(MainWindow)
+        self.actionGo_to_Parent_Directory_Backspace.setObjectName(
+            "actionGo_to_Parent_Directory_Backspace"
+        )
+        self.actionGo_inside_Selected_Directory_Enter = QAction(MainWindow)
+        self.actionGo_inside_Selected_Directory_Enter.setObjectName(
+            "actionGo_inside_Selected_Directory_Enter"
+        )
+        self.actionFold_Selected_Directory_Left_Arrow = QAction(MainWindow)
+        self.actionFold_Selected_Directory_Left_Arrow.setObjectName(
+            "actionFold_Selected_Directory_Left_Arrow"
+        )
+        self.actionUnfold_Selected_Directory_Right_Arrow = QAction(MainWindow)
+        self.actionUnfold_Selected_Directory_Right_Arrow.setObjectName(
+            "actionUnfold_Selected_Directory_Right_Arrow"
+        )
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QGridLayout(self.centralwidget)
@@ -94,14 +114,9 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.tv_dir, 1, 0, 1, 1)
 
-        self.verticalSpacer_3 = QSpacerItem(
-            20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
-        )
-
-        self.gridLayout_3.addItem(self.verticalSpacer_3, 4, 0, 1, 1)
-
         self.cb_ft_filter = QCheckBox(self.gb_dir_panel)
         self.cb_ft_filter.setObjectName("cb_ft_filter")
+        self.cb_ft_filter.setChecked(True)
 
         self.gridLayout_3.addWidget(self.cb_ft_filter, 0, 0, 1, 1)
 
@@ -261,11 +276,6 @@ class Ui_MainWindow(object):
         self.tab_1.setObjectName("tab_1")
         self.gridLayout_6 = QGridLayout(self.tab_1)
         self.gridLayout_6.setObjectName("gridLayout_6")
-        self.limg_bayer_full = QLabelClick(self.tab_1)
-        self.limg_bayer_full.setObjectName("limg_bayer_full")
-
-        self.gridLayout_6.addWidget(self.limg_bayer_full, 0, 0, 1, 1)
-
         self.limg_bayer_gray = QLabelClick(self.tab_1)
         self.limg_bayer_gray.setObjectName("limg_bayer_gray")
 
@@ -276,6 +286,12 @@ class Ui_MainWindow(object):
 
         self.gridLayout_6.addWidget(self.limg_bayer_obje, 2, 0, 1, 1)
 
+        self.limg_bayer_full = QLabelClick(self.tab_1)
+        self.limg_bayer_full.setObjectName("limg_bayer_full")
+
+        self.gridLayout_6.addWidget(self.limg_bayer_full, 0, 0, 1, 1)
+
+        self.gridLayout_6.setRowStretch(0, 1)
         self.tabWidget.addTab(self.tab_1, "")
         self.tab_2 = QWidget()
         self.tab_2.setObjectName("tab_2")
@@ -319,12 +335,17 @@ class Ui_MainWindow(object):
 
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuTutorial.menuAction())
-        self.menuFile.addAction(self.actionOpen_Directory)
         self.menuFile.addAction(self.actionLoad_geometry_configuration)
-        self.menuFile.addSeparator()
         self.menuFile.addAction(self.actionSave_configuration)
-        self.menuFile.addAction(self.actionSave_Raw_Bayer_as)
         self.menuFile.addSeparator()
+        self.menuFile.addAction(self.actionSave_Raw_Bayer_as)
+        self.menuFile.addAction(self.actionPreview_Current_Selected_JPEG_Space)
+        self.menuFile.addSeparator()
+        self.menuFile.addAction(self.actionGo_to_Parent_Directory_Backspace)
+        self.menuFile.addAction(self.actionGo_inside_Selected_Directory_Enter)
+        self.menuFile.addSeparator()
+        self.menuFile.addAction(self.actionFold_Selected_Directory_Left_Arrow)
+        self.menuFile.addAction(self.actionUnfold_Selected_Directory_Right_Arrow)
         self.menuTutorial.addAction(self.actionRead_Tutorial)
         self.menuTutorial.addAction(self.actionAbout)
 
@@ -344,7 +365,9 @@ class Ui_MainWindow(object):
             QCoreApplication.translate("MainWindow", "Open Directory", None)
         )
         self.actionSave_Raw_Bayer_as.setText(
-            QCoreApplication.translate("MainWindow", "Export Raw-Bayer as", None)
+            QCoreApplication.translate(
+                "MainWindow", "Export Current Selected JPEG (Ctlr-E)", None
+            )
         )
         self.actionSave_configuration.setText(
             QCoreApplication.translate(
@@ -371,17 +394,42 @@ class Ui_MainWindow(object):
         self.actionContact.setText(
             QCoreApplication.translate("MainWindow", "Contact", None)
         )
+        self.actionPreview_Current_Selected_JPEG_Space.setText(
+            QCoreApplication.translate(
+                "MainWindow", "Preview Current Selected JPEG (Space)", None
+            )
+        )
+        self.actionGo_to_Parent_Directory_Backspace.setText(
+            QCoreApplication.translate(
+                "MainWindow", "Go to Parent Directory (Backspace)", None
+            )
+        )
+        self.actionGo_inside_Selected_Directory_Enter.setText(
+            QCoreApplication.translate(
+                "MainWindow", "Go inside Selected Directory (Enter)", None
+            )
+        )
+        self.actionFold_Selected_Directory_Left_Arrow.setText(
+            QCoreApplication.translate(
+                "MainWindow", "Fold Selected Directory (Left Arrow)", None
+            )
+        )
+        self.actionUnfold_Selected_Directory_Right_Arrow.setText(
+            QCoreApplication.translate(
+                "MainWindow", "Unfold Selected Directory (Right Arrow)", None
+            )
+        )
         self.gb_dir_panel.setTitle(
             QCoreApplication.translate("MainWindow", "Directory Control Panel", None)
         )
         self.cb_ft_filter.setText(
-            QCoreApplication.translate("MainWindow", "Show All File Types", None)
+            QCoreApplication.translate("MainWindow", "File type filter", None)
         )
         self.gb_control_panel.setTitle(
             QCoreApplication.translate("MainWindow", "Geometry control panel", None)
         )
         self.pb_refresh.setText(
-            QCoreApplication.translate("MainWindow", "Refresh (Redraw)", None)
+            QCoreApplication.translate("MainWindow", "Refresh (Ctrl + r)", None)
         )
         self._label_1.setText(
             QCoreApplication.translate("MainWindow", "Horizontal Left Pixel", None)
@@ -405,17 +453,19 @@ class Ui_MainWindow(object):
         self.gp_spectral_panel.setTitle(
             QCoreApplication.translate("MainWindow", "Spectral data Panel", None)
         )
-        self.pb_export.setText(QCoreApplication.translate("MainWindow", "Export", None))
+        self.pb_export.setText(
+            QCoreApplication.translate("MainWindow", "Export (Ctrl + e)", None)
+        )
         self.pb_conf_export.setText(
             QCoreApplication.translate("MainWindow", "Configure Export", None)
-        )
-        self.limg_bayer_full.setText(
-            QCoreApplication.translate("MainWindow", "....", None)
         )
         self.limg_bayer_gray.setText(
             QCoreApplication.translate("MainWindow", "....", None)
         )
         self.limg_bayer_obje.setText(
+            QCoreApplication.translate("MainWindow", "....", None)
+        )
+        self.limg_bayer_full.setText(
             QCoreApplication.translate("MainWindow", "....", None)
         )
         self.tabWidget.setTabText(
@@ -436,7 +486,9 @@ class Ui_MainWindow(object):
             self.tabWidget.indexOf(self.tab_3),
             QCoreApplication.translate("MainWindow", "Spectrum (Reflectance)", None),
         )
-        self.menuFile.setTitle(QCoreApplication.translate("MainWindow", "File", None))
+        self.menuFile.setTitle(
+            QCoreApplication.translate("MainWindow", "Directory Operations", None)
+        )
         self.menuTutorial.setTitle(
             QCoreApplication.translate("MainWindow", "Help", None)
         )

@@ -30,9 +30,10 @@ class FileSystemModel(QFileSystemModel):
     # read from https://stackoverflow.com/a/40455027/14696853
     def __init__(self, *args, **kwargs):
         super(FileSystemModel, self).__init__(*args, **kwargs)
-        self.setNameFilters( (["*.jpeg", "*.jpg", "*.json"]))
-        #  , "*.tiff", "*.npy", "*.mat", "*.png"]))
-        self.setNameFilterDisables(False)
+        self.setNameFilters( ( ["*.jpeg", "*.jpg", "*.json"] ) )
+        #, "*.tiff", "*.npy", "*.mat", "*.png"]))
+        #self.setNameFilterDisables(False)
+        #self.setNameFilterDisables(True)
 
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
         if role == Qt.ItemDataRole.ForegroundRole:
@@ -63,7 +64,7 @@ class TheMainWindow(QMainWindow):
         self.ex_type_dialog   = ExportTypeDialog()
         self.ui.pb_refresh.clicked.connect(self.call_btnRefresh)
         self.ui.pb_conf_export.clicked.connect(self.ex_type_dialog.exec)
-        self.ui.pb_export.clicked.connect(self.call_export)
+        self.ui.pb_export.clicked.connect(self.call_export_data)
 
         # -----------------------------------------------------------------------------
         self.fsmodel = FileSystemModel()            # self.fsmodel = QFileSystemModel()
@@ -73,16 +74,27 @@ class TheMainWindow(QMainWindow):
         self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath(QDir.homePath()))
         self.ui.tv_dir.doubleClicked.connect(self.call_tv_onItemClicked)
 
-        self.ui.cb_ft_filter.stateChanged.connect(self.fsmodel.setNameFilterDisables)
+        #self.ui.cb_ft_filter.stateChanged.connect(self.fsmodel.setNameFilterDisables)
+        self.ui.cb_ft_filter.stateChanged.connect(self.toggle_filetype_visiblity)
         # -----------------------------------------------------------------------------
         self.init_keyboard_bindings()
+
+    def toggle_filetype_visiblity(self, a: int) -> None:
+        if a:
+            self.fsmodel.setNameFilters( ( ["*.jpeg", "*.jpg", "*.json"] ) )
+        else:
+            self.fsmodel.setNameFilters( ( ["*"] ) )
+
 
 
     def init_keyboard_bindings(self) -> None:
         QShortcut(QKeySequence("Ctrl+B"),    self).activated.connect(self.short_cut_goto_parent_dir)
         QShortcut(QKeySequence("Backspace"), self).activated.connect(self.short_cut_goto_parent_dir)
         QShortcut(QKeySequence("Return"),    self).activated.connect(self.short_cut_goto_selected_child_dir)
-        QShortcut(QKeySequence("Space"),    self).activated.connect(self.short_cut_select_raw_jpeg)
+        QShortcut(QKeySequence("Space"),     self).activated.connect(self.short_cut_preview_raw_jpeg)
+        QShortcut(QKeySequence("Ctrl+E"),    self).activated.connect(self.short_cut_export_raw_jpeg)
+        QShortcut(QKeySequence("Ctrl+Shift+E"),    self).activated.connect(self.ex_type_dialog.exec)
+
 
 
     def short_cut_goto_parent_dir(self):
@@ -91,6 +103,7 @@ class TheMainWindow(QMainWindow):
         parent_of_cur_root_index = self.fsmodel.parent(cur_root_index) # get ..
         self.ui.tv_dir.setRootIndex(parent_of_cur_root_index)          # set ..
         self.ui.tv_dir.setCurrentIndex(parent_of_cur_root_index)   # idk why this needed
+    
 
     def short_cut_goto_selected_child_dir(self):
         sel_m_index = self.ui.tv_dir.currentIndex()    # get
@@ -99,25 +112,35 @@ class TheMainWindow(QMainWindow):
         else:
             pass                                       # need to update jpeg_path here 
 
-    def short_cut_select_raw_jpeg(self):
+    def short_cut_preview_raw_jpeg(self) -> bool:
         sel_m_index = self.ui.tv_dir.currentIndex()
         tmppath = self.fsmodel.filePath(sel_m_index)
         basename = os.path.basename(tmppath)
         print("space press", tmppath)
         if not os.path.isfile(tmppath):
+            return False
+        if not ((".jpeg" in basename) and 
+                (basename.count("_")==3)):
+            return False
+
+        self.jpeg_path = tmppath
+        self.dir_path  = os.path.dirname(self.jpeg_path)
+        self.ddtree.set_ddir(self.dir_path)
+        self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
+        self.ui.limg_webcam.show_np_img(
+            cv.imread(self.ddtree.webcamFP).astype(np.uint8) 
+            if os.path.isfile(self.ddtree.webcamFP)
+            else np.zeros((10, 10, 3), dtype=np.uint8)
+        )
+        self.refresh_plots()
+        return True
+
+    def short_cut_export_raw_jpeg(self):
+        print("exporting")
+        if self.short_cut_preview_raw_jpeg():
+            self.call_export_data()
             pass
-        if (".jpeg" in basename) and (basename.count("_")==3):
-            self.jpeg_path = tmppath
-            self.dir_path  = os.path.dirname(self.jpeg_path)
-            self.ddtree.set_ddir(self.dir_path)
-            self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
-            self.ui.limg_webcam.show_np_img(
-                    cv.imread(self.ddtree.webcamFP).astype(np.uint8) 
-                    if os.path.isfile(self.ddtree.webcamFP)
-                    else np.zeros((10, 10, 3), dtype=np.uint8)
-            )
-            self.refresh_plots()
-            pass
+            # exporting
         
     #@QtCore.pyqtSlot(QTreeWidgetItem, int)
     def call_tv_onItemClicked(self, v: QModelIndex):
@@ -213,7 +236,7 @@ class TheMainWindow(QMainWindow):
         img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
         self.ui.limg_refl_spectrum.show_np_img(arr = img, outwidth= 640)
 
-    def call_export(self) -> None:
+    def call_export_data(self) -> None:
         """Exports"""
         os.makedirs(os.path.join(self.ddtree.ddir, "output") , exist_ok=True)
         if self.ex_type_dialog.ui.cb_numerical.isChecked():
@@ -223,7 +246,9 @@ class TheMainWindow(QMainWindow):
             # self.jp.save_cropping_regions(json_path)
 
             # saving actual export tabels
-            csv_path = self.jpeg_path.replace(".jpeg", "_output.csv")
+            csv_path = os.path.join(
+                os.path.dirname(self.jpeg_path), 
+                "output", 
+                os.path.basename(self.jpeg_path).replace(".jpeg", "_output.csv")
+            )
             self.jp.get_table(csvfname=csv_path)
-            # self.btnExport.setText('Done')
-            # self.open_a_file(csv_path)
