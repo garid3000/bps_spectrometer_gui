@@ -113,6 +113,7 @@ class TheMainWindow(QMainWindow):
 
         #self.ui.cb_ft_filter.stateChanged.connect(self.fsmodel.setNameFilterDisables)
         self.ui.cb_ft_filter.stateChanged.connect(self.toggle_filetype_visiblity)
+        self.ui.cb_bayer_show_geometry.stateChanged.connect(self.update_visual_1_rawbayer_img_section)
         # -----------------------------------------------------------------------------
         self.init_keyboard_bindings()
         self.init_actions()
@@ -288,13 +289,37 @@ class TheMainWindow(QMainWindow):
                 (255, 0, 0),
                 thickness=8)
 
-        #tmp = cv.arrowedLine(
-        #        tmp, 
-        #        (0, ), 
-        #        end_point, 
-        #        color, 
-        #        thickness)
 
+
+        if self.ui.cb_bayer_show_geometry.isChecked():
+            tmp = cv.putText(tmp, str(self.ui.sb_horx_left_pxl.value()) + "px",
+                             (self.jp.xWaveRng[0]//2, self.jp.yObjeRng[0]//2), 
+                             0,  4, (0, 255, 0), 8, cv.LINE_AA)
+            tmp = cv.arrowedLine(tmp,  
+                    (0,                   self.jp.yObjeRng[0]//2), 
+                    (self.jp.xWaveRng[0], self.jp.yObjeRng[0]//2), 
+                    (0, 255, 0), 
+                    thickness=8)
+
+            tmp = cv.putText(tmp, str(self.ui.sb_gray_top_pxl.value()) + "px",
+                             (self.jp.xWaveRng[0]//2, 3*self.jp.yGrayRng[0]//4), 
+                             0,  4, (255, 0, 0), 8, cv.LINE_AA)
+
+            tmp = cv.arrowedLine(tmp,  
+                    (self.jp.xWaveRng[0]//2, 0                  ), 
+                    (self.jp.xWaveRng[0]//2, self.jp.yGrayRng[0]), 
+                    (255, 0, 0), 
+                    thickness=8)
+
+            tmp = cv.putText(tmp, str(self.ui.sb_obje_top_pxl.value()) + "px",
+                             (self.jp.xWaveRng[0]//4, 3*self.jp.yObjeRng[0]//4), 
+                             0,  4, (0, 0, 255), 8, cv.LINE_AA)
+
+            tmp = cv.arrowedLine(tmp,  
+                    (self.jp.xWaveRng[0]//4, 0                  ), 
+                    (self.jp.xWaveRng[0]//4, self.jp.yObjeRng[0]), 
+                    (0, 0, 255), 
+                    thickness=8)
 
 
 
