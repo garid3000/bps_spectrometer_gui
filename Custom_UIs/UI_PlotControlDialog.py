@@ -21,6 +21,8 @@ from PySide6.QtWidgets import (
     QFrame,
     QLabel,
     QLineEdit,
+    QSizePolicy,
+    QSpacerItem,
 )
 
 
@@ -28,7 +30,7 @@ class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
             Dialog.setObjectName("Dialog")
-        Dialog.resize(281, 417)
+        Dialog.resize(281, 541)
         self.formLayout = QFormLayout(Dialog)
         self.formLayout.setObjectName("formLayout")
         self._label_5 = QLabel(Dialog)
@@ -163,7 +165,52 @@ class Ui_Dialog(object):
             QDialogButtonBox.Cancel | QDialogButtonBox.Ok | QDialogButtonBox.Reset
         )
 
-        self.formLayout.setWidget(16, QFormLayout.SpanningRole, self.btn_box)
+        self.formLayout.setWidget(20, QFormLayout.SpanningRole, self.btn_box)
+
+        self._label_11 = QLabel(Dialog)
+        self._label_11.setObjectName("_label_11")
+
+        self.formLayout.setWidget(16, QFormLayout.LabelRole, self._label_11)
+
+        self._label_12 = QLabel(Dialog)
+        self._label_12.setObjectName("_label_12")
+
+        self.formLayout.setWidget(17, QFormLayout.LabelRole, self._label_12)
+
+        self.sb_fig_size_x = QDoubleSpinBox(Dialog)
+        self.sb_fig_size_x.setObjectName("sb_fig_size_x")
+        self.sb_fig_size_x.setValue(6.400000000000000)
+
+        self.formLayout.setWidget(16, QFormLayout.FieldRole, self.sb_fig_size_x)
+
+        self.sb_fig_size_y = QDoubleSpinBox(Dialog)
+        self.sb_fig_size_y.setObjectName("sb_fig_size_y")
+        self.sb_fig_size_y.setValue(4.800000000000000)
+
+        self.formLayout.setWidget(17, QFormLayout.FieldRole, self.sb_fig_size_y)
+
+        self._label = QLabel(Dialog)
+        self._label.setObjectName("_label")
+
+        self.formLayout.setWidget(15, QFormLayout.SpanningRole, self._label)
+
+        self._label_13 = QLabel(Dialog)
+        self._label_13.setObjectName("_label_13")
+
+        self.formLayout.setWidget(18, QFormLayout.LabelRole, self._label_13)
+
+        self.sb_fig_dpi = QDoubleSpinBox(Dialog)
+        self.sb_fig_dpi.setObjectName("sb_fig_dpi")
+        self.sb_fig_dpi.setMaximum(500.000000000000000)
+        self.sb_fig_dpi.setValue(100.000000000000000)
+
+        self.formLayout.setWidget(18, QFormLayout.FieldRole, self.sb_fig_dpi)
+
+        self.verticalSpacer = QSpacerItem(
+            20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
+        )
+
+        self.formLayout.setItem(19, QFormLayout.LabelRole, self.verticalSpacer)
 
         self.retranslateUi(Dialog)
         self.btn_box.accepted.connect(Dialog.accept)
@@ -198,5 +245,17 @@ class Ui_Dialog(object):
         self.cb_grid.setText(QCoreApplication.translate("Dialog", "Grid Lines", None))
         self.cb_legend.setText(QCoreApplication.translate("Dialog", "Legend", None))
         self._label_1.setText(QCoreApplication.translate("Dialog", "General:", None))
+        self._label_11.setText(
+            QCoreApplication.translate("Dialog", "Output Figure x size", None)
+        )
+        self._label_12.setText(
+            QCoreApplication.translate("Dialog", "Output Figure y size", None)
+        )
+        self._label.setText(
+            QCoreApplication.translate("Dialog", "Plot / figure size", None)
+        )
+        self._label_13.setText(
+            QCoreApplication.translate("Dialog", "Output Figure DPI", None)
+        )
 
     # retranslateUi

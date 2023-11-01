@@ -131,6 +131,9 @@ class TheMainWindow(QMainWindow):
         self.raw_pcon_dialog.ui.sb_x_range_max.setValue(900)
         self.raw_pcon_dialog.ui.sb_y_range_min.setValue(0)
         self.raw_pcon_dialog.ui.sb_y_range_max.setValue(1024)
+        self.raw_pcon_dialog.ui.sb_fig_size_x.setValue(6.4)
+        self.raw_pcon_dialog.ui.sb_fig_size_y.setValue(4.8)
+        self.raw_pcon_dialog.ui.sb_fig_dpi.setValue(100)
 
         self.ref_pcon_dialog.ui.le_title.setText("Reflectance")
         self.ref_pcon_dialog.ui.le_x_label.setText("Wavelength (nm)")
@@ -139,7 +142,9 @@ class TheMainWindow(QMainWindow):
         self.ref_pcon_dialog.ui.sb_x_range_max.setValue(900)
         self.ref_pcon_dialog.ui.sb_y_range_min.setValue(0)
         self.ref_pcon_dialog.ui.sb_y_range_max.setValue(2)
-
+        self.ref_pcon_dialog.ui.sb_fig_size_x.setValue(6.4)
+        self.ref_pcon_dialog.ui.sb_fig_size_y.setValue(4.8)
+        self.ref_pcon_dialog.ui.sb_fig_dpi.setValue(100)
         
 
     def toggle_filetype_visiblity(self, a: int) -> None:
@@ -334,6 +339,12 @@ class TheMainWindow(QMainWindow):
         ax.set_xlabel(self.raw_pcon_dialog.ui.le_x_label.text())
         ax.set_ylabel(self.raw_pcon_dialog.ui.le_y_label.text())
 
+        fig.set_size_inches(
+            w=self.raw_pcon_dialog.ui.sb_fig_size_x.value(),
+            h=self.raw_pcon_dialog.ui.sb_fig_size_y.value(),
+        )
+        fig.set_dpi(self.raw_pcon_dialog.ui.sb_fig_dpi.value())
+
         fig.canvas.draw()
         img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8) # type: ignore
         img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
@@ -360,6 +371,11 @@ class TheMainWindow(QMainWindow):
         ax.set_xlabel(self.ref_pcon_dialog.ui.le_x_label.text())
         ax.set_ylabel(self.ref_pcon_dialog.ui.le_y_label.text())
 
+        fig.set_size_inches(
+            w=self.ref_pcon_dialog.ui.sb_fig_size_x.value(),
+            h=self.ref_pcon_dialog.ui.sb_fig_size_y.value(),
+        )
+        fig.set_dpi(self.ref_pcon_dialog.ui.sb_fig_dpi.value())
 
         fig.canvas.draw()
         img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8) # type: ignore
