@@ -1,7 +1,9 @@
 import os
 import logging
+import subprocess
 #from os.path import isfile
 #import tifffile as tf
+import platform
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
@@ -17,6 +19,9 @@ from Custom_Libs.Lib_DataDirTree         import DataDirTree
 from Custom_Widgets.Lib_ExportTypeDialog import ExportTypeDialog
 from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import JpegProcessor
 
+
+system_str = platform.system()
+
 logging.basicConfig(
     filename="/tmp/app.log",  
     format="%(asctime)s %(levelname)-8s %(message)s",
@@ -25,6 +30,24 @@ logging.basicConfig(
     # encoding="utf-8",
     # datefmt='%Y-%m-%d %H:%M:%S'
 )
+
+def open_a_file(filepath: str) -> None:
+    try:
+        if system_str == "Windows":                  # Windows
+            os.startfile(filepath)                        # type: ignore
+        elif system_str == "Darwin":                 # macOS
+            subprocess.Popen(
+                ("open ",  filepath),                     # shell=True,
+                stdin=None, stdout=None, stderr=None, close_fds=True)
+        elif system_str == "Linux":                  # linux variants
+            subprocess.Popen(
+                ("xdg-open", os.path.abspath(filepath)),  # hshell=True,
+                stdin=None, stdout=None, stderr=None, close_fds=True)
+        return None
+    except Exception as e:
+        print(e)
+        return None
+
 
 
 class FileSystemModel(QFileSystemModel): 
@@ -94,6 +117,7 @@ class TheMainWindow(QMainWindow):
         QShortcut(QKeySequence("Return"),    self).activated.connect(self.short_cut_goto_selected_child_dir)
         QShortcut(QKeySequence("Space"),     self).activated.connect(self.short_cut_preview_raw_jpeg)
         QShortcut(QKeySequence("Ctrl+E"),    self).activated.connect(self.short_cut_export_raw_jpeg)
+        QShortcut(QKeySequence("Ctrl+O"),    self).activated.connect(self.short_cut_open_at_point)
         QShortcut(QKeySequence("Ctrl+Shift+E"),    self).activated.connect(self.ex_type_dialog.exec)
 
 
@@ -112,6 +136,12 @@ class TheMainWindow(QMainWindow):
             self.ui.tv_dir.setRootIndex(sel_m_index)
         else:
             pass                                       # need to update jpeg_path here 
+
+    def short_cut_open_at_point(self):
+        sel_m_index = self.ui.tv_dir.currentIndex()
+        tmppath = self.fsmodel.filePath(sel_m_index)
+        open_a_file(tmppath)
+
 
     def short_cut_preview_raw_jpeg(self) -> bool:
         sel_m_index = self.ui.tv_dir.currentIndex()
