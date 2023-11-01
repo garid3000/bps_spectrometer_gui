@@ -64,7 +64,8 @@ class TheMainWindow(QMainWindow):
 
         # ----------------------------------------------------------------------------------
         self.fsmodel = QFileSystemModel()
-        self.fsmodel.setRootPath(QDir.homePath()) # TODO
+        #self.fsmodel.setRootPath(QDir.homePath()) # TODO
+        self.fsmodel.setRootPath("/tmp/") # TODO
         self.ui.tv_dir.setModel(self.fsmodel)
         #self.ui.tv_dir.setAnimated()
         self.ui.tv_dir.setIndentation(10)
@@ -78,15 +79,22 @@ class TheMainWindow(QMainWindow):
 
     #@QtCore.pyqtSlot(QTreeWidgetItem, int)
     def call_tv_onItemClicked(self, v):
-        #print(type(v), v)
-        #tmp = self.fsmodel.data(v)
-        self.jpeg_path = self.fsmodel.filePath(v)
-        #self.ddtree.set_ddir = self.fsmodel.rootPath(v)
-        self.dir_path = os.path.dirname(self.jpeg_path)
-        print(self.dir_path, self.jpeg_path)
-        self.ddtree.set_ddir(self.dir_path)
-        self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
-        self.ui.limg_webcam.show_np_img(cv.imread(self.ddtree.webcamFP).astype(np.uint8))
+        tmp  = self.fsmodel.filePath(v)
+        if os.path.isdir(tmp):
+            print(tmp)
+            #self.fsmodel.setRootPath(tmp)
+            self.ui.tv_dir.setRootIndex(v)
+            print(self.fsmodel.rootPath())
+        else:
+            #print(type(v), v)
+            #tmp = self.fsmodel.data(v)
+            self.jpeg_path = self.fsmodel.filePath(v)
+            #self.ddtree.set_ddir = self.fsmodel.rootPath(v)
+            self.dir_path = os.path.dirname(self.jpeg_path)
+            print(self.dir_path, self.jpeg_path)
+            self.ddtree.set_ddir(self.dir_path)
+            self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
+            self.ui.limg_webcam.show_np_img(cv.imread(self.ddtree.webcamFP).astype(np.uint8))
 
 
         
