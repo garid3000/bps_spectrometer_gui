@@ -17,7 +17,7 @@ from PySide6.QtCore    import QModelIndex,  QDir, Qt
 
 from Custom_UIs.UI_Mainwindow            import Ui_MainWindow
 from Custom_Libs.Lib_DataDirTree         import DataDirTree
-from Custom_Widgets.Lib_ExportTypeDialog import ExportTypeDialog
+#from Custom_Widgets.Lib_ExportTypeDialog import ExportTypeDialog
 from Custom_Widgets.Lib_PlotConfigDialog import PlotConfigDialog
 from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import JpegProcessor
 
@@ -78,7 +78,7 @@ class TheMainWindow(QMainWindow):
     ddtree          : DataDirTree       = DataDirTree()
     jp              : JpegProcessor     = JpegProcessor()
     jpeg_path       : str
-    ex_type_dialog  : ExportTypeDialog # cant initialize Q widget an instance here.
+    #ex_type_dialog  : ExportTypeDialog # cant initialize Q widget an instance here.
     raw_pcon_dialog : PlotConfigDialog # cant initialize Q widget an instance here.
     ref_pcon_dialog : PlotConfigDialog # cant initialize Q widget an instance here.
 
@@ -89,7 +89,7 @@ class TheMainWindow(QMainWindow):
         self.ui.setupUi(self)
 
         # dialogs
-        self.ex_type_dialog  = ExportTypeDialog()
+        #self.ex_type_dialog  = ExportTypeDialog()
         self.raw_pcon_dialog = PlotConfigDialog()
         self.ref_pcon_dialog = PlotConfigDialog()
         self.set_def_val_raw_ref_dialog()
@@ -105,7 +105,7 @@ class TheMainWindow(QMainWindow):
         #self.ref_pcon_dialog.ui.btn_box. #accepted.connect(self.call_btnRefresh)
 
         self.ui.pb_refresh.clicked.connect(self.call_btnRefresh)
-        self.ui.pb_conf_export.clicked.connect(self.ex_type_dialog.exec)
+        #self.ui.pb_conf_export.clicked.connect(self.ex_type_dialog.exec)
         self.ui.pb_export.clicked.connect(self.call_export_data)
 
 
@@ -170,12 +170,12 @@ class TheMainWindow(QMainWindow):
         QShortcut(QKeySequence("Ctrl+P"),       self).activated.connect(self.ref_pcon_dialog.exec)
         QShortcut(QKeySequence("Ctrl+Shift+P"), self).activated.connect(self.raw_pcon_dialog.exec)
 
-        QShortcut(QKeySequence("Alt+1"),        self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(0))
-        QShortcut(QKeySequence("Alt+2"),        self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(1))
-        QShortcut(QKeySequence("Alt+3"),        self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(2))
-        QShortcut(QKeySequence("Ctrl+1"),       self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(0))
-        QShortcut(QKeySequence("Ctrl+2"),       self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(1))
-        QShortcut(QKeySequence("Ctrl+3"),       self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(2))
+        #QShortcut(QKeySequence("Alt+1"),        self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(0))
+        #QShortcut(QKeySequence("Alt+2"),        self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(1))
+        #QShortcut(QKeySequence("Alt+3"),        self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(2))
+        #QShortcut(QKeySequence("Ctrl+1"),       self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(0))
+        #QShortcut(QKeySequence("Ctrl+2"),       self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(1))
+        #QShortcut(QKeySequence("Ctrl+3"),       self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(2))
 
     def init_actions(self) -> None:
         self.ui.action_help.triggered.connect(self.open_help_page)
@@ -190,9 +190,9 @@ class TheMainWindow(QMainWindow):
         self.ui.action_cur_jpeg_preview.triggered.connect(self.short_cut_preview_raw_jpeg)
         self.ui.action_cur_file_open.triggered.connect(self.short_cut_open_at_point)
 
-        self.ui.action_tabs_show_tab1.triggered.connect(lambda: self.ui.tabWidget.setCurrentIndex(0))
-        self.ui.action_tabs_show_tab2.triggered.connect(lambda: self.ui.tabWidget.setCurrentIndex(1))
-        self.ui.action_tabs_show_tab3.triggered.connect(lambda: self.ui.tabWidget.setCurrentIndex(2))
+        #self.ui.action_tabs_show_tab1.triggered.connect(lambda: self.ui.tabWidget.setCurrentIndex(0))
+        #self.ui.action_tabs_show_tab2.triggered.connect(lambda: self.ui.tabWidget.setCurrentIndex(1))
+        #self.ui.action_tabs_show_tab3.triggered.connect(lambda: self.ui.tabWidget.setCurrentIndex(2))
 
     def open_help_page(self):
         open_a_file("/home/garid/Projects/psm/bps_spectrometer_gui/docs/help.html")
@@ -281,7 +281,7 @@ class TheMainWindow(QMainWindow):
         #= visuals ====================================================================
         self.ui.limg_bayer_full.show_np_img(
             arr=(self.jp.rgb // 4).astype(np.uint8),
-            outwidth = 600
+            outwidth = 480
         )
 
         self.ui.limg_bayer_gray.show_np_img(
@@ -292,7 +292,7 @@ class TheMainWindow(QMainWindow):
                               : 
                               ] // 4
                  ).astype(np.uint8),
-            outwidth = 600
+            outwidth = 480
         )
         
 
@@ -304,7 +304,7 @@ class TheMainWindow(QMainWindow):
                               : 
                               ]// 4
                  ).astype(np.uint8),
-            outwidth = 600
+            outwidth = 480
         )
         #= visuals ====================================================================
         fig: Figure
@@ -348,7 +348,7 @@ class TheMainWindow(QMainWindow):
         fig.canvas.draw()
         img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8) # type: ignore
         img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
-        self.ui.limg_raw_spectrum.show_np_img( arr = img, outwidth= 640)
+        self.ui.limg_raw_spectrum.show_np_img( arr = img, outwidth= 480)
 
         #= visuals ====================================================================
         fig, ax = plt.subplots()
@@ -380,35 +380,36 @@ class TheMainWindow(QMainWindow):
         fig.canvas.draw()
         img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8) # type: ignore
         img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
-        self.ui.limg_ref_spectrum.show_np_img(arr = img, outwidth= 640)
+        self.ui.limg_ref_spectrum.show_np_img(arr = img, outwidth= 480)
 
     def call_export_data(self) -> None:
         """Exports"""
         os.makedirs(os.path.join(self.ddtree.ddir, "output") , exist_ok=True)
-        if self.ex_type_dialog.ui.cb_numerical.isChecked():
-            # saving cropping regions
-            # ymdhmr = datetime.now().strftime("%Y%m%d_%H%M%S")
-            # json_path = self.jpeg_path.replace('.jpeg', f'_crop_region{ymdhmr}.json')
-            # self.jp.save_cropping_regions(json_path)
+        #if self.ex_type_dialog.ui.cb_numerical.isChecked():
+        #    # saving cropping regions
+        #    # ymdhmr = datetime.now().strftime("%Y%m%d_%H%M%S")
+        #    # json_path = self.jpeg_path.replace('.jpeg', f'_crop_region{ymdhmr}.json')
+        #    # self.jp.save_cropping_regions(json_path)
 
-            # saving actual export tabels
-            csv_path = os.path.join(
-                os.path.dirname(self.jpeg_path), 
-                "output", 
-                os.path.basename(self.jpeg_path).replace(".jpeg", "_output.csv")
-            )
-            self.jp.get_table(csvfname=csv_path)
-        if self.ex_type_dialog.ui.cb_tif_1layer.isChecked():
-            tmp_path = os.path.join(
-                os.path.dirname(self.jpeg_path), "output", 
-                os.path.basename(self.jpeg_path).replace(".jpeg", ".tiff")
-            )
-            cv.imwrite(tmp_path, self.jp.data)
+        #    # saving actual export tabels
+        #    csv_path = os.path.join(
+        #        os.path.dirname(self.jpeg_path), 
+        #        "output", 
+        #        os.path.basename(self.jpeg_path).replace(".jpeg", "_output.csv")
+        #    )
+        #    self.jp.get_table(csvfname=csv_path)
+        #if self.ex_type_dialog.ui.cb_tif_1layer.isChecked():
+        #    tmp_path = os.path.join(
+        #        os.path.dirname(self.jpeg_path), "output", 
+        #        os.path.basename(self.jpeg_path).replace(".jpeg", ".tiff")
+        #    )
+        #    cv.imwrite(tmp_path, self.jp.data)
 
-        if self.ex_type_dialog.ui.cb_npy_1layer.isChecked():
-            tmp_path = os.path.join(
-                os.path.dirname(self.jpeg_path), "output", 
-                os.path.basename(self.jpeg_path).replace(".jpeg", ".npy")
-            )
-            np.save(tmp_path, self.jp.data)
+        #if self.ex_type_dialog.ui.cb_npy_1layer.isChecked():
+        #    tmp_path = os.path.join(
+        #        os.path.dirname(self.jpeg_path), "output", 
+        #        os.path.basename(self.jpeg_path).replace(".jpeg", ".npy")
+        #    )
+        #    np.save(tmp_path, self.jp.data)
 
+        #if self.
