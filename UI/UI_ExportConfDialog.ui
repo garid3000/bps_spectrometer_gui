@@ -33,14 +33,14 @@
       <item>
        <widget class="QCheckBox" name="cb_plot_raw">
         <property name="text">
-         <string>Plot Raw (PNG)</string>
+         <string>Plot Figure Raw (PNG)</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QCheckBox" name="cb_plo_refl">
         <property name="text">
-         <string>Plot Reflectance (PNG)</string>
+         <string>Plot Figure Reflectance (PNG)</string>
         </property>
        </widget>
       </item>
@@ -59,8 +59,17 @@
       </item>
       <item>
        <widget class="QCheckBox" name="cb_numerical">
+        <property name="whatsThis">
+         <string extracomment="Exports Numerical Values of Spectrum in a CSV file"/>
+        </property>
         <property name="text">
-         <string>Numerical Data (CSV)</string>
+         <string>Numerical Spectrum Data (CSV)</string>
+        </property>
+        <property name="checked">
+         <bool>true</bool>
+        </property>
+        <property name="tristate">
+         <bool>false</bool>
         </property>
        </widget>
       </item>

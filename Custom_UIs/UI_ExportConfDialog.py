@@ -60,6 +60,8 @@ class Ui_Dialog(object):
 
         self.cb_numerical = QCheckBox(self.groupBox_2)
         self.cb_numerical.setObjectName("cb_numerical")
+        self.cb_numerical.setChecked(True)
+        self.cb_numerical.setTristate(False)
 
         self.verticalLayout_2.addWidget(self.cb_numerical)
 
@@ -133,13 +135,16 @@ class Ui_Dialog(object):
             QCoreApplication.translate("Dialog", "Spectrum Export", None)
         )
         self.cb_plot_raw.setText(
-            QCoreApplication.translate("Dialog", "Plot Raw (PNG)", None)
+            QCoreApplication.translate("Dialog", "Plot Figure Raw (PNG)", None)
         )
         self.cb_plo_refl.setText(
-            QCoreApplication.translate("Dialog", "Plot Reflectance (PNG)", None)
+            QCoreApplication.translate("Dialog", "Plot Figure Reflectance (PNG)", None)
         )
+        # if QT_CONFIG(whatsthis)
+        self.cb_numerical.setWhatsThis("")
+        # endif // QT_CONFIG(whatsthis)
         self.cb_numerical.setText(
-            QCoreApplication.translate("Dialog", "Numerical Data (CSV)", None)
+            QCoreApplication.translate("Dialog", "Numerical Spectrum Data (CSV)", None)
         )
         self.groupBox.setTitle(
             QCoreApplication.translate("Dialog", "Raw Bayer Export", None)

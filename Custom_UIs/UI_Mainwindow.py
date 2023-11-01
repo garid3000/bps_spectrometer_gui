@@ -116,10 +116,10 @@ class Ui_MainWindow(object):
 
         self.gridLayout_4.addWidget(self.pb_export, 1, 2, 1, 1)
 
-        self.pushButton = QPushButton(self.gp_spectral_panel)
-        self.pushButton.setObjectName("pushButton")
+        self.pb_conf_export = QPushButton(self.gp_spectral_panel)
+        self.pb_conf_export.setObjectName("pb_conf_export")
 
-        self.gridLayout_4.addWidget(self.pushButton, 1, 1, 1, 1)
+        self.gridLayout_4.addWidget(self.pb_conf_export, 1, 1, 1, 1)
 
         self.horizontalSpacer = QSpacerItem(
             40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
@@ -401,7 +401,7 @@ class Ui_MainWindow(object):
             QCoreApplication.translate("MainWindow", "Spectral data Panel", None)
         )
         self.pb_export.setText(QCoreApplication.translate("MainWindow", "Export", None))
-        self.pushButton.setText(
+        self.pb_conf_export.setText(
             QCoreApplication.translate("MainWindow", "Configure Export", None)
         )
         self.limg_bayer_full.setText(

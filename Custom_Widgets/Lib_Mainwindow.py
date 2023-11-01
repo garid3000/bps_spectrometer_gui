@@ -15,6 +15,7 @@ from PySide6.QtWidgets import  (
 # , QtCore
 from Custom_UIs.UI_Mainwindow import Ui_MainWindow
 from Custom_Libs.Lib_DataDirTree import DataDirTree
+from Custom_Widgets.Lib_ExportTypeDialog import ExportTypeDialog
 from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import JpegProcessor
 
 logging.basicConfig(
@@ -33,20 +34,26 @@ dbg_ddir: str = os.path.join(    # this contains selected path string
 
 
 class TheMainWindow(QMainWindow):
-    dir_path : str        = dbg_ddir
-    ddtree   :DataDirTree = DataDirTree()
-    jp       :JpegProcessor = JpegProcessor()
+    dir_path       : str             = dbg_ddir
+    ddtree         :DataDirTree      = DataDirTree()
+    jp             :JpegProcessor    = JpegProcessor()
+    ex_type_dialog :ExportTypeDialog # = ExportTypeDialog() # cannot initialize here due to lib.
+
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super(TheMainWindow, self).__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+
+        self.ex_type_dialog   = ExportTypeDialog()
+
         self.dir_path = dbg_ddir
         self.ui.pb_data_dir.clicked.connect(self.call_btnDirSelect)
         self.ui.actionOpen_Directory.triggered.connect(self.call_btnDirSelect)
         self.ui.pb_refresh.clicked.connect(self.call_btnRefresh)
         self.ui.cob_jpeg_selector.textActivated.connect(self.refresh_plots)
+        self.ui.pb_conf_export.clicked.connect(self.ex_type_dialog.exec)
 
         
     def call_btnDirSelect(self) -> None:
