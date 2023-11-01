@@ -34,14 +34,13 @@ logging.basicConfig(
 def open_a_file(filepath: str) -> None:
     try:
         if system_str == "Windows":                  # Windows
-            os.startfile(filepath)                        # type: ignore
-        elif system_str == "Darwin":                 # macOS
-            subprocess.Popen(
-                ("open ",  filepath),                     # shell=True,
+            os.startfile(filepath)                   # type: ignore
+        elif system_str == "Darwin":                 # BSDs and macos
+            subprocess.Popen( ("open ",  filepath),  # shell=True,
                 stdin=None, stdout=None, stderr=None, close_fds=True)
         elif system_str == "Linux":                  # linux variants
             subprocess.Popen(
-                ("xdg-open", os.path.abspath(filepath)),  # hshell=True,
+                ("xdg-open", os.path.abspath(filepath)), # hshell=True,
                 stdin=None, stdout=None, stderr=None, close_fds=True)
         return None
     except Exception as e:
