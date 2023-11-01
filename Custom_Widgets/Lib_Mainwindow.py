@@ -265,8 +265,65 @@ class TheMainWindow(QMainWindow):
         self.jp.fancy_reflectance()
 
     def update_visual_1_rawbayer_img_section(self) -> None:
+        tmp = (self.jp.rgb // 4).astype(np.uint8)
+        
+        tmp = cv.rectangle(
+                tmp, 
+                (self.jp.xWaveRng[0], self.jp.yGrayRng[0]),
+                (self.jp.xWaveRng[1], self.jp.yGrayRng[1]),
+                (255, 0, 0),
+                thickness=8)
+
+        tmp = cv.rectangle(
+                tmp, 
+                (self.jp.xLfBgRng[0], self.jp.yGrayRng[0]),
+                (self.jp.xLfBgRng[1], self.jp.yGrayRng[1]),
+                (255, 0, 0),
+                thickness=8)
+
+        tmp = cv.rectangle(
+                tmp, 
+                (self.jp.xRiBgRng[0], self.jp.yGrayRng[0]),
+                (self.jp.xRiBgRng[1], self.jp.yGrayRng[1]),
+                (255, 0, 0),
+                thickness=8)
+
+        #tmp = cv.arrowedLine(
+        #        tmp, 
+        #        (0, ), 
+        #        end_point, 
+        #        color, 
+        #        thickness)
+
+
+
+
+
+        tmp = cv.rectangle(
+                tmp, 
+                (self.jp.xWaveRng[0], self.jp.yObjeRng[0]),
+                (self.jp.xWaveRng[1], self.jp.yObjeRng[1]),
+                (0, 0, 255),
+                thickness=8)
+
+        tmp = cv.rectangle(
+                tmp, 
+                (self.jp.xLfBgRng[0], self.jp.yObjeRng[0]),
+                (self.jp.xLfBgRng[1], self.jp.yObjeRng[1]),
+                (0, 0, 255),
+                thickness=8)
+
+        tmp = cv.rectangle(
+                tmp, 
+                (self.jp.xRiBgRng[0], self.jp.yObjeRng[0]),
+                (self.jp.xRiBgRng[1], self.jp.yObjeRng[1]),
+                (0, 0, 255),
+                thickness=8)
+
+
+
         self.ui.limg_bayer_full.show_np_img(
-            arr=(self.jp.rgb // 4).astype(np.uint8),
+            arr=tmp,
             outwidth = 480
         )
 
