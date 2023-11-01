@@ -1,23 +1,24 @@
+# Base libraries
 import os
 import logging
 import subprocess
-#from os.path import isfile
-#import tifffile as tf
 import platform
+
+# Numerical/Visual packages
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.axes   import Axes
 import cv2 as cv
 
-from PySide6.QtWidgets import QDialogButtonBox, QMainWindow,  QWidget,   QFileSystemModel
-#, QDialogButtonBox
+# GUI packages
+from PySide6.QtWidgets import QDialogButtonBox, QMainWindow, QWidget, QFileSystemModel
 from PySide6.QtGui     import QKeySequence, QShortcut, QColor
 from PySide6.QtCore    import QModelIndex,  QDir, Qt
 
+# Custom packages
 from Custom_UIs.UI_Mainwindow            import Ui_MainWindow
 from Custom_Libs.Lib_DataDirTree         import DataDirTree
-#from Custom_Widgets.Lib_ExportTypeDialog import ExportTypeDialog
 from Custom_Widgets.Lib_PlotConfigDialog import PlotConfigDialog
 from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import JpegProcessor
 
@@ -88,8 +89,6 @@ class TheMainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        # dialogs
-        #self.ex_type_dialog  = ExportTypeDialog()
         self.raw_pcon_dialog = PlotConfigDialog()
         self.ref_pcon_dialog = PlotConfigDialog()
         self.set_def_val_raw_ref_dialog()
@@ -99,13 +98,8 @@ class TheMainWindow(QMainWindow):
         self.ref_pcon_dialog.ui.btn_box.accepted.connect(self.call_update_geometry_vals)
         self.raw_pcon_dialog.ui.btn_box.button(QDialogButtonBox.StandardButton.Reset).clicked.connect(self.set_def_val_raw_ref_dialog)
         self.ref_pcon_dialog.ui.btn_box.button(QDialogButtonBox.StandardButton.Reset).clicked.connect(self.set_def_val_raw_ref_dialog)
-        # self.raw_pcon_dialog.ui.btn_box.rejected.connect(self.test)
-        # self.ref_pcon_dialog.ui.btn_box.rejected.connect(self.test)
-        # button( QDialogButtonBox.Reset )
-        #self.ref_pcon_dialog.ui.btn_box. #accepted.connect(self.call_btnRefresh)
 
         self.ui.pb_refresh.clicked.connect(self.call_update_geometry_vals)
-        #self.ui.pb_conf_export.clicked.connect(self.ex_type_dialog.exec)
         self.ui.pb_export.clicked.connect(self.call_export_data)
 
 
@@ -170,12 +164,6 @@ class TheMainWindow(QMainWindow):
         QShortcut(QKeySequence("Ctrl+P"),       self).activated.connect(self.ref_pcon_dialog.exec)
         QShortcut(QKeySequence("Ctrl+Shift+P"), self).activated.connect(self.raw_pcon_dialog.exec)
 
-        #QShortcut(QKeySequence("Alt+1"),        self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(0))
-        #QShortcut(QKeySequence("Alt+2"),        self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(1))
-        #QShortcut(QKeySequence("Alt+3"),        self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(2))
-        #QShortcut(QKeySequence("Ctrl+1"),       self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(0))
-        #QShortcut(QKeySequence("Ctrl+2"),       self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(1))
-        #QShortcut(QKeySequence("Ctrl+3"),       self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(2))
 
     def init_actions(self) -> None:
         self.ui.action_help.triggered.connect(self.open_help_page)
@@ -190,9 +178,6 @@ class TheMainWindow(QMainWindow):
         self.ui.action_cur_jpeg_preview.triggered.connect(self.short_cut_preview_raw_jpeg)
         self.ui.action_cur_file_open.triggered.connect(self.short_cut_open_at_point)
 
-        #self.ui.action_tabs_show_tab1.triggered.connect(lambda: self.ui.tabWidget.setCurrentIndex(0))
-        #self.ui.action_tabs_show_tab2.triggered.connect(lambda: self.ui.tabWidget.setCurrentIndex(1))
-        #self.ui.action_tabs_show_tab3.triggered.connect(lambda: self.ui.tabWidget.setCurrentIndex(2))
 
     def open_help_page(self):
         open_a_file("/home/garid/Projects/psm/bps_spectrometer_gui/docs/help.html")
@@ -418,5 +403,3 @@ class TheMainWindow(QMainWindow):
         #        os.path.basename(self.jpeg_path).replace(".jpeg", ".npy")
         #    )
         #    np.save(tmp_path, self.jp.data)
-
-        #if self.
