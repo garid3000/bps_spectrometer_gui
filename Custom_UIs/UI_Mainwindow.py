@@ -38,6 +38,7 @@ from PySide6.QtWidgets import (
     QStatusBar,
     QTabWidget,
     QTextBrowser,
+    QToolButton,
     QTreeView,
     QVBoxLayout,
     QWidget,
@@ -95,8 +96,8 @@ class Ui_MainWindow(object):
         self.action_tabs_show_tab3.setObjectName("action_tabs_show_tab3")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.gridLayout = QGridLayout(self.centralwidget)
-        self.gridLayout.setObjectName("gridLayout")
+        self.verticalLayout_3 = QVBoxLayout(self.centralwidget)
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.splitter = QSplitter(self.centralwidget)
         self.splitter.setObjectName("splitter")
         self.splitter.setOrientation(Qt.Orientation.Horizontal)
@@ -299,20 +300,20 @@ class Ui_MainWindow(object):
         self.tab_1.setObjectName("tab_1")
         self.gridLayout_6 = QGridLayout(self.tab_1)
         self.gridLayout_6.setObjectName("gridLayout_6")
-        self.limg_bayer_obje = QLabelClick(self.tab_1)
-        self.limg_bayer_obje.setObjectName("limg_bayer_obje")
+        self.limg_bayer_full = QLabelClick(self.tab_1)
+        self.limg_bayer_full.setObjectName("limg_bayer_full")
 
-        self.gridLayout_6.addWidget(self.limg_bayer_obje, 2, 0, 1, 1)
+        self.gridLayout_6.addWidget(self.limg_bayer_full, 0, 0, 1, 1)
 
         self.limg_bayer_gray = QLabelClick(self.tab_1)
         self.limg_bayer_gray.setObjectName("limg_bayer_gray")
 
         self.gridLayout_6.addWidget(self.limg_bayer_gray, 1, 0, 1, 1)
 
-        self.limg_bayer_full = QLabelClick(self.tab_1)
-        self.limg_bayer_full.setObjectName("limg_bayer_full")
+        self.limg_bayer_obje = QLabelClick(self.tab_1)
+        self.limg_bayer_obje.setObjectName("limg_bayer_obje")
 
-        self.gridLayout_6.addWidget(self.limg_bayer_full, 0, 0, 1, 1)
+        self.gridLayout_6.addWidget(self.limg_bayer_obje, 2, 0, 1, 1)
 
         self.verticalSpacer = QSpacerItem(
             20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
@@ -331,6 +332,11 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_4.addWidget(self.limg_raw_spectrum)
 
+        self.tbtn_raw_spectrum_config = QToolButton(self.tab_2)
+        self.tbtn_raw_spectrum_config.setObjectName("tbtn_raw_spectrum_config")
+
+        self.verticalLayout_4.addWidget(self.tbtn_raw_spectrum_config)
+
         self.tabWidget.addTab(self.tab_2, "")
         self.tab_3 = QWidget()
         self.tab_3.setObjectName("tab_3")
@@ -341,13 +347,18 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_5.addWidget(self.limg_refl_spectrum)
 
+        self.tbtn_relf_spectrum_config = QToolButton(self.tab_3)
+        self.tbtn_relf_spectrum_config.setObjectName("tbtn_relf_spectrum_config")
+
+        self.verticalLayout_5.addWidget(self.tbtn_relf_spectrum_config)
+
         self.tabWidget.addTab(self.tab_3, "")
 
         self.gridLayout_4.addWidget(self.tabWidget, 0, 0, 1, 3)
 
         self.splitter.addWidget(self.gp_spectral_panel)
 
-        self.gridLayout.addWidget(self.splitter, 0, 0, 1, 1)
+        self.verticalLayout_3.addWidget(self.splitter)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
@@ -535,13 +546,13 @@ class Ui_MainWindow(object):
         self.pb_export.setText(
             QCoreApplication.translate("MainWindow", "Export (Ctrl+E)", None)
         )
-        self.limg_bayer_obje.setText(
+        self.limg_bayer_full.setText(
             QCoreApplication.translate("MainWindow", "....", None)
         )
         self.limg_bayer_gray.setText(
             QCoreApplication.translate("MainWindow", "....", None)
         )
-        self.limg_bayer_full.setText(
+        self.limg_bayer_obje.setText(
             QCoreApplication.translate("MainWindow", "....", None)
         )
         self.tabWidget.setTabText(
@@ -551,12 +562,18 @@ class Ui_MainWindow(object):
         self.limg_raw_spectrum.setText(
             QCoreApplication.translate("MainWindow", "....", None)
         )
+        self.tbtn_raw_spectrum_config.setText(
+            QCoreApplication.translate("MainWindow", "Plot Config (Ctrl+Shift+P)", None)
+        )
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tab_2),
             QCoreApplication.translate("MainWindow", "Spectrum-Raw (Ctrl+2)", None),
         )
         self.limg_refl_spectrum.setText(
             QCoreApplication.translate("MainWindow", "....", None)
+        )
+        self.tbtn_relf_spectrum_config.setText(
+            QCoreApplication.translate("MainWindow", "Plot Config (Ctrl+P)", None)
         )
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tab_3),
