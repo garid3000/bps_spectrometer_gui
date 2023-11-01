@@ -17,6 +17,7 @@ from PySide6.QtCore    import QModelIndex,  QDir, Qt
 from Custom_UIs.UI_Mainwindow            import Ui_MainWindow
 from Custom_Libs.Lib_DataDirTree         import DataDirTree
 from Custom_Widgets.Lib_ExportTypeDialog import ExportTypeDialog
+from Custom_Widgets.Lib_PlotConfigDialog import PlotConfigDialog
 from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import JpegProcessor
 
 
@@ -72,11 +73,13 @@ class FileSystemModel(QFileSystemModel):
 
 
 class TheMainWindow(QMainWindow):
-    dir_path       : str              = QDir.homePath()
-    ddtree         :DataDirTree       = DataDirTree()
-    jp             :JpegProcessor     = JpegProcessor()
-    ex_type_dialog :ExportTypeDialog  # cant initialize an instance here.
-    jpeg_path      : str
+    dir_path        : str              = QDir.homePath()
+    ddtree          : DataDirTree       = DataDirTree()
+    jp              : JpegProcessor     = JpegProcessor()
+    jpeg_path       : str
+    ex_type_dialog  : ExportTypeDialog # cant initialize Q widget an instance here.
+    raw_pcon_dialog : PlotConfigDialog # cant initialize Q widget an instance here.
+    ref_pcon_dialog : PlotConfigDialog # cant initialize Q widget an instance here.
 
 
     def __init__(self, parent: QWidget | None = None) -> None:
@@ -84,7 +87,10 @@ class TheMainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.ex_type_dialog   = ExportTypeDialog()
+        self.ex_type_dialog  = ExportTypeDialog()
+        self.raw_pcon_dialog = PlotConfigDialog()
+        self.ref_pcon_dialog = PlotConfigDialog()
+
         self.ui.pb_refresh.clicked.connect(self.call_btnRefresh)
         self.ui.pb_conf_export.clicked.connect(self.ex_type_dialog.exec)
         self.ui.pb_export.clicked.connect(self.call_export_data)
@@ -123,6 +129,9 @@ class TheMainWindow(QMainWindow):
         QShortcut(QKeySequence("Ctrl+F"),          self).activated.connect(self.ui.cb_ft_filter.toggle)
         QShortcut(QKeySequence("Ctrl+R"),          self).activated.connect(self.call_btnRefresh)
 
+        QShortcut(QKeySequence("Ctrl+P"),          self).activated.connect(self.ref_pcon_dialog.exec)
+        QShortcut(QKeySequence("Ctrl+Shift+P"),    self).activated.connect(self.raw_pcon_dialog.exec)
+
         QShortcut(QKeySequence("Alt+1"),  self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(0))
         QShortcut(QKeySequence("Alt+2"),  self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(1))
         QShortcut(QKeySequence("Alt+3"),  self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(2))
@@ -146,7 +155,8 @@ class TheMainWindow(QMainWindow):
         self.ui.action_tabs_show_tab1.triggered.connect(lambda: self.ui.tabWidget.setCurrentIndex(0))
         self.ui.action_tabs_show_tab2.triggered.connect(lambda: self.ui.tabWidget.setCurrentIndex(1))
         self.ui.action_tabs_show_tab3.triggered.connect(lambda: self.ui.tabWidget.setCurrentIndex(2))
-
+        # QShortcut(QKeySequence("Ctrl+P"),          self).activated.connect(self.ref_pcon_dialog.exec)
+        # QShortcut(QKeySequence("Ctrl+Shift+P"),    self).activated.connect(self.raw_pcon_dialog.exec)
 
         #self.ui.action_about.triggered.connect(self.open_about_page)
 

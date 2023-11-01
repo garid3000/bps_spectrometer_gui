@@ -1,0 +1,200 @@
+# -*- coding: utf-8 -*-
+
+################################################################################
+## Form generated from reading UI file 'UI_PlotControlDialog.ui'
+##
+## Created by: Qt User Interface Compiler version 6.5.2
+##
+## WARNING! All changes made in this file will be lost when recompiling UI file!
+################################################################################
+
+from PySide6.QtCore import (
+    QCoreApplication,
+    QMetaObject,
+    Qt,
+)
+from PySide6.QtWidgets import (
+    QCheckBox,
+    QDialogButtonBox,
+    QDoubleSpinBox,
+    QFormLayout,
+    QFrame,
+    QLabel,
+    QLineEdit,
+    QPushButton,
+)
+
+
+class Ui_Dialog(object):
+    def setupUi(self, Dialog):
+        if not Dialog.objectName():
+            Dialog.setObjectName("Dialog")
+        Dialog.resize(281, 417)
+        self.formLayout = QFormLayout(Dialog)
+        self.formLayout.setObjectName("formLayout")
+        self._label_5 = QLabel(Dialog)
+        self._label_5.setObjectName("_label_5")
+
+        self.formLayout.setWidget(1, QFormLayout.LabelRole, self._label_5)
+
+        self.le_title = QLineEdit(Dialog)
+        self.le_title.setObjectName("le_title")
+
+        self.formLayout.setWidget(1, QFormLayout.FieldRole, self.le_title)
+
+        self._l = QFrame(Dialog)
+        self._l.setObjectName("_l")
+        self._l.setFrameShape(QFrame.Shape.HLine)
+        self._l.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.formLayout.setWidget(4, QFormLayout.SpanningRole, self._l)
+
+        self._label_7 = QLabel(Dialog)
+        self._label_7.setObjectName("_label_7")
+
+        self.formLayout.setWidget(5, QFormLayout.SpanningRole, self._label_7)
+
+        self._label_2 = QLabel(Dialog)
+        self._label_2.setObjectName("_label_2")
+
+        self.formLayout.setWidget(6, QFormLayout.LabelRole, self._label_2)
+
+        self.le_y_label = QLineEdit(Dialog)
+        self.le_y_label.setObjectName("le_y_label")
+
+        self.formLayout.setWidget(6, QFormLayout.FieldRole, self.le_y_label)
+
+        self._label_3 = QLabel(Dialog)
+        self._label_3.setObjectName("_label_3")
+
+        self.formLayout.setWidget(7, QFormLayout.LabelRole, self._label_3)
+
+        self.sb_y_range_max = QDoubleSpinBox(Dialog)
+        self.sb_y_range_max.setObjectName("sb_y_range_max")
+
+        self.formLayout.setWidget(7, QFormLayout.FieldRole, self.sb_y_range_max)
+
+        self._label_4 = QLabel(Dialog)
+        self._label_4.setObjectName("_label_4")
+
+        self.formLayout.setWidget(8, QFormLayout.LabelRole, self._label_4)
+
+        self.sb_y_range_min = QDoubleSpinBox(Dialog)
+        self.sb_y_range_min.setObjectName("sb_y_range_min")
+
+        self.formLayout.setWidget(8, QFormLayout.FieldRole, self.sb_y_range_min)
+
+        self._l_2 = QFrame(Dialog)
+        self._l_2.setObjectName("_l_2")
+        self._l_2.setFrameShape(QFrame.Shape.HLine)
+        self._l_2.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.formLayout.setWidget(9, QFormLayout.SpanningRole, self._l_2)
+
+        self._label_8 = QLabel(Dialog)
+        self._label_8.setObjectName("_label_8")
+
+        self.formLayout.setWidget(10, QFormLayout.SpanningRole, self._label_8)
+
+        self._label_9 = QLabel(Dialog)
+        self._label_9.setObjectName("_label_9")
+
+        self.formLayout.setWidget(11, QFormLayout.LabelRole, self._label_9)
+
+        self.le_x_label = QLineEdit(Dialog)
+        self.le_x_label.setObjectName("le_x_label")
+
+        self.formLayout.setWidget(11, QFormLayout.FieldRole, self.le_x_label)
+
+        self._label_10 = QLabel(Dialog)
+        self._label_10.setObjectName("_label_10")
+
+        self.formLayout.setWidget(12, QFormLayout.LabelRole, self._label_10)
+
+        self.sb_x_range_max = QDoubleSpinBox(Dialog)
+        self.sb_x_range_max.setObjectName("sb_x_range_max")
+
+        self.formLayout.setWidget(12, QFormLayout.FieldRole, self.sb_x_range_max)
+
+        self._label_6 = QLabel(Dialog)
+        self._label_6.setObjectName("_label_6")
+
+        self.formLayout.setWidget(13, QFormLayout.LabelRole, self._label_6)
+
+        self.sb_x_range_min = QDoubleSpinBox(Dialog)
+        self.sb_x_range_min.setObjectName("sb_x_range_min")
+
+        self.formLayout.setWidget(13, QFormLayout.FieldRole, self.sb_x_range_min)
+
+        self._l_3 = QFrame(Dialog)
+        self._l_3.setObjectName("_l_3")
+        self._l_3.setFrameShape(QFrame.Shape.HLine)
+        self._l_3.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.formLayout.setWidget(14, QFormLayout.SpanningRole, self._l_3)
+
+        self.cb_grid = QCheckBox(Dialog)
+        self.cb_grid.setObjectName("cb_grid")
+
+        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.cb_grid)
+
+        self.cb_legend = QCheckBox(Dialog)
+        self.cb_legend.setObjectName("cb_legend")
+
+        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.cb_legend)
+
+        self._label_1 = QLabel(Dialog)
+        self._label_1.setObjectName("_label_1")
+
+        self.formLayout.setWidget(0, QFormLayout.SpanningRole, self._label_1)
+
+        self.buttonBox = QDialogButtonBox(Dialog)
+        self.buttonBox.setObjectName("buttonBox")
+        self.buttonBox.setOrientation(Qt.Orientation.Vertical)
+        self.buttonBox.setStandardButtons(QDialogButtonBox.Cancel | QDialogButtonBox.Ok)
+
+        self.formLayout.setWidget(15, QFormLayout.FieldRole, self.buttonBox)
+
+        self.btn_reset = QPushButton(Dialog)
+        self.btn_reset.setObjectName("btn_reset")
+
+        self.formLayout.setWidget(15, QFormLayout.LabelRole, self.btn_reset)
+
+        self.retranslateUi(Dialog)
+        self.buttonBox.accepted.connect(Dialog.accept)
+        self.buttonBox.rejected.connect(Dialog.reject)
+
+        QMetaObject.connectSlotsByName(Dialog)
+
+    # setupUi
+
+    def retranslateUi(self, Dialog):
+        Dialog.setWindowTitle(QCoreApplication.translate("Dialog", "Dialog", None))
+        self._label_5.setText(QCoreApplication.translate("Dialog", "Title Name", None))
+        self.le_title.setText("")
+        self._label_7.setText(QCoreApplication.translate("Dialog", "Y axis:", None))
+        self._label_2.setText(QCoreApplication.translate("Dialog", "Y Label", None))
+        self.le_y_label.setText("")
+        self._label_3.setText(
+            QCoreApplication.translate("Dialog", "Y Range Max (Top)", None)
+        )
+        self._label_4.setText(
+            QCoreApplication.translate("Dialog", "Y Range Min (Bottom)", None)
+        )
+        self._label_8.setText(QCoreApplication.translate("Dialog", "X axis:", None))
+        self._label_9.setText(QCoreApplication.translate("Dialog", "X axis name", None))
+        self.le_x_label.setText("")
+        self._label_10.setText(
+            QCoreApplication.translate("Dialog", "X Range Max (Right)", None)
+        )
+        self._label_6.setText(
+            QCoreApplication.translate("Dialog", "X Range Min (Left)", None)
+        )
+        self.cb_grid.setText(QCoreApplication.translate("Dialog", "Grid Lines", None))
+        self.cb_legend.setText(QCoreApplication.translate("Dialog", "Legend", None))
+        self._label_1.setText(QCoreApplication.translate("Dialog", "General:", None))
+        self.btn_reset.setText(
+            QCoreApplication.translate("Dialog", "Reset Values", None)
+        )
+
+    # retranslateUi
