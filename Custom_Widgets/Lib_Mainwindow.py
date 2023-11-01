@@ -12,9 +12,11 @@ import cv2 as cv  # import cmap
 
 
 from PySide6.QtWidgets import  (
-    QMainWindow, QWidget, QFileDialog,    
+    QMainWindow, QWidget, QFileDialog, QFileSystemModel, QTreeWidgetItem#, QTreeView
 )
-# , QtCore
+
+from PySide6.QtCore import QDir#, pyqtSlot
+
 from Custom_UIs.UI_Mainwindow import Ui_MainWindow
 from Custom_Libs.Lib_DataDirTree import DataDirTree
 from Custom_Widgets.Lib_ExportTypeDialog import ExportTypeDialog
@@ -52,44 +54,71 @@ class TheMainWindow(QMainWindow):
         self.ex_type_dialog   = ExportTypeDialog()
 
         self.dir_path = dbg_ddir
-        self.ui.pb_data_dir.clicked.connect(self.call_btnDirSelect)
-        self.ui.actionOpen_Directory.triggered.connect(self.call_btnDirSelect)
+        #self.ui.pb_data_dir.clicked.connect(self.call_btnDirSelect)
+        #self.ui.actionOpen_Directory.triggered.connect(self.call_btnDirSelect)
         self.ui.pb_refresh.clicked.connect(self.call_btnRefresh)
-        self.ui.cob_jpeg_selector.textActivated.connect(self.refresh_plots)
+        #self.ui.cob_jpeg_selector.textActivated.connect(self.refresh_plots)
 
         self.ui.pb_conf_export.clicked.connect(self.ex_type_dialog.exec)
         self.ui.pb_export.clicked.connect(self.call_export)
 
-        
-    def call_btnDirSelect(self) -> None:
-        """
-        Opens file-dialog in order to select data directory.
-        if:   self.dir_path exists in system, open that directory
-        else: open at home directory
-        """
-        logging.debug(f"{self.__repr__()}: call_btnDirSelect, starting")
-        if os.path.isdir(self.dir_path):
-            tmpDir = QFileDialog.getExistingDirectory(
-                    self, "Choose Directory", self.dir_path) 
-            logging.debug(f"{self.__repr__()}: call_btnDirSelect, opening at old point")
-        else:
-            tmpDir = QFileDialog.getExistingDirectory(self, "Choose Directory", "")
-            logging.debug(f"{self.__repr__()}: call_btnDirSelect, opening at new point")
+        # ----------------------------------------------------------------------------------
+        self.fsmodel = QFileSystemModel()
+        self.fsmodel.setRootPath(QDir.homePath()) # TODO
+        self.ui.tv_dir.setModel(self.fsmodel)
+        #self.ui.tv_dir.setAnimated()
+        self.ui.tv_dir.setIndentation(10)
+        self.ui.tv_dir.setSortingEnabled(True)
+        #self.ui.tv_dir.setStyle
+        #self.ui.tv_dir.setHeader
+        #self.ui.tv_dir.clicked.connect()
+        #self.ui.tv_dir.clicked.connect(self.call_tv_onItemClicked)
+        self.ui.tv_dir.doubleClicked.connect(self.call_tv_onItemClicked)
+        # ----------------------------------------------------------------------------------
 
-        # checks user if cancelled
-        self.dir_path = tmpDir if os.path.isdir(tmpDir) else self.dir_path
-        self.ui.le_data_dir.setText(self.dir_path)
-        logging.debug(f"{self.__repr__()}: call_btnDirSelect, end: {self.dir_path}")
-
-        # =============================================================================
+    #@QtCore.pyqtSlot(QTreeWidgetItem, int)
+    def call_tv_onItemClicked(self, v):
+        #print(type(v), v)
+        #tmp = self.fsmodel.data(v)
+        self.jpeg_path = self.fsmodel.filePath(v)
+        #self.ddtree.set_ddir = self.fsmodel.rootPath(v)
+        self.dir_path = os.path.dirname(self.jpeg_path)
+        print(self.dir_path, self.jpeg_path)
         self.ddtree.set_ddir(self.dir_path)
-        self.ui.cob_jpeg_selector.clear()        # clear jpeg
-        self.ui.cob_jpeg_selector.addItems(self.ddtree.jpegFnames)
         self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
-        self.ui.tb_data_dir_tree.setText(self.ddtree.directory_structure())
-        # =============================================================================
         self.ui.limg_webcam.show_np_img(cv.imread(self.ddtree.webcamFP).astype(np.uint8))
-        return
+
+
+        
+    #def call_btnDirSelect(self) -> None:
+    #    """
+    #    Opens file-dialog in order to select data directory.
+    #    if:   self.dir_path exists in system, open that directory
+    #    else: open at home directory
+    #    """
+    #    logging.debug(f"{self.__repr__()}: call_btnDirSelect, starting")
+    #    if os.path.isdir(self.dir_path):
+    #        tmpDir = QFileDialog.getExistingDirectory(
+    #                self, "Choose Directory", self.dir_path) 
+    #        logging.debug(f"{self.__repr__()}: call_btnDirSelect, opening at old point")
+    #    else:
+    #        tmpDir = QFileDialog.getExistingDirectory(self, "Choose Directory", "")
+    #        logging.debug(f"{self.__repr__()}: call_btnDirSelect, opening at new point")
+
+    #    # checks user if cancelled
+    #    self.dir_path = tmpDir if os.path.isdir(tmpDir) else self.dir_path
+    #    self.ui.le_data_dir.setText(self.dir_path)
+    #    logging.debug(f"{self.__repr__()}: call_btnDirSelect, end: {self.dir_path}")
+
+    #    # =============================================================================
+    #    self.ddtree.set_ddir(self.dir_path)
+    #    #self.ui.cob_jpeg_selector.clear()        # clear jpeg
+    #    #self.ui.cob_jpeg_selector.addItems(self.ddtree.jpegFnames)
+    #    self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
+    #    #self.ui.tb_data_dir_tree.setText(self.ddtree.directory_structure())
+    #    # =============================================================================
+    #    self.ui.limg_webcam.show_np_img(cv.imread(self.ddtree.webcamFP).astype(np.uint8))
+    #    return
     
     def call_btnRefresh(self) -> None:
         self.jp.set_xWaveRng( int(self.ui.sb_horx_left_pxl.text()) )
@@ -97,10 +126,10 @@ class TheMainWindow(QMainWindow):
             (int(self.ui.sb_gray_top_pxl.text()), int(self.ui.sb_gray_bot_pxl.text())))
         self.jp.set_yObjeRng(
             (int(self.ui.sb_obje_top_pxl.text()), int(self.ui.sb_obje_bot_pxl.text())))
-        self.refresh_plots("hi")
+        self.refresh_plots()
 
-    def refresh_plots(self, atgivenjpeg: str) -> None:
-        self.jpeg_path = os.path.join(self.dir_path, atgivenjpeg)
+    def refresh_plots(self) -> None:
+        #self.jpeg_path = os.path.join(self.dir_path, atgivenjpeg)
         #print(atgivenjpeg)
 
         #= ===========================================================================

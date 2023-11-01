@@ -173,45 +173,17 @@
        <string>Directory Control Panel</string>
       </property>
       <layout class="QGridLayout" name="gridLayout_3">
-       <item row="5" column="0">
-        <widget class="QComboBox" name="cob_jpeg_selector"/>
+       <item row="2" column="0">
+        <widget class="QTreeView" name="tv_dir"/>
        </item>
        <item row="1" column="0">
         <widget class="QPushButton" name="pb_data_dir">
          <property name="text">
-          <string>Open Directory</string>
+          <string>Set root directory ???</string>
          </property>
         </widget>
        </item>
-       <item row="0" column="0">
-        <widget class="QLineEdit" name="le_data_dir"/>
-       </item>
-       <item row="6" column="0">
-        <spacer name="verticalSpacer">
-         <property name="orientation">
-          <enum>Qt::Vertical</enum>
-         </property>
-         <property name="sizeHint" stdset="0">
-          <size>
-           <width>20</width>
-           <height>40</height>
-          </size>
-         </property>
-        </spacer>
-       </item>
-       <item row="4" column="0">
-        <widget class="QComboBox" name="comboBox"/>
-       </item>
-       <item row="3" column="0">
-        <widget class="QTextBrowser" name="tb_data_dir_tree">
-         <property name="font">
-          <font>
-           <family>Monospace</family>
-          </font>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="0">
+       <item row="5" column="0">
         <spacer name="verticalSpacer_3">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -223,6 +195,9 @@
           </size>
          </property>
         </spacer>
+       </item>
+       <item row="0" column="0">
+        <widget class="QLineEdit" name="le_data_dir"/>
        </item>
       </layout>
      </widget>

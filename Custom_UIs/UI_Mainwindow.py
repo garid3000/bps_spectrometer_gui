@@ -20,7 +20,6 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import (
     QCheckBox,
-    QComboBox,
     QFrame,
     QGridLayout,
     QGroupBox,
@@ -37,6 +36,7 @@ from PySide6.QtWidgets import (
     QStatusBar,
     QTabWidget,
     QTextBrowser,
+    QTreeView,
     QVBoxLayout,
     QWidget,
 )
@@ -182,43 +182,26 @@ class Ui_MainWindow(object):
         self.gb_dir_panel.setObjectName("gb_dir_panel")
         self.gridLayout_3 = QGridLayout(self.gb_dir_panel)
         self.gridLayout_3.setObjectName("gridLayout_3")
-        self.cob_jpeg_selector = QComboBox(self.gb_dir_panel)
-        self.cob_jpeg_selector.setObjectName("cob_jpeg_selector")
+        self.tv_dir = QTreeView(self.gb_dir_panel)
+        self.tv_dir.setObjectName("tv_dir")
 
-        self.gridLayout_3.addWidget(self.cob_jpeg_selector, 5, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.tv_dir, 2, 0, 1, 1)
 
         self.pb_data_dir = QPushButton(self.gb_dir_panel)
         self.pb_data_dir.setObjectName("pb_data_dir")
 
         self.gridLayout_3.addWidget(self.pb_data_dir, 1, 0, 1, 1)
 
-        self.le_data_dir = QLineEdit(self.gb_dir_panel)
-        self.le_data_dir.setObjectName("le_data_dir")
-
-        self.gridLayout_3.addWidget(self.le_data_dir, 0, 0, 1, 1)
-
-        self.verticalSpacer = QSpacerItem(
-            20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
-        )
-
-        self.gridLayout_3.addItem(self.verticalSpacer, 6, 0, 1, 1)
-
-        self.comboBox = QComboBox(self.gb_dir_panel)
-        self.comboBox.setObjectName("comboBox")
-
-        self.gridLayout_3.addWidget(self.comboBox, 4, 0, 1, 1)
-
-        self.tb_data_dir_tree = QTextBrowser(self.gb_dir_panel)
-        self.tb_data_dir_tree.setObjectName("tb_data_dir_tree")
-        self.tb_data_dir_tree.setFont(font)
-
-        self.gridLayout_3.addWidget(self.tb_data_dir_tree, 3, 0, 1, 1)
-
         self.verticalSpacer_3 = QSpacerItem(
             20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
         )
 
-        self.gridLayout_3.addItem(self.verticalSpacer_3, 2, 0, 1, 1)
+        self.gridLayout_3.addItem(self.verticalSpacer_3, 5, 0, 1, 1)
+
+        self.le_data_dir = QLineEdit(self.gb_dir_panel)
+        self.le_data_dir.setObjectName("le_data_dir")
+
+        self.gridLayout_3.addWidget(self.le_data_dir, 0, 0, 1, 1)
 
         self.gridLayout.addWidget(self.gb_dir_panel, 0, 0, 1, 1)
 
@@ -435,7 +418,7 @@ class Ui_MainWindow(object):
             QCoreApplication.translate("MainWindow", "Directory Control Panel", None)
         )
         self.pb_data_dir.setText(
-            QCoreApplication.translate("MainWindow", "Open Directory", None)
+            QCoreApplication.translate("MainWindow", "Set root directory ???", None)
         )
         self.gb_control_panel.setTitle(
             QCoreApplication.translate("MainWindow", "Geometry control panel", None)
