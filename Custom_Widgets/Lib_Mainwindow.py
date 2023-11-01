@@ -95,8 +95,8 @@ class TheMainWindow(QMainWindow):
         self.set_def_val_raw_ref_dialog()
         self.ui.tbtn_raw_spectrum_config.clicked.connect(self.raw_pcon_dialog.exec)
         self.ui.tbtn_ref_spectrum_config.clicked.connect(self.ref_pcon_dialog.exec)
-        self.raw_pcon_dialog.ui.btn_box.accepted.connect(self.call_btnRefresh)
-        self.ref_pcon_dialog.ui.btn_box.accepted.connect(self.call_btnRefresh)
+        self.raw_pcon_dialog.ui.btn_box.accepted.connect(self.call_update_geometry_vals)
+        self.ref_pcon_dialog.ui.btn_box.accepted.connect(self.call_update_geometry_vals)
         self.raw_pcon_dialog.ui.btn_box.button(QDialogButtonBox.StandardButton.Reset).clicked.connect(self.set_def_val_raw_ref_dialog)
         self.ref_pcon_dialog.ui.btn_box.button(QDialogButtonBox.StandardButton.Reset).clicked.connect(self.set_def_val_raw_ref_dialog)
         # self.raw_pcon_dialog.ui.btn_box.rejected.connect(self.test)
@@ -104,7 +104,7 @@ class TheMainWindow(QMainWindow):
         # button( QDialogButtonBox.Reset )
         #self.ref_pcon_dialog.ui.btn_box. #accepted.connect(self.call_btnRefresh)
 
-        self.ui.pb_refresh.clicked.connect(self.call_btnRefresh)
+        self.ui.pb_refresh.clicked.connect(self.call_update_geometry_vals)
         #self.ui.pb_conf_export.clicked.connect(self.ex_type_dialog.exec)
         self.ui.pb_export.clicked.connect(self.call_export_data)
 
@@ -165,7 +165,7 @@ class TheMainWindow(QMainWindow):
         #QShortcut(QKeySequence("Ctrl+Shift+E"), self).activated.connect(self.ex_type_dialog.exec)
         QShortcut(QKeySequence("Ctrl+H"),       self).activated.connect(self.open_help_page)
         QShortcut(QKeySequence("Ctrl+F"),       self).activated.connect(self.ui.cb_ft_filter.toggle)
-        QShortcut(QKeySequence("Ctrl+R"),       self).activated.connect(self.call_btnRefresh)
+        QShortcut(QKeySequence("Ctrl+R"),       self).activated.connect(self.call_update_geometry_vals)
 
         QShortcut(QKeySequence("Ctrl+P"),       self).activated.connect(self.ref_pcon_dialog.exec)
         QShortcut(QKeySequence("Ctrl+Shift+P"), self).activated.connect(self.raw_pcon_dialog.exec)
@@ -264,13 +264,13 @@ class TheMainWindow(QMainWindow):
             self.ui.limg_webcam.show_np_img(cv.imread(self.ddtree.webcamFP).astype(np.uint8))
             self.refresh_plots()
     
-    def call_btnRefresh(self) -> None:
+    def call_update_geometry_vals(self) -> None:
         self.jp.set_xWaveRng(  int(self.ui.sb_horx_left_pxl.text()) )
         self.jp.set_yGrayRng( (int(self.ui.sb_gray_top_pxl.text()), int(self.ui.sb_gray_bot_pxl.text())))
         self.jp.set_yObjeRng( (int(self.ui.sb_obje_top_pxl.text()), int(self.ui.sb_obje_bot_pxl.text())))
         self.refresh_plots()
 
-    def refresh_plots(self) -> None:
+    def update_jp_numerical_vals(self) -> None:
         self.jp.load_file(self.jpeg_path)
         self.jp.get_bayer()
         self.jp.get_spectrums_channels_rgb()
@@ -278,7 +278,8 @@ class TheMainWindow(QMainWindow):
         self.jp.shiftall()
         self.jp.calc_reflectance()
         self.jp.fancy_reflectance()
-        #= visuals ====================================================================
+
+    def update_visual_1_rawbayer_img_section(self) -> None:
         self.ui.limg_bayer_full.show_np_img(
             arr=(self.jp.rgb // 4).astype(np.uint8),
             outwidth = 480
@@ -306,7 +307,7 @@ class TheMainWindow(QMainWindow):
                  ).astype(np.uint8),
             outwidth = 480
         )
-        #= visuals ====================================================================
+    def update_visual_2_raw_spectrum_section(self) -> None:
         fig: Figure
         ax: Axes
         fig, ax = plt.subplots()
@@ -350,7 +351,7 @@ class TheMainWindow(QMainWindow):
         img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
         self.ui.limg_raw_spectrum.show_np_img( arr = img, outwidth= 480)
 
-        #= visuals ====================================================================
+    def update_visual_3_ref_spectrum_section(self) -> None:
         fig, ax = plt.subplots()
         ax.plot(self.jp.xwave, self.jp.ref_fancy, color="black",   label="reflectance")
 
@@ -381,6 +382,12 @@ class TheMainWindow(QMainWindow):
         img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8) # type: ignore
         img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
         self.ui.limg_ref_spectrum.show_np_img(arr = img, outwidth= 480)
+
+    def refresh_plots(self) -> None:
+        self.update_jp_numerical_vals()
+        self.update_visual_1_rawbayer_img_section()
+        self.update_visual_2_raw_spectrum_section()
+        self.update_visual_3_ref_spectrum_section()
 
     def call_export_data(self) -> None:
         """Exports"""
