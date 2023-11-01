@@ -174,7 +174,13 @@
       </property>
       <layout class="QGridLayout" name="gridLayout_3">
        <item row="2" column="0">
-        <widget class="QTreeView" name="tv_dir"/>
+        <widget class="QTreeView" name="tv_dir">
+         <property name="font">
+          <font>
+           <family>Monospace</family>
+          </font>
+         </property>
+        </widget>
        </item>
        <item row="1" column="0">
         <widget class="QPushButton" name="pb_data_dir">

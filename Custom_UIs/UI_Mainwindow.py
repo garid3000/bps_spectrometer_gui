@@ -184,6 +184,7 @@ class Ui_MainWindow(object):
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.tv_dir = QTreeView(self.gb_dir_panel)
         self.tv_dir.setObjectName("tv_dir")
+        self.tv_dir.setFont(font)
 
         self.gridLayout_3.addWidget(self.tv_dir, 2, 0, 1, 1)
 
