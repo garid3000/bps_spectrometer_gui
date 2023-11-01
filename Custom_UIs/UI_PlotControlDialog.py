@@ -21,7 +21,6 @@ from PySide6.QtWidgets import (
     QFrame,
     QLabel,
     QLineEdit,
-    QPushButton,
 )
 
 
@@ -157,21 +156,18 @@ class Ui_Dialog(object):
 
         self.formLayout.setWidget(0, QFormLayout.SpanningRole, self._label_1)
 
-        self.buttonBox = QDialogButtonBox(Dialog)
-        self.buttonBox.setObjectName("buttonBox")
-        self.buttonBox.setOrientation(Qt.Orientation.Vertical)
-        self.buttonBox.setStandardButtons(QDialogButtonBox.Cancel | QDialogButtonBox.Ok)
+        self.btn_box = QDialogButtonBox(Dialog)
+        self.btn_box.setObjectName("btn_box")
+        self.btn_box.setOrientation(Qt.Orientation.Horizontal)
+        self.btn_box.setStandardButtons(
+            QDialogButtonBox.Cancel | QDialogButtonBox.Ok | QDialogButtonBox.Reset
+        )
 
-        self.formLayout.setWidget(15, QFormLayout.FieldRole, self.buttonBox)
-
-        self.btn_reset = QPushButton(Dialog)
-        self.btn_reset.setObjectName("btn_reset")
-
-        self.formLayout.setWidget(15, QFormLayout.LabelRole, self.btn_reset)
+        self.formLayout.setWidget(16, QFormLayout.SpanningRole, self.btn_box)
 
         self.retranslateUi(Dialog)
-        self.buttonBox.accepted.connect(Dialog.accept)
-        self.buttonBox.rejected.connect(Dialog.reject)
+        self.btn_box.accepted.connect(Dialog.accept)
+        self.btn_box.rejected.connect(Dialog.reject)
 
         QMetaObject.connectSlotsByName(Dialog)
 
@@ -202,8 +198,5 @@ class Ui_Dialog(object):
         self.cb_grid.setText(QCoreApplication.translate("Dialog", "Grid Lines", None))
         self.cb_legend.setText(QCoreApplication.translate("Dialog", "Legend", None))
         self._label_1.setText(QCoreApplication.translate("Dialog", "General:", None))
-        self.btn_reset.setText(
-            QCoreApplication.translate("Dialog", "Reset Values", None)
-        )
 
     # retranslateUi

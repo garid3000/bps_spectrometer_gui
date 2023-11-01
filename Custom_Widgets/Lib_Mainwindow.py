@@ -11,6 +11,7 @@ from matplotlib.axes   import Axes
 import cv2 as cv
 
 from PySide6.QtWidgets import QMainWindow,  QWidget,   QFileSystemModel
+#, QDialogButtonBox
 from PySide6.QtGui     import QKeySequence, QShortcut, QColor
 from PySide6.QtCore    import QModelIndex,  QDir, Qt
 
@@ -127,6 +128,10 @@ class TheMainWindow(QMainWindow):
         self.ref_pcon_dialog.ui.sb_x_range_max.setValue(900)
         self.ref_pcon_dialog.ui.sb_y_range_min.setValue(0)
         self.ref_pcon_dialog.ui.sb_y_range_max.setValue(2)
+
+        #self.raw_pcon_dialog.ui.buttonBox.button()
+        self.raw_pcon_dialog.ui.btn_box.accepted.connect(self.call_btnRefresh)
+        self.ref_pcon_dialog.ui.btn_box.accepted.connect(self.call_btnRefresh)
         
 
     def toggle_filetype_visiblity(self, a: int) -> None:
@@ -251,11 +256,9 @@ class TheMainWindow(QMainWindow):
             self.refresh_plots()
     
     def call_btnRefresh(self) -> None:
-        self.jp.set_xWaveRng( int(self.ui.sb_horx_left_pxl.text()) )
-        self.jp.set_yGrayRng(
-            (int(self.ui.sb_gray_top_pxl.text()), int(self.ui.sb_gray_bot_pxl.text())))
-        self.jp.set_yObjeRng(
-            (int(self.ui.sb_obje_top_pxl.text()), int(self.ui.sb_obje_bot_pxl.text())))
+        self.jp.set_xWaveRng(  int(self.ui.sb_horx_left_pxl.text()) )
+        self.jp.set_yGrayRng( (int(self.ui.sb_gray_top_pxl.text()), int(self.ui.sb_gray_bot_pxl.text())))
+        self.jp.set_yObjeRng( (int(self.ui.sb_obje_top_pxl.text()), int(self.ui.sb_obje_bot_pxl.text())))
         self.refresh_plots()
 
     def refresh_plots(self) -> None:
@@ -311,7 +314,18 @@ class TheMainWindow(QMainWindow):
         print(self.jp.xwave)
 
         ax.vlines(759, 0, 1024) # the 759nm
-        ax.legend()
+        if self.raw_pcon_dialog.ui.cb_legend.isChecked():
+            ax.legend()
+        if self.raw_pcon_dialog.ui.cb_grid.isChecked():
+            ax.grid()
+        ax.set_xlim(
+            left=self.raw_pcon_dialog.ui.sb_x_range_min.value(),
+            right=self.raw_pcon_dialog.ui.sb_x_range_max.value(),
+        )
+        ax.set_ylim(
+            bottom=self.raw_pcon_dialog.ui.sb_y_range_min.value(),
+            top=self.raw_pcon_dialog.ui.sb_y_range_max.value(),
+        )
 
         fig.canvas.draw()
         img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8) # type: ignore
@@ -321,7 +335,20 @@ class TheMainWindow(QMainWindow):
         #= visuals ====================================================================
         fig, ax = plt.subplots()
         ax.plot(self.jp.xwave, self.jp.ref_fancy, color="black",   label="reflectance")
-        ax.legend()
+
+        ax.vlines(759, 0, 1024) # the 759nm
+        if self.ref_pcon_dialog.ui.cb_legend.isChecked():
+            ax.legend()
+        if self.ref_pcon_dialog.ui.cb_grid.isChecked():
+            ax.grid()
+        ax.set_xlim(
+            left=self.ref_pcon_dialog.ui.sb_x_range_min.value(),
+            right=self.ref_pcon_dialog.ui.sb_x_range_max.value(),
+        )
+        ax.set_ylim(
+            bottom=self.ref_pcon_dialog.ui.sb_y_range_min.value(),
+            top=self.ref_pcon_dialog.ui.sb_y_range_max.value(),
+        )
 
         fig.canvas.draw()
         img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8) # type: ignore
