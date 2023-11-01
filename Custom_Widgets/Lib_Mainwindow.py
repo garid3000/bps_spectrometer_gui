@@ -90,6 +90,7 @@ class TheMainWindow(QMainWindow):
         self.ex_type_dialog  = ExportTypeDialog()
         self.raw_pcon_dialog = PlotConfigDialog()
         self.ref_pcon_dialog = PlotConfigDialog()
+        self.init_raw_n_ref_dialog()
 
         self.ui.pb_refresh.clicked.connect(self.call_btnRefresh)
         self.ui.pb_conf_export.clicked.connect(self.ex_type_dialog.exec)
@@ -109,6 +110,25 @@ class TheMainWindow(QMainWindow):
         self.init_keyboard_bindings()
         self.init_actions()
 
+
+    def init_raw_n_ref_dialog(self):
+        self.raw_pcon_dialog.ui.le_title.setText("Raw Digital Value")
+        self.raw_pcon_dialog.ui.le_x_label.setText("Wavelength (nm)")
+        self.raw_pcon_dialog.ui.le_y_label.setText("Digital Value (background removed)")
+        self.raw_pcon_dialog.ui.sb_x_range_min.setValue(400)
+        self.raw_pcon_dialog.ui.sb_x_range_max.setValue(900)
+        self.raw_pcon_dialog.ui.sb_y_range_min.setValue(0)
+        self.raw_pcon_dialog.ui.sb_y_range_max.setValue(1024)
+
+        self.ref_pcon_dialog.ui.le_title.setText("Reflectance")
+        self.ref_pcon_dialog.ui.le_x_label.setText("Wavelength (nm)")
+        self.ref_pcon_dialog.ui.le_y_label.setText("Reflectance")
+        self.ref_pcon_dialog.ui.sb_x_range_min.setValue(400)
+        self.ref_pcon_dialog.ui.sb_x_range_max.setValue(900)
+        self.ref_pcon_dialog.ui.sb_y_range_min.setValue(0)
+        self.ref_pcon_dialog.ui.sb_y_range_max.setValue(2)
+        
+
     def toggle_filetype_visiblity(self, a: int) -> None:
         if a:
             self.fsmodel.setNameFilters( ( ["*.jpeg", "*.jpg", "*.json"] ) )
@@ -118,26 +138,26 @@ class TheMainWindow(QMainWindow):
 
 
     def init_keyboard_bindings(self) -> None:
-        QShortcut(QKeySequence("Ctrl+B"),          self).activated.connect(self.short_cut_goto_parent_dir)
-        QShortcut(QKeySequence("Backspace"),       self).activated.connect(self.short_cut_goto_parent_dir)
-        QShortcut(QKeySequence("Return"),          self).activated.connect(self.short_cut_goto_selected_child_dir)
-        QShortcut(QKeySequence("Space"),           self).activated.connect(self.short_cut_preview_raw_jpeg)
-        QShortcut(QKeySequence("Ctrl+E"),          self).activated.connect(self.short_cut_export_raw_jpeg)
-        QShortcut(QKeySequence("Ctrl+O"),          self).activated.connect(self.short_cut_open_at_point)
-        QShortcut(QKeySequence("Ctrl+Shift+E"),    self).activated.connect(self.ex_type_dialog.exec)
-        QShortcut(QKeySequence("Ctrl+H"),          self).activated.connect(self.open_help_page)
-        QShortcut(QKeySequence("Ctrl+F"),          self).activated.connect(self.ui.cb_ft_filter.toggle)
-        QShortcut(QKeySequence("Ctrl+R"),          self).activated.connect(self.call_btnRefresh)
+        QShortcut(QKeySequence("Ctrl+B"),       self).activated.connect(self.short_cut_goto_parent_dir)
+        QShortcut(QKeySequence("Backspace"),    self).activated.connect(self.short_cut_goto_parent_dir)
+        QShortcut(QKeySequence("Return"),       self).activated.connect(self.short_cut_goto_selected_child_dir)
+        QShortcut(QKeySequence("Space"),        self).activated.connect(self.short_cut_preview_raw_jpeg)
+        QShortcut(QKeySequence("Ctrl+E"),       self).activated.connect(self.short_cut_export_raw_jpeg)
+        QShortcut(QKeySequence("Ctrl+O"),       self).activated.connect(self.short_cut_open_at_point)
+        QShortcut(QKeySequence("Ctrl+Shift+E"), self).activated.connect(self.ex_type_dialog.exec)
+        QShortcut(QKeySequence("Ctrl+H"),       self).activated.connect(self.open_help_page)
+        QShortcut(QKeySequence("Ctrl+F"),       self).activated.connect(self.ui.cb_ft_filter.toggle)
+        QShortcut(QKeySequence("Ctrl+R"),       self).activated.connect(self.call_btnRefresh)
 
-        QShortcut(QKeySequence("Ctrl+P"),          self).activated.connect(self.ref_pcon_dialog.exec)
-        QShortcut(QKeySequence("Ctrl+Shift+P"),    self).activated.connect(self.raw_pcon_dialog.exec)
+        QShortcut(QKeySequence("Ctrl+P"),       self).activated.connect(self.ref_pcon_dialog.exec)
+        QShortcut(QKeySequence("Ctrl+Shift+P"), self).activated.connect(self.raw_pcon_dialog.exec)
 
-        QShortcut(QKeySequence("Alt+1"),  self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(0))
-        QShortcut(QKeySequence("Alt+2"),  self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(1))
-        QShortcut(QKeySequence("Alt+3"),  self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(2))
-        QShortcut(QKeySequence("Ctrl+1"), self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(0))
-        QShortcut(QKeySequence("Ctrl+2"), self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(1))
-        QShortcut(QKeySequence("Ctrl+3"), self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(2))
+        QShortcut(QKeySequence("Alt+1"),        self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(0))
+        QShortcut(QKeySequence("Alt+2"),        self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(1))
+        QShortcut(QKeySequence("Alt+3"),        self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(2))
+        QShortcut(QKeySequence("Ctrl+1"),       self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(0))
+        QShortcut(QKeySequence("Ctrl+2"),       self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(1))
+        QShortcut(QKeySequence("Ctrl+3"),       self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(2))
 
     def init_actions(self) -> None:
         self.ui.action_help.triggered.connect(self.open_help_page)

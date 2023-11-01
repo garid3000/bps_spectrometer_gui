@@ -71,6 +71,8 @@ class Ui_Dialog(object):
 
         self.sb_y_range_max = QDoubleSpinBox(Dialog)
         self.sb_y_range_max.setObjectName("sb_y_range_max")
+        self.sb_y_range_max.setMinimum(-1000.000000000000000)
+        self.sb_y_range_max.setMaximum(1500.000000000000000)
 
         self.formLayout.setWidget(7, QFormLayout.FieldRole, self.sb_y_range_max)
 
@@ -81,6 +83,8 @@ class Ui_Dialog(object):
 
         self.sb_y_range_min = QDoubleSpinBox(Dialog)
         self.sb_y_range_min.setObjectName("sb_y_range_min")
+        self.sb_y_range_min.setMinimum(-1000.000000000000000)
+        self.sb_y_range_min.setMaximum(1500.000000000000000)
 
         self.formLayout.setWidget(8, QFormLayout.FieldRole, self.sb_y_range_min)
 
@@ -113,6 +117,8 @@ class Ui_Dialog(object):
 
         self.sb_x_range_max = QDoubleSpinBox(Dialog)
         self.sb_x_range_max.setObjectName("sb_x_range_max")
+        self.sb_x_range_max.setMinimum(-1000.000000000000000)
+        self.sb_x_range_max.setMaximum(1000.000000000000000)
 
         self.formLayout.setWidget(12, QFormLayout.FieldRole, self.sb_x_range_max)
 
@@ -123,6 +129,8 @@ class Ui_Dialog(object):
 
         self.sb_x_range_min = QDoubleSpinBox(Dialog)
         self.sb_x_range_min.setObjectName("sb_x_range_min")
+        self.sb_x_range_min.setMinimum(-1000.000000000000000)
+        self.sb_x_range_min.setMaximum(1000.000000000000000)
 
         self.formLayout.setWidget(13, QFormLayout.FieldRole, self.sb_x_range_min)
 
@@ -140,6 +148,7 @@ class Ui_Dialog(object):
 
         self.cb_legend = QCheckBox(Dialog)
         self.cb_legend.setObjectName("cb_legend")
+        self.cb_legend.setChecked(True)
 
         self.formLayout.setWidget(3, QFormLayout.FieldRole, self.cb_legend)
 
