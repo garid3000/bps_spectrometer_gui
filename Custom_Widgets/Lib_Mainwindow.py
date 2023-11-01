@@ -120,9 +120,35 @@ class TheMainWindow(QMainWindow):
         QShortcut(QKeySequence("Ctrl+O"),          self).activated.connect(self.short_cut_open_at_point)
         QShortcut(QKeySequence("Ctrl+Shift+E"),    self).activated.connect(self.ex_type_dialog.exec)
         QShortcut(QKeySequence("Ctrl+H"),          self).activated.connect(self.open_help_page)
+        QShortcut(QKeySequence("Ctrl+F"),          self).activated.connect(self.ui.cb_ft_filter.toggle)
+        QShortcut(QKeySequence("Ctrl+R"),          self).activated.connect(self.call_btnRefresh)
+
+        QShortcut(QKeySequence("Alt+1"),  self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(0))
+        QShortcut(QKeySequence("Alt+2"),  self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(1))
+        QShortcut(QKeySequence("Alt+3"),  self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(2))
+        QShortcut(QKeySequence("Ctrl+1"), self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(0))
+        QShortcut(QKeySequence("Ctrl+2"), self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(1))
+        QShortcut(QKeySequence("Ctrl+3"), self).activated.connect(lambda: self.ui.tabWidget.setCurrentIndex(2))
 
     def init_actions(self) -> None:
-        self.ui.actionRead_Tutorial.triggered.connect(self.open_help_page)
+        self.ui.action_help.triggered.connect(self.open_help_page)
+        #self.ui.action_dir_cur_child_fold.connect( #lambda self.ui.tv_dir.collapse())
+        #self.ui.action_dir_cur_child_unfold.connect(self.ui.tv_dir.)
+
+        self.ui.action_dir_goto_cur_child.triggered.connect(self.short_cut_goto_selected_child_dir)
+        self.ui.action_dir_goto_parent.triggered.connect(self.short_cut_goto_parent_dir)
+        self.ui.action_dir_ft_filter_toggle.triggered.connect(self.ui.cb_ft_filter.toggle)
+
+        self.ui.action_cur_jpeg_export.triggered.connect(self.short_cut_export_raw_jpeg)
+        self.ui.action_cur_jpeg_preview.triggered.connect(self.short_cut_preview_raw_jpeg)
+        self.ui.action_cur_file_open.triggered.connect(self.short_cut_open_at_point)
+
+        self.ui.action_tabs_show_tab1.triggered.connect(lambda: self.ui.tabWidget.setCurrentIndex(0))
+        self.ui.action_tabs_show_tab2.triggered.connect(lambda: self.ui.tabWidget.setCurrentIndex(1))
+        self.ui.action_tabs_show_tab3.triggered.connect(lambda: self.ui.tabWidget.setCurrentIndex(2))
+
+
+        #self.ui.action_about.triggered.connect(self.open_about_page)
 
     def open_help_page(self):
         open_a_file("/home/garid/Projects/psm/bps_spectrometer_gui/docs/help.html")
@@ -135,7 +161,7 @@ class TheMainWindow(QMainWindow):
         self.ui.tv_dir.setCurrentIndex(parent_of_cur_root_index)   # idk why this needed
     
 
-    def short_cut_goto_selected_child_dir(self):
+    def short_cut_goto_selected_child_dir(self) -> None:
         sel_m_index = self.ui.tv_dir.currentIndex()    # get
         if self.fsmodel.hasChildren(sel_m_index):      # enter only if this has children
             self.ui.tv_dir.setRootIndex(sel_m_index)
