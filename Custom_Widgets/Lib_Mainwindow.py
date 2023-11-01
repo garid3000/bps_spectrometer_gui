@@ -1,6 +1,7 @@
 import os
 import logging
 #from os.path import isfile
+#import tifffile as tf
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
@@ -252,3 +253,17 @@ class TheMainWindow(QMainWindow):
                 os.path.basename(self.jpeg_path).replace(".jpeg", "_output.csv")
             )
             self.jp.get_table(csvfname=csv_path)
+        if self.ex_type_dialog.ui.cb_tif_1layer.isChecked():
+            tmp_path = os.path.join(
+                os.path.dirname(self.jpeg_path), "output", 
+                os.path.basename(self.jpeg_path).replace(".jpeg", ".tiff")
+            )
+            cv.imwrite(tmp_path, self.jp.data)
+
+        if self.ex_type_dialog.ui.cb_npy_1layer.isChecked():
+            tmp_path = os.path.join(
+                os.path.dirname(self.jpeg_path), "output", 
+                os.path.basename(self.jpeg_path).replace(".jpeg", ".npy")
+            )
+            np.save(tmp_path, self.jp.data)
+
