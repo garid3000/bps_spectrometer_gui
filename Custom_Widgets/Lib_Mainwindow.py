@@ -62,38 +62,35 @@ class TheMainWindow(QMainWindow):
         self.ui.pb_export.clicked.connect(self.call_export)
 
         # -----------------------------------------------------------------------------
-        #self.fsmodel = QFileSystemModel()
-        self.fsmodel = FileSystemModel()
-        #self.fsmodel.setRootPath(QDir.homePath()) # TODO
-        #self.fsmodel.setRootPath("/tmp/") # TODO
+        self.fsmodel = FileSystemModel()            # self.fsmodel = QFileSystemModel()
+        self.fsmodel.setRootPath(QDir.homePath())
 
-        #self.ui.tv_dir.setRootIndex( self.fsmodel.index(path= QDir.homePath(), 0))
         self.ui.tv_dir.setModel(self.fsmodel)
         self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath(QDir.homePath()))
-        #self.ui.tv_dir.setAnimated()
-        self.ui.tv_dir.setIndentation(20)
-        self.ui.tv_dir.setSortingEnabled(True)
         self.ui.tv_dir.doubleClicked.connect(self.call_tv_onItemClicked)
-        # ------------------------------------------------------------------------------
-        #self.shortcut =
-        #self.shortcut
+        # -----------------------------------------------------------------------------
+        self.init_keyboard_bindings()
+
+
+    def init_keyboard_bindings(self) -> None:
         QShortcut(QKeySequence("Ctrl+B"),    self).activated.connect(self.short_cut_goto_parent_dir)
         QShortcut(QKeySequence("Backspace"), self).activated.connect(self.short_cut_goto_parent_dir)
         QShortcut(QKeySequence("Return"),    self).activated.connect(self.short_cut_goto_selected_child_dir)
 
+
     def short_cut_goto_parent_dir(self):
         print("goto parent")
-        cur_root_index = self.ui.tv_dir.rootIndex()
-        parent_of_cur_root_index = self.fsmodel.parent(cur_root_index)
-        print("cur  index", self.fsmodel.filePath(cur_root_index))
-        print("par index", self.fsmodel.filePath(parent_of_cur_root_index))
-        self.ui.tv_dir.setRootIndex(parent_of_cur_root_index)
+        cur_root_index           = self.ui.tv_dir.rootIndex()          # get .
+        parent_of_cur_root_index = self.fsmodel.parent(cur_root_index) # get ..
+        self.ui.tv_dir.setRootIndex(parent_of_cur_root_index)          # set ..
+        self.ui.tv_dir.setCurrentIndex(parent_of_cur_root_index)       # idk why this needed
 
     def short_cut_goto_selected_child_dir(self):
-        selectedindex = self.ui.tv_dir.currentIndex()
-        print(selectedindex)
-        self.ui.tv_dir.setRootIndex(selectedindex)
-        #self.ui.tv_dir.focusNextChild()
+        sel_m_index = self.ui.tv_dir.currentIndex()    # get
+        if self.fsmodel.hasChildren(sel_m_index):      # enter only if this has children
+            self.ui.tv_dir.setRootIndex(sel_m_index)
+        else:
+            pass                                       # need to update jpeg_path here 
         
     #@QtCore.pyqtSlot(QTreeWidgetItem, int)
     def call_tv_onItemClicked(self, v: QModelIndex):
