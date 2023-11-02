@@ -368,6 +368,25 @@ class TheMainWindow(QMainWindow):
                           color=(100, 100, 100), 
                           thickness=4) 
 
+            #
+            tmp = cv.line(tmp, 
+                          (self.jp.xWaveRng[0], self.jp.yObjeRng[0]), 
+                          (self.jp.xWaveRng[0], 0), 
+                          color=(100, 100, 100), 
+                          thickness=4)
+
+            tmp = cv.line(tmp, 
+                          (                  0, self.jp.yObjeRng[0]), 
+                          (self.jp.xWaveRng[0], self.jp.yObjeRng[0]), 
+                          color=(100, 100, 100), 
+                          thickness=4)
+            tmp = cv.line(tmp, 
+                          (                  0, self.jp.yGrayRng[0]), 
+                          (self.jp.xWaveRng[0], self.jp.yGrayRng[0]), 
+                          color=(100, 100, 100), 
+                          thickness=4)
+
+
 
         tmp = cv.rectangle(
                 tmp, 
