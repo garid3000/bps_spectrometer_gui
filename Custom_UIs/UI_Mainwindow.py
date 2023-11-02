@@ -293,29 +293,12 @@ class Ui_MainWindow(object):
         self.gp_spectral_panel.setObjectName("gp_spectral_panel")
         self.gridLayout_4 = QGridLayout(self.gp_spectral_panel)
         self.gridLayout_4.setObjectName("gridLayout_4")
-        self.pb_export = QPushButton(self.gp_spectral_panel)
-        self.pb_export.setObjectName("pb_export")
-
-        self.gridLayout_4.addWidget(self.pb_export, 2, 2, 1, 1)
-
-        self.cb_export_numerical_vals = QCheckBox(self.gp_spectral_panel)
-        self.cb_export_numerical_vals.setObjectName("cb_export_numerical_vals")
-        self.cb_export_numerical_vals.setChecked(True)
-
-        self.gridLayout_4.addWidget(self.cb_export_numerical_vals, 2, 1, 1, 1)
-
-        self.horizontalSpacer = QSpacerItem(
-            40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
-        )
-
-        self.gridLayout_4.addItem(self.horizontalSpacer, 2, 0, 1, 1)
-
         self.scrollArea = QScrollArea(self.gp_spectral_panel)
         self.scrollArea.setObjectName("scrollArea")
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 353, 444))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 376, 444))
         self.formLayout = QFormLayout(self.scrollAreaWidgetContents)
         self.formLayout.setObjectName("formLayout")
         self.line = QFrame(self.scrollAreaWidgetContents)
@@ -449,7 +432,30 @@ class Ui_MainWindow(object):
 
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
-        self.gridLayout_4.addWidget(self.scrollArea, 0, 0, 1, 3)
+        self.gridLayout_4.addWidget(self.scrollArea, 0, 0, 1, 4)
+
+        self.pb_export = QPushButton(self.gp_spectral_panel)
+        self.pb_export.setObjectName("pb_export")
+
+        self.gridLayout_4.addWidget(self.pb_export, 2, 3, 1, 1)
+
+        self.cb_export_numerical_vals = QCheckBox(self.gp_spectral_panel)
+        self.cb_export_numerical_vals.setObjectName("cb_export_numerical_vals")
+        self.cb_export_numerical_vals.setChecked(True)
+
+        self.gridLayout_4.addWidget(self.cb_export_numerical_vals, 2, 1, 1, 1)
+
+        self.horizontalSpacer = QSpacerItem(
+            40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
+        )
+
+        self.gridLayout_4.addItem(self.horizontalSpacer, 2, 0, 1, 1)
+
+        self.pb_export_progress = QProgressBar(self.gp_spectral_panel)
+        self.pb_export_progress.setObjectName("pb_export_progress")
+        self.pb_export_progress.setValue(0)
+
+        self.gridLayout_4.addWidget(self.pb_export_progress, 2, 2, 1, 1)
 
         self.splitter.addWidget(self.gp_spectral_panel)
 
@@ -688,32 +694,6 @@ class Ui_MainWindow(object):
         self.gp_spectral_panel.setTitle(
             QCoreApplication.translate("MainWindow", "Spectral Data Panel", None)
         )
-        # if QT_CONFIG(tooltip)
-        self.pb_export.setToolTip(
-            QCoreApplication.translate(
-                "MainWindow",
-                "<html><head/><body><p>Export FIles:  (depending on each enable/disable):</p><p><br/></p><p>- Raw Bayer Image (TIF)</p><p>- Raw Bayer Image (NPY)</p><p>- Raw Bayer Image (MAT)</p><p>- Plot Figure: Raw Spectrum (PNG)</p><p>- Plot Figure: Reflectance Spectrum (PNG)</p><p>- Numerical Data (CSV)</p></body></html>",
-                None,
-            )
-        )
-        # endif // QT_CONFIG(tooltip)
-        self.pb_export.setText(
-            QCoreApplication.translate("MainWindow", "Export (Ctrl+E)", None)
-        )
-        # if QT_CONFIG(tooltip)
-        self.cb_export_numerical_vals.setToolTip(
-            QCoreApplication.translate(
-                "MainWindow",
-                "<html><head/><body><p>Export Numerical Values as CSV file:</p></body></html>",
-                None,
-            )
-        )
-        # endif // QT_CONFIG(tooltip)
-        self.cb_export_numerical_vals.setText(
-            QCoreApplication.translate(
-                "MainWindow", "Export Numerical Values  (CSV)", None
-            )
-        )
         self.label_3.setText(
             QCoreApplication.translate("MainWindow", "3. Spectrum (Reflectance)", None)
         )
@@ -829,6 +809,32 @@ class Ui_MainWindow(object):
         # endif // QT_CONFIG(tooltip)
         self.cb_bayer_show_geometry.setText(
             QCoreApplication.translate("MainWindow", "Show Geometry", None)
+        )
+        # if QT_CONFIG(tooltip)
+        self.pb_export.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                "<html><head/><body><p>Export FIles:  (depending on each enable/disable):</p><p><br/></p><p>- Raw Bayer Image (TIF)</p><p>- Raw Bayer Image (NPY)</p><p>- Raw Bayer Image (MAT)</p><p>- Plot Figure: Raw Spectrum (PNG)</p><p>- Plot Figure: Reflectance Spectrum (PNG)</p><p>- Numerical Data (CSV)</p></body></html>",
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
+        self.pb_export.setText(
+            QCoreApplication.translate("MainWindow", "Export (Ctrl+E)", None)
+        )
+        # if QT_CONFIG(tooltip)
+        self.cb_export_numerical_vals.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                "<html><head/><body><p>Export Numerical Values as CSV file:</p></body></html>",
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
+        self.cb_export_numerical_vals.setText(
+            QCoreApplication.translate(
+                "MainWindow", "Export Numerical Values  (CSV)", None
+            )
         )
         self.menuFile.setTitle(
             QCoreApplication.translate("MainWindow", "Operation", None)

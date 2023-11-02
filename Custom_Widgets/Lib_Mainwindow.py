@@ -253,7 +253,9 @@ class TheMainWindow(QMainWindow):
         return True
 
     def short_cut_export_raw_jpeg(self):
+        self.ui.pb_export_progress.setValue(0)
         if self.short_cut_preview_raw_jpeg():
+            self.ui.pb_export_progress.setValue(10)
             self.call_export_data()
         
     def call_open_folder_or_preview_jpeg(self, v: QModelIndex):
@@ -493,26 +495,38 @@ class TheMainWindow(QMainWindow):
 
     def call_export_data(self) -> None:
         """Exports"""
+        self.ui.pb_export_progress.setValue(20)
         self.export_output_dir = os.path.join(self.ddtree.ddir, "output")
         self.export_output_file_template = os.path.join(
                 self.ddtree.ddir, "output", os.path.basename(self.jpeg_path).replace(".jpeg", ""))
 
         os.makedirs(self.export_output_dir, exist_ok=True)
+        self.ui.pb_export_progress.setValue(30)
 
         if self.ui.cb_rawbayer_export_npy.isChecked():
             np.save(self.export_output_file_template + ".npy", self.jp.data)
+        self.ui.pb_export_progress.setValue(40)
 
         if self.ui.cb_rawbayer_export_tif.isChecked():
             cv.imwrite(self.export_output_file_template + ".tif", self.jp.data)
+        self.ui.pb_export_progress.setValue(50)
 
         if self.ui.cb_rawbayer_export_mat.isChecked():
             savemat(
                 self.export_output_file_template + ".mat", 
                 {"rawbayer": self.jp.data}
             )
+        self.ui.pb_export_progress.setValue(60)
 
         if self.ui.cb_rawspect_export_plot.isChecked():
             cv.imwrite(self.export_output_file_template + "_raw.png", self.raw_plot_as_npimg)
+        self.ui.pb_export_progress.setValue(70)
 
         if self.ui.cb_refspect_export_plot.isChecked():
             cv.imwrite(self.export_output_file_template + "_ref.png", self.ref_plot_as_npimg)
+        self.ui.pb_export_progress.setValue(80)
+        
+        if self.ui.cb_export_numerical_vals.isChecked():
+            self.jp.get_table(csvfname=self.export_output_file_template + ".csv")
+        self.ui.pb_export_progress.setValue(100)
+

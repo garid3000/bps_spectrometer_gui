@@ -382,43 +382,7 @@
         <string>Spectral Data Panel</string>
        </property>
        <layout class="QGridLayout" name="gridLayout_4">
-        <item row="2" column="2">
-         <widget class="QPushButton" name="pb_export">
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export FIles:  (depending on each enable/disable):&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;- Raw Bayer Image (TIF)&lt;/p&gt;&lt;p&gt;- Raw Bayer Image (NPY)&lt;/p&gt;&lt;p&gt;- Raw Bayer Image (MAT)&lt;/p&gt;&lt;p&gt;- Plot Figure: Raw Spectrum (PNG)&lt;/p&gt;&lt;p&gt;- Plot Figure: Reflectance Spectrum (PNG)&lt;/p&gt;&lt;p&gt;- Numerical Data (CSV)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="text">
-           <string>Export (Ctrl+E)</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QCheckBox" name="cb_export_numerical_vals">
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export Numerical Values as CSV file:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-          </property>
-          <property name="text">
-           <string>Export Numerical Values  (CSV)</string>
-          </property>
-          <property name="checked">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0">
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-        <item row="0" column="0" colspan="3">
+        <item row="0" column="0" colspan="4">
          <widget class="QScrollArea" name="scrollArea">
           <property name="widgetResizable">
            <bool>true</bool>
@@ -428,7 +392,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>353</width>
+             <width>376</width>
              <height>444</height>
             </rect>
            </property>
@@ -634,6 +598,49 @@
             </item>
            </layout>
           </widget>
+         </widget>
+        </item>
+        <item row="2" column="3">
+         <widget class="QPushButton" name="pb_export">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export FIles:  (depending on each enable/disable):&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;- Raw Bayer Image (TIF)&lt;/p&gt;&lt;p&gt;- Raw Bayer Image (NPY)&lt;/p&gt;&lt;p&gt;- Raw Bayer Image (MAT)&lt;/p&gt;&lt;p&gt;- Plot Figure: Raw Spectrum (PNG)&lt;/p&gt;&lt;p&gt;- Plot Figure: Reflectance Spectrum (PNG)&lt;/p&gt;&lt;p&gt;- Numerical Data (CSV)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Export (Ctrl+E)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QCheckBox" name="cb_export_numerical_vals">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export Numerical Values as CSV file:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Export Numerical Values  (CSV)</string>
+          </property>
+          <property name="checked">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
+         <spacer name="horizontalSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item row="2" column="2">
+         <widget class="QProgressBar" name="pb_export_progress">
+          <property name="value">
+           <number>0</number>
+          </property>
          </widget>
         </item>
        </layout>
