@@ -254,8 +254,10 @@ class TheMainWindow(QMainWindow):
         self.jp.load_file(self.jpeg_path)
         self.jp.get_bayer()
         self.jp.get_spectrums_channels_rgb()
-        self.jp.calc_shift_pixel_length()
-        self.jp.shiftall()
+        if self.ui.cb_fraunhofer_calib.isChecked():
+            self.jp.calc_shift_pixel_length()
+            self.jp.shiftall()
+            print("shift")
         self.jp.calc_reflectance()
         self.jp.fancy_reflectance()
 
