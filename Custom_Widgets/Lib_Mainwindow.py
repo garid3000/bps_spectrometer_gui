@@ -66,7 +66,7 @@ class FileSystemModel(QFileSystemModel):
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
         if role == Qt.ItemDataRole.ForegroundRole:
             text = index.data(Qt.ItemDataRole.DisplayRole)
-            if (".jpeg" in text) and (text.count("_")==3):
+            if (".jpeg" in text) and (text.count("_") in (3, 4)):
                 return QColor("#58cd1c")
 
             elif (text.count("_")==1 and 
