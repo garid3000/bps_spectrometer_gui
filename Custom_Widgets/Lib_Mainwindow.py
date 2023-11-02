@@ -240,7 +240,7 @@ class TheMainWindow(QMainWindow):
         #print("space press", tmppath)
         if not os.path.isfile(tmppath):
             return False
-        if not ((".jpeg" in basename) and (basename.count("_")==3)):
+        if not ((".jpeg" in basename) and (basename.count("_") in (3, 4))):
             self.warn_bad_jpeg_selected()
             return False
 
