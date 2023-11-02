@@ -208,10 +208,12 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self._label_3, 4, 0, 1, 1)
 
-        self.cb_fraunhofer = QCheckBox(self.gb_control_panel)
-        self.cb_fraunhofer.setObjectName("cb_fraunhofer")
+        self.cb_fraunhofer_calib = QCheckBox(self.gb_control_panel)
+        self.cb_fraunhofer_calib.setObjectName("cb_fraunhofer_calib")
+        self.cb_fraunhofer_calib.setToolTipDuration(-1)
+        self.cb_fraunhofer_calib.setChecked(True)
 
-        self.gridLayout_2.addWidget(self.cb_fraunhofer, 1, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.cb_fraunhofer_calib, 1, 2, 1, 1)
 
         self.sb_gray_bot_pxl = QSpinBox(self.gb_control_panel)
         self.sb_gray_bot_pxl.setObjectName("sb_gray_bot_pxl")
@@ -311,31 +313,12 @@ class Ui_MainWindow(object):
         self.scrollAreaWidgetContents.setGeometry(QRect(0, -66, 353, 444))
         self.formLayout = QFormLayout(self.scrollAreaWidgetContents)
         self.formLayout.setObjectName("formLayout")
-        self.label = QLabel(self.scrollAreaWidgetContents)
-        self.label.setObjectName("label")
-        font2 = QFont()
-        font2.setPointSize(14)
-        font2.setItalic(False)
-        font2.setUnderline(False)
-        self.label.setFont(font2)
-
-        self.formLayout.setWidget(0, QFormLayout.SpanningRole, self.label)
-
         self.line = QFrame(self.scrollAreaWidgetContents)
         self.line.setObjectName("line")
         self.line.setFrameShape(QFrame.Shape.HLine)
         self.line.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.formLayout.setWidget(13, QFormLayout.SpanningRole, self.line)
-
-        self.label_2 = QLabel(self.scrollAreaWidgetContents)
-        self.label_2.setObjectName("label_2")
-        font3 = QFont()
-        font3.setPointSize(14)
-        font3.setBold(False)
-        self.label_2.setFont(font3)
-
-        self.formLayout.setWidget(15, QFormLayout.SpanningRole, self.label_2)
 
         self.line_2 = QFrame(self.scrollAreaWidgetContents)
         self.line_2.setObjectName("line_2")
@@ -346,7 +329,10 @@ class Ui_MainWindow(object):
 
         self.label_3 = QLabel(self.scrollAreaWidgetContents)
         self.label_3.setObjectName("label_3")
-        self.label_3.setFont(font3)
+        font2 = QFont()
+        font2.setPointSize(14)
+        font2.setBold(False)
+        self.label_3.setFont(font2)
 
         self.formLayout.setWidget(25, QFormLayout.SpanningRole, self.label_3)
 
@@ -430,15 +416,31 @@ class Ui_MainWindow(object):
 
         self.formLayout.setWidget(19, QFormLayout.SpanningRole, self.limg_raw_spectrum)
 
-        self.cb_bayer_show_geometry = QCheckBox(self.scrollAreaWidgetContents)
-        self.cb_bayer_show_geometry.setObjectName("cb_bayer_show_geometry")
-
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.cb_bayer_show_geometry)
-
         self.cb_raw_show_bg = QCheckBox(self.scrollAreaWidgetContents)
         self.cb_raw_show_bg.setObjectName("cb_raw_show_bg")
 
         self.formLayout.setWidget(16, QFormLayout.LabelRole, self.cb_raw_show_bg)
+
+        self.label_2 = QLabel(self.scrollAreaWidgetContents)
+        self.label_2.setObjectName("label_2")
+        self.label_2.setFont(font2)
+
+        self.formLayout.setWidget(15, QFormLayout.SpanningRole, self.label_2)
+
+        self.label = QLabel(self.scrollAreaWidgetContents)
+        self.label.setObjectName("label")
+        font3 = QFont()
+        font3.setPointSize(14)
+        font3.setItalic(False)
+        font3.setUnderline(False)
+        self.label.setFont(font3)
+
+        self.formLayout.setWidget(0, QFormLayout.SpanningRole, self.label)
+
+        self.cb_bayer_show_geometry = QCheckBox(self.scrollAreaWidgetContents)
+        self.cb_bayer_show_geometry.setObjectName("cb_bayer_show_geometry")
+
+        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.cb_bayer_show_geometry)
 
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
@@ -587,15 +589,37 @@ class Ui_MainWindow(object):
         self.gb_dir_panel.setTitle(
             QCoreApplication.translate("MainWindow", "Directory Control Panel", None)
         )
+        # if QT_CONFIG(tooltip)
+        self.cb_ft_filter.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow", "Filter out (CSV, JPEG, JPG) files", None
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
         self.cb_ft_filter.setText(
             QCoreApplication.translate("MainWindow", "File type filter (Ctrl-F)", None)
         )
         self.gb_control_panel.setTitle(
             QCoreApplication.translate("MainWindow", "Geometry control panel", None)
         )
+        # if QT_CONFIG(tooltip)
+        self.sb_obje_top_pxl.setToolTip(
+            QCoreApplication.translate("MainWindow", "Pixel lenght from top", None)
+        )
+        # endif // QT_CONFIG(tooltip)
+        # if QT_CONFIG(tooltip)
+        self.pb_refresh.setToolTip(
+            QCoreApplication.translate("MainWindow", "Redraw Plots", None)
+        )
+        # endif // QT_CONFIG(tooltip)
         self.pb_refresh.setText(
             QCoreApplication.translate("MainWindow", "Refresh (Ctrl+R)", None)
         )
+        # if QT_CONFIG(tooltip)
+        self.sb_horx_left_pxl.setToolTip(
+            QCoreApplication.translate("MainWindow", "Pixel lenght from left", None)
+        )
+        # endif // QT_CONFIG(tooltip)
         self._label_1.setText(
             QCoreApplication.translate("MainWindow", "Horizontal Left Pixel", None)
         )
@@ -608,9 +632,29 @@ class Ui_MainWindow(object):
         self._label_3.setText(
             QCoreApplication.translate("MainWindow", "Vert. Object Pixel Range", None)
         )
-        self.cb_fraunhofer.setText(
+        # if QT_CONFIG(tooltip)
+        self.cb_fraunhofer_calib.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                "<html><head/><body><p>Enable/Disable x axis calibration using Fraunhofer (759.32nm) Line.</p><p>If the data is outside measurement, then it's better to enable it.</p><p>If the data is inside measurement, then it's better to disable it.</p></body></html>",
+                "asdf",
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
+        # if QT_CONFIG(statustip)
+        self.cb_fraunhofer_calib.setStatusTip("")
+        # endif // QT_CONFIG(statustip)
+        # if QT_CONFIG(whatsthis)
+        self.cb_fraunhofer_calib.setWhatsThis("")
+        # endif // QT_CONFIG(whatsthis)
+        self.cb_fraunhofer_calib.setText(
             QCoreApplication.translate("MainWindow", "Calibrate", None)
         )
+        # if QT_CONFIG(tooltip)
+        self.sb_gray_top_pxl.setToolTip(
+            QCoreApplication.translate("MainWindow", "Pixel lenght from top", None)
+        )
+        # endif // QT_CONFIG(tooltip)
         self.gp_webcam_meta.setTitle(
             QCoreApplication.translate("MainWindow", "Webcam + Meta Data Panel", None)
         )
@@ -618,20 +662,30 @@ class Ui_MainWindow(object):
         self.gp_spectral_panel.setTitle(
             QCoreApplication.translate("MainWindow", "Spectral Data Panel", None)
         )
+        # if QT_CONFIG(tooltip)
+        self.pb_export.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                "<html><head/><body><p>Export FIles:  (depending on each enable/disable):</p><p><br/></p><p>- Raw Bayer Image (TIF)</p><p>- Raw Bayer Image (NPY)</p><p>- Raw Bayer Image (MAT)</p><p>- Plot Figure: Raw Spectrum (PNG)</p><p>- Plot Figure: Reflectance Spectrum (PNG)</p><p>- Numerical Data (CSV)</p></body></html>",
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
         self.pb_export.setText(
             QCoreApplication.translate("MainWindow", "Export (Ctrl+E)", None)
         )
+        # if QT_CONFIG(tooltip)
+        self.cb_export_numerical_vals.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                "<html><head/><body><p>Export Numerical Values as CSV file:</p></body></html>",
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
         self.cb_export_numerical_vals.setText(
             QCoreApplication.translate(
                 "MainWindow", "Export Numerical Values  (CSV)", None
-            )
-        )
-        self.label.setText(
-            QCoreApplication.translate("MainWindow", "1. Raw Bayer", None)
-        )
-        self.label_2.setText(
-            QCoreApplication.translate(
-                "MainWindow", "2. Raw Spectrum (Ditigal Number)", None
             )
         )
         self.label_3.setText(
@@ -646,24 +700,69 @@ class Ui_MainWindow(object):
         self.limg_bayer_obje.setText(
             QCoreApplication.translate("MainWindow", "....", None)
         )
+        # if QT_CONFIG(tooltip)
+        self.cb_rawspect_export_plot.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                "Enable or Disable saving this plot-figure as PNG file",
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
         self.cb_rawspect_export_plot.setText(
             QCoreApplication.translate("MainWindow", "Export Plot (PNG)", None)
         )
         self.tbtn_raw_spectrum_config.setText(
             QCoreApplication.translate("MainWindow", "Plot Config (Ctrl+Shift+P)", None)
         )
+        # if QT_CONFIG(tooltip)
+        self.cb_rawbayer_export_npy.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                "<html><head/><body><p>Enable or Disable saving Raw Bayer Image as </p><p>NPY (numpy data file).</p><p><br/></p><p>Shape are (2464 x 3280) </p><p>dtype is np.uint16</p></body></html>",
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
         self.cb_rawbayer_export_npy.setText(
             QCoreApplication.translate("MainWindow", "Export Raw-Bayer (.NPY)", None)
         )
+        # if QT_CONFIG(tooltip)
+        self.cb_rawbayer_export_tif.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                "<html><head/><body><p>Enable or Disable saving Raw Bayer Image as </p><p>TIF (image).</p><p><br/></p><p>Shape are (2464 x 3280 x 1) </p><p>dtype is np.uint16.</p><p><br/></p><p><br/></p></body></html>",
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
         self.cb_rawbayer_export_tif.setText(
             QCoreApplication.translate("MainWindow", "Export Raw-Bayer (.TIF)", None)
         )
+        # if QT_CONFIG(tooltip)
+        self.cb_rawbayer_export_mat.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                "<html><head/><body><p>Enable or Disable saving Raw Bayer Image as </p><p>MAT (matlab data file).</p><p><br/></p><p>Shape are (2464 x 3280) </p><p>dtype is np.uint16</p></body></html>",
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
         self.cb_rawbayer_export_mat.setText(
             QCoreApplication.translate("MainWindow", "Export Raw-Bayer (.MAT)", None)
         )
         self.tbtn_ref_spectrum_config.setText(
             QCoreApplication.translate("MainWindow", "Plot Config (Ctrl+P)", None)
         )
+        # if QT_CONFIG(tooltip)
+        self.cb_refspect_export_plot.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                "Enable or Disable saving this plot-figure as PNG file",
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
         self.cb_refspect_export_plot.setText(
             QCoreApplication.translate("MainWindow", "Export Plot (PNG)", None)
         )
@@ -673,11 +772,37 @@ class Ui_MainWindow(object):
         self.limg_raw_spectrum.setText(
             QCoreApplication.translate("MainWindow", "....", None)
         )
-        self.cb_bayer_show_geometry.setText(
-            QCoreApplication.translate("MainWindow", "Show Geometry", None)
+        # if QT_CONFIG(tooltip)
+        self.cb_raw_show_bg.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                "<html><head/><body><p>On plot figure, </p><p>Show background estimation.</p><p><br/></p><p>Whether it's on or off, </p><p>Background value is always export in the &quot;Numerical Values (CSV)&quot; .</p></body></html>",
+                None,
+            )
         )
+        # endif // QT_CONFIG(tooltip)
         self.cb_raw_show_bg.setText(
             QCoreApplication.translate("MainWindow", "Show Backgroud Estimation", None)
+        )
+        self.label_2.setText(
+            QCoreApplication.translate(
+                "MainWindow", "2. Raw Spectrum (Ditigal Number)", None
+            )
+        )
+        self.label.setText(
+            QCoreApplication.translate("MainWindow", "1. Raw Bayer", None)
+        )
+        # if QT_CONFIG(tooltip)
+        self.cb_bayer_show_geometry.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                "<html><head/><body><p>Show geometry (arrows) on the Raw image below.</p><p><br/></p><p>It would not appear on the exported file Raw-Bayer ( npy, mat, tif).</p><p>It would only appear on the image in GUI</p></body></html>",
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
+        self.cb_bayer_show_geometry.setText(
+            QCoreApplication.translate("MainWindow", "Show Geometry", None)
         )
         self.menuFile.setTitle(
             QCoreApplication.translate("MainWindow", "Operation", None)

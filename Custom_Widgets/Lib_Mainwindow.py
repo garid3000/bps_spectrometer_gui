@@ -114,7 +114,7 @@ class TheMainWindow(QMainWindow):
 
         self.ui.tv_dir.setModel(self.fsmodel)
         self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath(QDir.homePath()))
-        self.ui.tv_dir.doubleClicked.connect(self.call_tv_onItemClicked)
+        self.ui.tv_dir.doubleClicked.connect(self.call_open_folder_or_preview_jpeg)
 
         #self.ui.cb_ft_filter.stateChanged.connect(self.fsmodel.setNameFilterDisables)
         self.ui.cb_ft_filter.stateChanged.connect(self.toggle_filetype_visiblity)
@@ -226,7 +226,7 @@ class TheMainWindow(QMainWindow):
         self.ddtree.set_ddir(self.dir_path)
         self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
         self.ui.limg_webcam.show_np_img(
-            cv.imread(self.ddtree.webcamFP).astype(np.uint8) 
+            cv.imread(self.ddtree.webcamFP).astype(np.uint8)[:, :, ::-1]
             if os.path.isfile(self.ddtree.webcamFP)
             else np.zeros((10, 10, 3), dtype=np.uint8)
         )
@@ -234,27 +234,15 @@ class TheMainWindow(QMainWindow):
         return True
 
     def short_cut_export_raw_jpeg(self):
-        print("exporting")
         if self.short_cut_preview_raw_jpeg():
             self.call_export_data()
-            pass
-            # exporting
         
-    #@QtCore.pyqtSlot(QTreeWidgetItem, int)
-    def call_tv_onItemClicked(self, v: QModelIndex):
+    def call_open_folder_or_preview_jpeg(self, v: QModelIndex):
         tmp  = self.fsmodel.filePath(v)
         if os.path.isdir(tmp):
-            print(tmp)
             self.ui.tv_dir.setRootIndex(v)
-            print(self.fsmodel.rootPath())
         else:
-            self.jpeg_path = self.fsmodel.filePath(v)
-            self.dir_path = os.path.dirname(self.jpeg_path)
-            print(self.dir_path, self.jpeg_path)
-            self.ddtree.set_ddir(self.dir_path)
-            self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
-            self.ui.limg_webcam.show_np_img(cv.imread(self.ddtree.webcamFP).astype(np.uint8))
-            self.refresh_plots()
+            self.short_cut_preview_raw_jpeg()
     
     def call_update_geometry_vals(self) -> None:
         self.jp.set_xWaveRng(  int(self.ui.sb_horx_left_pxl.text()) )
@@ -469,10 +457,15 @@ class TheMainWindow(QMainWindow):
         self.ui.limg_ref_spectrum.show_np_img(arr = self.ref_plot_as_npimg, outwidth= 480)
 
     def refresh_plots(self) -> None:
+        self.ui.pb_redraw_progress.setValue(0)
         self.update_jp_numerical_vals()
+        self.ui.pb_redraw_progress.setValue(25)
         self.update_visual_1_rawbayer_img_section()
+        self.ui.pb_redraw_progress.setValue(50)
         self.update_visual_2_raw_spectrum_section()
+        self.ui.pb_redraw_progress.setValue(75)
         self.update_visual_3_ref_spectrum_section()
+        self.ui.pb_redraw_progress.setValue(100)
 
     def call_export_data(self) -> None:
         """Exports"""

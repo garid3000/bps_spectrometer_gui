@@ -43,6 +43,9 @@
            </item>
            <item row="0" column="0">
             <widget class="QCheckBox" name="cb_ft_filter">
+             <property name="toolTip">
+              <string>Filter out (CSV, JPEG, JPG) files</string>
+             </property>
              <property name="text">
               <string>File type filter (Ctrl-F)</string>
              </property>
@@ -62,6 +65,9 @@
           <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,1,1">
            <item row="4" column="1">
             <widget class="QSpinBox" name="sb_obje_top_pxl">
+             <property name="toolTip">
+              <string>Pixel lenght from top</string>
+             </property>
              <property name="minimum">
               <number>500</number>
              </property>
@@ -75,6 +81,9 @@
            </item>
            <item row="6" column="1" colspan="2">
             <widget class="QPushButton" name="pb_refresh">
+             <property name="toolTip">
+              <string>Redraw Plots</string>
+             </property>
              <property name="text">
               <string>Refresh (Ctrl+R)</string>
              </property>
@@ -82,6 +91,9 @@
            </item>
            <item row="0" column="1">
             <widget class="QSpinBox" name="sb_horx_left_pxl">
+             <property name="toolTip">
+              <string>Pixel lenght from left</string>
+             </property>
              <property name="minimum">
               <number>900</number>
              </property>
@@ -223,9 +235,24 @@
             </widget>
            </item>
            <item row="1" column="2">
-            <widget class="QCheckBox" name="cb_fraunhofer">
+            <widget class="QCheckBox" name="cb_fraunhofer_calib">
+             <property name="toolTip">
+              <string comment="asdf" extracomment="hi htere does it working???">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable/Disable x axis calibration using Fraunhofer (759.32nm) Line.&lt;/p&gt;&lt;p&gt;If the data is outside measurement, then it's better to enable it.&lt;/p&gt;&lt;p&gt;If the data is inside measurement, then it's better to disable it.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="toolTipDuration">
+              <number>-1</number>
+             </property>
+             <property name="statusTip">
+              <string comment="zxcv" extracomment="asdf123"/>
+             </property>
+             <property name="whatsThis">
+              <string extracomment="asdf thi"/>
+             </property>
              <property name="text">
               <string>Calibrate</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -244,6 +271,9 @@
            </item>
            <item row="3" column="1">
             <widget class="QSpinBox" name="sb_gray_top_pxl">
+             <property name="toolTip">
+              <string>Pixel lenght from top</string>
+             </property>
              <property name="minimum">
               <number>500</number>
              </property>
@@ -330,6 +360,9 @@
        <layout class="QGridLayout" name="gridLayout_4">
         <item row="2" column="2">
          <widget class="QPushButton" name="pb_export">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export FIles:  (depending on each enable/disable):&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;- Raw Bayer Image (TIF)&lt;/p&gt;&lt;p&gt;- Raw Bayer Image (NPY)&lt;/p&gt;&lt;p&gt;- Raw Bayer Image (MAT)&lt;/p&gt;&lt;p&gt;- Plot Figure: Raw Spectrum (PNG)&lt;/p&gt;&lt;p&gt;- Plot Figure: Reflectance Spectrum (PNG)&lt;/p&gt;&lt;p&gt;- Numerical Data (CSV)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Export (Ctrl+E)</string>
           </property>
@@ -337,6 +370,9 @@
         </item>
         <item row="2" column="1">
          <widget class="QCheckBox" name="cb_export_numerical_vals">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export Numerical Values as CSV file:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Export Numerical Values  (CSV)</string>
           </property>
@@ -373,37 +409,10 @@
             </rect>
            </property>
            <layout class="QFormLayout" name="formLayout">
-            <item row="0" column="0" colspan="2">
-             <widget class="QLabel" name="label">
-              <property name="font">
-               <font>
-                <pointsize>14</pointsize>
-                <italic>false</italic>
-                <underline>false</underline>
-               </font>
-              </property>
-              <property name="text">
-               <string>1. Raw Bayer</string>
-              </property>
-             </widget>
-            </item>
             <item row="13" column="0" colspan="2">
              <widget class="Line" name="line">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="15" column="0" colspan="2">
-             <widget class="QLabel" name="label_2">
-              <property name="font">
-               <font>
-                <pointsize>14</pointsize>
-                <bold>false</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>2. Raw Spectrum (Ditigal Number)</string>
               </property>
              </widget>
             </item>
@@ -450,6 +459,9 @@
             </item>
             <item row="17" column="0">
              <widget class="QCheckBox" name="cb_rawspect_export_plot">
+              <property name="toolTip">
+               <string>Enable or Disable saving this plot-figure as PNG file</string>
+              </property>
               <property name="text">
                <string>Export Plot (PNG)</string>
               </property>
@@ -464,6 +476,9 @@
             </item>
             <item row="2" column="0">
              <widget class="QCheckBox" name="cb_rawbayer_export_npy">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable or Disable saving Raw Bayer Image as &lt;/p&gt;&lt;p&gt;NPY (numpy data file).&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Shape are (2464 x 3280) &lt;/p&gt;&lt;p&gt;dtype is np.uint16&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
               <property name="text">
                <string>Export Raw-Bayer (.NPY)</string>
               </property>
@@ -471,6 +486,9 @@
             </item>
             <item row="2" column="1">
              <widget class="QCheckBox" name="cb_rawbayer_export_tif">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable or Disable saving Raw Bayer Image as &lt;/p&gt;&lt;p&gt;TIF (image).&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Shape are (2464 x 3280 x 1) &lt;/p&gt;&lt;p&gt;dtype is np.uint16.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
               <property name="text">
                <string>Export Raw-Bayer (.TIF)</string>
               </property>
@@ -478,6 +496,9 @@
             </item>
             <item row="3" column="0">
              <widget class="QCheckBox" name="cb_rawbayer_export_mat">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable or Disable saving Raw Bayer Image as &lt;/p&gt;&lt;p&gt;MAT (matlab data file).&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Shape are (2464 x 3280) &lt;/p&gt;&lt;p&gt;dtype is np.uint16&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
               <property name="text">
                <string>Export Raw-Bayer (.MAT)</string>
               </property>
@@ -518,6 +539,9 @@
             </item>
             <item row="26" column="0">
              <widget class="QCheckBox" name="cb_refspect_export_plot">
+              <property name="toolTip">
+               <string>Enable or Disable saving this plot-figure as PNG file</string>
+              </property>
               <property name="text">
                <string>Export Plot (PNG)</string>
               </property>
@@ -537,17 +561,50 @@
               </property>
              </widget>
             </item>
-            <item row="1" column="0">
-             <widget class="QCheckBox" name="cb_bayer_show_geometry">
+            <item row="16" column="0">
+             <widget class="QCheckBox" name="cb_raw_show_bg">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;On plot figure, &lt;/p&gt;&lt;p&gt;Show background estimation.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Whether it's on or off, &lt;/p&gt;&lt;p&gt;Background value is always export in the &amp;quot;Numerical Values (CSV)&amp;quot; .&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
               <property name="text">
-               <string>Show Geometry</string>
+               <string>Show Backgroud Estimation</string>
               </property>
              </widget>
             </item>
-            <item row="16" column="0">
-             <widget class="QCheckBox" name="cb_raw_show_bg">
+            <item row="15" column="0" colspan="2">
+             <widget class="QLabel" name="label_2">
+              <property name="font">
+               <font>
+                <pointsize>14</pointsize>
+                <bold>false</bold>
+               </font>
+              </property>
               <property name="text">
-               <string>Show Backgroud Estimation</string>
+               <string>2. Raw Spectrum (Ditigal Number)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0" colspan="2">
+             <widget class="QLabel" name="label">
+              <property name="font">
+               <font>
+                <pointsize>14</pointsize>
+                <italic>false</italic>
+                <underline>false</underline>
+               </font>
+              </property>
+              <property name="text">
+               <string>1. Raw Bayer</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QCheckBox" name="cb_bayer_show_geometry">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show geometry (arrows) on the Raw image below.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;It would not appear on the exported file Raw-Bayer ( npy, mat, tif).&lt;/p&gt;&lt;p&gt;It would only appear on the image in GUI&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>Show Geometry</string>
               </property>
              </widget>
             </item>
