@@ -66,13 +66,16 @@
            <item row="4" column="1">
             <widget class="QSpinBox" name="sb_obje_top_pxl">
              <property name="toolTip">
-              <string>Pixel lenght from top</string>
+              <string>Pixel lenght from top (only takes EVEN Value)</string>
              </property>
              <property name="minimum">
               <number>500</number>
              </property>
              <property name="maximum">
               <number>2000</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
              </property>
              <property name="value">
               <number>1200</number>
@@ -92,13 +95,16 @@
            <item row="0" column="1">
             <widget class="QSpinBox" name="sb_horx_left_pxl">
              <property name="toolTip">
-              <string>Pixel lenght from left</string>
+              <string>Pixel lenght from left (only takes EVEN Value)</string>
              </property>
              <property name="minimum">
               <number>900</number>
              </property>
              <property name="maximum">
               <number>1700</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
              </property>
              <property name="value">
               <number>1350</number>
@@ -189,11 +195,17 @@
            </item>
            <item row="4" column="2">
             <widget class="QSpinBox" name="sb_obje_bot_pxl">
+             <property name="toolTip">
+              <string>(only takes EVEN Value)</string>
+             </property>
              <property name="minimum">
               <number>500</number>
              </property>
              <property name="maximum">
               <number>2000</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
              </property>
              <property name="value">
               <number>1250</number>
@@ -258,11 +270,17 @@
            </item>
            <item row="3" column="2">
             <widget class="QSpinBox" name="sb_gray_bot_pxl">
+             <property name="toolTip">
+              <string>(only takes EVEN Value)</string>
+             </property>
              <property name="minimum">
               <number>500</number>
              </property>
              <property name="maximum">
               <number>2000</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
              </property>
              <property name="value">
               <number>1100</number>
@@ -272,13 +290,16 @@
            <item row="3" column="1">
             <widget class="QSpinBox" name="sb_gray_top_pxl">
              <property name="toolTip">
-              <string>Pixel lenght from top</string>
+              <string>Pixel lenght from top (only takes EVEN Value)</string>
              </property>
              <property name="minimum">
               <number>500</number>
              </property>
              <property name="maximum">
               <number>2000</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
              </property>
              <property name="value">
               <number>1050</number>
@@ -289,6 +310,9 @@
             <widget class="QSpinBox" name="sb_horx_frau_pxl">
              <property name="enabled">
               <bool>false</bool>
+             </property>
+             <property name="toolTip">
+              <string>Fraunhofer line (in pixel)</string>
              </property>
              <property name="maximum">
               <number>9999</number>
@@ -403,7 +427,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-66</y>
+             <y>0</y>
              <width>353</width>
              <height>444</height>
             </rect>

@@ -107,6 +107,13 @@ class TheMainWindow(QMainWindow):
         self.ui.pb_refresh.clicked.connect(self.call_update_geometry_vals)
         self.ui.pb_export.clicked.connect(self.call_export_data)
 
+        # ensure even value
+        self.ui.sb_obje_top_pxl.valueChanged.connect(self.hand_odd_values_in_geometry_spinbox)
+        self.ui.sb_obje_bot_pxl.valueChanged.connect(self.hand_odd_values_in_geometry_spinbox)
+        self.ui.sb_gray_bot_pxl.valueChanged.connect(self.hand_odd_values_in_geometry_spinbox)
+        self.ui.sb_gray_top_pxl.valueChanged.connect(self.hand_odd_values_in_geometry_spinbox)
+        self.ui.sb_horx_left_pxl.valueChanged.connect(self.hand_odd_values_in_geometry_spinbox)
+
 
         # -----------------------------------------------------------------------------
         self.fsmodel = FileSystemModel()            # self.fsmodel = QFileSystemModel()
@@ -123,6 +130,18 @@ class TheMainWindow(QMainWindow):
         # -----------------------------------------------------------------------------
         self.init_keyboard_bindings()
         self.init_actions()
+
+    def hand_odd_values_in_geometry_spinbox(self) -> None:
+        self.ui.sb_obje_top_pxl.setValue(self.ui.sb_obje_top_pxl.value() - self.ui.sb_obje_top_pxl.value() % 2)
+        self.ui.sb_obje_bot_pxl.setValue(self.ui.sb_obje_bot_pxl.value() - self.ui.sb_obje_bot_pxl.value() % 2)
+        self.ui.sb_gray_bot_pxl.setValue(self.ui.sb_gray_bot_pxl.value() - self.ui.sb_gray_bot_pxl.value() % 2)
+        self.ui.sb_gray_top_pxl.setValue(self.ui.sb_gray_top_pxl.value() - self.ui.sb_gray_top_pxl.value() % 2)
+
+        self.ui.sb_horx_left_pxl.setValue(self.ui.sb_horx_left_pxl.value() -  self.ui.sb_horx_left_pxl.value() % 2)
+        self.ui.sb_horx_frau_pxl.setValue(self.ui.sb_horx_left_pxl.value() + 192*2)
+        
+        print("hi")
+        pass
 
     def set_def_val_raw_ref_dialog(self):
         self.raw_pcon_dialog.ui.le_title.setText("Raw Digital Value")
@@ -317,7 +336,11 @@ class TheMainWindow(QMainWindow):
                     (0, 0, 255), 
                     thickness=8)
 
-
+            tmp = cv.line(tmp, 
+                          (self.jp.xWaveRng[0] + 192* 2, 0), 
+                          (self.jp.xWaveRng[0] + 192* 2, 2400), 
+                          color=(100, 100, 100), 
+                          thickness=4) 
 
 
         tmp = cv.rectangle(
@@ -345,18 +368,17 @@ class TheMainWindow(QMainWindow):
 
         self.ui.limg_bayer_full.show_np_img(
             arr=tmp,
-            outwidth = 480
+            outwidth = 640 #480
         )
 
         self.ui.limg_bayer_gray.show_np_img(
-            arr=( 
-                 self.jp.rgb[ 
+            arr=( self.jp.rgb[ 
                               self.jp.yGrayRng[0]: self.jp.yGrayRng[1],
                               self.jp.xWaveRng[0]: self.jp.xWaveRng[1], 
                               : 
                               ] // 4
                  ).astype(np.uint8),
-            outwidth = 480
+            outwidth = 640 # 480
         )
         
 
@@ -368,34 +390,34 @@ class TheMainWindow(QMainWindow):
                               : 
                               ]// 4
                  ).astype(np.uint8),
-            outwidth = 480
+            outwidth = 640  # 480
         )
     def update_visual_2_raw_spectrum_section(self) -> None:
         fig: Figure
         ax: Axes
         fig, ax = plt.subplots()
 
-        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan0_r"], "r--", label="red")    
-        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan2_G"], "k--", label="green2")
-        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan1_g"], "g--", label="green")
-        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan3_b"], "b--", label="blue")
+        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan0_r"], "r--", label="Gray r")    
+        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan2_G"], "k--", label="Gray g")
+        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan1_g"], "g--", label="Gray G")
+        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan3_b"], "b--", label="Gray b")
 
-        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan0_r"], "r-", label="red")
-        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan2_G"], "k-", label="green2")
-        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan1_g"], "g-", label="green")
-        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan3_b"], "b-", label="blue")
+        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan0_r"], "r-", label="Object r")
+        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan2_G"], "k-", label="Object g")
+        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan1_g"], "g-", label="Object G")
+        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan3_b"], "b-", label="Object b")
         print(self.jp.xwave)
 
         if self.ui.cb_raw_show_bg.isChecked():
-            ax.plot(self.jp.xwave, self.jp.bg_gray4["chan0_r"], "r--") #, label="red")
-            ax.plot(self.jp.xwave, self.jp.bg_gray4["chan2_G"], "k--") #, label="green2")
-            ax.plot(self.jp.xwave, self.jp.bg_gray4["chan1_g"], "g--") #, label="green")
-            ax.plot(self.jp.xwave, self.jp.bg_gray4["chan3_b"], "b--") #, label="blue")
+            ax.plot(self.jp.xwave, self.jp.bg_gray4["chan0_r"], "r:") #, label="red")
+            ax.plot(self.jp.xwave, self.jp.bg_gray4["chan2_G"], "k:") #, label="green2")
+            ax.plot(self.jp.xwave, self.jp.bg_gray4["chan1_g"], "g:") #, label="green")
+            ax.plot(self.jp.xwave, self.jp.bg_gray4["chan3_b"], "b:") #, label="blue")
 
-            ax.plot(self.jp.xwave, self.jp.bg_obje4["chan0_r"], "r-") #, label="red")
-            ax.plot(self.jp.xwave, self.jp.bg_obje4["chan2_G"], "k-") #, label="green2")
-            ax.plot(self.jp.xwave, self.jp.bg_obje4["chan1_g"], "g-") #, label="green")
-            ax.plot(self.jp.xwave, self.jp.bg_obje4["chan3_b"], "b-") #, label="blue")
+            ax.plot(self.jp.xwave, self.jp.bg_obje4["chan0_r"], "r-.") #, label="red")
+            ax.plot(self.jp.xwave, self.jp.bg_obje4["chan2_G"], "k-.") #, label="green2")
+            ax.plot(self.jp.xwave, self.jp.bg_obje4["chan1_g"], "g-.") #, label="green")
+            ax.plot(self.jp.xwave, self.jp.bg_obje4["chan3_b"], "b-.") #, label="blue")
 
 
         ax.vlines(759, 0, 1024) # the 759nm
@@ -424,7 +446,7 @@ class TheMainWindow(QMainWindow):
         fig.canvas.draw()
         self.raw_plot_as_npimg = np.fromstring(
                 fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,)) # type: ignore
-        self.ui.limg_raw_spectrum.show_np_img(arr = self.raw_plot_as_npimg, outwidth= 480)
+        self.ui.limg_raw_spectrum.show_np_img(arr = self.raw_plot_as_npimg, outwidth= 640)
 
     def update_visual_3_ref_spectrum_section(self) -> None:
         fig, ax = plt.subplots()
@@ -456,7 +478,7 @@ class TheMainWindow(QMainWindow):
         fig.canvas.draw()
         self.ref_plot_as_npimg = np.fromstring(
                 fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,)) # type: ignore
-        self.ui.limg_ref_spectrum.show_np_img(arr = self.ref_plot_as_npimg, outwidth= 480)
+        self.ui.limg_ref_spectrum.show_np_img(arr = self.ref_plot_as_npimg, outwidth= 640)
 
     def refresh_plots(self) -> None:
         self.ui.pb_redraw_progress.setValue(0)

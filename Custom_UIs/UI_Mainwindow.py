@@ -138,6 +138,7 @@ class Ui_MainWindow(object):
         self.sb_obje_top_pxl.setObjectName("sb_obje_top_pxl")
         self.sb_obje_top_pxl.setMinimum(500)
         self.sb_obje_top_pxl.setMaximum(2000)
+        self.sb_obje_top_pxl.setSingleStep(2)
         self.sb_obje_top_pxl.setValue(1200)
 
         self.gridLayout_2.addWidget(self.sb_obje_top_pxl, 4, 1, 1, 1)
@@ -151,6 +152,7 @@ class Ui_MainWindow(object):
         self.sb_horx_left_pxl.setObjectName("sb_horx_left_pxl")
         self.sb_horx_left_pxl.setMinimum(900)
         self.sb_horx_left_pxl.setMaximum(1700)
+        self.sb_horx_left_pxl.setSingleStep(2)
         self.sb_horx_left_pxl.setValue(1350)
 
         self.gridLayout_2.addWidget(self.sb_horx_left_pxl, 0, 1, 1, 1)
@@ -193,6 +195,7 @@ class Ui_MainWindow(object):
         self.sb_obje_bot_pxl.setObjectName("sb_obje_bot_pxl")
         self.sb_obje_bot_pxl.setMinimum(500)
         self.sb_obje_bot_pxl.setMaximum(2000)
+        self.sb_obje_bot_pxl.setSingleStep(2)
         self.sb_obje_bot_pxl.setValue(1250)
 
         self.gridLayout_2.addWidget(self.sb_obje_bot_pxl, 4, 2, 1, 1)
@@ -219,6 +222,7 @@ class Ui_MainWindow(object):
         self.sb_gray_bot_pxl.setObjectName("sb_gray_bot_pxl")
         self.sb_gray_bot_pxl.setMinimum(500)
         self.sb_gray_bot_pxl.setMaximum(2000)
+        self.sb_gray_bot_pxl.setSingleStep(2)
         self.sb_gray_bot_pxl.setValue(1100)
 
         self.gridLayout_2.addWidget(self.sb_gray_bot_pxl, 3, 2, 1, 1)
@@ -227,6 +231,7 @@ class Ui_MainWindow(object):
         self.sb_gray_top_pxl.setObjectName("sb_gray_top_pxl")
         self.sb_gray_top_pxl.setMinimum(500)
         self.sb_gray_top_pxl.setMaximum(2000)
+        self.sb_gray_top_pxl.setSingleStep(2)
         self.sb_gray_top_pxl.setValue(1050)
 
         self.gridLayout_2.addWidget(self.sb_gray_top_pxl, 3, 1, 1, 1)
@@ -310,7 +315,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, -66, 353, 444))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 353, 444))
         self.formLayout = QFormLayout(self.scrollAreaWidgetContents)
         self.formLayout.setObjectName("formLayout")
         self.line = QFrame(self.scrollAreaWidgetContents)
@@ -604,7 +609,9 @@ class Ui_MainWindow(object):
         )
         # if QT_CONFIG(tooltip)
         self.sb_obje_top_pxl.setToolTip(
-            QCoreApplication.translate("MainWindow", "Pixel lenght from top", None)
+            QCoreApplication.translate(
+                "MainWindow", "Pixel lenght from top (only takes EVEN Value)", None
+            )
         )
         # endif // QT_CONFIG(tooltip)
         # if QT_CONFIG(tooltip)
@@ -617,7 +624,9 @@ class Ui_MainWindow(object):
         )
         # if QT_CONFIG(tooltip)
         self.sb_horx_left_pxl.setToolTip(
-            QCoreApplication.translate("MainWindow", "Pixel lenght from left", None)
+            QCoreApplication.translate(
+                "MainWindow", "Pixel lenght from left (only takes EVEN Value)", None
+            )
         )
         # endif // QT_CONFIG(tooltip)
         self._label_1.setText(
@@ -629,6 +638,11 @@ class Ui_MainWindow(object):
         self._label_4.setText(
             QCoreApplication.translate("MainWindow", "Horizontal Fraunhofer", None)
         )
+        # if QT_CONFIG(tooltip)
+        self.sb_obje_bot_pxl.setToolTip(
+            QCoreApplication.translate("MainWindow", "(only takes EVEN Value)", None)
+        )
+        # endif // QT_CONFIG(tooltip)
         self._label_3.setText(
             QCoreApplication.translate("MainWindow", "Vert. Object Pixel Range", None)
         )
@@ -651,8 +665,20 @@ class Ui_MainWindow(object):
             QCoreApplication.translate("MainWindow", "Calibrate", None)
         )
         # if QT_CONFIG(tooltip)
+        self.sb_gray_bot_pxl.setToolTip(
+            QCoreApplication.translate("MainWindow", "(only takes EVEN Value)", None)
+        )
+        # endif // QT_CONFIG(tooltip)
+        # if QT_CONFIG(tooltip)
         self.sb_gray_top_pxl.setToolTip(
-            QCoreApplication.translate("MainWindow", "Pixel lenght from top", None)
+            QCoreApplication.translate(
+                "MainWindow", "Pixel lenght from top (only takes EVEN Value)", None
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
+        # if QT_CONFIG(tooltip)
+        self.sb_horx_frau_pxl.setToolTip(
+            QCoreApplication.translate("MainWindow", "Fraunhofer line (in pixel)", None)
         )
         # endif // QT_CONFIG(tooltip)
         self.gp_webcam_meta.setTitle(
