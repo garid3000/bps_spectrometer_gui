@@ -49,7 +49,7 @@ def open_a_file(filepath: str) -> None:
                 stdin=None, stdout=None, stderr=None, close_fds=True)
         return None
     except Exception as e:
-        print(e)
+        logging.warning(f"{e}")
         return None
 
 
@@ -139,9 +139,6 @@ class TheMainWindow(QMainWindow):
 
         self.ui.sb_horx_left_pxl.setValue(self.ui.sb_horx_left_pxl.value() -  self.ui.sb_horx_left_pxl.value() % 2)
         self.ui.sb_horx_frau_pxl.setValue(self.ui.sb_horx_left_pxl.value() + 192*2)
-        
-        print("hi")
-        pass
 
     def set_def_val_raw_ref_dialog(self):
         self.raw_pcon_dialog.ui.le_title.setText("Raw Digital Value")
@@ -209,7 +206,7 @@ class TheMainWindow(QMainWindow):
         open_a_file("/home/garid/Projects/psm/bps_spectrometer_gui/docs/help.html")
 
     def short_cut_goto_parent_dir(self):
-        print("goto parent")
+        #print("goto parent")
         cur_root_index           = self.ui.tv_dir.rootIndex()          # get .
         parent_of_cur_root_index = self.fsmodel.parent(cur_root_index) # get ..
         self.ui.tv_dir.setRootIndex(parent_of_cur_root_index)          # set ..
@@ -227,17 +224,24 @@ class TheMainWindow(QMainWindow):
         sel_m_index = self.ui.tv_dir.currentIndex()
         tmppath = self.fsmodel.filePath(sel_m_index)
         open_a_file(tmppath)
+    
+    def warn_bad_jpeg_selected(self):
+        dlg = QMessageBox(self)
+        dlg.setIcon(QMessageBox.Icon.Warning)
+        dlg.setWindowTitle("Bad JPEG-file selected")
+        dlg.setInformativeText("Choose different JPEG-file, and try again")
+        dlg.exec()
 
 
     def short_cut_preview_raw_jpeg(self) -> bool:
         sel_m_index = self.ui.tv_dir.currentIndex()
         tmppath = self.fsmodel.filePath(sel_m_index)
         basename = os.path.basename(tmppath)
-        print("space press", tmppath)
+        #print("space press", tmppath)
         if not os.path.isfile(tmppath):
             return False
-        if not ((".jpeg" in basename) and 
-                (basename.count("_")==3)):
+        if not ((".jpeg" in basename) and (basename.count("_")==3)):
+            self.warn_bad_jpeg_selected()
             return False
 
         self.jpeg_path = tmppath
@@ -272,7 +276,11 @@ class TheMainWindow(QMainWindow):
         self.refresh_plots()
 
     def update_jp_numerical_vals(self) -> None:
-        self.jp.load_file(self.jpeg_path)
+        ret = self.jp.load_file(self.jpeg_path)
+        if not ret:
+            self.warn_bad_jpeg_selected()
+            return
+
         self.jp.get_bayer()
         self.jp.get_spectrums_channels_rgb()
         if self.ui.cb_fraunhofer_calib.isChecked():
@@ -424,7 +432,7 @@ class TheMainWindow(QMainWindow):
         ax.plot(self.jp.xwave, self.jp.obje4_mean["chan2_G"], "k-", label="Object g")
         ax.plot(self.jp.xwave, self.jp.obje4_mean["chan1_g"], "g-", label="Object G")
         ax.plot(self.jp.xwave, self.jp.obje4_mean["chan3_b"], "b-", label="Object b")
-        print(self.jp.xwave)
+        #print(self.jp.xwave)
 
         if self.ui.cb_raw_show_bg.isChecked():
             ax.plot(self.jp.xwave, self.jp.bg_gray4["chan0_r"], "r:") #, label="red")
