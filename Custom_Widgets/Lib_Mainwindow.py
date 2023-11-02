@@ -386,6 +386,27 @@ class TheMainWindow(QMainWindow):
                           color=(100, 100, 100), 
                           thickness=4)
 
+            tmp = cv.putText(tmp, "Gray Reference Region", (1600, 300),  0,  4, (255, 0, 0), 8, cv.LINE_AA)
+            tmp = cv.putText(tmp, "Target Object Region",  (1600, 2000), 0,  4, (0, 0, 255), 8, cv.LINE_AA)
+            tmp = cv.putText(tmp, "Fraunhofer Line 759nm", (100,  2200), 0,  4, (80, 80, 80), 8, cv.LINE_AA)
+
+            tmp = cv.arrowedLine(tmp,  
+                    (1600, 300) , 
+                    (self.jp.xWaveRng[0] + 200, self.jp.yGrayRng[0]), 
+                    (255, 0, 0), 
+                    thickness=4)
+
+            tmp = cv.arrowedLine(tmp,  
+                    (1600, 2000) , 
+                    (self.jp.xWaveRng[0] + 200, self.jp.yObjeRng[1]), 
+                    (0, 0, 255), 
+                    thickness=4)
+
+            tmp = cv.arrowedLine(tmp,  
+                    (100, 2200) , 
+                    (self.jp.xWaveRng[0] + 192*2, 2200), 
+                    (80, 80, 80), 
+                    thickness=4)
 
 
         tmp = cv.rectangle(
