@@ -14,7 +14,7 @@ from numpy._typing import NDArray
 from scipy.io import savemat
 
 # GUI packages
-from PySide6.QtWidgets import QDialogButtonBox, QMainWindow, QWidget, QFileSystemModel
+from PySide6.QtWidgets import QDialogButtonBox, QMainWindow, QWidget, QFileSystemModel, QMessageBox
 from PySide6.QtGui     import QKeySequence, QShortcut, QColor
 from PySide6.QtCore    import QModelIndex,  QDir, Qt
 
@@ -105,7 +105,7 @@ class TheMainWindow(QMainWindow):
         self.ref_pcon_dialog.ui.btn_box.button(QDialogButtonBox.StandardButton.Reset).clicked.connect(self.set_def_val_raw_ref_dialog)
 
         self.ui.pb_refresh.clicked.connect(self.call_update_geometry_vals)
-        self.ui.pb_export.clicked.connect(self.call_export_data)
+        self.ui.pb_export.clicked.connect(self.short_cut_export_raw_jpeg)
 
         # ensure even value
         self.ui.sb_obje_top_pxl.valueChanged.connect(self.hand_odd_values_in_geometry_spinbox)
@@ -278,9 +278,25 @@ class TheMainWindow(QMainWindow):
         if self.ui.cb_fraunhofer_calib.isChecked():
             self.jp.calc_shift_pixel_length()
             self.jp.shiftall()
-            print("shift")
-        self.jp.calc_reflectance()
-        self.jp.fancy_reflectance()
+        try:
+            self.jp.calc_reflectance()        # may raise an error
+            self.jp.fancy_reflectance()
+        except RuntimeError:
+            dlg = QMessageBox(self)
+            dlg.setIcon(QMessageBox.Icon.Warning)
+            dlg.setWindowTitle("Run time error encountered")
+            dlg.setInformativeText(
+                "Probably due to bad geometry values" + 
+                "please change values and try again" +
+                "(especially: Horizontal Left Pixel)"
+            )
+            dlg.exec()
+        except Exception as e:
+            dlg = QMessageBox(self)
+            dlg.setIcon(QMessageBox.Icon.Warning)
+            dlg.setWindowTitle("Error encountered")
+            dlg.setInformativeText(f"{e}")
+            dlg.exec()
 
     def update_visual_1_rawbayer_img_section(self) -> None:
         tmp = (self.jp.rgb // 4).astype(np.uint8)
