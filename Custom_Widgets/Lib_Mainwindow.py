@@ -37,10 +37,12 @@ logging.basicConfig(
 )
 
 
-def open_a_file(filepath: str) -> None:
+def open_file_with_external_default_app(filepath: str) -> None:
     """
+    try to open file based on the operation system, 
+    if can't report on qdialog
 
-    :param filepath: str: 
+    :param filepath: str:  file path
 
     """
     try:
@@ -56,6 +58,15 @@ def open_a_file(filepath: str) -> None:
         return None
     except Exception as e:
         logging.warning(f"{e}")
+        dlg = QMessageBox()
+        dlg.setIcon(QMessageBox.Icon.Warning)
+        dlg.setWindowTitle("Couldn't open file")
+        dlg.setInformativeText(                          # f"you have selected {}"
+            "Couldn't open file: -2 possible reasons, "
+            f"1. default application for this {filepath} is not set"
+            "2. your OS is not supported"
+        )
+        dlg.exec()
         return None
 
 
@@ -95,7 +106,6 @@ class TheMainWindow(QMainWindow):
     ddtree: DataDirTree = DataDirTree()
     jp: JpegProcessor = JpegProcessor()
     jpeg_path: str
-    # ex_type_dialog  : ExportTypeDialog # cant initialize Q widget an instance here.
     raw_pcon_dialog: PlotConfigDialog  # cant initialize Q widget an instance here.
     ref_pcon_dialog: PlotConfigDialog  # cant initialize Q widget an instance here.
 
@@ -120,7 +130,7 @@ class TheMainWindow(QMainWindow):
             QDialogButtonBox.StandardButton.Reset).clicked.connect(self.set_def_val_raw_ref_dialog)
 
         self.ui.pb_refresh.clicked.connect(self.call_update_geometry_vals)
-        self.ui.pb_export.clicked.connect(self.short_cut_export_raw_jpeg)
+        self.ui.pb_export.clicked.connect(self.try_to_export_data)
 
         # ensure even value
         self.ui.sb_obje_top_pxl.valueChanged.connect(self.hand_odd_values_in_geometry_spinbox)
@@ -142,8 +152,8 @@ class TheMainWindow(QMainWindow):
         self.ui.cb_bayer_show_geometry.stateChanged.connect(self.update_visual_1_rawbayer_img_section)
         self.ui.cb_raw_show_bg.stateChanged.connect(self.update_visual_2_raw_spectrum_section)
         # -----------------------------------------------------------------------------
-        self.init_keyboard_bindings()
-        self.init_actions()
+        self.init_linking_keybindings_n_callbacks()
+        self.init_linking_actions_n_callbacks()
         # "baa16d09-103c-474c-935d-eccf84960000-end"
 
     def hand_odd_values_in_geometry_spinbox(self) -> None:  # "ff666a54-e5b0-4c35-9b5a-4310cdcae654-start"
@@ -193,39 +203,38 @@ class TheMainWindow(QMainWindow):
         else:
             self.fsmodel.setNameFilters((["*"]))
 
-    def init_keyboard_bindings(self) -> None:
-        """ """
+    def init_linking_keybindings_n_callbacks(self) -> None:
+        """
+        initialze: linking keyboard keybindings (shortccuts) with their callbacks
+        """
         QShortcut(QKeySequence("Ctrl+B"),       self).activated.connect(self.short_cut_goto_parent_dir)
         QShortcut(QKeySequence("Backspace"),    self).activated.connect(self.short_cut_goto_parent_dir)
         QShortcut(QKeySequence("Return"),       self).activated.connect(self.short_cut_goto_selected_child_dir)
-        QShortcut(QKeySequence("Space"),        self).activated.connect(self.short_cut_preview_raw_jpeg)
-        QShortcut(QKeySequence("Ctrl+E"),       self).activated.connect(self.short_cut_export_raw_jpeg)
+        QShortcut(QKeySequence("Space"),        self).activated.connect(self.try_to_preview_raw_jpeg_n_return)
+        QShortcut(QKeySequence("Ctrl+E"),       self).activated.connect(self.try_to_export_data)
         QShortcut(QKeySequence("Ctrl+O"),       self).activated.connect(self.short_cut_open_at_point)
-        # QShortcut(QKeySequence("Ctrl+Shift+E"), self).activated.connect(self.ex_type_dialog.exec)
         QShortcut(QKeySequence("Ctrl+H"),       self).activated.connect(self.open_help_page)
         QShortcut(QKeySequence("Ctrl+F"),       self).activated.connect(self.ui.cb_ft_filter.toggle)
         QShortcut(QKeySequence("Ctrl+R"),       self).activated.connect(self.call_update_geometry_vals)
-
         QShortcut(QKeySequence("Ctrl+P"),       self).activated.connect(self.ref_pcon_dialog.exec)
         QShortcut(QKeySequence("Ctrl+Shift+P"), self).activated.connect(self.raw_pcon_dialog.exec)
 
-    def init_actions(self) -> None:
-        """ """
+    def init_linking_actions_n_callbacks(self) -> None:
+        """ 
+        initialize actions' callback:
+        action are the button on top of frame/window (e.g. File, Edit, Help ...)
+        """
         self.ui.action_help.triggered.connect(self.open_help_page)
-        # self.ui.action_dir_cur_child_fold.connect( #lambda self.ui.tv_dir.collapse())
-        # self.ui.action_dir_cur_child_unfold.connect(self.ui.tv_dir.)
-
         self.ui.action_dir_goto_cur_child.triggered.connect(self.short_cut_goto_selected_child_dir)
         self.ui.action_dir_goto_parent.triggered.connect(self.short_cut_goto_parent_dir)
         self.ui.action_dir_ft_filter_toggle.triggered.connect(self.ui.cb_ft_filter.toggle)
-
-        self.ui.action_cur_jpeg_export.triggered.connect(self.short_cut_export_raw_jpeg)
-        self.ui.action_cur_jpeg_preview.triggered.connect(self.short_cut_preview_raw_jpeg)
+        self.ui.action_cur_jpeg_export.triggered.connect(self.try_to_export_data)
+        self.ui.action_cur_jpeg_preview.triggered.connect(self.try_to_preview_raw_jpeg_n_return)
         self.ui.action_cur_file_open.triggered.connect(self.short_cut_open_at_point)
 
-    def open_help_page(self):
+    def open_help_page(self) -> None:  # This need to fixed ()
         """ """
-        open_a_file("/home/garid/Projects/psm/bps_spectrometer_gui/docs/help.html")
+        open_file_with_external_default_app("/home/garid/Projects/psm/bps_spectrometer_gui/docs/help.html")
 
     def short_cut_goto_parent_dir(self):
         """ """
@@ -247,7 +256,7 @@ class TheMainWindow(QMainWindow):
         """ """
         sel_m_index = self.ui.tv_dir.currentIndex()
         tmppath = self.fsmodel.filePath(sel_m_index)
-        open_a_file(tmppath)
+        open_file_with_external_default_app(tmppath)
 
     def warn_bad_jpeg_selected(self):
         """ """
@@ -257,12 +266,20 @@ class TheMainWindow(QMainWindow):
         dlg.setInformativeText("Choose different JPEG-file, and try again")
         dlg.exec()
 
-    def short_cut_preview_raw_jpeg(self) -> bool:
-        """ """
+    def try_to_preview_raw_jpeg_n_return(self) -> bool:
+        """ 
+        try_to_preview currently selected file (hopefully raw_jpeg).
+        and return success boolean
+
+        if selected-file is raw-jpeg:
+            then preview, and return True
+        else:
+            nothing, and return False
+        """
         sel_m_index = self.ui.tv_dir.currentIndex()
         tmppath = self.fsmodel.filePath(sel_m_index)
         basename = os.path.basename(tmppath)
-        # print("space press", tmppath)
+
         if not os.path.isfile(tmppath):
             return False
         if not ((".jpeg" in basename) and (basename.count("_") in (3, 4))):
@@ -273,20 +290,38 @@ class TheMainWindow(QMainWindow):
         self.dir_path = os.path.dirname(self.jpeg_path)
         self.ddtree.set_ddir(self.dir_path)
         self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
-        self.ui.limg_webcam.show_np_img(
-            cv.imread(self.ddtree.webcamFP).astype(np.uint8)[:, :, ::-1]
-            if os.path.isfile(self.ddtree.webcamFP)
-            else np.zeros((10, 10, 3), dtype=np.uint8)
-        )
-        self.refresh_plots()
+        try:
+            if os.path.isfile(self.ddtree.webcamFP):
+                self.ui.limg_webcam.show_np_img(cv.imread(self.ddtree.webcamFP).astype(np.uint8)[:, :, ::-1])
+            else:
+                self.ui.limg_webcam.show_np_img(np.zeros((10, 10, 3), dtype=np.uint8))
+        except Exception as e:
+            self.ui.limg_webcam.show_np_img(np.zeros((10, 10, 3), dtype=np.uint8))
+            logging.error(e)
+
+        self.calclate_numerical_val_n_replot()
         return True
 
-    def short_cut_export_raw_jpeg(self):
-        """ """
+    def try_to_export_data(self):
+        """ 
+        try_to_export_data:
+            if current selected file == raw-jpeg: 
+                then export 
+            else:
+                warning   TODO
+        """
         self.ui.pb_export_progress.setValue(0)
-        if self.short_cut_preview_raw_jpeg():
+        if self.try_to_preview_raw_jpeg_n_return():
             self.ui.pb_export_progress.setValue(10)
-            self.call_export_data()
+            self.export_data_on_last_selected_jpeg()
+        else:
+            dlg = QMessageBox(self)
+            dlg.setIcon(QMessageBox.Icon.Warning)
+            dlg.setWindowTitle("Bad JPEG file selected")
+            dlg.setInformativeText(                          # f"you have selected {}"
+                "check your file selection and try again"
+            )
+            dlg.exec()
 
     def call_open_folder_or_preview_jpeg(self, v: QModelIndex):
         """
@@ -298,14 +333,14 @@ class TheMainWindow(QMainWindow):
         if os.path.isdir(tmp):
             self.ui.tv_dir.setRootIndex(v)
         else:
-            self.short_cut_preview_raw_jpeg()
+            self.try_to_preview_raw_jpeg_n_return()
 
     def call_update_geometry_vals(self) -> None:
         """ """
         self.jp.set_xWaveRng(int(self.ui.sb_horx_left_pxl.text()))
         self.jp.set_yGrayRng((int(self.ui.sb_gray_top_pxl.text()), int(self.ui.sb_gray_bot_pxl.text())))
         self.jp.set_yObjeRng((int(self.ui.sb_obje_top_pxl.text()), int(self.ui.sb_obje_bot_pxl.text())))
-        self.refresh_plots()
+        self.calclate_numerical_val_n_replot()
 
     def update_jp_numerical_vals(self) -> None:
         """ """
@@ -339,7 +374,7 @@ class TheMainWindow(QMainWindow):
             dlg.setInformativeText(f"{e}")
             dlg.exec()
 
-    def update_visual_1_rawbayer_img_section(self) -> None:
+    def update_visual_1_rawbayer_img_section(self) -> None:  # TODO this might should be in raw_jpeg_processer
         """ """
         tmp = (self.jp.rgb // 4).astype(np.uint8)
 
@@ -461,27 +496,22 @@ class TheMainWindow(QMainWindow):
             (0, 0, 255),
             thickness=8)
 
-        self.ui.limg_bayer_full.show_np_img(
-            arr=tmp,
-            outwidth=640  # 480
-        )
+        self.ui.limg_bayer_full.show_np_img(arr=tmp, outwidth=640)
 
         self.ui.limg_bayer_gray.show_np_img(
-            arr=(self.jp.rgb[
-                self.jp.yGrayRng[0]: self.jp.yGrayRng[1],
-                self.jp.xWaveRng[0]: self.jp.xWaveRng[1],
-                :
-            ] // 4
+            arr=(
+                self.jp.rgb[self.jp.yGrayRng[0]: self.jp.yGrayRng[1],
+                            self.jp.xWaveRng[0]: self.jp.xWaveRng[1],
+                            :] // 4
             ).astype(np.uint8),
             outwidth=640  # 480
         )
 
         self.ui.limg_bayer_obje.show_np_img(
             arr=(
-                self.jp.rgb[
-                    self.jp.yObjeRng[0]: self.jp.yObjeRng[1],
-                    self.jp.xWaveRng[0]: self.jp.xWaveRng[1],
-                    :] // 4
+                self.jp.rgb[self.jp.yObjeRng[0]: self.jp.yObjeRng[1],
+                            self.jp.xWaveRng[0]: self.jp.xWaveRng[1],
+                            :] // 4
             ).astype(np.uint8),
             outwidth=640  # 480
         )
@@ -574,8 +604,15 @@ class TheMainWindow(QMainWindow):
             fig.canvas.tostring_rgb(), dtype=np.uint8).reshape(fig.canvas.get_width_height()[::-1] + (3,))  # type: ignore
         self.ui.limg_ref_spectrum.show_np_img(arr=self.ref_plot_as_npimg, outwidth=640)
 
-    def refresh_plots(self) -> None:
-        """ """
+    def calclate_numerical_val_n_replot(self) -> None:
+        """
+        Recalculate Numerical vals, & update 3 plots (raw, plot, plot):
+
+        1. update_jp_numerical_vals
+        2. update_visual_1_rawbayer_img_section
+        3. update_visual_2_raw_spectrum_section
+        4. update_visual_3_ref_spectrum_section
+        """
         self.ui.pb_redraw_progress.setValue(0)
         self.update_jp_numerical_vals()
         self.ui.pb_redraw_progress.setValue(25)
@@ -586,7 +623,7 @@ class TheMainWindow(QMainWindow):
         self.update_visual_3_ref_spectrum_section()
         self.ui.pb_redraw_progress.setValue(100)
 
-    def call_export_data(self) -> None:
+    def export_data_on_last_selected_jpeg(self) -> None:
         """Exports"""
         self.ui.pb_export_progress.setValue(20)
         self.export_output_dir = os.path.join(self.ddtree.ddir, "output")
