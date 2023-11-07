@@ -38,6 +38,11 @@ logging.basicConfig(
 
 
 def open_a_file(filepath: str) -> None:
+    """
+
+    :param filepath: str: 
+
+    """
     try:
         if system_str == "Windows":                  # Windows
             os.startfile(filepath)                   # type: ignore
@@ -55,7 +60,9 @@ def open_a_file(filepath: str) -> None:
 
 
 class FileSystemModel(QFileSystemModel):
+    """ """
     # read from https://stackoverflow.com/a/40455027/14696853
+
     def __init__(self, *args, **kwargs):
         super(FileSystemModel, self).__init__(*args, **kwargs)
         self.setNameFilters((["*.jpeg", "*.jpg", "*.json"]))
@@ -64,6 +71,12 @@ class FileSystemModel(QFileSystemModel):
         # self.setNameFilterDisables(True)
 
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
+        """
+
+        :param index: 
+        :param role:  (Default value = Qt.ItemDataRole.DisplayRole)
+
+        """
         if role == Qt.ItemDataRole.ForegroundRole:
             text = index.data(Qt.ItemDataRole.DisplayRole)
             if (".jpeg" in text) and (text.count("_") in (3, 4)):
@@ -77,6 +90,7 @@ class FileSystemModel(QFileSystemModel):
 
 
 class TheMainWindow(QMainWindow):
+    """ """
     dir_path: str = QDir.homePath()
     ddtree: DataDirTree = DataDirTree()
     jp: JpegProcessor = JpegProcessor()
@@ -143,6 +157,9 @@ class TheMainWindow(QMainWindow):
         # "ff666a54-e5b0-4c35-9b5a-4310cdcae654-end"
 
     def set_def_val_raw_ref_dialog(self):
+        """
+
+        """
         self.raw_pcon_dialog.ui.le_title.setText("Raw Digital Value")
         self.raw_pcon_dialog.ui.le_x_label.setText("Wavelength (nm)")
         self.raw_pcon_dialog.ui.le_y_label.setText("Digital Value (background removed)")
@@ -166,12 +183,18 @@ class TheMainWindow(QMainWindow):
         self.ref_pcon_dialog.ui.sb_fig_dpi.setValue(100)
 
     def toggle_filetype_visiblity(self, a: int) -> None:
+        """
+
+        :param a: int: 
+
+        """
         if a:
             self.fsmodel.setNameFilters((["*.jpeg", "*.jpg", "*.json"]))
         else:
             self.fsmodel.setNameFilters((["*"]))
 
     def init_keyboard_bindings(self) -> None:
+        """ """
         QShortcut(QKeySequence("Ctrl+B"),       self).activated.connect(self.short_cut_goto_parent_dir)
         QShortcut(QKeySequence("Backspace"),    self).activated.connect(self.short_cut_goto_parent_dir)
         QShortcut(QKeySequence("Return"),       self).activated.connect(self.short_cut_goto_selected_child_dir)
@@ -187,6 +210,7 @@ class TheMainWindow(QMainWindow):
         QShortcut(QKeySequence("Ctrl+Shift+P"), self).activated.connect(self.raw_pcon_dialog.exec)
 
     def init_actions(self) -> None:
+        """ """
         self.ui.action_help.triggered.connect(self.open_help_page)
         # self.ui.action_dir_cur_child_fold.connect( #lambda self.ui.tv_dir.collapse())
         # self.ui.action_dir_cur_child_unfold.connect(self.ui.tv_dir.)
@@ -200,9 +224,11 @@ class TheMainWindow(QMainWindow):
         self.ui.action_cur_file_open.triggered.connect(self.short_cut_open_at_point)
 
     def open_help_page(self):
+        """ """
         open_a_file("/home/garid/Projects/psm/bps_spectrometer_gui/docs/help.html")
 
     def short_cut_goto_parent_dir(self):
+        """ """
         # print("goto parent")
         cur_root_index = self.ui.tv_dir.rootIndex()          # get .
         parent_of_cur_root_index = self.fsmodel.parent(cur_root_index)  # get ..
@@ -210,6 +236,7 @@ class TheMainWindow(QMainWindow):
         self.ui.tv_dir.setCurrentIndex(parent_of_cur_root_index)   # idk why this needed
 
     def short_cut_goto_selected_child_dir(self) -> None:
+        """ """
         sel_m_index = self.ui.tv_dir.currentIndex()    # get
         if self.fsmodel.hasChildren(sel_m_index):      # enter only if this has children
             self.ui.tv_dir.setRootIndex(sel_m_index)
@@ -217,11 +244,13 @@ class TheMainWindow(QMainWindow):
             pass                                       # need to update jpeg_path here
 
     def short_cut_open_at_point(self):
+        """ """
         sel_m_index = self.ui.tv_dir.currentIndex()
         tmppath = self.fsmodel.filePath(sel_m_index)
         open_a_file(tmppath)
 
     def warn_bad_jpeg_selected(self):
+        """ """
         dlg = QMessageBox(self)
         dlg.setIcon(QMessageBox.Icon.Warning)
         dlg.setWindowTitle("Bad JPEG-file selected")
@@ -229,6 +258,7 @@ class TheMainWindow(QMainWindow):
         dlg.exec()
 
     def short_cut_preview_raw_jpeg(self) -> bool:
+        """ """
         sel_m_index = self.ui.tv_dir.currentIndex()
         tmppath = self.fsmodel.filePath(sel_m_index)
         basename = os.path.basename(tmppath)
@@ -252,12 +282,18 @@ class TheMainWindow(QMainWindow):
         return True
 
     def short_cut_export_raw_jpeg(self):
+        """ """
         self.ui.pb_export_progress.setValue(0)
         if self.short_cut_preview_raw_jpeg():
             self.ui.pb_export_progress.setValue(10)
             self.call_export_data()
 
     def call_open_folder_or_preview_jpeg(self, v: QModelIndex):
+        """
+
+        :param v: QModelIndex: 
+
+        """
         tmp = self.fsmodel.filePath(v)
         if os.path.isdir(tmp):
             self.ui.tv_dir.setRootIndex(v)
@@ -265,12 +301,14 @@ class TheMainWindow(QMainWindow):
             self.short_cut_preview_raw_jpeg()
 
     def call_update_geometry_vals(self) -> None:
+        """ """
         self.jp.set_xWaveRng(int(self.ui.sb_horx_left_pxl.text()))
         self.jp.set_yGrayRng((int(self.ui.sb_gray_top_pxl.text()), int(self.ui.sb_gray_bot_pxl.text())))
         self.jp.set_yObjeRng((int(self.ui.sb_obje_top_pxl.text()), int(self.ui.sb_obje_bot_pxl.text())))
         self.refresh_plots()
 
     def update_jp_numerical_vals(self) -> None:
+        """ """
         ret = self.jp.load_file(self.jpeg_path)
         if not ret:
             self.warn_bad_jpeg_selected()
@@ -302,6 +340,7 @@ class TheMainWindow(QMainWindow):
             dlg.exec()
 
     def update_visual_1_rawbayer_img_section(self) -> None:
+        """ """
         tmp = (self.jp.rgb // 4).astype(np.uint8)
 
         tmp = cv.rectangle(
@@ -448,6 +487,7 @@ class TheMainWindow(QMainWindow):
         )
 
     def update_visual_2_raw_spectrum_section(self) -> None:
+        """ """
         fig: Figure
         ax:  Axes
         fig, ax = plt.subplots()
@@ -502,6 +542,7 @@ class TheMainWindow(QMainWindow):
         self.ui.limg_raw_spectrum.show_np_img(arr=self.raw_plot_as_npimg, outwidth=640)
 
     def update_visual_3_ref_spectrum_section(self) -> None:
+        """ """
         fig, ax = plt.subplots()
         ax.plot(self.jp.xwave, self.jp.ref_fancy, color="black",   label="reflectance")
 
@@ -534,6 +575,7 @@ class TheMainWindow(QMainWindow):
         self.ui.limg_ref_spectrum.show_np_img(arr=self.ref_plot_as_npimg, outwidth=640)
 
     def refresh_plots(self) -> None:
+        """ """
         self.ui.pb_redraw_progress.setValue(0)
         self.update_jp_numerical_vals()
         self.ui.pb_redraw_progress.setValue(25)
