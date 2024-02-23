@@ -15,7 +15,7 @@ import cv2 as cv
 # GUI packages
 from PySide6.QtWidgets import QDialogButtonBox, QMainWindow, QWidget, QFileSystemModel
 from PySide6.QtGui import QKeySequence, QShortcut, QColor
-from PySide6.QtCore import QModelIndex, QDir, QRect, Qt
+from PySide6.QtCore import QModelIndex, QDir, Qt # QRect, 
 
 # Custom packages
 from Custom_UIs.UI_Mainwindow import Ui_MainWindow
@@ -136,11 +136,18 @@ class TheMainWindow(QMainWindow):
         self.roi_g = pg.ROI(
             pos=[self.ui.sb_horx_left_pxl.value(), self.ui.sb_gray_top_pxl.value()], 
             size=pg.Point(800, self.ui.sb_gray_top_pxl.value() - self.ui.sb_gray_bot_pxl.value()), 
-            movable=False)
+            movable=True,
+            scaleSnap=True,
+            snapSize=2,
+            translateSnap=True,
+        )
         self.roi_o = pg.ROI(
             pos=[self.ui.sb_horx_left_pxl.value(), self.ui.sb_obje_top_pxl.value()], 
             size=pg.Point(800, self.ui.sb_obje_top_pxl.value() - self.ui.sb_obje_bot_pxl.value()), 
-            movable=False
+            movable=True,
+            scaleSnap=True,
+            snapSize=2,
+            translateSnap=True,
         )
         #self.roi_g = pg.ROI([1480, 1250], pg.Point(800, 100), maxBounds=QRect(1480, 0, 800, 3000))
         #self.roi_o = pg.ROI([1480, 1350], pg.Point(800, 100), maxBounds=QRect(1480, 0, 800, 3000))
@@ -377,18 +384,20 @@ class TheMainWindow(QMainWindow):
             labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}
         )
         self.ui.graph_raw.addItem(inf1)
+        self.ui.graph_raw.addLegend()
 
-        self.ui.graph_raw.plot(self.jp.obje.rchan.index[:350], self.jp.obje.rchan["dn"].values[:350], pen="r", name="o")
-        self.ui.graph_raw.plot(self.jp.obje.gchan.index[:700], self.jp.obje.gchan["dn"].values[:700], pen="g", name="o")
-        self.ui.graph_raw.plot(self.jp.obje.bchan.index[:350], self.jp.obje.bchan["dn"].values[:350], pen="b", name="o")
+        self.ui.graph_raw.plot(self.jp.obje.rchan.index[:350], self.jp.obje.rchan["dn"].values[:350], pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="R-object")
+        self.ui.graph_raw.plot(self.jp.obje.gchan.index[:700], self.jp.obje.gchan["dn"].values[:700], pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-object")
+        self.ui.graph_raw.plot(self.jp.obje.bchan.index[:350], self.jp.obje.bchan["dn"].values[:350], pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="B-object")
 
-        self.ui.graph_raw.plot(self.jp.gray.rchan.index[:350], self.jp.gray.rchan["dn"].values[:350], pen="r", name="g")
-        self.ui.graph_raw.plot(self.jp.gray.gchan.index[:700], self.jp.gray.gchan["dn"].values[:700], pen="g", name="g")
-        self.ui.graph_raw.plot(self.jp.gray.bchan.index[:350], self.jp.gray.bchan["dn"].values[:350], pen="b", name="g")
-
+        self.ui.graph_raw.plot(self.jp.gray.rchan.index[:350], self.jp.gray.rchan["dn"].values[:350], pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine),  name="R-gray")
+        self.ui.graph_raw.plot(self.jp.gray.gchan.index[:700], self.jp.gray.gchan["dn"].values[:700], pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine),  name="G-gray")
+        self.ui.graph_raw.plot(self.jp.gray.bchan.index[:350], self.jp.gray.bchan["dn"].values[:350], pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine),  name="B-gray")
+        
         self.ui.graph_raw.setXRange(400,900)
         self.ui.graph_raw.setYRange(0,1024)
 
+        
 
     def update_visual_3_ref_spectrum_section(self) -> None:
         self.ui.graph_ref.clear()
