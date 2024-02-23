@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'UI_Mainwindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.5.2
+## Created by: Qt User Interface Compiler version 6.6.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -46,13 +46,14 @@ from PySide6.QtWidgets import (
 )
 
 from Custom_Libs.Lib_QLabelClick_Widget_NoUI import QLabelClick
+from pyqtgraph import ImageView, PlotWidget
 
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow: QMainWindow) -> None:
         if not MainWindow.objectName():
             MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(956, 521)
+        MainWindow.resize(1111, 686)
         self.actionOpen_Directory = QAction(MainWindow)
         self.actionOpen_Directory.setObjectName("actionOpen_Directory")
         self.action_cur_jpeg_export = QAction(MainWindow)
@@ -258,6 +259,11 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.limg_webcam)
 
+        self.widget = QWidget(self.gp_webcam_meta)
+        self.widget.setObjectName("widget")
+
+        self.verticalLayout.addWidget(self.widget)
+
         self.tb_meta_json = QTextBrowser(self.gp_webcam_meta)
         self.tb_meta_json.setObjectName("tb_meta_json")
         font1 = QFont()
@@ -273,7 +279,7 @@ class Ui_MainWindow(object):
         self.verticalLayout.addItem(self.verticalSpacer_2)
 
         self.verticalLayout.setStretch(0, 2)
-        self.verticalLayout.setStretch(1, 1)
+        self.verticalLayout.setStretch(2, 1)
         self.splitter.addWidget(self.gp_webcam_meta)
         self.gp_spectral_panel = QGroupBox(self.splitter)
         self.gp_spectral_panel.setObjectName("gp_spectral_panel")
@@ -301,7 +307,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 321, 412))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 389, 557))
         self.formLayout = QFormLayout(self.scrollAreaWidgetContents)
         self.formLayout.setObjectName("formLayout")
         self.label = QLabel(self.scrollAreaWidgetContents)
@@ -314,12 +320,44 @@ class Ui_MainWindow(object):
 
         self.formLayout.setWidget(0, QFormLayout.SpanningRole, self.label)
 
+        self.cb_bayer_show_geometry = QCheckBox(self.scrollAreaWidgetContents)
+        self.cb_bayer_show_geometry.setObjectName("cb_bayer_show_geometry")
+
+        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.cb_bayer_show_geometry)
+
+        self.cb_export_bayer_as_npy = QCheckBox(self.scrollAreaWidgetContents)
+        self.cb_export_bayer_as_npy.setObjectName("cb_export_bayer_as_npy")
+
+        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.cb_export_bayer_as_npy)
+
+        self.cb_export_bayer_as_tif = QCheckBox(self.scrollAreaWidgetContents)
+        self.cb_export_bayer_as_tif.setObjectName("cb_export_bayer_as_tif")
+
+        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.cb_export_bayer_as_tif)
+
+        self.cb_export_bayer_as_mat = QCheckBox(self.scrollAreaWidgetContents)
+        self.cb_export_bayer_as_mat.setObjectName("cb_export_bayer_as_mat")
+
+        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.cb_export_bayer_as_mat)
+
+        self.graph_2dimg = ImageView(self.scrollAreaWidgetContents)
+        self.graph_2dimg.setObjectName("graph_2dimg")
+        sizePolicy = QSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
+        )
+        sizePolicy.setHorizontalStretch(200)
+        sizePolicy.setVerticalStretch(200)
+        sizePolicy.setHeightForWidth(self.graph_2dimg.sizePolicy().hasHeightForWidth())
+        self.graph_2dimg.setSizePolicy(sizePolicy)
+
+        self.formLayout.setWidget(4, QFormLayout.SpanningRole, self.graph_2dimg)
+
         self.line = QFrame(self.scrollAreaWidgetContents)
         self.line.setObjectName("line")
         self.line.setFrameShape(QFrame.Shape.HLine)
         self.line.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.formLayout.setWidget(13, QFormLayout.SpanningRole, self.line)
+        self.formLayout.setWidget(9, QFormLayout.SpanningRole, self.line)
 
         self.label_2 = QLabel(self.scrollAreaWidgetContents)
         self.label_2.setObjectName("label_2")
@@ -328,101 +366,67 @@ class Ui_MainWindow(object):
         font3.setBold(False)
         self.label_2.setFont(font3)
 
-        self.formLayout.setWidget(15, QFormLayout.SpanningRole, self.label_2)
+        self.formLayout.setWidget(11, QFormLayout.SpanningRole, self.label_2)
+
+        self.cb_export_raw_plot_as_png = QCheckBox(self.scrollAreaWidgetContents)
+        self.cb_export_raw_plot_as_png.setObjectName("cb_export_raw_plot_as_png")
+
+        self.formLayout.setWidget(
+            12, QFormLayout.LabelRole, self.cb_export_raw_plot_as_png
+        )
+
+        self.tbtn_raw_spectrum_config = QToolButton(self.scrollAreaWidgetContents)
+        self.tbtn_raw_spectrum_config.setObjectName("tbtn_raw_spectrum_config")
+
+        self.formLayout.setWidget(
+            12, QFormLayout.FieldRole, self.tbtn_raw_spectrum_config
+        )
+
+        self.graph_raw = PlotWidget(self.scrollAreaWidgetContents)
+        self.graph_raw.setObjectName("graph_raw")
+        sizePolicy1 = QSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
+        )
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(200)
+        sizePolicy1.setHeightForWidth(self.graph_raw.sizePolicy().hasHeightForWidth())
+        self.graph_raw.setSizePolicy(sizePolicy1)
+
+        self.formLayout.setWidget(14, QFormLayout.SpanningRole, self.graph_raw)
 
         self.line_2 = QFrame(self.scrollAreaWidgetContents)
         self.line_2.setObjectName("line_2")
         self.line_2.setFrameShape(QFrame.Shape.HLine)
         self.line_2.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.formLayout.setWidget(21, QFormLayout.SpanningRole, self.line_2)
+        self.formLayout.setWidget(15, QFormLayout.SpanningRole, self.line_2)
 
         self.label_3 = QLabel(self.scrollAreaWidgetContents)
         self.label_3.setObjectName("label_3")
         self.label_3.setFont(font3)
 
-        self.formLayout.setWidget(23, QFormLayout.SpanningRole, self.label_3)
+        self.formLayout.setWidget(17, QFormLayout.SpanningRole, self.label_3)
 
-        self.limg_bayer_full = QLabelClick(self.scrollAreaWidgetContents)
-        self.limg_bayer_full.setObjectName("limg_bayer_full")
-
-        self.formLayout.setWidget(4, QFormLayout.SpanningRole, self.limg_bayer_full)
-
-        self.limg_bayer_gray = QLabelClick(self.scrollAreaWidgetContents)
-        self.limg_bayer_gray.setObjectName("limg_bayer_gray")
-
-        self.formLayout.setWidget(5, QFormLayout.SpanningRole, self.limg_bayer_gray)
-
-        self.limg_bayer_obje = QLabelClick(self.scrollAreaWidgetContents)
-        self.limg_bayer_obje.setObjectName("limg_bayer_obje")
-
-        self.formLayout.setWidget(6, QFormLayout.SpanningRole, self.limg_bayer_obje)
-
-        self.checkBox_4 = QCheckBox(self.scrollAreaWidgetContents)
-        self.checkBox_4.setObjectName("checkBox_4")
-
-        self.formLayout.setWidget(16, QFormLayout.LabelRole, self.checkBox_4)
-
-        self.tbtn_raw_spectrum_config = QToolButton(self.scrollAreaWidgetContents)
-        self.tbtn_raw_spectrum_config.setObjectName("tbtn_raw_spectrum_config")
+        self.cb_export_ref_plot_as_png = QCheckBox(self.scrollAreaWidgetContents)
+        self.cb_export_ref_plot_as_png.setObjectName("cb_export_ref_plot_as_png")
 
         self.formLayout.setWidget(
-            16, QFormLayout.FieldRole, self.tbtn_raw_spectrum_config
+            18, QFormLayout.LabelRole, self.cb_export_ref_plot_as_png
         )
-
-        self.checkBox_2 = QCheckBox(self.scrollAreaWidgetContents)
-        self.checkBox_2.setObjectName("checkBox_2")
-
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.checkBox_2)
-
-        self.checkBox = QCheckBox(self.scrollAreaWidgetContents)
-        self.checkBox.setObjectName("checkBox")
-
-        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.checkBox)
-
-        self.checkBox_3 = QCheckBox(self.scrollAreaWidgetContents)
-        self.checkBox_3.setObjectName("checkBox_3")
-
-        self.formLayout.setWidget(3, QFormLayout.LabelRole, self.checkBox_3)
-
-        self.verticalSpacer = QSpacerItem(
-            20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
-        )
-
-        self.formLayout.setItem(7, QFormLayout.SpanningRole, self.verticalSpacer)
-
-        self.verticalSpacer_3 = QSpacerItem(
-            20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
-        )
-
-        self.formLayout.setItem(20, QFormLayout.SpanningRole, self.verticalSpacer_3)
 
         self.tbtn_ref_spectrum_config = QToolButton(self.scrollAreaWidgetContents)
         self.tbtn_ref_spectrum_config.setObjectName("tbtn_ref_spectrum_config")
 
         self.formLayout.setWidget(
-            24, QFormLayout.FieldRole, self.tbtn_ref_spectrum_config
+            18, QFormLayout.FieldRole, self.tbtn_ref_spectrum_config
         )
 
-        self.checkBox_5 = QCheckBox(self.scrollAreaWidgetContents)
-        self.checkBox_5.setObjectName("checkBox_5")
+        self.graph_ref = PlotWidget(self.scrollAreaWidgetContents)
+        self.graph_ref.setObjectName("graph_ref")
+        sizePolicy1.setHeightForWidth(self.graph_ref.sizePolicy().hasHeightForWidth())
+        self.graph_ref.setSizePolicy(sizePolicy1)
 
-        self.formLayout.setWidget(24, QFormLayout.LabelRole, self.checkBox_5)
-
-        self.limg_ref_spectrum = QLabelClick(self.scrollAreaWidgetContents)
-        self.limg_ref_spectrum.setObjectName("limg_ref_spectrum")
-
-        self.formLayout.setWidget(25, QFormLayout.SpanningRole, self.limg_ref_spectrum)
-
-        self.limg_raw_spectrum = QLabelClick(self.scrollAreaWidgetContents)
-        self.limg_raw_spectrum.setObjectName("limg_raw_spectrum")
-
-        self.formLayout.setWidget(17, QFormLayout.SpanningRole, self.limg_raw_spectrum)
-
-        self.cb_bayer_show_geometry = QCheckBox(self.scrollAreaWidgetContents)
-        self.cb_bayer_show_geometry.setObjectName("cb_bayer_show_geometry")
-
-        self.formLayout.setWidget(1, QFormLayout.LabelRole, self.cb_bayer_show_geometry)
+        self.formLayout.setWidget(19, QFormLayout.SpanningRole, self.graph_ref)
 
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
@@ -438,7 +442,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName("menubar")
-        self.menubar.setGeometry(QRect(0, 0, 956, 19))
+        self.menubar.setGeometry(QRect(0, 0, 1111, 19))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
         self.menuDirectory_operations = QMenu(self.menuFile)
@@ -613,52 +617,37 @@ class Ui_MainWindow(object):
         self.label.setText(
             QCoreApplication.translate("MainWindow", "1. Raw Bayer", None)
         )
+        self.cb_bayer_show_geometry.setText(
+            QCoreApplication.translate("MainWindow", "Draw Geometry", None)
+        )
+        self.cb_export_bayer_as_npy.setText(
+            QCoreApplication.translate("MainWindow", "Export (Bayer as NPY)", None)
+        )
+        self.cb_export_bayer_as_tif.setText(
+            QCoreApplication.translate("MainWindow", "Export (Bayer as TIF)", None)
+        )
+        self.cb_export_bayer_as_mat.setText(
+            QCoreApplication.translate("MainWindow", "Export (Bayer as MAT)", None)
+        )
         self.label_2.setText(
             QCoreApplication.translate(
                 "MainWindow", "2. Raw Spectrum (Ditigal Number)", None
             )
         )
-        self.label_3.setText(
-            QCoreApplication.translate("MainWindow", "3. Spectrum (Reflectance)", None)
-        )
-        self.limg_bayer_full.setText(
-            QCoreApplication.translate("MainWindow", "....", None)
-        )
-        self.limg_bayer_gray.setText(
-            QCoreApplication.translate("MainWindow", "....", None)
-        )
-        self.limg_bayer_obje.setText(
-            QCoreApplication.translate("MainWindow", "....", None)
-        )
-        self.checkBox_4.setText(
+        self.cb_export_raw_plot_as_png.setText(
             QCoreApplication.translate("MainWindow", "Export Plot (PNG)", None)
         )
         self.tbtn_raw_spectrum_config.setText(
             QCoreApplication.translate("MainWindow", "Plot Config (Ctrl+Shift+P)", None)
         )
-        self.checkBox_2.setText(
-            QCoreApplication.translate("MainWindow", "Export (Bayer as NPY)", None)
+        self.label_3.setText(
+            QCoreApplication.translate("MainWindow", "3. Spectrum (Reflectance)", None)
         )
-        self.checkBox.setText(
-            QCoreApplication.translate("MainWindow", "Export (Bayer as TIF)", None)
-        )
-        self.checkBox_3.setText(
-            QCoreApplication.translate("MainWindow", "Export (Bayer as MAT)", None)
+        self.cb_export_ref_plot_as_png.setText(
+            QCoreApplication.translate("MainWindow", "Export Plot (PNG)", None)
         )
         self.tbtn_ref_spectrum_config.setText(
             QCoreApplication.translate("MainWindow", "Plot Config (Ctrl+P)", None)
-        )
-        self.checkBox_5.setText(
-            QCoreApplication.translate("MainWindow", "Export Plot (PNG)", None)
-        )
-        self.limg_ref_spectrum.setText(
-            QCoreApplication.translate("MainWindow", "....", None)
-        )
-        self.limg_raw_spectrum.setText(
-            QCoreApplication.translate("MainWindow", "....", None)
-        )
-        self.cb_bayer_show_geometry.setText(
-            QCoreApplication.translate("MainWindow", "Draw Geometry", None)
         )
         self.menuFile.setTitle(
             QCoreApplication.translate("MainWindow", "Operation", None)

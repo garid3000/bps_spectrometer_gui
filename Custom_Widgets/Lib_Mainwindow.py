@@ -6,24 +6,25 @@ import subprocess
 import platform
 from datetime import datetime
 from pathlib import Path
+import pyqtgraph as pg
 
 # Numerical/Visual packages
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib.figure import Figure
-from matplotlib.axes import Axes
 import cv2 as cv
 
 # GUI packages
 from PySide6.QtWidgets import QDialogButtonBox, QMainWindow, QWidget, QFileSystemModel
 from PySide6.QtGui import QKeySequence, QShortcut, QColor
-from PySide6.QtCore import QModelIndex, QDir, Qt
+from PySide6.QtCore import QModelIndex, QDir, QRect, Qt
 
 # Custom packages
 from Custom_UIs.UI_Mainwindow import Ui_MainWindow
 from Custom_Libs.Lib_DataDirTree import DataDirTree
 from Custom_Widgets.Lib_PlotConfigDialog import PlotConfigDialog
 from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import JpegProcessor
+
+pg.setConfigOption("background", "w")
+pg.setConfigOption("foreground", "k")
 
 
 system_str = platform.system()
@@ -36,6 +37,7 @@ logging.basicConfig(
 
 
 def open_file_externally(filepath: str) -> None:
+    """Opens given file externally, without hanging current running python script."""
     try:
         if system_str == "Windows":  # Windows
             os.startfile(filepath)  # type: ignore
@@ -77,6 +79,12 @@ class FileSystemModel(QFileSystemModel):
                 return QColor("#288d4c")
         return super(FileSystemModel, self).data(index, role)
 
+#class ConstantXROI(pg.ROI):
+#    constant_left_x = 0
+#
+#    def setPos(self, pos, y=None, update=True, finish=True):
+#        pos.setX(self.constant_left_x)
+#        super().setPos(pos, y=y, update=update, finish=finish)
 
 class TheMainWindow(QMainWindow):
     dir_path: str = QDir.homePath()
@@ -91,6 +99,10 @@ class TheMainWindow(QMainWindow):
         super(TheMainWindow, self).__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+
+        self.jp.set_xWaveRng(int(self.ui.sb_horx_left_pxl.text()))
+        self.jp.set_yGrayRng((int(self.ui.sb_gray_top_pxl.text()), int(self.ui.sb_gray_bot_pxl.text())))
+        self.jp.set_yObjeRng((int(self.ui.sb_obje_top_pxl.text()), int(self.ui.sb_obje_bot_pxl.text())))
 
         self.raw_pcon_dialog = PlotConfigDialog()
         self.ref_pcon_dialog = PlotConfigDialog()
@@ -121,6 +133,37 @@ class TheMainWindow(QMainWindow):
         self.ui.cb_ft_filter.stateChanged.connect(self.toggle_filetype_visiblity)
         self.ui.cb_bayer_show_geometry.stateChanged.connect(self.update_visual_1_rawbayer_img_section)
         # -----------------------------------------------------------------------------
+        self.roi_g = pg.ROI(
+            pos=[self.ui.sb_horx_left_pxl.value(), self.ui.sb_gray_top_pxl.value()], 
+            size=pg.Point(800, self.ui.sb_gray_top_pxl.value() - self.ui.sb_gray_bot_pxl.value()), 
+            movable=False)
+        self.roi_o = pg.ROI(
+            pos=[self.ui.sb_horx_left_pxl.value(), self.ui.sb_obje_top_pxl.value()], 
+            size=pg.Point(800, self.ui.sb_obje_top_pxl.value() - self.ui.sb_obje_bot_pxl.value()), 
+            movable=False
+        )
+        #self.roi_g = pg.ROI([1480, 1250], pg.Point(800, 100), maxBounds=QRect(1480, 0, 800, 3000))
+        #self.roi_o = pg.ROI([1480, 1350], pg.Point(800, 100), maxBounds=QRect(1480, 0, 800, 3000))
+        #self.roi_g = ConstantXROI([1480, 1250], pg.Point(800, 100), maxBounds=QRect(1480, 0, 800, 3000))
+        #self.roi_o = ConstantXROI([1480, 1350], pg.Point(800, 100), maxBounds=QRect(1480, 0, 800, 3000))
+        
+        self.roi_g.constant_left_x = 1480
+        self.roi_o.constant_left_x = 1480
+
+        #self.roi_o.addScaleHandle([0.5, 1], [0.5, 0.5])
+        #self.roi_g.addScaleHandle([0.5, 1], [0.5, 0.5])
+
+        self.roi_o.setZValue(10)
+        self.roi_g.setZValue(10)
+
+        self.ui.graph_2dimg.addItem(self.roi_o)
+        self.ui.graph_2dimg.addItem(self.roi_g)
+
+        # self.roi_g.sigRegionChanged.connect(self.updatePlot_g_roi)
+        # self.roi_o.sigRegionChanged.connect(self.updatePlot_o_roi)
+
+
+
         self.init_keyboard_bindings()
         self.init_actions()
 
@@ -182,7 +225,7 @@ class TheMainWindow(QMainWindow):
         self.ui.action_cur_file_open.triggered.connect(self.short_cut_open_at_point)
 
     def open_help_page(self):
-        open_file_externally("/home/garid/Projects/psm/bps_spectrometer_gui/docs/help.html")  # TODO need to change
+        open_file_externally("./docs/help.html")  # TODO need to change
 
     def short_cut_goto_parent_dir(self):
         logging.info("going to parent file")
@@ -218,7 +261,7 @@ class TheMainWindow(QMainWindow):
         self.ddtree.set_ddir(self.dir_path)
         self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
         self.ui.limg_webcam.show_np_img(
-            cv.imread(self.ddtree.webcamFP).astype(np.uint8)
+            cv.imread(self.ddtree.webcamFP).astype(np.uint8)[:, :, ::-1]
             if os.path.isfile(self.ddtree.webcamFP)
             else np.zeros((10, 10, 3), dtype=np.uint8)
         )
@@ -227,7 +270,7 @@ class TheMainWindow(QMainWindow):
 
     def short_cut_export_raw_jpeg(self):
         logging.info("exporting")
-        if self.short_cut_preview_raw_jpeg():
+        if self.short_cut_preview_raw_jpeg():    # this itself it the exporting 
             self.call_export_data()
 
     # @QtCore.pyqtSlot(QTreeWidgetItem, int)
@@ -250,215 +293,109 @@ class TheMainWindow(QMainWindow):
         self.jp.set_xWaveRng(int(self.ui.sb_horx_left_pxl.text()))
         self.jp.set_yGrayRng((int(self.ui.sb_gray_top_pxl.text()), int(self.ui.sb_gray_bot_pxl.text())))
         self.jp.set_yObjeRng((int(self.ui.sb_obje_top_pxl.text()), int(self.ui.sb_obje_bot_pxl.text())))
+
+        self.roi_o.setPos(pos=(int(self.ui.sb_horx_left_pxl.text()), int(self.ui.sb_obje_top_pxl.text())))
+        self.roi_g.setPos(pos=(int(self.ui.sb_horx_left_pxl.text()), int(self.ui.sb_gray_top_pxl.text())))
+
+        self.roi_o.setSize(size=(800, int(self.ui.sb_obje_top_pxl.text())-int(self.ui.sb_obje_bot_pxl.text())))
+        self.roi_g.setSize(size=(800, int(self.ui.sb_gray_top_pxl.text())-int(self.ui.sb_gray_bot_pxl.text())))
         self.refresh_plots()
 
     def update_jp_numerical_vals(self) -> None:
         self.jp.load_file(self.jpeg_path)
         self.jp.get_bayer()
-        self.jp.get_spectrums_channels_rgb()
-        self.jp.calc_shift_pixel_length()
-        self.jp.shiftall()
-        self.jp.calc_reflectance()
+        #self.jp.get_spectrums_channels_rgb()
+        #self.jp.calc_shift_pixel_length()
+        #self.jp.shiftall()
+        #self.jp.calc_reflectance()
+        #self.jp.fancy_reflectance()
+        self.jp.get_spectrum()
+        self.jp.fixme()
         self.jp.fancy_reflectance()
 
+    # def updatePlot_g_roi(self) -> None:
+    #     selected_o = self.roi_o.getState()
+
+    #     self.roi_o.setPos(
+    #         pos=pg.Point(self.ui.sb_horx_left_pxl.value(), selected_o["pos"].y())   
+    #     )
+    #     self.roi_o.setSize(
+    #         size=pg.Point(800, selected_o["size"].y())   
+    #     )
+    #     self.update_geometry_parameters_after_roi_update()
+
+    # def updatePlot_o_roi(self) -> None:
+    #     selected_g = self.roi_g.getState()
+
+    #     self.roi_g.setPos(
+    #         pos=pg.Point(self.ui.sb_horx_left_pxl.value(), selected_g["pos"].y())   
+    #     )
+    #     self.roi_g.setSize(
+    #         size=pg.Point(800, selected_g["size"].y())   
+    #     )
+    #     self.update_geometry_parameters_after_roi_update()
+
+
+    # def update_geometry_parameters_after_roi_update(self) -> None:
+    #     selected_o = self.roi_o.getState()
+    #     selected_g = self.roi_g.getState()
+
+    #     #self.ui.sb_horx_left_pxl.setValue(int(selected_o["pos"].x()))
+    #     self.ui.sb_obje_top_pxl.setValue(int(selected_o["pos"].y()))
+    #     self.ui.sb_obje_bot_pxl.setValue(int(selected_o["pos"].y() + selected_o["size"].y() ))
+    #     self.ui.sb_gray_top_pxl.setValue(int(selected_g["pos"].y()))
+    #     self.ui.sb_gray_bot_pxl.setValue(int(selected_g["pos"].y() + selected_g["size"].y() ))
+    #     pass
+
+
+    #     self.jp.set_xWaveRng(int(self.ui.sb_horx_left_pxl.text()))
+    #     self.jp.set_yGrayRng((int(self.ui.sb_gray_top_pxl.text()), int(self.ui.sb_gray_bot_pxl.text())))
+    #     self.jp.set_yObjeRng((int(self.ui.sb_obje_top_pxl.text()), int(self.ui.sb_obje_bot_pxl.text())))
+    #     self.jp.get_bayer()
+    #     self.jp.get_spectrum()
+    #     self.jp.fixme()
+    #     self.jp.fancy_reflectance()
+
+    #     self.update_visual_2_raw_spectrum_section()
+
     def update_visual_1_rawbayer_img_section(self) -> None:
-        tmp = (self.jp.rgb // 4).astype(np.uint8)
-
-        tmp = cv.rectangle(
-            tmp,
-            (self.jp.xWaveRng[0], self.jp.yGrayRng[0]),
-            (self.jp.xWaveRng[1], self.jp.yGrayRng[1]),
-            (255, 0, 0),
-            thickness=8,
+        self.ui.graph_2dimg.clear()
+        self.ui.graph_2dimg.setImage(
+            img=self.jp.rgb,
+            levels=(0, 1024),
+            axes={"x":1, "y":0, "c":2}
         )
-
-        tmp = cv.rectangle(
-            tmp,
-            (self.jp.xLfBgRng[0], self.jp.yGrayRng[0]),
-            (self.jp.xLfBgRng[1], self.jp.yGrayRng[1]),
-            (255, 0, 0),
-            thickness=8,
-        )
-
-        tmp = cv.rectangle(
-            tmp,
-            (self.jp.xRiBgRng[0], self.jp.yGrayRng[0]),
-            (self.jp.xRiBgRng[1], self.jp.yGrayRng[1]),
-            (255, 0, 0),
-            thickness=8,
-        )
-
-        if self.ui.cb_bayer_show_geometry.isChecked():
-            tmp = cv.putText(
-                tmp,
-                str(self.ui.sb_horx_left_pxl.value()) + "px",
-                (self.jp.xWaveRng[0] // 2, self.jp.yObjeRng[0] // 2),
-                0,
-                4,
-                (0, 255, 0),
-                8,
-                cv.LINE_AA,
-            )
-            tmp = cv.arrowedLine(
-                tmp,
-                (0, self.jp.yObjeRng[0] // 2),
-                (self.jp.xWaveRng[0], self.jp.yObjeRng[0] // 2),
-                (0, 255, 0),
-                thickness=8,
-            )
-
-            tmp = cv.putText(
-                tmp,
-                str(self.ui.sb_gray_top_pxl.value()) + "px",
-                (self.jp.xWaveRng[0] // 2, 3 * self.jp.yGrayRng[0] // 4),
-                0,
-                4,
-                (255, 0, 0),
-                8,
-                cv.LINE_AA,
-            )
-
-            tmp = cv.arrowedLine(
-                tmp,
-                (self.jp.xWaveRng[0] // 2, 0),
-                (self.jp.xWaveRng[0] // 2, self.jp.yGrayRng[0]),
-                (255, 0, 0),
-                thickness=8,
-            )
-
-            tmp = cv.putText(
-                tmp,
-                str(self.ui.sb_obje_top_pxl.value()) + "px",
-                (self.jp.xWaveRng[0] // 4, 3 * self.jp.yObjeRng[0] // 4),
-                0,
-                4,
-                (0, 0, 255),
-                8,
-                cv.LINE_AA,
-            )
-
-            tmp = cv.arrowedLine(
-                tmp,
-                (self.jp.xWaveRng[0] // 4, 0),
-                (self.jp.xWaveRng[0] // 4, self.jp.yObjeRng[0]),
-                (0, 0, 255),
-                thickness=8,
-            )
-
-        tmp = cv.rectangle(
-            tmp,
-            (self.jp.xWaveRng[0], self.jp.yObjeRng[0]),
-            (self.jp.xWaveRng[1], self.jp.yObjeRng[1]),
-            (0, 0, 255),
-            thickness=8,
-        )
-
-        tmp = cv.rectangle(
-            tmp,
-            (self.jp.xLfBgRng[0], self.jp.yObjeRng[0]),
-            (self.jp.xLfBgRng[1], self.jp.yObjeRng[1]),
-            (0, 0, 255),
-            thickness=8,
-        )
-
-        tmp = cv.rectangle(
-            tmp,
-            (self.jp.xRiBgRng[0], self.jp.yObjeRng[0]),
-            (self.jp.xRiBgRng[1], self.jp.yObjeRng[1]),
-            (0, 0, 255),
-            thickness=8,
-        )
-
-        self.ui.limg_bayer_full.show_np_img(arr=tmp, outwidth=480)
-
-        self.ui.limg_bayer_gray.show_np_img(
-            arr=(
-                self.jp.rgb[self.jp.yGrayRng[0]:self.jp.yGrayRng[1], self.jp.xWaveRng[0]:self.jp.xWaveRng[1], :] // 4
-            ).astype(np.uint8),
-            outwidth=480,
-        )
-
-        self.ui.limg_bayer_obje.show_np_img(
-            arr=(
-                self.jp.rgb[self.jp.yObjeRng[0]:self.jp.yObjeRng[1], self.jp.xWaveRng[0]:self.jp.xWaveRng[1], :] // 4
-            ).astype(np.uint8),
-            outwidth=480,
-        )
+        self.ui.graph_2dimg.ui.roiBtn.hide()
+        self.ui.graph_2dimg.ui.menuBtn.hide()
 
     def update_visual_2_raw_spectrum_section(self) -> None:
-        fig: Figure
-        ax: Axes
-        fig, ax = plt.subplots()
-
-        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan0_r"], "r--", label="red")
-        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan2_G"], "k--", label="green2")
-        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan1_g"], "g--", label="green")
-        ax.plot(self.jp.xwave, self.jp.gray4_mean["chan3_b"], "b--", label="blue")
-
-        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan0_r"], "r-", label="red")
-        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan2_G"], "k-", label="green2")
-        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan1_g"], "g-", label="green")
-        ax.plot(self.jp.xwave, self.jp.obje4_mean["chan3_b"], "b-", label="blue")
-
-        ax.vlines(759, 0, 1024)  # the 759nm
-        if self.raw_pcon_dialog.ui.cb_legend.isChecked():
-            ax.legend()
-        if self.raw_pcon_dialog.ui.cb_grid.isChecked():
-            ax.grid()
-        ax.set_xlim(
-            left=self.raw_pcon_dialog.ui.sb_x_range_min.value(),
-            right=self.raw_pcon_dialog.ui.sb_x_range_max.value(),
+        self.ui.graph_raw.clear()
+        inf1 = pg.InfiniteLine(
+            pos=759.3,
+            movable=False, angle=90, 
+            label="x={value:0.2f}nm", 
+            labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}
         )
-        ax.set_ylim(
-            bottom=self.raw_pcon_dialog.ui.sb_y_range_min.value(),
-            top=self.raw_pcon_dialog.ui.sb_y_range_max.value(),
-        )
-        ax.set_title(self.raw_pcon_dialog.ui.le_title.text())
-        ax.set_xlabel(self.raw_pcon_dialog.ui.le_x_label.text())
-        ax.set_ylabel(self.raw_pcon_dialog.ui.le_y_label.text())
+        self.ui.graph_raw.addItem(inf1)
 
-        fig.set_size_inches(
-            w=self.raw_pcon_dialog.ui.sb_fig_size_x.value(),
-            h=self.raw_pcon_dialog.ui.sb_fig_size_y.value(),
-        )
-        fig.set_dpi(self.raw_pcon_dialog.ui.sb_fig_dpi.value())
+        self.ui.graph_raw.plot(self.jp.obje.rchan.index[:350], self.jp.obje.rchan["dn"].values[:350], pen="r", name="o")
+        self.ui.graph_raw.plot(self.jp.obje.gchan.index[:700], self.jp.obje.gchan["dn"].values[:700], pen="g", name="o")
+        self.ui.graph_raw.plot(self.jp.obje.bchan.index[:350], self.jp.obje.bchan["dn"].values[:350], pen="b", name="o")
 
-        fig.canvas.draw()
-        img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8)  # type: ignore
-        img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
-        self.ui.limg_raw_spectrum.show_np_img(arr=img, outwidth=480)
+        self.ui.graph_raw.plot(self.jp.gray.rchan.index[:350], self.jp.gray.rchan["dn"].values[:350], pen="r", name="g")
+        self.ui.graph_raw.plot(self.jp.gray.gchan.index[:700], self.jp.gray.gchan["dn"].values[:700], pen="g", name="g")
+        self.ui.graph_raw.plot(self.jp.gray.bchan.index[:350], self.jp.gray.bchan["dn"].values[:350], pen="b", name="g")
+
+        self.ui.graph_raw.setXRange(400,900)
+        self.ui.graph_raw.setYRange(0,1024)
+
 
     def update_visual_3_ref_spectrum_section(self) -> None:
-        fig, ax = plt.subplots()
-        ax.plot(self.jp.xwave, self.jp.ref_fancy, color="black", label="reflectance")
-
-        ax.vlines(759, 0, 1024)  # the 759nm
-        if self.ref_pcon_dialog.ui.cb_legend.isChecked():
-            ax.legend()
-        if self.ref_pcon_dialog.ui.cb_grid.isChecked():
-            ax.grid()
-        ax.set_xlim(
-            left=self.ref_pcon_dialog.ui.sb_x_range_min.value(),
-            right=self.ref_pcon_dialog.ui.sb_x_range_max.value(),
+        self.ui.graph_ref.clear()
+        self.ui.graph_ref.plot(
+            self.jp.obje.rchan_final.index[-1000:], 
+            self.jp.ref_fancy,
         )
-        ax.set_ylim(
-            bottom=self.ref_pcon_dialog.ui.sb_y_range_min.value(),
-            top=self.ref_pcon_dialog.ui.sb_y_range_max.value(),
-        )
-        ax.set_title(self.ref_pcon_dialog.ui.le_title.text())
-        ax.set_xlabel(self.ref_pcon_dialog.ui.le_x_label.text())
-        ax.set_ylabel(self.ref_pcon_dialog.ui.le_y_label.text())
-
-        fig.set_size_inches(
-            w=self.ref_pcon_dialog.ui.sb_fig_size_x.value(),
-            h=self.ref_pcon_dialog.ui.sb_fig_size_y.value(),
-        )
-        fig.set_dpi(self.ref_pcon_dialog.ui.sb_fig_dpi.value())
-
-        fig.canvas.draw()
-        img = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8)  # type: ignore
-        img = img.reshape(fig.canvas.get_width_height()[::-1] + (3,))
-        self.ui.limg_ref_spectrum.show_np_img(arr=img, outwidth=480)
 
     def refresh_plots(self) -> None:
         self.update_jp_numerical_vals()
@@ -469,29 +406,13 @@ class TheMainWindow(QMainWindow):
     def call_export_data(self) -> None:
         """Exports"""
         os.makedirs(os.path.join(self.ddtree.ddir, "output"), exist_ok=True)
-        # if self.ex_type_dialog.ui.cb_numerical.isChecked():
-        #    # saving cropping regions
-        #    # ymdhmr = datetime.now().strftime("%Y%m%d_%H%M%S")
-        #    # json_path = self.jpeg_path.replace('.jpeg', f'_crop_region{ymdhmr}.json')
-        #    # self.jp.save_cropping_regions(json_path)
-
-        #    # saving actual export tabels
-        #    csv_path = os.path.join(
-        #        os.path.dirname(self.jpeg_path),
-        #        "output",
-        #        os.path.basename(self.jpeg_path).replace(".jpeg", "_output.csv")
-        #    )
-        #    self.jp.get_table(csvfname=csv_path)
-        # if self.ex_type_dialog.ui.cb_tif_1layer.isChecked():
-        #    tmp_path = os.path.join(
-        #        os.path.dirname(self.jpeg_path), "output",
-        #        os.path.basename(self.jpeg_path).replace(".jpeg", ".tiff")
-        #    )
-        #    cv.imwrite(tmp_path, self.jp.data)
-
-        # if self.ex_type_dialog.ui.cb_npy_1layer.isChecked():
-        #    tmp_path = os.path.join(
-        #        os.path.dirname(self.jpeg_path), "output",
-        #        os.path.basename(self.jpeg_path).replace(".jpeg", ".npy")
-        #    )
-        #    np.save(tmp_path, self.jp.data)
+        if self.ui.cb_export_bayer_as_npy.isChecked():
+            pass
+        if self.ui.cb_export_bayer_as_tif.isChecked():
+            pass
+        if self.ui.cb_export_bayer_as_mat.isChecked():
+            pass
+        if self.ui.cb_export_ref_plot_as_png.isChecked():
+            pass
+        if self.ui.cb_export_raw_plot_as_png.isChecked():
+            pass

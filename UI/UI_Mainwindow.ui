@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>956</width>
-    <height>521</height>
+    <width>1111</width>
+    <height>686</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -284,13 +284,16 @@
        <property name="title">
         <string>Webcam + Meta Data Panel</string>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout" stretch="2,1,0">
+       <layout class="QVBoxLayout" name="verticalLayout" stretch="2,0,1,0">
         <item>
          <widget class="QLabelClick" name="limg_webcam">
           <property name="text">
            <string>....</string>
           </property>
          </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="widget" native="true"/>
         </item>
         <item>
          <widget class="QTextBrowser" name="tb_meta_json">
@@ -361,8 +364,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>321</width>
-             <height>412</height>
+             <width>389</width>
+             <height>557</height>
             </rect>
            </property>
            <layout class="QFormLayout" name="formLayout">
@@ -380,14 +383,52 @@
               </property>
              </widget>
             </item>
-            <item row="13" column="0" colspan="2">
+            <item row="1" column="0">
+             <widget class="QCheckBox" name="cb_bayer_show_geometry">
+              <property name="text">
+               <string>Draw Geometry</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QCheckBox" name="cb_export_bayer_as_npy">
+              <property name="text">
+               <string>Export (Bayer as NPY)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QCheckBox" name="cb_export_bayer_as_tif">
+              <property name="text">
+               <string>Export (Bayer as TIF)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QCheckBox" name="cb_export_bayer_as_mat">
+              <property name="text">
+               <string>Export (Bayer as MAT)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0" colspan="2">
+             <widget class="ImageView" name="graph_2dimg" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>200</horstretch>
+                <verstretch>200</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="0" colspan="2">
              <widget class="Line" name="line">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
              </widget>
             </item>
-            <item row="15" column="0" colspan="2">
+            <item row="11" column="0" colspan="2">
              <widget class="QLabel" name="label_2">
               <property name="font">
                <font>
@@ -400,14 +441,38 @@
               </property>
              </widget>
             </item>
-            <item row="21" column="0" colspan="2">
+            <item row="12" column="0">
+             <widget class="QCheckBox" name="cb_export_raw_plot_as_png">
+              <property name="text">
+               <string>Export Plot (PNG)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="12" column="1">
+             <widget class="QToolButton" name="tbtn_raw_spectrum_config">
+              <property name="text">
+               <string>Plot Config (Ctrl+Shift+P)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="14" column="0" colspan="2">
+             <widget class="PlotWidget" name="graph_raw" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>200</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
+            <item row="15" column="0" colspan="2">
              <widget class="Line" name="line_2">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
              </widget>
             </item>
-            <item row="23" column="0" colspan="2">
+            <item row="17" column="0" colspan="2">
              <widget class="QLabel" name="label_3">
               <property name="font">
                <font>
@@ -420,120 +485,27 @@
               </property>
              </widget>
             </item>
-            <item row="4" column="0" colspan="2">
-             <widget class="QLabelClick" name="limg_bayer_full">
-              <property name="text">
-               <string>....</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="0" colspan="2">
-             <widget class="QLabelClick" name="limg_bayer_gray">
-              <property name="text">
-               <string>....</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0" colspan="2">
-             <widget class="QLabelClick" name="limg_bayer_obje">
-              <property name="text">
-               <string>....</string>
-              </property>
-             </widget>
-            </item>
-            <item row="16" column="0">
-             <widget class="QCheckBox" name="checkBox_4">
+            <item row="18" column="0">
+             <widget class="QCheckBox" name="cb_export_ref_plot_as_png">
               <property name="text">
                <string>Export Plot (PNG)</string>
               </property>
              </widget>
             </item>
-            <item row="16" column="1">
-             <widget class="QToolButton" name="tbtn_raw_spectrum_config">
-              <property name="text">
-               <string>Plot Config (Ctrl+Shift+P)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QCheckBox" name="checkBox_2">
-              <property name="text">
-               <string>Export (Bayer as NPY)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QCheckBox" name="checkBox">
-              <property name="text">
-               <string>Export (Bayer as TIF)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QCheckBox" name="checkBox_3">
-              <property name="text">
-               <string>Export (Bayer as MAT)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="0" colspan="2">
-             <spacer name="verticalSpacer">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="20" column="0" colspan="2">
-             <spacer name="verticalSpacer_3">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="24" column="1">
+            <item row="18" column="1">
              <widget class="QToolButton" name="tbtn_ref_spectrum_config">
               <property name="text">
                <string>Plot Config (Ctrl+P)</string>
               </property>
              </widget>
             </item>
-            <item row="24" column="0">
-             <widget class="QCheckBox" name="checkBox_5">
-              <property name="text">
-               <string>Export Plot (PNG)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="25" column="0" colspan="2">
-             <widget class="QLabelClick" name="limg_ref_spectrum">
-              <property name="text">
-               <string>....</string>
-              </property>
-             </widget>
-            </item>
-            <item row="17" column="0" colspan="2">
-             <widget class="QLabelClick" name="limg_raw_spectrum">
-              <property name="text">
-               <string>....</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QCheckBox" name="cb_bayer_show_geometry">
-              <property name="text">
-               <string>Draw Geometry</string>
+            <item row="19" column="0" colspan="2">
+             <widget class="PlotWidget" name="graph_ref" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                <horstretch>0</horstretch>
+                <verstretch>200</verstretch>
+               </sizepolicy>
               </property>
              </widget>
             </item>
@@ -553,7 +525,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>956</width>
+     <width>1111</width>
      <height>19</height>
     </rect>
    </property>
@@ -712,6 +684,18 @@
    <class>QLabelClick</class>
    <extends>QLabel</extends>
    <header>Custom_Libs.Lib_QLabelClick_Widget_NoUI</header>
+  </customwidget>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QWidget</extends>
+   <header>pyqtgraph</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ImageView</class>
+   <extends>QWidget</extends>
+   <header>pyqtgraph</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
