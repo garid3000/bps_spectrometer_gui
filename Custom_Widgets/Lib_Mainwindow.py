@@ -13,14 +13,14 @@ import numpy as np
 import cv2 as cv
 
 # GUI packages
-from PySide6.QtWidgets import QDialogButtonBox, QMainWindow, QWidget, QFileSystemModel
+from PySide6.QtWidgets import QMainWindow, QWidget, QFileSystemModel #QDialogButtonBox, 
 from PySide6.QtGui import QKeySequence, QShortcut, QColor
 from PySide6.QtCore import QModelIndex, QDir, Qt # QRect, 
 
 # Custom packages
 from Custom_UIs.UI_Mainwindow import Ui_MainWindow
 from Custom_Libs.Lib_DataDirTree import DataDirTree
-from Custom_Widgets.Lib_PlotConfigDialog import PlotConfigDialog
+# from Custom_Widgets.Lib_PlotConfigDialog import PlotConfigDialog
 from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import JpegProcessor
 
 pg.setConfigOption("background", "w")
@@ -45,7 +45,7 @@ def open_file_externally(filepath: str) -> None:
             subprocess.Popen(("open ", filepath), stdin=None, stdout=None, stderr=None, close_fds=True)  # shell=True,
         elif system_str == "Linux":  # linux variants
             subprocess.Popen(
-                ("xdg-open", os.path.abspath(filepath)),  # hshell=True,
+                ("xdg-open", os.path.abspath(filepath)),  # shell=True,
                 stdin=None,
                 stdout=None,
                 stderr=None,
@@ -91,9 +91,6 @@ class TheMainWindow(QMainWindow):
     jpeg_path: str
     ddtree: DataDirTree = DataDirTree()
     jp: JpegProcessor = JpegProcessor()
-    # ex_type_dialog  : ExportTypeDialog # cant initialize Q widget an instance here.
-    raw_pcon_dialog: PlotConfigDialog  # cant initialize Q widget an instance here.
-    ref_pcon_dialog: PlotConfigDialog  # cant initialize Q widget an instance here.
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super(TheMainWindow, self).__init__(parent)
@@ -104,19 +101,19 @@ class TheMainWindow(QMainWindow):
         self.jp.set_yGrayRng((int(self.ui.sb_gray_top_pxl.text()), int(self.ui.sb_gray_bot_pxl.text())))
         self.jp.set_yObjeRng((int(self.ui.sb_obje_top_pxl.text()), int(self.ui.sb_obje_bot_pxl.text())))
 
-        self.raw_pcon_dialog = PlotConfigDialog()
-        self.ref_pcon_dialog = PlotConfigDialog()
-        self.set_def_val_raw_ref_dialog()
-        self.ui.tbtn_raw_spectrum_config.clicked.connect(self.raw_pcon_dialog.exec)
-        self.ui.tbtn_ref_spectrum_config.clicked.connect(self.ref_pcon_dialog.exec)
-        self.raw_pcon_dialog.ui.btn_box.accepted.connect(self.call_update_geometry_vals)
-        self.ref_pcon_dialog.ui.btn_box.accepted.connect(self.call_update_geometry_vals)
-        self.raw_pcon_dialog.ui.btn_box.button(QDialogButtonBox.StandardButton.Reset).clicked.connect(
-            self.set_def_val_raw_ref_dialog
-        )
-        self.ref_pcon_dialog.ui.btn_box.button(QDialogButtonBox.StandardButton.Reset).clicked.connect(
-            self.set_def_val_raw_ref_dialog
-        )
+        #self.raw_pcon_dialog = PlotConfigDialog()
+        #self.ref_pcon_dialog = PlotConfigDialog()
+        #self.set_def_val_raw_ref_dialog()
+        #self.ui.tbtn_raw_spectrum_config.clicked.connect(self.raw_pcon_dialog.exec)
+        #self.ui.tbtn_ref_spectrum_config.clicked.connect(self.ref_pcon_dialog.exec)
+        #self.raw_pcon_dialog.ui.btn_box.accepted.connect(self.call_update_geometry_vals)
+        #self.ref_pcon_dialog.ui.btn_box.accepted.connect(self.call_update_geometry_vals)
+        #self.raw_pcon_dialog.ui.btn_box.button(QDialogButtonBox.StandardButton.Reset).clicked.connect(
+        #    self.set_def_val_raw_ref_dialog
+        #)
+        #self.ref_pcon_dialog.ui.btn_box.button(QDialogButtonBox.StandardButton.Reset).clicked.connect(
+        #    self.set_def_val_raw_ref_dialog
+        #)
 
         self.ui.pb_refresh.clicked.connect(self.call_update_geometry_vals)
         self.ui.pb_export.clicked.connect(self.call_export_data)
@@ -169,33 +166,31 @@ class TheMainWindow(QMainWindow):
         # self.roi_g.sigRegionChanged.connect(self.updatePlot_g_roi)
         # self.roi_o.sigRegionChanged.connect(self.updatePlot_o_roi)
 
-
-
         self.init_keyboard_bindings()
         self.init_actions()
 
-    def set_def_val_raw_ref_dialog(self):
-        self.raw_pcon_dialog.ui.le_title.setText("Raw Digital Value")
-        self.raw_pcon_dialog.ui.le_x_label.setText("Wavelength (nm)")
-        self.raw_pcon_dialog.ui.le_y_label.setText("Digital Value (background removed)")
-        self.raw_pcon_dialog.ui.sb_x_range_min.setValue(400)
-        self.raw_pcon_dialog.ui.sb_x_range_max.setValue(900)
-        self.raw_pcon_dialog.ui.sb_y_range_min.setValue(0)
-        self.raw_pcon_dialog.ui.sb_y_range_max.setValue(1024)
-        self.raw_pcon_dialog.ui.sb_fig_size_x.setValue(6.4)
-        self.raw_pcon_dialog.ui.sb_fig_size_y.setValue(4.8)
-        self.raw_pcon_dialog.ui.sb_fig_dpi.setValue(100)
+    #def set_def_val_raw_ref_dialog(self):
+    #    self.raw_pcon_dialog.ui.le_title.setText("Raw Digital Value")
+    #    self.raw_pcon_dialog.ui.le_x_label.setText("Wavelength (nm)")
+    #    self.raw_pcon_dialog.ui.le_y_label.setText("Digital Value (background removed)")
+    #    self.raw_pcon_dialog.ui.sb_x_range_min.setValue(400)
+    #    self.raw_pcon_dialog.ui.sb_x_range_max.setValue(900)
+    #    self.raw_pcon_dialog.ui.sb_y_range_min.setValue(0)
+    #    self.raw_pcon_dialog.ui.sb_y_range_max.setValue(1024)
+    #    self.raw_pcon_dialog.ui.sb_fig_size_x.setValue(6.4)
+    #    self.raw_pcon_dialog.ui.sb_fig_size_y.setValue(4.8)
+    #    self.raw_pcon_dialog.ui.sb_fig_dpi.setValue(100)
 
-        self.ref_pcon_dialog.ui.le_title.setText("Reflectance")
-        self.ref_pcon_dialog.ui.le_x_label.setText("Wavelength (nm)")
-        self.ref_pcon_dialog.ui.le_y_label.setText("Reflectance")
-        self.ref_pcon_dialog.ui.sb_x_range_min.setValue(400)
-        self.ref_pcon_dialog.ui.sb_x_range_max.setValue(900)
-        self.ref_pcon_dialog.ui.sb_y_range_min.setValue(0)
-        self.ref_pcon_dialog.ui.sb_y_range_max.setValue(2)
-        self.ref_pcon_dialog.ui.sb_fig_size_x.setValue(6.4)
-        self.ref_pcon_dialog.ui.sb_fig_size_y.setValue(4.8)
-        self.ref_pcon_dialog.ui.sb_fig_dpi.setValue(100)
+    #    self.ref_pcon_dialog.ui.le_title.setText("Reflectance")
+    #    self.ref_pcon_dialog.ui.le_x_label.setText("Wavelength (nm)")
+    #    self.ref_pcon_dialog.ui.le_y_label.setText("Reflectance")
+    #    self.ref_pcon_dialog.ui.sb_x_range_min.setValue(400)
+    #    self.ref_pcon_dialog.ui.sb_x_range_max.setValue(900)
+    #    self.ref_pcon_dialog.ui.sb_y_range_min.setValue(0)
+    #    self.ref_pcon_dialog.ui.sb_y_range_max.setValue(2)
+    #    self.ref_pcon_dialog.ui.sb_fig_size_x.setValue(6.4)
+    #    self.ref_pcon_dialog.ui.sb_fig_size_y.setValue(4.8)
+    #    self.ref_pcon_dialog.ui.sb_fig_dpi.setValue(100)
 
     def toggle_filetype_visiblity(self, a: int) -> None:
         if a:
@@ -215,8 +210,8 @@ class TheMainWindow(QMainWindow):
         QShortcut(QKeySequence("Ctrl+F"), self).activated.connect(self.ui.cb_ft_filter.toggle)
         QShortcut(QKeySequence("Ctrl+R"), self).activated.connect(self.call_update_geometry_vals)
 
-        QShortcut(QKeySequence("Ctrl+P"), self).activated.connect(self.ref_pcon_dialog.exec)
-        QShortcut(QKeySequence("Ctrl+Shift+P"), self).activated.connect(self.raw_pcon_dialog.exec)
+        #QShortcut(QKeySequence("Ctrl+P"), self).activated.connect(self.ref_pcon_dialog.exec)
+        #QShortcut(QKeySequence("Ctrl+Shift+P"), self).activated.connect(self.raw_pcon_dialog.exec)
 
     def init_actions(self) -> None:
         self.ui.action_help.triggered.connect(self.open_help_page)
@@ -320,50 +315,6 @@ class TheMainWindow(QMainWindow):
         self.jp.fixme()
         self.jp.fancy_reflectance()
 
-    # def updatePlot_g_roi(self) -> None:
-    #     selected_o = self.roi_o.getState()
-
-    #     self.roi_o.setPos(
-    #         pos=pg.Point(self.ui.sb_horx_left_pxl.value(), selected_o["pos"].y())   
-    #     )
-    #     self.roi_o.setSize(
-    #         size=pg.Point(800, selected_o["size"].y())   
-    #     )
-    #     self.update_geometry_parameters_after_roi_update()
-
-    # def updatePlot_o_roi(self) -> None:
-    #     selected_g = self.roi_g.getState()
-
-    #     self.roi_g.setPos(
-    #         pos=pg.Point(self.ui.sb_horx_left_pxl.value(), selected_g["pos"].y())   
-    #     )
-    #     self.roi_g.setSize(
-    #         size=pg.Point(800, selected_g["size"].y())   
-    #     )
-    #     self.update_geometry_parameters_after_roi_update()
-
-
-    # def update_geometry_parameters_after_roi_update(self) -> None:
-    #     selected_o = self.roi_o.getState()
-    #     selected_g = self.roi_g.getState()
-
-    #     #self.ui.sb_horx_left_pxl.setValue(int(selected_o["pos"].x()))
-    #     self.ui.sb_obje_top_pxl.setValue(int(selected_o["pos"].y()))
-    #     self.ui.sb_obje_bot_pxl.setValue(int(selected_o["pos"].y() + selected_o["size"].y() ))
-    #     self.ui.sb_gray_top_pxl.setValue(int(selected_g["pos"].y()))
-    #     self.ui.sb_gray_bot_pxl.setValue(int(selected_g["pos"].y() + selected_g["size"].y() ))
-    #     pass
-
-
-    #     self.jp.set_xWaveRng(int(self.ui.sb_horx_left_pxl.text()))
-    #     self.jp.set_yGrayRng((int(self.ui.sb_gray_top_pxl.text()), int(self.ui.sb_gray_bot_pxl.text())))
-    #     self.jp.set_yObjeRng((int(self.ui.sb_obje_top_pxl.text()), int(self.ui.sb_obje_bot_pxl.text())))
-    #     self.jp.get_bayer()
-    #     self.jp.get_spectrum()
-    #     self.jp.fixme()
-    #     self.jp.fancy_reflectance()
-
-    #     self.update_visual_2_raw_spectrum_section()
 
     def update_visual_1_rawbayer_img_section(self) -> None:
         self.ui.graph_2dimg.clear()
@@ -383,8 +334,8 @@ class TheMainWindow(QMainWindow):
             label="x={value:0.2f}nm", 
             labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}
         )
-        self.ui.graph_raw.addItem(inf1)
         self.ui.graph_raw.addLegend()
+        self.ui.graph_raw.addItem(inf1)
 
         self.ui.graph_raw.plot(self.jp.obje.rchan.index[:350], self.jp.obje.rchan["dn"].values[:350], pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="R-object")
         self.ui.graph_raw.plot(self.jp.obje.gchan.index[:700], self.jp.obje.gchan["dn"].values[:700], pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-object")
@@ -396,8 +347,6 @@ class TheMainWindow(QMainWindow):
         
         self.ui.graph_raw.setXRange(400,900)
         self.ui.graph_raw.setYRange(0,1024)
-
-        
 
     def update_visual_3_ref_spectrum_section(self) -> None:
         self.ui.graph_ref.clear()
