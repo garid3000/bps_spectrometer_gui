@@ -79,16 +79,10 @@ class FileSystemModel(QFileSystemModel):
                 return QColor("#288d4c")
         return super(FileSystemModel, self).data(index, role)
 
-#class ConstantXROI(pg.ROI):
-#    constant_left_x = 0
-#
-#    def setPos(self, pos, y=None, update=True, finish=True):
-#        pos.setX(self.constant_left_x)
-#        super().setPos(pos, y=y, update=update, finish=finish)
-
 class TheMainWindow(QMainWindow):
     dir_path: str = QDir.homePath()
     jpeg_path: str
+    help_html_path: str = os.path.join(QDir.currentPath(), "docs/help.html") # need change on the binary release
     ddtree: DataDirTree = DataDirTree()
     jp: JpegProcessor = JpegProcessor()
 
@@ -101,25 +95,11 @@ class TheMainWindow(QMainWindow):
         self.jp.set_yGrayRng((int(self.ui.sb_gray_top_pxl.text()), int(self.ui.sb_gray_bot_pxl.text())))
         self.jp.set_yObjeRng((int(self.ui.sb_obje_top_pxl.text()), int(self.ui.sb_obje_bot_pxl.text())))
 
-        #self.raw_pcon_dialog = PlotConfigDialog()
-        #self.ref_pcon_dialog = PlotConfigDialog()
-        #self.set_def_val_raw_ref_dialog()
-        #self.ui.tbtn_raw_spectrum_config.clicked.connect(self.raw_pcon_dialog.exec)
-        #self.ui.tbtn_ref_spectrum_config.clicked.connect(self.ref_pcon_dialog.exec)
-        #self.raw_pcon_dialog.ui.btn_box.accepted.connect(self.call_update_geometry_vals)
-        #self.ref_pcon_dialog.ui.btn_box.accepted.connect(self.call_update_geometry_vals)
-        #self.raw_pcon_dialog.ui.btn_box.button(QDialogButtonBox.StandardButton.Reset).clicked.connect(
-        #    self.set_def_val_raw_ref_dialog
-        #)
-        #self.ref_pcon_dialog.ui.btn_box.button(QDialogButtonBox.StandardButton.Reset).clicked.connect(
-        #    self.set_def_val_raw_ref_dialog
-        #)
-
         self.ui.pb_refresh.clicked.connect(self.call_update_geometry_vals)
         self.ui.pb_export.clicked.connect(self.call_export_data)
 
         # -----------------------------------------------------------------------------
-        self.fsmodel = FileSystemModel()  # self.fsmodel = QFileSystemModel()
+        self.fsmodel = FileSystemModel()  # prev. QFileSystemModel()
         self.fsmodel.setRootPath(QDir.homePath())
 
         self.ui.tv_dir.setModel(self.fsmodel)
@@ -130,9 +110,43 @@ class TheMainWindow(QMainWindow):
         self.ui.cb_ft_filter.stateChanged.connect(self.toggle_filetype_visiblity)
         self.ui.cb_bayer_show_geometry.stateChanged.connect(self.update_visual_1_rawbayer_img_section)
         # -----------------------------------------------------------------------------
+        self.init_2d_graph()
+        self.init_roi_s()
+        self.init_sb_signals()
+
+        self.init_keyboard_bindings()
+        self.init_actions()
+
+
+    def init_sb_signals(self) -> None:
+        self.ui.sb_gray_bot_pxl.valueChanged.connect(self.update_gray_obje_roi_from_sb)
+        self.ui.sb_gray_top_pxl.valueChanged.connect(self.update_gray_obje_roi_from_sb)
+        self.ui.sb_obje_bot_pxl.valueChanged.connect(self.update_gray_obje_roi_from_sb)
+        self.ui.sb_obje_top_pxl.valueChanged.connect(self.update_gray_obje_roi_from_sb)
+        self.ui.sb_horx_left_pxl.valueChanged.connect(self.update_gray_obje_roi_from_sb)
+        pass
+
+    def update_gray_obje_roi_from_sb(self) -> None:
+        self.roi_o.setPos(pos=(int(self.ui.sb_horx_left_pxl.text()), int(self.ui.sb_obje_top_pxl.text())))
+        self.roi_o.setSize(size=(800, int(self.ui.sb_obje_bot_pxl.text())))
+
+        self.roi_g.setPos(pos=(int(self.ui.sb_horx_left_pxl.text()), int(self.ui.sb_gray_top_pxl.text())))
+        self.roi_g.setSize(size=(800, int(self.ui.sb_gray_bot_pxl.text())))
+
+    def init_2d_graph(self) -> None:
+        self.ui.graph_2dimg.ui.roiBtn.hide()
+        self.ui.graph_2dimg.ui.menuBtn.hide()
+        self.ui.graph_2d_roi_gray.ui.roiBtn.hide()
+        self.ui.graph_2d_roi_gray.ui.menuBtn.hide()
+        self.ui.graph_2d_roi_object.ui.roiBtn.hide()
+        self.ui.graph_2d_roi_object.ui.menuBtn.hide()
+
+    def init_roi_s(self) -> None:
+        """Initializes ROI"""
+
         self.roi_g = pg.ROI(
             pos=[self.ui.sb_horx_left_pxl.value(), self.ui.sb_gray_top_pxl.value()], 
-            size=pg.Point(800, self.ui.sb_gray_top_pxl.value() - self.ui.sb_gray_bot_pxl.value()), 
+            size=pg.Point(800, self.ui.sb_gray_bot_pxl.value() - self.ui.sb_gray_top_pxl.value()), 
             movable=True,
             scaleSnap=True,
             snapSize=2,
@@ -140,57 +154,71 @@ class TheMainWindow(QMainWindow):
         )
         self.roi_o = pg.ROI(
             pos=[self.ui.sb_horx_left_pxl.value(), self.ui.sb_obje_top_pxl.value()], 
-            size=pg.Point(800, self.ui.sb_obje_top_pxl.value() - self.ui.sb_obje_bot_pxl.value()), 
+            size=pg.Point(800, self.ui.sb_obje_bot_pxl.value() - self.ui.sb_obje_top_pxl.value()), 
             movable=True,
             scaleSnap=True,
             snapSize=2,
             translateSnap=True,
         )
-        #self.roi_g = pg.ROI([1480, 1250], pg.Point(800, 100), maxBounds=QRect(1480, 0, 800, 3000))
-        #self.roi_o = pg.ROI([1480, 1350], pg.Point(800, 100), maxBounds=QRect(1480, 0, 800, 3000))
-        #self.roi_g = ConstantXROI([1480, 1250], pg.Point(800, 100), maxBounds=QRect(1480, 0, 800, 3000))
-        #self.roi_o = ConstantXROI([1480, 1350], pg.Point(800, 100), maxBounds=QRect(1480, 0, 800, 3000))
-        
-        self.roi_g.constant_left_x = 1480
-        self.roi_o.constant_left_x = 1480
 
-        #self.roi_o.addScaleHandle([0.5, 1], [0.5, 0.5])
-        #self.roi_g.addScaleHandle([0.5, 1], [0.5, 0.5])
-
+        self.roi_o.addScaleHandle([0.5, 1], [0.5, 0])
+        self.roi_g.addScaleHandle([0.5, 1], [0.5, 0])
         self.roi_o.setZValue(10)
         self.roi_g.setZValue(10)
+
+        self.roi_g.sigRegionChanged.connect(self.updatePlot_g_roi)
+        self.roi_o.sigRegionChanged.connect(self.updatePlot_o_roi)
 
         self.ui.graph_2dimg.addItem(self.roi_o)
         self.ui.graph_2dimg.addItem(self.roi_g)
 
-        # self.roi_g.sigRegionChanged.connect(self.updatePlot_g_roi)
-        # self.roi_o.sigRegionChanged.connect(self.updatePlot_o_roi)
+    def updatePlot_g_roi(self) -> None:
+        roi_g = self.roi_g.getState()
 
-        self.init_keyboard_bindings()
-        self.init_actions()
+        self.ui.graph_2d_roi_gray.setImage(
+            self.jp.rgb[
+            int(roi_g["pos"].y()):int(roi_g["pos"].y() +roi_g["size"].y()), 
+            int(roi_g["pos"].x()):int(roi_g["pos"].x() +roi_g["size"].x()), 
+            :],
+            axes={"x":1, "y":0, "c":2},
+        )
+        print(roi_g)
+        self.ui.sb_gray_top_pxl.blockSignals(True)
+        self.ui.sb_gray_bot_pxl.blockSignals(True)
 
-    #def set_def_val_raw_ref_dialog(self):
-    #    self.raw_pcon_dialog.ui.le_title.setText("Raw Digital Value")
-    #    self.raw_pcon_dialog.ui.le_x_label.setText("Wavelength (nm)")
-    #    self.raw_pcon_dialog.ui.le_y_label.setText("Digital Value (background removed)")
-    #    self.raw_pcon_dialog.ui.sb_x_range_min.setValue(400)
-    #    self.raw_pcon_dialog.ui.sb_x_range_max.setValue(900)
-    #    self.raw_pcon_dialog.ui.sb_y_range_min.setValue(0)
-    #    self.raw_pcon_dialog.ui.sb_y_range_max.setValue(1024)
-    #    self.raw_pcon_dialog.ui.sb_fig_size_x.setValue(6.4)
-    #    self.raw_pcon_dialog.ui.sb_fig_size_y.setValue(4.8)
-    #    self.raw_pcon_dialog.ui.sb_fig_dpi.setValue(100)
+        self.ui.sb_gray_top_pxl.setValue(roi_g["pos"].y())
+        self.ui.sb_gray_bot_pxl.setValue(roi_g["size"].y())
+        self.ui.sb_horx_left_pxl.setValue(roi_g["pos"].x())
 
-    #    self.ref_pcon_dialog.ui.le_title.setText("Reflectance")
-    #    self.ref_pcon_dialog.ui.le_x_label.setText("Wavelength (nm)")
-    #    self.ref_pcon_dialog.ui.le_y_label.setText("Reflectance")
-    #    self.ref_pcon_dialog.ui.sb_x_range_min.setValue(400)
-    #    self.ref_pcon_dialog.ui.sb_x_range_max.setValue(900)
-    #    self.ref_pcon_dialog.ui.sb_y_range_min.setValue(0)
-    #    self.ref_pcon_dialog.ui.sb_y_range_max.setValue(2)
-    #    self.ref_pcon_dialog.ui.sb_fig_size_x.setValue(6.4)
-    #    self.ref_pcon_dialog.ui.sb_fig_size_y.setValue(4.8)
-    #    self.ref_pcon_dialog.ui.sb_fig_dpi.setValue(100)
+        self.ui.sb_gray_top_pxl.blockSignals(False)
+        self.ui.sb_gray_bot_pxl.blockSignals(False)
+
+        self.update_visual_2_raw_spectrum_section()
+
+    def updatePlot_o_roi(self) -> None:
+        roi_o = self.roi_o.getState()
+        #self.ui.graph_2d_roi_object.setImage(self.jp.rgb[:, :, :])
+
+        self.ui.graph_2d_roi_object.setImage(
+            self.jp.rgb[
+            int(roi_o["pos"].y()):int(roi_o["pos"].y() +roi_o["size"].y()), 
+            int(roi_o["pos"].x()):int(roi_o["pos"].x() +roi_o["size"].x()), 
+            :],
+            axes={"x":1, "y":0, "c":2},
+        )
+        print(roi_o)
+
+        self.ui.sb_obje_top_pxl.blockSignals(True)
+        self.ui.sb_obje_bot_pxl.blockSignals(True)
+
+        self.ui.sb_obje_top_pxl.setValue(roi_o["pos"].y())
+        self.ui.sb_obje_bot_pxl.setValue(roi_o["size"].y())
+        self.ui.sb_horx_left_pxl.setValue(roi_o["pos"].x())
+
+        self.ui.sb_obje_top_pxl.blockSignals(False)
+        self.ui.sb_obje_bot_pxl.blockSignals(False)
+
+        self.update_visual_2_raw_spectrum_section()
 
     def toggle_filetype_visiblity(self, a: int) -> None:
         if a:
@@ -199,19 +227,19 @@ class TheMainWindow(QMainWindow):
             self.fsmodel.setNameFilters((["*"]))
 
     def init_keyboard_bindings(self) -> None:
-        QShortcut(QKeySequence("Ctrl+B"), self).activated.connect(self.short_cut_goto_parent_dir)
+        QShortcut(QKeySequence("Ctrl+B"),    self).activated.connect(self.short_cut_goto_parent_dir)
         QShortcut(QKeySequence("Backspace"), self).activated.connect(self.short_cut_goto_parent_dir)
-        QShortcut(QKeySequence("Return"), self).activated.connect(self.short_cut_goto_selected_child_dir)
-        QShortcut(QKeySequence("Space"), self).activated.connect(self.short_cut_preview_raw_jpeg)
-        QShortcut(QKeySequence("Ctrl+E"), self).activated.connect(self.short_cut_export_raw_jpeg)
-        QShortcut(QKeySequence("Ctrl+O"), self).activated.connect(self.short_cut_open_at_point)
-        # QShortcut(QKeySequence("Ctrl+Shift+E"), self).activated.connect(self.ex_type_dialog.exec)
-        QShortcut(QKeySequence("Ctrl+H"), self).activated.connect(self.open_help_page)
-        QShortcut(QKeySequence("Ctrl+F"), self).activated.connect(self.ui.cb_ft_filter.toggle)
-        QShortcut(QKeySequence("Ctrl+R"), self).activated.connect(self.call_update_geometry_vals)
+        QShortcut(QKeySequence("Return"),    self).activated.connect(self.short_cut_goto_selected_child_dir)
+        QShortcut(QKeySequence("Space"),     self).activated.connect(self.short_cut_preview_raw_jpeg)
+        QShortcut(QKeySequence("Ctrl+E"),    self).activated.connect(self.short_cut_export_raw_jpeg)
+        QShortcut(QKeySequence("Ctrl+O"),    self).activated.connect(self.short_cut_open_at_point)
+        QShortcut(QKeySequence("Ctrl+H"),    self).activated.connect(self.open_help_page)
+        QShortcut(QKeySequence("Ctrl+F"),    self).activated.connect(self.ui.cb_ft_filter.toggle)
+        QShortcut(QKeySequence("Ctrl+R"),    self).activated.connect(self.call_update_geometry_vals)
 
-        #QShortcut(QKeySequence("Ctrl+P"), self).activated.connect(self.ref_pcon_dialog.exec)
-        #QShortcut(QKeySequence("Ctrl+Shift+P"), self).activated.connect(self.raw_pcon_dialog.exec)
+        # QShortcut(QKeySequence("Ctrl+Shift+E"), self).activated.connect(self.ex_type_dialog.exec)
+        # QShortcut(QKeySequence("Ctrl+P"), self).activated.connect(self.ref_pcon_dialog.exec)
+        # QShortcut(QKeySequence("Ctrl+Shift+P"), self).activated.connect(self.raw_pcon_dialog.exec)
 
     def init_actions(self) -> None:
         self.ui.action_help.triggered.connect(self.open_help_page)
@@ -226,10 +254,12 @@ class TheMainWindow(QMainWindow):
         self.ui.action_cur_jpeg_preview.triggered.connect(self.short_cut_preview_raw_jpeg)
         self.ui.action_cur_file_open.triggered.connect(self.short_cut_open_at_point)
 
-    def open_help_page(self):
-        open_file_externally("./docs/help.html")  # TODO need to change
+    def open_help_page(self) -> None:
+        """Opens help page."""
+        open_file_externally(self.help_html_path)
 
-    def short_cut_goto_parent_dir(self):
+    def short_cut_goto_parent_dir(self) -> None:
+        """Go to parent directory, Backspace"""
         logging.info("going to parent file")
         cur_root_index = self.ui.tv_dir.rootIndex()  # get .
         parent_of_cur_root_index = self.fsmodel.parent(cur_root_index)  # get ..
@@ -237,18 +267,21 @@ class TheMainWindow(QMainWindow):
         self.ui.tv_dir.setCurrentIndex(parent_of_cur_root_index)  # idk why this needed
 
     def short_cut_goto_selected_child_dir(self) -> None:
+        """Enter: the directory"""
         sel_m_index = self.ui.tv_dir.currentIndex()  # get
         if self.fsmodel.hasChildren(sel_m_index):  # enter only if this has children
             self.ui.tv_dir.setRootIndex(sel_m_index)
         else:
             pass  # need to update jpeg_path here
 
-    def short_cut_open_at_point(self):
+    def short_cut_open_at_point(self) -> None:
+        """C-o: opens file externally"""
         sel_m_index = self.ui.tv_dir.currentIndex()
         tmppath = self.fsmodel.filePath(sel_m_index)
         open_file_externally(tmppath)
 
     def short_cut_preview_raw_jpeg(self) -> bool:
+        """SPC"""
         sel_m_index = self.ui.tv_dir.currentIndex()
         tmppath = self.fsmodel.filePath(sel_m_index)
         basename = os.path.basename(tmppath)
@@ -270,9 +303,10 @@ class TheMainWindow(QMainWindow):
         self.refresh_plots()
         return True
 
-    def short_cut_export_raw_jpeg(self):
+    def short_cut_export_raw_jpeg(self) -> None:
+        """C-e: export"""
         logging.info("exporting")
-        if self.short_cut_preview_raw_jpeg():    # this itself it the exporting 
+        if self.short_cut_preview_raw_jpeg():    # checking the selected jpeg
             self.call_export_data()
 
     # @QtCore.pyqtSlot(QTreeWidgetItem, int)
@@ -306,15 +340,10 @@ class TheMainWindow(QMainWindow):
     def update_jp_numerical_vals(self) -> None:
         self.jp.load_file(self.jpeg_path)
         self.jp.get_bayer()
-        #self.jp.get_spectrums_channels_rgb()
-        #self.jp.calc_shift_pixel_length()
-        #self.jp.shiftall()
-        #self.jp.calc_reflectance()
-        #self.jp.fancy_reflectance()
+
         self.jp.get_spectrum()
         self.jp.fixme()
         self.jp.fancy_reflectance()
-
 
     def update_visual_1_rawbayer_img_section(self) -> None:
         self.ui.graph_2dimg.clear()
@@ -323,30 +352,61 @@ class TheMainWindow(QMainWindow):
             levels=(0, 1024),
             axes={"x":1, "y":0, "c":2}
         )
-        self.ui.graph_2dimg.ui.roiBtn.hide()
-        self.ui.graph_2dimg.ui.menuBtn.hide()
 
     def update_visual_2_raw_spectrum_section(self) -> None:
         self.ui.graph_raw.clear()
+        self.ui.graph_raw.addLegend()
+
         inf1 = pg.InfiniteLine(
             pos=759.3,
             movable=False, angle=90, 
             label="x={value:0.2f}nm", 
             labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}
         )
-        self.ui.graph_raw.addLegend()
         self.ui.graph_raw.addItem(inf1)
 
-        self.ui.graph_raw.plot(self.jp.obje.rchan.index[:350], self.jp.obje.rchan["dn"].values[:350], pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="R-object")
-        self.ui.graph_raw.plot(self.jp.obje.gchan.index[:700], self.jp.obje.gchan["dn"].values[:700], pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-object")
-        self.ui.graph_raw.plot(self.jp.obje.bchan.index[:350], self.jp.obje.bchan["dn"].values[:350], pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="B-object")
+        b = np.mean(
+            self.jp.data[self.ui.sb_gray_top_pxl.value():self.ui.sb_gray_top_pxl.value()+self.ui.sb_gray_bot_pxl.value():2, 
+                         self.ui.sb_horx_left_pxl.value():self.ui.sb_horx_left_pxl.value()+800:2], axis=0)
+        g = np.mean(
+            self.jp.data[self.ui.sb_gray_top_pxl.value():self.ui.sb_gray_top_pxl.value()+self.ui.sb_gray_bot_pxl.value():2, 
+                         self.ui.sb_horx_left_pxl.value()+1:self.ui.sb_horx_left_pxl.value()+800:2], axis=0)
+        G = np.mean(
+            self.jp.data[self.ui.sb_gray_top_pxl.value()+1:self.ui.sb_gray_top_pxl.value()+self.ui.sb_gray_bot_pxl.value():2, 
+                         self.ui.sb_horx_left_pxl.value():self.ui.sb_horx_left_pxl.value()+800:2], axis=0)
+        r = np.mean(
+            self.jp.data[self.ui.sb_gray_top_pxl.value()+1:self.ui.sb_gray_top_pxl.value()+self.ui.sb_gray_bot_pxl.value():2, 
+                         self.ui.sb_horx_left_pxl.value()+1:self.ui.sb_horx_left_pxl.value()+800:2], axis=0)
 
-        self.ui.graph_raw.plot(self.jp.gray.rchan.index[:350], self.jp.gray.rchan["dn"].values[:350], pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine),  name="R-gray")
-        self.ui.graph_raw.plot(self.jp.gray.gchan.index[:700], self.jp.gray.gchan["dn"].values[:700], pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine),  name="G-gray")
-        self.ui.graph_raw.plot(self.jp.gray.bchan.index[:350], self.jp.gray.bchan["dn"].values[:350], pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine),  name="B-gray")
-        
+        self.ui.graph_raw.plot(np.linspace(400, 800, 400), r, pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="R-gray", ) # noqa
+        self.ui.graph_raw.plot(np.linspace(400, 800, 400), g, pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray", ) # noqa
+        self.ui.graph_raw.plot(np.linspace(400, 800, 400), G, pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray", ) # noqa
+        self.ui.graph_raw.plot(np.linspace(400, 800, 400), b, pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="B-gray", ) # noqa
+
+
+        bb = np.mean(
+            self.jp.data[self.ui.sb_obje_top_pxl.value():self.ui.sb_obje_top_pxl.value()+self.ui.sb_obje_bot_pxl.value():2, 
+                         self.ui.sb_horx_left_pxl.value():self.ui.sb_horx_left_pxl.value()+800:2], axis=0)
+        gg = np.mean(
+            self.jp.data[self.ui.sb_obje_top_pxl.value():self.ui.sb_obje_top_pxl.value()+self.ui.sb_obje_bot_pxl.value():2, 
+                         self.ui.sb_horx_left_pxl.value()+1:self.ui.sb_horx_left_pxl.value()+800:2], axis=0)
+        GG = np.mean(
+            self.jp.data[self.ui.sb_obje_top_pxl.value()+1:self.ui.sb_obje_top_pxl.value()+self.ui.sb_obje_bot_pxl.value():2, 
+                         self.ui.sb_horx_left_pxl.value():self.ui.sb_horx_left_pxl.value()+800:2], axis=0)
+        rr = np.mean(
+            self.jp.data[self.ui.sb_obje_top_pxl.value()+1:self.ui.sb_obje_top_pxl.value()+self.ui.sb_obje_bot_pxl.value():2, 
+                         self.ui.sb_horx_left_pxl.value()+1:self.ui.sb_horx_left_pxl.value()+800:2], axis=0)
+
+        self.ui.graph_raw.plot(np.linspace(400, 800, 400), rr, pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine), name="R-object", ) # noqa
+        self.ui.graph_raw.plot(np.linspace(400, 800, 400), gg, pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="G-object", ) # noqa
+        self.ui.graph_raw.plot(np.linspace(400, 800, 400), GG, pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="G-object", ) # noqa
+        self.ui.graph_raw.plot(np.linspace(400, 800, 400), bb, pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine), name="B-object", ) # noqa
+
         self.ui.graph_raw.setXRange(400,900)
-        self.ui.graph_raw.setYRange(0,1024)
+        self.ui.graph_raw.setYRange(
+            min(bb.min(), gg.min(), GG.min(), rr.min(), b.min(), g.min(), G.min(), r.min()), 
+            max(bb.max(), gg.max(), GG.max(), rr.max(), b.max(), g.max(), G.max(), r.max())
+        )
 
     def update_visual_3_ref_spectrum_section(self) -> None:
         self.ui.graph_ref.clear()
@@ -362,7 +422,7 @@ class TheMainWindow(QMainWindow):
         self.update_visual_3_ref_spectrum_section()
 
     def call_export_data(self) -> None:
-        """Exports"""
+        """Export"""
         os.makedirs(os.path.join(self.ddtree.ddir, "output"), exist_ok=True)
         if self.ui.cb_export_bayer_as_npy.isChecked():
             pass

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1111</width>
-    <height>686</height>
+    <width>1240</width>
+    <height>929</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,16 +28,25 @@
            <string>Directory Control Panel</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="1" column="0">
-            <widget class="QTreeView" name="tv_dir">
+           <item row="2" column="0">
+            <widget class="QLabelClick" name="limg_webcam">
+             <property name="text">
+              <string>....</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QTextBrowser" name="tb_meta_json">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="font">
               <font>
                <family>Monospace</family>
-               <pointsize>10</pointsize>
               </font>
-             </property>
-             <property name="sortingEnabled">
-              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -51,227 +60,22 @@
              </property>
             </widget>
            </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="gb_control_panel">
-          <property name="title">
-           <string>Geometry control panel</string>
-          </property>
-          <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,1,1">
-           <item row="4" column="1">
-            <widget class="QSpinBox" name="sb_obje_top_pxl">
-             <property name="minimum">
-              <number>500</number>
-             </property>
-             <property name="maximum">
-              <number>2000</number>
-             </property>
-             <property name="value">
-              <number>1200</number>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="1" colspan="2">
-            <widget class="QPushButton" name="pb_refresh">
-             <property name="text">
-              <string>Refresh (Ctrl+R)</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QSpinBox" name="sb_horx_left_pxl">
-             <property name="minimum">
-              <number>900</number>
-             </property>
-             <property name="maximum">
-              <number>1700</number>
-             </property>
-             <property name="value">
-              <number>1350</number>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="_label_1">
-             <property name="palette">
-              <palette>
-               <active>
-                <colorrole role="WindowText">
-                 <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>0</red>
-                   <green>170</green>
-                   <blue>0</blue>
-                  </color>
-                 </brush>
-                </colorrole>
-               </active>
-               <inactive>
-                <colorrole role="WindowText">
-                 <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>0</red>
-                   <green>170</green>
-                   <blue>0</blue>
-                  </color>
-                 </brush>
-                </colorrole>
-               </inactive>
-               <disabled/>
-              </palette>
-             </property>
-             <property name="text">
-              <string>Horizontal Left Pixel</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0" colspan="3">
-            <widget class="Line" name="_line">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="_label_2">
-             <property name="palette">
-              <palette>
-               <active>
-                <colorrole role="WindowText">
-                 <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>255</red>
-                   <green>0</green>
-                   <blue>0</blue>
-                  </color>
-                 </brush>
-                </colorrole>
-               </active>
-               <inactive>
-                <colorrole role="WindowText">
-                 <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>255</red>
-                   <green>0</green>
-                   <blue>0</blue>
-                  </color>
-                 </brush>
-                </colorrole>
-               </inactive>
-               <disabled/>
-              </palette>
-             </property>
-             <property name="text">
-              <string>Vert. Gray Pixel Range</string>
-             </property>
-            </widget>
-           </item>
            <item row="1" column="0">
-            <widget class="QLabel" name="_label_4">
-             <property name="text">
-              <string>Horizontal Fraunhofer</string>
+            <widget class="QTreeView" name="tv_dir">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>10</verstretch>
+              </sizepolicy>
              </property>
-            </widget>
-           </item>
-           <item row="4" column="2">
-            <widget class="QSpinBox" name="sb_obje_bot_pxl">
-             <property name="minimum">
-              <number>500</number>
+             <property name="font">
+              <font>
+               <family>Monospace</family>
+               <pointsize>10</pointsize>
+              </font>
              </property>
-             <property name="maximum">
-              <number>2000</number>
-             </property>
-             <property name="value">
-              <number>1250</number>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="_label_3">
-             <property name="palette">
-              <palette>
-               <active>
-                <colorrole role="WindowText">
-                 <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>0</red>
-                   <green>0</green>
-                   <blue>255</blue>
-                  </color>
-                 </brush>
-                </colorrole>
-               </active>
-               <inactive>
-                <colorrole role="WindowText">
-                 <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>0</red>
-                   <green>0</green>
-                   <blue>255</blue>
-                  </color>
-                 </brush>
-                </colorrole>
-               </inactive>
-               <disabled/>
-              </palette>
-             </property>
-             <property name="text">
-              <string>Vert. Object Pixel Range</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QCheckBox" name="cb_fraunhofer">
-             <property name="text">
-              <string>Calibrate</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="2">
-            <widget class="QSpinBox" name="sb_gray_bot_pxl">
-             <property name="minimum">
-              <number>500</number>
-             </property>
-             <property name="maximum">
-              <number>2000</number>
-             </property>
-             <property name="value">
-              <number>1100</number>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QSpinBox" name="sb_gray_top_pxl">
-             <property name="minimum">
-              <number>500</number>
-             </property>
-             <property name="maximum">
-              <number>2000</number>
-             </property>
-             <property name="value">
-              <number>1050</number>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QSpinBox" name="sb_horx_frau_pxl">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="maximum">
-              <number>9999</number>
-             </property>
-             <property name="value">
-              <number>190</number>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="0" colspan="3">
-            <widget class="Line" name="_line_2">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
+             <property name="sortingEnabled">
+              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -284,38 +88,280 @@
        <property name="title">
         <string>Webcam + Meta Data Panel</string>
        </property>
-       <layout class="QVBoxLayout" name="verticalLayout" stretch="2,0,1,0">
+       <layout class="QVBoxLayout" name="verticalLayout">
         <item>
-         <widget class="QLabelClick" name="limg_webcam">
-          <property name="text">
-           <string>....</string>
+         <widget class="QScrollArea" name="scrollArea_2">
+          <property name="widgetResizable">
+           <bool>true</bool>
           </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_2">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>-205</y>
+             <width>420</width>
+             <height>1049</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <item>
+             <widget class="ImageView" name="graph_2dimg" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>200</horstretch>
+                <verstretch>200</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>400</width>
+                <height>400</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QGroupBox" name="gb_control_panel">
+              <property name="title">
+               <string>Geometry control panel</string>
+              </property>
+              <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0">
+               <item row="2" column="0" colspan="3">
+                <widget class="Line" name="_line">
+                 <property name="orientation">
+                  <enum>Qt::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="_label_2">
+                 <property name="palette">
+                  <palette>
+                   <active>
+                    <colorrole role="WindowText">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>255</red>
+                       <green>0</green>
+                       <blue>0</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                   </active>
+                   <inactive>
+                    <colorrole role="WindowText">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>255</red>
+                       <green>0</green>
+                       <blue>0</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                   </inactive>
+                   <disabled/>
+                  </palette>
+                 </property>
+                 <property name="text">
+                  <string>Vert. Gray Pixel Range</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="2">
+                <widget class="QSpinBox" name="sb_obje_bot_pxl">
+                 <property name="minimum">
+                  <number>0</number>
+                 </property>
+                 <property name="maximum">
+                  <number>20000</number>
+                 </property>
+                 <property name="value">
+                  <number>1250</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QSpinBox" name="sb_horx_left_pxl">
+                 <property name="minimum">
+                  <number>0</number>
+                 </property>
+                 <property name="maximum">
+                  <number>17000</number>
+                 </property>
+                 <property name="value">
+                  <number>1350</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="_label_4">
+                 <property name="text">
+                  <string>Horizontal Fraunhofer</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0">
+                <widget class="QPushButton" name="pb_refresh">
+                 <property name="text">
+                  <string>Refresh (Ctrl+R)</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QCheckBox" name="cb_fraunhofer">
+                 <property name="text">
+                  <string>Calibrate</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QSpinBox" name="sb_horx_frau_pxl">
+                 <property name="enabled">
+                  <bool>false</bool>
+                 </property>
+                 <property name="maximum">
+                  <number>9999</number>
+                 </property>
+                 <property name="value">
+                  <number>190</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="0">
+                <widget class="QLabel" name="_label_3">
+                 <property name="palette">
+                  <palette>
+                   <active>
+                    <colorrole role="WindowText">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>0</red>
+                       <green>0</green>
+                       <blue>255</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                   </active>
+                   <inactive>
+                    <colorrole role="WindowText">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>0</red>
+                       <green>0</green>
+                       <blue>255</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                   </inactive>
+                   <disabled/>
+                  </palette>
+                 </property>
+                 <property name="text">
+                  <string>Vert. Object Pixel Range</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QSpinBox" name="sb_gray_top_pxl">
+                 <property name="minimum">
+                  <number>0</number>
+                 </property>
+                 <property name="maximum">
+                  <number>20000</number>
+                 </property>
+                 <property name="value">
+                  <number>1050</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="4" column="1">
+                <widget class="QSpinBox" name="sb_obje_top_pxl">
+                 <property name="minimum">
+                  <number>0</number>
+                 </property>
+                 <property name="maximum">
+                  <number>20000</number>
+                 </property>
+                 <property name="value">
+                  <number>1200</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="_label_1">
+                 <property name="palette">
+                  <palette>
+                   <active>
+                    <colorrole role="WindowText">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>0</red>
+                       <green>170</green>
+                       <blue>0</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                   </active>
+                   <inactive>
+                    <colorrole role="WindowText">
+                     <brush brushstyle="SolidPattern">
+                      <color alpha="255">
+                       <red>0</red>
+                       <green>170</green>
+                       <blue>0</blue>
+                      </color>
+                     </brush>
+                    </colorrole>
+                   </inactive>
+                   <disabled/>
+                  </palette>
+                 </property>
+                 <property name="text">
+                  <string>Horizontal Left Pixel</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="2">
+                <widget class="QSpinBox" name="sb_gray_bot_pxl">
+                 <property name="minimum">
+                  <number>0</number>
+                 </property>
+                 <property name="maximum">
+                  <number>20000</number>
+                 </property>
+                 <property name="value">
+                  <number>1100</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="PlotWidget" name="graph_raw" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <horstretch>0</horstretch>
+                <verstretch>200</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>400</width>
+                <height>300</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="ImageView" name="graph_2d_roi_object" native="true"/>
+            </item>
+            <item>
+             <widget class="ImageView" name="graph_2d_roi_gray" native="true"/>
+            </item>
+           </layout>
+          </widget>
          </widget>
-        </item>
-        <item>
-         <widget class="QWidget" name="widget" native="true"/>
-        </item>
-        <item>
-         <widget class="QTextBrowser" name="tb_meta_json">
-          <property name="font">
-           <font>
-            <family>Monospace</family>
-           </font>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </widget>
@@ -364,12 +410,12 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>389</width>
-             <height>557</height>
+             <width>435</width>
+             <height>800</height>
             </rect>
            </property>
            <layout class="QFormLayout" name="formLayout">
-            <item row="0" column="0" colspan="2">
+            <item row="0" column="0">
              <widget class="QLabel" name="label">
               <property name="font">
                <font>
@@ -384,23 +430,23 @@
              </widget>
             </item>
             <item row="1" column="0">
+             <widget class="QCheckBox" name="cb_export_bayer_as_tif">
+              <property name="text">
+               <string>Export (Bayer as TIF)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
              <widget class="QCheckBox" name="cb_bayer_show_geometry">
               <property name="text">
                <string>Draw Geometry</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
+            <item row="2" column="1">
              <widget class="QCheckBox" name="cb_export_bayer_as_npy">
               <property name="text">
                <string>Export (Bayer as NPY)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QCheckBox" name="cb_export_bayer_as_tif">
-              <property name="text">
-               <string>Export (Bayer as TIF)</string>
               </property>
              </widget>
             </item>
@@ -412,23 +458,13 @@
              </widget>
             </item>
             <item row="4" column="0" colspan="2">
-             <widget class="ImageView" name="graph_2dimg" native="true">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>200</horstretch>
-                <verstretch>200</verstretch>
-               </sizepolicy>
-              </property>
-             </widget>
-            </item>
-            <item row="9" column="0" colspan="2">
              <widget class="Line" name="line">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
              </widget>
             </item>
-            <item row="11" column="0" colspan="2">
+            <item row="5" column="0" colspan="2">
              <widget class="QLabel" name="label_2">
               <property name="font">
                <font>
@@ -441,38 +477,28 @@
               </property>
              </widget>
             </item>
-            <item row="12" column="0">
+            <item row="6" column="0">
              <widget class="QCheckBox" name="cb_export_raw_plot_as_png">
               <property name="text">
                <string>Export Plot (PNG)</string>
               </property>
              </widget>
             </item>
-            <item row="12" column="1">
+            <item row="6" column="1">
              <widget class="QToolButton" name="tbtn_raw_spectrum_config">
               <property name="text">
                <string>Plot Config (Ctrl+Shift+P)</string>
               </property>
              </widget>
             </item>
-            <item row="14" column="0" colspan="2">
-             <widget class="PlotWidget" name="graph_raw" native="true">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>200</verstretch>
-               </sizepolicy>
-              </property>
-             </widget>
-            </item>
-            <item row="15" column="0" colspan="2">
+            <item row="9" column="0" colspan="2">
              <widget class="Line" name="line_2">
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
               </property>
              </widget>
             </item>
-            <item row="17" column="0" colspan="2">
+            <item row="10" column="0" colspan="2">
              <widget class="QLabel" name="label_3">
               <property name="font">
                <font>
@@ -485,27 +511,33 @@
               </property>
              </widget>
             </item>
-            <item row="18" column="0">
+            <item row="11" column="0">
              <widget class="QCheckBox" name="cb_export_ref_plot_as_png">
               <property name="text">
                <string>Export Plot (PNG)</string>
               </property>
              </widget>
             </item>
-            <item row="18" column="1">
+            <item row="11" column="1">
              <widget class="QToolButton" name="tbtn_ref_spectrum_config">
               <property name="text">
                <string>Plot Config (Ctrl+P)</string>
               </property>
              </widget>
             </item>
-            <item row="19" column="0" colspan="2">
+            <item row="12" column="0" colspan="2">
              <widget class="PlotWidget" name="graph_ref" native="true">
               <property name="sizePolicy">
                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
                 <horstretch>0</horstretch>
                 <verstretch>200</verstretch>
                </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>400</width>
+                <height>400</height>
+               </size>
               </property>
              </widget>
             </item>
@@ -525,7 +557,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1111</width>
+     <width>1240</width>
      <height>19</height>
     </rect>
    </property>
