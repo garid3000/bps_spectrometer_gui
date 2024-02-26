@@ -1,4 +1,4 @@
-# Base libraries
+# ---------- Base libraries -------------------------------------------------------------------------------------------
 import os
 import tempfile
 import logging
@@ -8,21 +8,22 @@ from datetime import datetime
 from pathlib import Path
 import pyqtgraph as pg
 
-# Numerical/Visual packages
+# ---------- Numerical Visual packages---------------------------------------------------------------------------------
 import numpy as np
 import cv2 as cv
 
-# GUI packages
-from PySide6.QtWidgets import QMainWindow, QWidget, QFileSystemModel #QDialogButtonBox, 
+# ---------- GUI libraries --------------------------------------------------------------------------------------------
+from PySide6.QtWidgets import QMainWindow, QWidget, QFileSystemModel
 from PySide6.QtGui import QKeySequence, QShortcut, QColor
-from PySide6.QtCore import QModelIndex, QDir, Qt # QRect, 
+from PySide6.QtCore import QModelIndex, QDir, Qt
 
-# Custom packages
+# ---------- Custom libs ----------------------------------------------------------------------------------------------
 from Custom_UIs.UI_Mainwindow import Ui_MainWindow
 from Custom_Libs.Lib_DataDirTree import DataDirTree
 # from Custom_Widgets.Lib_PlotConfigDialog import PlotConfigDialog
 from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import JpegProcessor
 
+# ---------- Some logging ---------------------------------------------------------------------------------------------
 pg.setConfigOption("background", "w")
 pg.setConfigOption("foreground", "k")
 
@@ -91,134 +92,337 @@ class TheMainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.jp.set_xWaveRng(int(self.ui.sb_horx_left_pxl.text()))
-        self.jp.set_yGrayRng((int(self.ui.sb_gray_top_pxl.text()), int(self.ui.sb_gray_bot_pxl.text())))
-        self.jp.set_yObjeRng((int(self.ui.sb_obje_top_pxl.text()), int(self.ui.sb_obje_bot_pxl.text())))
-
         self.ui.pb_refresh.clicked.connect(self.call_update_geometry_vals)
         self.ui.pb_export.clicked.connect(self.call_export_data)
 
-        # -----------------------------------------------------------------------------
-        self.fsmodel = FileSystemModel()  # prev. QFileSystemModel()
+        # --------------- initialize the file system ----------------------------------
+        self.fsmodel = FileSystemModel()                     # prev. QFileSystemModel()
         self.fsmodel.setRootPath(QDir.homePath())
 
         self.ui.tv_dir.setModel(self.fsmodel)
         self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath(QDir.homePath()))
         self.ui.tv_dir.doubleClicked.connect(self.call_tv_onItemClicked)
-
         # self.ui.cb_ft_filter.stateChanged.connect(self.fsmodel.setNameFilterDisables)
         self.ui.cb_ft_filter.stateChanged.connect(self.toggle_filetype_visiblity)
         self.ui.cb_bayer_show_geometry.stateChanged.connect(self.update_visual_1_rawbayer_img_section)
+
         # -----------------------------------------------------------------------------
-        self.init_2d_graph()
-        self.init_roi_s()
+        self.jp.set_xWaveRng(self.ui.sb_midx_init.value())
+        self.jp.set_yGrayRng((self.ui.sb_gray_y_init.value(), self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value())) # noqa
+        self.jp.set_yObjeRng((self.ui.sb_obje_y_init.value(), self.ui.sb_obje_y_init.value() + self.ui.sb_obje_y_size.value())) # noqa
+
+        self.init_2d_graph_hide_the_original_roi_buttons()
+        self.init_all_6_roi()
         self.init_sb_signals()
 
         self.init_keyboard_bindings()
         self.init_actions()
 
-
-    def init_sb_signals(self) -> None:
-        self.ui.sb_gray_bot_pxl.valueChanged.connect(self.update_gray_obje_roi_from_sb)
-        self.ui.sb_gray_top_pxl.valueChanged.connect(self.update_gray_obje_roi_from_sb)
-        self.ui.sb_obje_bot_pxl.valueChanged.connect(self.update_gray_obje_roi_from_sb)
-        self.ui.sb_obje_top_pxl.valueChanged.connect(self.update_gray_obje_roi_from_sb)
-        self.ui.sb_horx_left_pxl.valueChanged.connect(self.update_gray_obje_roi_from_sb)
-        pass
-
-    def update_gray_obje_roi_from_sb(self) -> None:
-        self.roi_o.setPos(pos=(int(self.ui.sb_horx_left_pxl.text()), int(self.ui.sb_obje_top_pxl.text())))
-        self.roi_o.setSize(size=(800, int(self.ui.sb_obje_bot_pxl.text())))
-
-        self.roi_g.setPos(pos=(int(self.ui.sb_horx_left_pxl.text()), int(self.ui.sb_gray_top_pxl.text())))
-        self.roi_g.setSize(size=(800, int(self.ui.sb_gray_bot_pxl.text())))
-
-    def init_2d_graph(self) -> None:
+    def init_2d_graph_hide_the_original_roi_buttons(self) -> None:
+        """Hides the ROI/Menu buttons from the 3 images"""
         self.ui.graph_2dimg.ui.roiBtn.hide()
         self.ui.graph_2dimg.ui.menuBtn.hide()
-        self.ui.graph_2d_roi_gray.ui.roiBtn.hide()
-        self.ui.graph_2d_roi_gray.ui.menuBtn.hide()
-        self.ui.graph_2d_roi_object.ui.roiBtn.hide()
-        self.ui.graph_2d_roi_object.ui.menuBtn.hide()
 
-    def init_roi_s(self) -> None:
+        self.roi_label_gray = pg.TextItem(
+            html='<div style="text-align: center"><span style="color: #FFF;">Gray-ROI</span></div>', 
+            anchor=(0, 1), 
+            border="w", 
+            fill=(200, 50, 50, 100)
+        )
+
+        self.roi_label_obje = pg.TextItem(
+            html='<div style="text-align: center"><span style="color: #FFF;">Object-ROI</span></div>', 
+            anchor=(0, 1), 
+            border="w", 
+            fill=(50, 50, 200, 100)
+        )
+
+        self.ui.graph_2dimg.addItem(self.roi_label_obje)
+        self.ui.graph_2dimg.addItem(self.roi_label_gray)
+
+    def init_all_6_roi(self) -> None:
         """Initializes ROI"""
 
-        self.roi_g = pg.ROI(
-            pos=[self.ui.sb_horx_left_pxl.value(), self.ui.sb_gray_top_pxl.value()], 
-            size=pg.Point(800, self.ui.sb_gray_bot_pxl.value() - self.ui.sb_gray_top_pxl.value()), 
-            movable=True,
-            scaleSnap=True,
-            snapSize=2,
-            translateSnap=True,
+        self.roi_gray_main = pg.ROI(
+            pos=[self.ui.sb_midx_init.value(), self.ui.sb_gray_y_init.value()],  
+            size=pg.Point(800, self.ui.sb_gray_y_size.value()), 
+            movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
         )
-        self.roi_o = pg.ROI(
-            pos=[self.ui.sb_horx_left_pxl.value(), self.ui.sb_obje_top_pxl.value()], 
-            size=pg.Point(800, self.ui.sb_obje_bot_pxl.value() - self.ui.sb_obje_top_pxl.value()), 
-            movable=True,
-            scaleSnap=True,
-            snapSize=2,
-            translateSnap=True,
+        
+        self.roi_gray_bglf = pg.ROI(
+            pos=[self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_gray_y_init.value()],  
+            size=pg.Point(self.ui.sb_lefx_size.value(), self.ui.sb_gray_y_size.value()), 
+            movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
         )
 
-        self.roi_o.addScaleHandle([0.5, 1], [0.5, 0])
-        self.roi_g.addScaleHandle([0.5, 1], [0.5, 0])
-        self.roi_o.setZValue(10)
-        self.roi_g.setZValue(10)
-
-        self.roi_g.sigRegionChanged.connect(self.updatePlot_g_roi)
-        self.roi_o.sigRegionChanged.connect(self.updatePlot_o_roi)
-
-        self.ui.graph_2dimg.addItem(self.roi_o)
-        self.ui.graph_2dimg.addItem(self.roi_g)
-
-    def updatePlot_g_roi(self) -> None:
-        roi_g = self.roi_g.getState()
-
-        self.ui.graph_2d_roi_gray.setImage(
-            self.jp.rgb[
-            int(roi_g["pos"].y()):int(roi_g["pos"].y() +roi_g["size"].y()), 
-            int(roi_g["pos"].x()):int(roi_g["pos"].x() +roi_g["size"].x()), 
-            :],
-            axes={"x":1, "y":0, "c":2},
+        self.roi_gray_bgri = pg.ROI(
+            pos=[self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_gray_y_init.value()],  
+            size=pg.Point(self.ui.sb_rigx_size.value(), self.ui.sb_gray_y_size.value()), 
+            movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
         )
-        print(roi_g)
-        self.ui.sb_gray_top_pxl.blockSignals(True)
-        self.ui.sb_gray_bot_pxl.blockSignals(True)
 
-        self.ui.sb_gray_top_pxl.setValue(roi_g["pos"].y())
-        self.ui.sb_gray_bot_pxl.setValue(roi_g["size"].y())
-        self.ui.sb_horx_left_pxl.setValue(roi_g["pos"].x())
-
-        self.ui.sb_gray_top_pxl.blockSignals(False)
-        self.ui.sb_gray_bot_pxl.blockSignals(False)
-
-        self.update_visual_2_raw_spectrum_section()
-
-    def updatePlot_o_roi(self) -> None:
-        roi_o = self.roi_o.getState()
-        #self.ui.graph_2d_roi_object.setImage(self.jp.rgb[:, :, :])
-
-        self.ui.graph_2d_roi_object.setImage(
-            self.jp.rgb[
-            int(roi_o["pos"].y()):int(roi_o["pos"].y() +roi_o["size"].y()), 
-            int(roi_o["pos"].x()):int(roi_o["pos"].x() +roi_o["size"].x()), 
-            :],
-            axes={"x":1, "y":0, "c":2},
+        self.roi_obje_main = pg.ROI(
+            pos=[self.ui.sb_midx_init.value(), self.ui.sb_obje_y_init.value()],  
+            size=pg.Point(800, self.ui.sb_obje_y_size.value()), 
+            movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
         )
-        print(roi_o)
+        
+        self.roi_obje_bglf = pg.ROI(
+            pos=[self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_obje_y_init.value()],  
+            size=pg.Point(self.ui.sb_lefx_size.value(), self.ui.sb_obje_y_size.value()), 
+            movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
+        )
 
-        self.ui.sb_obje_top_pxl.blockSignals(True)
-        self.ui.sb_obje_bot_pxl.blockSignals(True)
+        self.roi_obje_bgri = pg.ROI(
+            pos=[self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_obje_y_init.value()],  
+            size=pg.Point(self.ui.sb_rigx_size.value(), self.ui.sb_obje_y_size.value()), 
+            movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
+        )
 
-        self.ui.sb_obje_top_pxl.setValue(roi_o["pos"].y())
-        self.ui.sb_obje_bot_pxl.setValue(roi_o["size"].y())
-        self.ui.sb_horx_left_pxl.setValue(roi_o["pos"].x())
 
-        self.ui.sb_obje_top_pxl.blockSignals(False)
-        self.ui.sb_obje_bot_pxl.blockSignals(False)
+        self.roi_obje_main.addScaleHandle([0.5, 1], [0.5, 0])
+        self.roi_gray_main.addScaleHandle([0.5, 1], [0.5, 0])
 
-        self.update_visual_2_raw_spectrum_section()
+        self.roi_obje_main.setZValue(10)
+        self.roi_gray_main.setZValue(10)
+
+        self.roi_gray_bglf.addScaleHandle([0, 0.5], [1, 0.5])
+        self.roi_gray_bglf.addScaleHandle([1, 0.5], [0, 0.5])
+        self.roi_gray_bgri.addScaleHandle([1, 0.5], [0, 0.5])
+        self.roi_gray_bgri.addScaleHandle([0, 0.5], [1, 0.5])
+        self.roi_gray_bglf.setZValue(10)
+        self.roi_gray_bgri.setZValue(10)
+
+        self.roi_obje_bglf.addScaleHandle([0, 0.5], [1, 0.5])
+        self.roi_obje_bglf.addScaleHandle([1, 0.5], [0, 0.5])
+        self.roi_obje_bgri.addScaleHandle([1, 0.5], [0, 0.5])
+        self.roi_obje_bgri.addScaleHandle([0, 0.5], [1, 0.5])
+        self.roi_obje_bglf.setZValue(10)
+        self.roi_obje_bgri.setZValue(10)
+
+
+        self.ui.graph_2dimg.addItem(self.roi_obje_main)
+        self.ui.graph_2dimg.addItem(self.roi_obje_bgri)
+        self.ui.graph_2dimg.addItem(self.roi_obje_bglf)
+        self.ui.graph_2dimg.addItem(self.roi_gray_main)
+        self.ui.graph_2dimg.addItem(self.roi_gray_bglf)
+        self.ui.graph_2dimg.addItem(self.roi_gray_bgri)
+
+    def init_sb_signals(self) -> None:
+        self.ui.sb_gray_y_init.valueChanged.connect(self.update_raw_from_sb)
+        self.ui.sb_gray_y_size.valueChanged.connect(self.update_raw_from_sb)
+        self.ui.sb_obje_y_init.valueChanged.connect(self.update_raw_from_sb)
+        self.ui.sb_obje_y_size.valueChanged.connect(self.update_raw_from_sb)
+        self.ui.sb_midx_init.valueChanged.connect(self.update_raw_from_sb)
+        self.ui.sb_midx_size.valueChanged.connect(self.update_raw_from_sb)
+        self.ui.sb_lefx_init_rel.valueChanged.connect(self.update_raw_from_sb)
+        self.ui.sb_lefx_size.valueChanged.connect(self.update_raw_from_sb)
+        self.ui.sb_rigx_init_rel.valueChanged.connect(self.update_raw_from_sb)
+        self.ui.sb_rigx_size.valueChanged.connect(self.update_raw_from_sb)
+
+        self.roi_gray_main.sigRegionChanged.connect(lambda: self.handle_roi_change("gray", "middle"))
+        self.roi_gray_bglf.sigRegionChanged.connect(lambda: self.handle_roi_change("gray", "left"))
+        self.roi_gray_bgri.sigRegionChanged.connect(lambda: self.handle_roi_change("gray", "right"))
+
+        self.roi_obje_main.sigRegionChanged.connect(lambda: self.handle_roi_change("obje", "middle"))
+        self.roi_obje_bglf.sigRegionChanged.connect(lambda: self.handle_roi_change("obje", "left"))
+        self.roi_obje_bgri.sigRegionChanged.connect(lambda: self.handle_roi_change("obje", "right"))
+
+    def all_sb_signal_block(self, b: bool) -> None:
+        self.ui.sb_lefx_size.blockSignals(b)
+        self.ui.sb_lefx_init_rel.blockSignals(b)
+        self.ui.sb_lefx_ends.blockSignals(b)
+        self.ui.sb_rigx_size.blockSignals(b)
+        self.ui.sb_rigx_init_rel.blockSignals(b)
+        self.ui.sb_rigx_ends.blockSignals(b)
+        self.ui.sb_midx_init.blockSignals(b)
+        self.ui.sb_midx_size.blockSignals(b)
+        self.ui.sb_midx_ends.blockSignals(b)
+        self.ui.sb_gray_y_init.blockSignals(b)
+        self.ui.sb_gray_y_size.blockSignals(b)
+        self.ui.sb_gray_y_ends.blockSignals(b)
+        self.ui.sb_obje_y_init.blockSignals(b)
+        self.ui.sb_obje_y_size.blockSignals(b)
+        self.ui.sb_obje_y_ends.blockSignals(b)
+    
+    def handle_roi_change(self, gray_or_obje: str, left_middle_right: str) -> None:
+        self.all_sb_signal_block(True)
+        print(self.roi_gray_main.getState()["pos"], self.roi_gray_bglf.getState()["pos"])
+
+        if gray_or_obje == "gray":
+            if left_middle_right == "middle":
+                self.ui.sb_midx_init.setValue(self.roi_gray_main.getState()["pos"].x() )
+                self.ui.sb_midx_size.setValue(self.roi_gray_main.getState()["size"].x())
+                self.ui.sb_gray_y_init.setValue(self.roi_gray_main.getState()["pos"].y() )
+                self.ui.sb_gray_y_size.setValue(self.roi_gray_main.getState()["size"].y())
+                #self.ui.sb_midx_ends.setValue()
+            elif left_middle_right == "left":
+                self.ui.sb_lefx_init_rel.setValue(- self.roi_gray_main.getState()["pos"].x() + self.roi_gray_bglf.getState()["pos"].x())
+                self.ui.sb_lefx_size.setValue(self.roi_gray_bglf.getState()["size"].x())
+            elif left_middle_right == "right":
+                self.ui.sb_rigx_init_rel.setValue(- self.roi_gray_main.getState()["pos"].x() + self.roi_gray_bgri.getState()["pos"].x())
+                self.ui.sb_rigx_size.setValue(self.roi_gray_bgri.getState()["size"].x())
+        elif gray_or_obje == "obje":
+            if left_middle_right == "middle":
+                self.ui.sb_midx_init.setValue(self.roi_obje_main.getState()["pos"].x() )
+                self.ui.sb_midx_size.setValue(self.roi_obje_main.getState()["size"].x())
+                self.ui.sb_obje_y_init.setValue(self.roi_obje_main.getState()["pos"].y() )
+                self.ui.sb_obje_y_size.setValue(self.roi_obje_main.getState()["size"].y())
+                #self.ui.sb_midx_ends.setValue()
+            elif left_middle_right == "left":
+                self.ui.sb_lefx_init_rel.setValue(- self.roi_gray_main.getState()["pos"].x() + self.roi_obje_bglf.getState()["pos"].x())
+                self.ui.sb_lefx_size.setValue(self.roi_obje_bglf.getState()["size"].x())
+            elif left_middle_right == "right":
+                self.ui.sb_rigx_init_rel.setValue(- self.roi_gray_main.getState()["pos"].x() + self.roi_obje_bgri.getState()["pos"].x())
+                self.ui.sb_rigx_size.setValue(self.roi_obje_bgri.getState()["size"].x())
+
+        self.all_sb_signal_block(False)
+        self.update_raw_from_sb()
+
+
+    def update_raw_from_sb(self) -> None:
+        self.roi_gray_main.blockSignals(True)
+        self.roi_gray_bglf.blockSignals(True)
+        self.roi_gray_bgri.blockSignals(True)
+        self.roi_obje_main.blockSignals(True)
+        self.roi_obje_bglf.blockSignals(True)
+        self.roi_obje_bgri.blockSignals(True)
+
+        self.roi_gray_main.setPos(self.ui.sb_midx_init.value(), self.ui.sb_gray_y_init.value())
+        self.roi_gray_bglf.setPos(self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_gray_y_init.value())
+        self.roi_gray_bgri.setPos(self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_gray_y_init.value())
+        self.roi_obje_main.setPos(self.ui.sb_midx_init.value(), self.ui.sb_obje_y_init.value())
+        self.roi_obje_bglf.setPos(self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_obje_y_init.value())
+        self.roi_obje_bgri.setPos(self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_obje_y_init.value())
+
+        self.roi_gray_main.setSize((self.ui.sb_midx_size.value(), self.ui.sb_gray_y_size.value()))
+        self.roi_gray_bglf.setSize((self.ui.sb_lefx_size.value(), self.ui.sb_gray_y_size.value()))
+        self.roi_gray_bgri.setSize((self.ui.sb_rigx_size.value(), self.ui.sb_gray_y_size.value()))
+        self.roi_obje_main.setSize((self.ui.sb_midx_size.value(), self.ui.sb_obje_y_size.value()))
+        self.roi_obje_bglf.setSize((self.ui.sb_lefx_size.value(), self.ui.sb_obje_y_size.value()))
+        self.roi_obje_bgri.setSize((self.ui.sb_rigx_size.value(), self.ui.sb_obje_y_size.value()))
+
+        self.roi_gray_main.blockSignals(False)
+        self.roi_gray_bglf.blockSignals(False)
+        self.roi_gray_bgri.blockSignals(False)
+        self.roi_obje_main.blockSignals(False)
+        self.roi_obje_bglf.blockSignals(False)
+        self.roi_obje_bgri.blockSignals(False)
+        
+        # change the label position
+        self.roi_label_gray.setPos(self.ui.sb_midx_init.value(), self.ui.sb_gray_y_init.value())
+        self.roi_label_obje.setPos(self.ui.sb_midx_init.value(), self.ui.sb_obje_y_init.value())
+
+        self.update_raw_roi_plot_when_sb_or_roi_moved()
+    
+    def update_raw_roi_plot_when_sb_or_roi_moved(self) -> None:
+        """update raw dn plot, when either spinbox or ROI dragged"""
+        self.ui.graph_raw.clear()
+        self.ui.graph_raw.addLegend()
+
+        inf1 = pg.InfiniteLine(
+            pos=759.3,
+            movable=False, angle=90, 
+            label="x={value:0.2f}nm", 
+            labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}
+        )
+        self.ui.graph_raw.addItem(inf1)
+
+        tmp_x = np.linspace(400, 800, 400)
+
+        gray_roi_mid = self.jp.data[
+            self.ui.sb_gray_y_init.value() : self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value(),
+            self.ui.sb_midx_init.value()   : self.ui.sb_midx_init.value()   + self.ui.sb_midx_size.value()
+        ]
+        obje_roi_mid = self.jp.data[
+            self.ui.sb_obje_y_init.value() : self.ui.sb_obje_y_init.value() + self.ui.sb_obje_y_size.value(),
+            self.ui.sb_midx_init.value()   : self.ui.sb_midx_init.value()   + self.ui.sb_midx_size.value()
+        ]
+
+        self.ui.graph_raw.plot(tmp_x, gray_roi_mid[1::2, 1::2].mean(axis=0), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="R-gray")
+        self.ui.graph_raw.plot(tmp_x, gray_roi_mid[1::2, 0::2].mean(axis=0), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray")
+        self.ui.graph_raw.plot(tmp_x, gray_roi_mid[0::2, 1::2].mean(axis=0), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray")
+        self.ui.graph_raw.plot(tmp_x, gray_roi_mid[0::2, 0::2].mean(axis=0), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="B-gray")
+
+        self.ui.graph_raw.plot(tmp_x, obje_roi_mid[1::2, 1::2].mean(axis=0), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine), name="R-object")
+        self.ui.graph_raw.plot(tmp_x, obje_roi_mid[1::2, 0::2].mean(axis=0), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="G-object")
+        self.ui.graph_raw.plot(tmp_x, obje_roi_mid[0::2, 1::2].mean(axis=0), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="G-object")
+        self.ui.graph_raw.plot(tmp_x, obje_roi_mid[0::2, 0::2].mean(axis=0), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine), name="B-object")
+
+
+
+        tmp_lef_x = np.linspace(300, 380,  self.ui.sb_lefx_size.value()// 2)
+        tmp_rig_x = np.linspace(810, 900,  self.ui.sb_rigx_size.value()// 2)
+        gray_roi_lef = self.jp.data[
+            self.ui.sb_gray_y_init.value() : self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value(),
+            self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value() : self.ui.sb_midx_init.value()  + self.ui.sb_lefx_init_rel.value() + self.ui.sb_lefx_size.value()
+        ]
+
+        gray_roi_rig = self.jp.data[
+            self.ui.sb_gray_y_init.value() : self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value(),
+            self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value() : self.ui.sb_midx_init.value()  + self.ui.sb_rigx_init_rel.value() + self.ui.sb_rigx_size.value()
+        ]
+
+        self.ui.graph_raw.plot(tmp_lef_x, gray_roi_lef[1::2, 1::2].mean(axis=0), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="bgR-gray")
+        self.ui.graph_raw.plot(tmp_lef_x, gray_roi_lef[1::2, 0::2].mean(axis=0), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="bgG-gray")
+        self.ui.graph_raw.plot(tmp_lef_x, gray_roi_lef[0::2, 1::2].mean(axis=0), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="bgG-gray")
+        self.ui.graph_raw.plot(tmp_lef_x, gray_roi_lef[0::2, 0::2].mean(axis=0), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="bgB-gray")
+
+        self.ui.graph_raw.plot(tmp_rig_x, gray_roi_rig[1::2, 1::2].mean(axis=0), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine), name="bgR-object")
+        self.ui.graph_raw.plot(tmp_rig_x, gray_roi_rig[1::2, 0::2].mean(axis=0), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="bgG-object")
+        self.ui.graph_raw.plot(tmp_rig_x, gray_roi_rig[0::2, 1::2].mean(axis=0), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="bgG-object")
+        self.ui.graph_raw.plot(tmp_rig_x, gray_roi_rig[0::2, 0::2].mean(axis=0), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine), name="bgB-object")
+        
+
+
+    #def updatePlot_g_roi(self) -> None:
+    #    roi_g = self.roi_gray_main.getState()
+
+    #    self.ui.graph_2d_roi_gray.setImage(
+    #        self.jp.rgb[
+    #        int(roi_g["pos"].y()):int(roi_g["pos"].y() +roi_g["size"].y()), 
+    #        int(roi_g["pos"].x()):int(roi_g["pos"].x() +roi_g["size"].x()), 
+    #        :],
+    #        axes={"x":1, "y":0, "c":2},
+    #    )
+    #    print(roi_g)
+    #    # self.ui.sb_gray_top_pxl.blockSignals(True)
+    #    # self.ui.sb_gray_size_pxl.blockSignals(True)
+    #    # self.ui.sb_gray_top_pxl.setValue(roi_g["pos"].y())
+    #    # self.ui.sb_gray_size_pxl.setValue(roi_g["size"].y())
+    #    # self.ui.sb_horx_left_pxl.setValue(roi_g["pos"].x())
+    #    # self.ui.sb_gray_top_pxl.blockSignals(False)
+    #    # self.ui.sb_gray_size_pxl.blockSignals(False)
+    #    # self.ui.sb_gray_bot_pxl.setValue(roi_g["pos"].y() + roi_g["size"].y())
+    #    self.update_visual_2_raw_spectrum_section()
+
+    #    self.roi_gray_bglf.setPos(pos=(int(roi_g["pos"].x())-60,      int(roi_g["pos"].y())))
+    #    self.roi_gray_bgri.setPos(pos=(int(roi_g["pos"].x())+800+10, int(roi_g["pos"].y()))) # noqa
+
+
+    #def updatePlot_o_roi(self) -> None:
+    #    roi_o = self.roi_obje_main.getState()
+    #    #self.ui.graph_2d_roi_object.setImage(self.jp.rgb[:, :, :])
+
+    #    self.ui.graph_2d_roi_obje.setImage(
+    #        self.jp.rgb[
+    #        int(roi_o["pos"].y()):int(roi_o["pos"].y() +roi_o["size"].y()), 
+    #        int(roi_o["pos"].x()):int(roi_o["pos"].x() +roi_o["size"].x()), 
+    #        :],
+    #        axes={"x":1, "y":0, "c":2},
+    #    )
+    #    print(roi_o)
+
+    #    # self.ui.sb_obje_top_pxl.blockSignals(True)
+    #    # self.ui.sb_obje_size_pxl.blockSignals(True)
+    #    # self.ui.sb_obje_top_pxl.setValue(roi_o["pos"].y())
+    #    # self.ui.sb_obje_size_pxl.setValue(roi_o["size"].y())
+    #    # self.ui.sb_horx_left_pxl.setValue(roi_o["pos"].x())
+    #    # self.ui.sb_obje_top_pxl.blockSignals(False)
+    #    # self.ui.sb_obje_size_pxl.blockSignals(False)
+    #    # self.ui.sb_obje_bot_pxl.setValue(roi_o["pos"].y() + roi_o["size"].y())
+    #    self.update_visual_2_raw_spectrum_section()
+
 
     def toggle_filetype_visiblity(self, a: int) -> None:
         if a:
@@ -326,15 +530,15 @@ class TheMainWindow(QMainWindow):
             self.refresh_plots()
 
     def call_update_geometry_vals(self) -> None:
-        self.jp.set_xWaveRng(int(self.ui.sb_horx_left_pxl.text()))
-        self.jp.set_yGrayRng((int(self.ui.sb_gray_top_pxl.text()), int(self.ui.sb_gray_bot_pxl.text())))
-        self.jp.set_yObjeRng((int(self.ui.sb_obje_top_pxl.text()), int(self.ui.sb_obje_bot_pxl.text())))
+        # self.jp.set_xWaveRng(self.ui.sb_midx_init.value())
+        # self.jp.set_yGrayRng((self.ui.sb_gray_y_init.value(), self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value()))
+        # self.jp.set_yObjeRng((self.ui.sb_obje_y_init.value(), self.ui.sb_obje_y_init.value() + self.ui.sb_obje_y_size.value()))
 
-        self.roi_o.setPos(pos=(int(self.ui.sb_horx_left_pxl.text()), int(self.ui.sb_obje_top_pxl.text())))
-        self.roi_g.setPos(pos=(int(self.ui.sb_horx_left_pxl.text()), int(self.ui.sb_gray_top_pxl.text())))
+        # self.roi_obje_main.setPos(pos=(int(self.ui.sb_horx_left_pxl.text()), int(self.ui.sb_obje_top_pxl.text())))
+        # self.roi_gray_main.setPos(pos=(int(self.ui.sb_horx_left_pxl.text()), int(self.ui.sb_gray_top_pxl.text())))
 
-        self.roi_o.setSize(size=(800, int(self.ui.sb_obje_top_pxl.text())-int(self.ui.sb_obje_bot_pxl.text())))
-        self.roi_g.setSize(size=(800, int(self.ui.sb_gray_top_pxl.text())-int(self.ui.sb_gray_bot_pxl.text())))
+        # self.roi_obje_main.setSize(size=(800, int(self.ui.sb_obje_top_pxl.text())-int(self.ui.sb_obje_size_pxl.text())))
+        # self.roi_gray_main.setSize(size=(800, int(self.ui.sb_gray_top_pxl.text())-int(self.ui.sb_gray_size_pxl.text())))
         self.refresh_plots()
 
     def update_jp_numerical_vals(self) -> None:
@@ -354,59 +558,8 @@ class TheMainWindow(QMainWindow):
         )
 
     def update_visual_2_raw_spectrum_section(self) -> None:
-        self.ui.graph_raw.clear()
-        self.ui.graph_raw.addLegend()
-
-        inf1 = pg.InfiniteLine(
-            pos=759.3,
-            movable=False, angle=90, 
-            label="x={value:0.2f}nm", 
-            labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}
-        )
-        self.ui.graph_raw.addItem(inf1)
-
-        b = np.mean(
-            self.jp.data[self.ui.sb_gray_top_pxl.value():self.ui.sb_gray_top_pxl.value()+self.ui.sb_gray_bot_pxl.value():2, 
-                         self.ui.sb_horx_left_pxl.value():self.ui.sb_horx_left_pxl.value()+800:2], axis=0)
-        g = np.mean(
-            self.jp.data[self.ui.sb_gray_top_pxl.value():self.ui.sb_gray_top_pxl.value()+self.ui.sb_gray_bot_pxl.value():2, 
-                         self.ui.sb_horx_left_pxl.value()+1:self.ui.sb_horx_left_pxl.value()+800:2], axis=0)
-        G = np.mean(
-            self.jp.data[self.ui.sb_gray_top_pxl.value()+1:self.ui.sb_gray_top_pxl.value()+self.ui.sb_gray_bot_pxl.value():2, 
-                         self.ui.sb_horx_left_pxl.value():self.ui.sb_horx_left_pxl.value()+800:2], axis=0)
-        r = np.mean(
-            self.jp.data[self.ui.sb_gray_top_pxl.value()+1:self.ui.sb_gray_top_pxl.value()+self.ui.sb_gray_bot_pxl.value():2, 
-                         self.ui.sb_horx_left_pxl.value()+1:self.ui.sb_horx_left_pxl.value()+800:2], axis=0)
-
-        self.ui.graph_raw.plot(np.linspace(400, 800, 400), r, pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="R-gray", ) # noqa
-        self.ui.graph_raw.plot(np.linspace(400, 800, 400), g, pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray", ) # noqa
-        self.ui.graph_raw.plot(np.linspace(400, 800, 400), G, pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray", ) # noqa
-        self.ui.graph_raw.plot(np.linspace(400, 800, 400), b, pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="B-gray", ) # noqa
-
-
-        bb = np.mean(
-            self.jp.data[self.ui.sb_obje_top_pxl.value():self.ui.sb_obje_top_pxl.value()+self.ui.sb_obje_bot_pxl.value():2, 
-                         self.ui.sb_horx_left_pxl.value():self.ui.sb_horx_left_pxl.value()+800:2], axis=0)
-        gg = np.mean(
-            self.jp.data[self.ui.sb_obje_top_pxl.value():self.ui.sb_obje_top_pxl.value()+self.ui.sb_obje_bot_pxl.value():2, 
-                         self.ui.sb_horx_left_pxl.value()+1:self.ui.sb_horx_left_pxl.value()+800:2], axis=0)
-        GG = np.mean(
-            self.jp.data[self.ui.sb_obje_top_pxl.value()+1:self.ui.sb_obje_top_pxl.value()+self.ui.sb_obje_bot_pxl.value():2, 
-                         self.ui.sb_horx_left_pxl.value():self.ui.sb_horx_left_pxl.value()+800:2], axis=0)
-        rr = np.mean(
-            self.jp.data[self.ui.sb_obje_top_pxl.value()+1:self.ui.sb_obje_top_pxl.value()+self.ui.sb_obje_bot_pxl.value():2, 
-                         self.ui.sb_horx_left_pxl.value()+1:self.ui.sb_horx_left_pxl.value()+800:2], axis=0)
-
-        self.ui.graph_raw.plot(np.linspace(400, 800, 400), rr, pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine), name="R-object", ) # noqa
-        self.ui.graph_raw.plot(np.linspace(400, 800, 400), gg, pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="G-object", ) # noqa
-        self.ui.graph_raw.plot(np.linspace(400, 800, 400), GG, pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="G-object", ) # noqa
-        self.ui.graph_raw.plot(np.linspace(400, 800, 400), bb, pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine), name="B-object", ) # noqa
-
-        self.ui.graph_raw.setXRange(400,900)
-        self.ui.graph_raw.setYRange(
-            min(bb.min(), gg.min(), GG.min(), rr.min(), b.min(), g.min(), G.min(), r.min()), 
-            max(bb.max(), gg.max(), GG.max(), rr.max(), b.max(), g.max(), G.max(), r.max())
-        )
+        """remobed"""
+        pass
 
     def update_visual_3_ref_spectrum_section(self) -> None:
         self.ui.graph_ref.clear()
