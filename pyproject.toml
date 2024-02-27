@@ -4,7 +4,7 @@ select = ["E", "F", "B", "Q"]
 
 # Never enforce `E501` (line length violations).
 # ignore = ["E501"]
-line-length = 120 # 88
+line-length = 200 # 88
 
 # Avoid trying to fix flake8-bugbear (`B`) violations.
 unfixable = ["B"]

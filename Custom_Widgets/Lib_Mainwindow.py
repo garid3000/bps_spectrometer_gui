@@ -21,7 +21,9 @@ from PySide6.QtCore import QModelIndex, QDir, Qt
 from Custom_UIs.UI_Mainwindow import Ui_MainWindow
 from Custom_Libs.Lib_DataDirTree import DataDirTree
 # from Custom_Widgets.Lib_PlotConfigDialog import PlotConfigDialog
-from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import JpegProcessor
+from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import (
+    JpegProcessor,  get_wavelength_array, # desalt_2d_array_by_vertically_median_filter,
+)
 
 # ---------- Some logging ---------------------------------------------------------------------------------------------
 pg.setConfigOption("background", "w")
@@ -92,8 +94,8 @@ class TheMainWindow(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
-        self.ui.pb_refresh.clicked.connect(self.call_update_geometry_vals)
-        self.ui.pb_export.clicked.connect(self.call_export_data)
+        self.ui.pb_calibrate_calculate.clicked.connect(self.call_calibrate_and_calculate)
+        #self.ui.pb_export.clicked.connect(self.call_export_data) TODOOOOOOOOOOOOOOOOOOO
 
         # --------------- initialize the file system ----------------------------------
         self.fsmodel = FileSystemModel()                     # prev. QFileSystemModel()
@@ -104,13 +106,13 @@ class TheMainWindow(QMainWindow):
         self.ui.tv_dir.doubleClicked.connect(self.call_tv_onItemClicked)
         # self.ui.cb_ft_filter.stateChanged.connect(self.fsmodel.setNameFilterDisables)
         self.ui.cb_ft_filter.stateChanged.connect(self.toggle_filetype_visiblity)
-        self.ui.cb_bayer_show_geometry.stateChanged.connect(self.update_visual_1_rawbayer_img_section)
+        #self.ui.cb_bayer_show_geometry.stateChanged.connect(self.update_visual_1_rawbayer_img_section)
         self.ui.pb_waveperpixel_reset.clicked.connect(lambda: self.ui.sb_waveperpixel.setValue(1.8385))
 
         # -----------------------------------------------------------------------------
-        self.jp.set_xWaveRng(self.ui.sb_midx_init.value())
-        self.jp.set_yGrayRng((self.ui.sb_gray_y_init.value(), self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value())) # noqa
-        self.jp.set_yObjeRng((self.ui.sb_obje_y_init.value(), self.ui.sb_obje_y_init.value() + self.ui.sb_obje_y_size.value())) # noqa
+        #self.jp.set_xWaveRng(self.ui.sb_midx_init.value())
+        #self.jp.set_yGrayRng((self.ui.sb_gray_y_init.value(), self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value())) # noqa
+        #self.jp.set_yObjeRng((self.ui.sb_obje_y_init.value(), self.ui.sb_obje_y_init.value() + self.ui.sb_obje_y_size.value())) # noqa
 
         self.init_2d_graph_hide_the_original_roi_buttons()
         self.init_all_6_roi()
@@ -214,7 +216,28 @@ class TheMainWindow(QMainWindow):
             #labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}
         )
         self.ui.graph_2dimg.addItem(self.graph_759nm_line_for_2dimg)
+        
+        self.graph_desalted_graphs_sep_line_y0 = pg.InfiniteLine(pos=0, movable=False, angle=0)
+        self.graph_desalted_graphs_sep_line_x0 = pg.InfiniteLine(pos=0, movable=False, angle=90)
+        self.graph_desalted_graphs_sep_line_x1 = pg.InfiniteLine(pos=0, movable=False, angle=90)
+        self.ui.graph_2d_after_desalt.addItem(self.graph_desalted_graphs_sep_line_y0)
+        self.ui.graph_2d_after_desalt.addItem(self.graph_desalted_graphs_sep_line_x0)
+        self.ui.graph_2d_after_desalt.addItem(self.graph_desalted_graphs_sep_line_x1)
 
+
+
+        self.text_for_desalted_img_label0 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">BG-Gray</span></div>',   anchor=(0, 0), border="w", fill=(100, 100, 100, 100))
+        self.text_for_desalted_img_label1 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">Gray</span></div>',      anchor=(0, 0), border="w", fill=(200,  50,  50, 100))
+        self.text_for_desalted_img_label2 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">BG-Gray</span></div>',   anchor=(0, 0), border="w", fill=(100, 100, 100, 100))
+        self.text_for_desalted_img_label3 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">BG-Object</span></div>', anchor=(0, 0), border="w", fill=(100, 100, 100, 100))
+        self.text_for_desalted_img_label4 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">Object</span></div>',    anchor=(0, 0), border="w", fill=(50,   50, 200, 100))
+        self.text_for_desalted_img_label5 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">BG-Object</span></div>', anchor=(0, 0), border="w", fill=(100, 100, 100, 100))
+        self.ui.graph_2d_after_desalt.addItem(self.text_for_desalted_img_label0)
+        self.ui.graph_2d_after_desalt.addItem(self.text_for_desalted_img_label1)
+        self.ui.graph_2d_after_desalt.addItem(self.text_for_desalted_img_label2)
+        self.ui.graph_2d_after_desalt.addItem(self.text_for_desalted_img_label3)
+        self.ui.graph_2d_after_desalt.addItem(self.text_for_desalted_img_label4)
+        self.ui.graph_2d_after_desalt.addItem(self.text_for_desalted_img_label5)
 
     def init_sb_signals(self) -> None:
         self.ui.sb_gray_y_init.valueChanged.connect(self.update_raw_from_sb)
@@ -339,7 +362,7 @@ class TheMainWindow(QMainWindow):
         )
         self.ui.graph_raw.addItem(inf1)
 
-        tmp_x = self.jp.get_wavelength_array(
+        tmp_x = get_wavelength_array(
             init_pxl=0,
             pxl_size=350,
             waveperpixel=self.ui.sb_waveperpixel.value(),
@@ -365,12 +388,12 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_raw.plot(tmp_x, obje_roi_mid[0::2, 0::2].mean(axis=0), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine), name="B-object")
 
 
-        tmp_lef_x = self.jp.get_wavelength_array(
+        tmp_lef_x = get_wavelength_array(
             init_pxl=self.ui.sb_lefx_init_rel.value()//2,
             pxl_size=self.ui.sb_lefx_size.value()//2,
             waveperpixel=self.ui.sb_waveperpixel.value(),
         )
-        tmp_rig_x = self.jp.get_wavelength_array(
+        tmp_rig_x = get_wavelength_array(
             init_pxl=self.ui.sb_rigx_init_rel.value()//2,
             pxl_size=self.ui.sb_rigx_size.value()//2,
             waveperpixel=self.ui.sb_waveperpixel.value(),
@@ -407,12 +430,13 @@ class TheMainWindow(QMainWindow):
         QShortcut(QKeySequence("Ctrl+B"),    self).activated.connect(self.short_cut_goto_parent_dir)
         QShortcut(QKeySequence("Backspace"), self).activated.connect(self.short_cut_goto_parent_dir)
         QShortcut(QKeySequence("Return"),    self).activated.connect(self.short_cut_goto_selected_child_dir)
+
         QShortcut(QKeySequence("Space"),     self).activated.connect(self.short_cut_preview_raw_jpeg)
-        QShortcut(QKeySequence("Ctrl+E"),    self).activated.connect(self.short_cut_export_raw_jpeg)
-        QShortcut(QKeySequence("Ctrl+O"),    self).activated.connect(self.short_cut_open_at_point)
-        QShortcut(QKeySequence("Ctrl+H"),    self).activated.connect(self.open_help_page)
-        QShortcut(QKeySequence("Ctrl+F"),    self).activated.connect(self.ui.cb_ft_filter.toggle)
-        QShortcut(QKeySequence("Ctrl+R"),    self).activated.connect(self.call_update_geometry_vals)
+        QShortcut(QKeySequence("Ctrl+R"),    self).activated.connect(self.call_calibrate_and_calculate)
+        #QShortcut(QKeySequence("Ctrl+E"),    self).activated.connect(self.short_cut_export_raw_jpeg)
+        #QShortcut(QKeySequence("Ctrl+O"),    self).activated.connect(self.short_cut_open_at_point)
+        #QShortcut(QKeySequence("Ctrl+H"),    self).activated.connect(self.open_help_page)
+        #QShortcut(QKeySequence("Ctrl+F"),    self).activated.connect(self.ui.cb_ft_filter.toggle)
 
         # QShortcut(QKeySequence("Ctrl+Shift+E"), self).activated.connect(self.ex_type_dialog.exec)
         # QShortcut(QKeySequence("Ctrl+P"), self).activated.connect(self.ref_pcon_dialog.exec)
@@ -477,16 +501,18 @@ class TheMainWindow(QMainWindow):
             if os.path.isfile(self.ddtree.webcamFP)
             else np.zeros((10, 10, 3), dtype=np.uint8)
         )
-        self.refresh_plots()
+        #self.jp_load_and_refresh_raw_image()
+        self.jp_load_newly_selected_jpeg_file()
+        self.update_1_rawbayer_img_data_and_then_plot_below()
         return True
 
     def short_cut_export_raw_jpeg(self) -> None:
         """C-e: export"""
         logging.info("exporting")
         if self.short_cut_preview_raw_jpeg():    # checking the selected jpeg
-            self.call_export_data()
+            #self.call_export_data() TODOOOOOOOOOOOOooo
+            pass
 
-    # @QtCore.pyqtSlot(QTreeWidgetItem, int)
     def call_tv_onItemClicked(self, v: QModelIndex):
         tmp = self.fsmodel.filePath(v)
         if os.path.isdir(tmp):
@@ -500,63 +526,75 @@ class TheMainWindow(QMainWindow):
             self.ddtree.set_ddir(self.dir_path)
             self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
             self.ui.limg_webcam.show_np_img(cv.imread(self.ddtree.webcamFP).astype(np.uint8))
-            self.refresh_plots()
+            self.jp_load_newly_selected_jpeg_file()
+            self.update_1_rawbayer_img_data_and_then_plot_below()
 
-    def call_update_geometry_vals(self) -> None:
-        # self.jp.set_xWaveRng(self.ui.sb_midx_init.value())
-        # self.jp.set_yGrayRng((self.ui.sb_gray_y_init.value(), self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value()))
-        # self.jp.set_yObjeRng((self.ui.sb_obje_y_init.value(), self.ui.sb_obje_y_init.value() + self.ui.sb_obje_y_size.value()))
+    def call_calibrate_and_calculate(self) -> None:
+        #Aself.jp_load_and_refresh_raw_image() do I need this?
+        self.jp.set_roi_geometry(
+            xWaveRng=(self.ui.sb_midx_init.value(), self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()),
+            xLfBgRng=(self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value() + self.ui.sb_lefx_size.value()),
+            xRiBgRng=(self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value() + self.ui.sb_rigx_size.value()),
+            yGrayRng=(self.ui.sb_gray_y_init.value(), self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value()),
+            yObjeRng=(self.ui.sb_obje_y_init.value(), self.ui.sb_obje_y_init.value() + self.ui.sb_obje_y_size.value()),
+        )
+        desaltedimg = np.concatenate(
+            (np.concatenate((self.jp.gray_bgle.roi_desalted, self.jp.gray.roi_desalted, self.jp.gray_bgri.roi_desalted), axis=1), 
+             np.concatenate((self.jp.obje_bgle.roi_desalted, self.jp.obje.roi_desalted, self.jp.obje_bgri.roi_desalted), axis=1)), 
+            axis=0,
+            dtype=np.int64
+        )
+        desalted_concatted_bayer_rgb_all_6roi = np.zeros((desaltedimg.shape[0], desaltedimg.shape[1], 3), dtype=np.int64)
+        desalted_concatted_bayer_rgb_all_6roi[0::2, 0::2, 2] = desaltedimg[0::2, 0::2]
+        desalted_concatted_bayer_rgb_all_6roi[0::2, 1::2, 1] = desaltedimg[0::2, 1::2]
+        desalted_concatted_bayer_rgb_all_6roi[1::2, 0::2, 1] = desaltedimg[1::2, 0::2]
+        desalted_concatted_bayer_rgb_all_6roi[1::2, 1::2, 0] = desaltedimg[1::2, 1::2]
 
-        # self.roi_obje_main.setPos(pos=(int(self.ui.sb_horx_left_pxl.text()), int(self.ui.sb_obje_top_pxl.text())))
-        # self.roi_gray_main.setPos(pos=(int(self.ui.sb_horx_left_pxl.text()), int(self.ui.sb_gray_top_pxl.text())))
+        self.ui.graph_2d_after_desalt.setImage(
+            img=desalted_concatted_bayer_rgb_all_6roi,
+            levels=(desalted_concatted_bayer_rgb_all_6roi.min(), desalted_concatted_bayer_rgb_all_6roi.max()),
+            axes={"x":1, "y":0, "c":2}
+        )
 
-        # self.roi_obje_main.setSize(size=(800, int(self.ui.sb_obje_top_pxl.text())-int(self.ui.sb_obje_size_pxl.text())))
-        # self.roi_gray_main.setSize(size=(800, int(self.ui.sb_gray_top_pxl.text())-int(self.ui.sb_gray_size_pxl.text())))
-        self.refresh_plots()
+        self.graph_desalted_graphs_sep_line_y0.setPos(self.ui.sb_gray_y_size.value())
+        self.graph_desalted_graphs_sep_line_x0.setPos(self.ui.sb_lefx_size.value())
+        self.graph_desalted_graphs_sep_line_x1.setPos(self.ui.sb_lefx_size.value() + self.ui.sb_midx_size.value())
 
-    def update_jp_numerical_vals(self) -> None:
-        self.jp.load_file(self.jpeg_path)
-        self.jp.get_bayer()
+        self.text_for_desalted_img_label0.setPos(0                                                             , 0)
+        self.text_for_desalted_img_label1.setPos(self.ui.sb_lefx_size.value() + self.ui.sb_midx_size.value()/2 , 0)
+        self.text_for_desalted_img_label2.setPos(self.ui.sb_lefx_size.value() + self.ui.sb_midx_size.value()   , 0)
+        self.text_for_desalted_img_label3.setPos(0                                                             , self.ui.sb_gray_y_size.value())
+        self.text_for_desalted_img_label4.setPos(self.ui.sb_lefx_size.value() + self.ui.sb_midx_size.value()/2 , self.ui.sb_gray_y_size.value())
+        self.text_for_desalted_img_label5.setPos(self.ui.sb_lefx_size.value() + self.ui.sb_midx_size.value()   , self.ui.sb_gray_y_size.value())
 
-        self.jp.get_spectrum()
-        self.jp.fixme()
-        self.jp.fancy_reflectance()
 
-    def update_visual_1_rawbayer_img_section(self) -> None:
+    def jp_load_newly_selected_jpeg_file(self) -> None:
+        """Loads latest selected jpeg file and then bayer extraction"""
+        self.jp.load_jpeg_file(self.jpeg_path, also_get_rgb_rerp=True)
+
+        #self.jp.get_spectrum()
+        #self.jp.fixme()
+        #self.jp.fancy_reflectance()
+
+    def update_1_rawbayer_img_data_and_then_plot_below(self) -> None:
         self.ui.graph_2dimg.clear()
         self.ui.graph_2dimg.setImage(
             img=self.jp.rgb,
             levels=(0, 1024),
             axes={"x":1, "y":0, "c":2}
         )
+        self.update_raw_from_sb()
 
-    def update_visual_2_raw_spectrum_section(self) -> None:
-        """remobed"""
-        pass
-
-    def update_visual_3_ref_spectrum_section(self) -> None:
-        self.ui.graph_ref.clear()
-        self.ui.graph_ref.plot(
-            self.jp.obje.rchan_final.index[-1000:], 
-            self.jp.ref_fancy,
-        )
-
-    def refresh_plots(self) -> None:
-        self.update_jp_numerical_vals()
-        self.update_visual_1_rawbayer_img_section()
-        self.update_visual_2_raw_spectrum_section()
-        self.update_visual_3_ref_spectrum_section()
-
-    def call_export_data(self) -> None:
-        """Export"""
-        os.makedirs(os.path.join(self.ddtree.ddir, "output"), exist_ok=True)
-        if self.ui.cb_export_bayer_as_npy.isChecked():
-            pass
-        if self.ui.cb_export_bayer_as_tif.isChecked():
-            pass
-        if self.ui.cb_export_bayer_as_mat.isChecked():
-            pass
-        if self.ui.cb_export_ref_plot_as_png.isChecked():
-            pass
-        if self.ui.cb_export_raw_plot_as_png.isChecked():
-            pass
+    #def call_export_data(self) -> None:
+    #    """Export"""
+    #    os.makedirs(os.path.join(self.ddtree.ddir, "output"), exist_ok=True)
+    #    if self.ui.cb_export_bayer_as_npy.isChecked():
+    #        pass
+    #    if self.ui.cb_export_bayer_as_tif.isChecked():
+    #        pass
+    #    if self.ui.cb_export_bayer_as_mat.isChecked():
+    #        pass
+    #    if self.ui.cb_export_ref_plot_as_png.isChecked():
+    #        pass
+    #    if self.ui.cb_export_raw_plot_as_png.isChecked():
+    #        pass
