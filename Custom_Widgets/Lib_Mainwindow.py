@@ -209,6 +209,13 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_2dimg.addItem(self.roi_gray_bglf)
         self.ui.graph_2dimg.addItem(self.roi_gray_bgri)
 
+        self.graph_759nm_line_for_2dimg = pg.InfiniteLine(
+            pos=192*2 + self.ui.sb_midx_init.value(), movable=False, angle=90, label="759.3nm", 
+            #labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}
+        )
+        self.ui.graph_2dimg.addItem(self.graph_759nm_line_for_2dimg)
+
+
     def init_sb_signals(self) -> None:
         self.ui.sb_gray_y_init.valueChanged.connect(self.update_raw_from_sb)
         self.ui.sb_gray_y_size.valueChanged.connect(self.update_raw_from_sb)
@@ -220,6 +227,8 @@ class TheMainWindow(QMainWindow):
         self.ui.sb_lefx_size.valueChanged.connect(self.update_raw_from_sb)
         self.ui.sb_rigx_init_rel.valueChanged.connect(self.update_raw_from_sb)
         self.ui.sb_rigx_size.valueChanged.connect(self.update_raw_from_sb)
+
+        self.ui.sb_waveperpixel.valueChanged.connect(self.update_raw_roi_plot_when_sb_or_roi_moved)
 
         self.roi_gray_main.sigRegionChanged.connect(lambda: self.handle_roi_change("gray", "middle"))
         self.roi_gray_bglf.sigRegionChanged.connect(lambda: self.handle_roi_change("gray", "left"))
@@ -302,6 +311,7 @@ class TheMainWindow(QMainWindow):
         self.roi_obje_main.setSize((self.ui.sb_midx_size.value(), self.ui.sb_obje_y_size.value()))
         self.roi_obje_bglf.setSize((self.ui.sb_lefx_size.value(), self.ui.sb_obje_y_size.value()))
         self.roi_obje_bgri.setSize((self.ui.sb_rigx_size.value(), self.ui.sb_obje_y_size.value()))
+        self.graph_759nm_line_for_2dimg.setPos(pos=self.ui.sb_midx_init.value() + 192*2)
 
         self.roi_gray_main.blockSignals(False)
         self.roi_gray_bglf.blockSignals(False)
