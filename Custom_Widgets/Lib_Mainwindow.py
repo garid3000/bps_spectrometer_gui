@@ -105,6 +105,7 @@ class TheMainWindow(QMainWindow):
         # self.ui.cb_ft_filter.stateChanged.connect(self.fsmodel.setNameFilterDisables)
         self.ui.cb_ft_filter.stateChanged.connect(self.toggle_filetype_visiblity)
         self.ui.cb_bayer_show_geometry.stateChanged.connect(self.update_visual_1_rawbayer_img_section)
+        self.ui.pb_waveperpixel_reset.clicked.connect(lambda: self.ui.sb_waveperpixel.setValue(1.8385))
 
         # -----------------------------------------------------------------------------
         self.jp.set_xWaveRng(self.ui.sb_midx_init.value())
@@ -145,7 +146,7 @@ class TheMainWindow(QMainWindow):
 
         self.roi_gray_main = pg.ROI(
             pos=[self.ui.sb_midx_init.value(), self.ui.sb_gray_y_init.value()],  
-            size=pg.Point(800, self.ui.sb_gray_y_size.value()), 
+            size=pg.Point(700, self.ui.sb_gray_y_size.value()), 
             movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
         )
         
@@ -163,7 +164,7 @@ class TheMainWindow(QMainWindow):
 
         self.roi_obje_main = pg.ROI(
             pos=[self.ui.sb_midx_init.value(), self.ui.sb_obje_y_init.value()],  
-            size=pg.Point(800, self.ui.sb_obje_y_size.value()), 
+            size=pg.Point(700, self.ui.sb_obje_y_size.value()), 
             movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
         )
         
@@ -328,7 +329,11 @@ class TheMainWindow(QMainWindow):
         )
         self.ui.graph_raw.addItem(inf1)
 
-        tmp_x = np.linspace(400, 800, 400)
+        tmp_x = self.jp.get_wavelength_array(
+            init_pxl=0,
+            pxl_size=350,
+            waveperpixel=self.ui.sb_waveperpixel.value(),
+        )
 
         gray_roi_mid = self.jp.data[
             self.ui.sb_gray_y_init.value() : self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value(),
@@ -350,9 +355,17 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_raw.plot(tmp_x, obje_roi_mid[0::2, 0::2].mean(axis=0), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine), name="B-object")
 
 
+        tmp_lef_x = self.jp.get_wavelength_array(
+            init_pxl=self.ui.sb_lefx_init_rel.value()//2,
+            pxl_size=self.ui.sb_lefx_size.value()//2,
+            waveperpixel=self.ui.sb_waveperpixel.value(),
+        )
+        tmp_rig_x = self.jp.get_wavelength_array(
+            init_pxl=self.ui.sb_rigx_init_rel.value()//2,
+            pxl_size=self.ui.sb_rigx_size.value()//2,
+            waveperpixel=self.ui.sb_waveperpixel.value(),
+        )
 
-        tmp_lef_x = np.linspace(300, 380,  self.ui.sb_lefx_size.value()// 2)
-        tmp_rig_x = np.linspace(810, 900,  self.ui.sb_rigx_size.value()// 2)
         gray_roi_lef = self.jp.data[
             self.ui.sb_gray_y_init.value() : self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value(),
             self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value() : self.ui.sb_midx_init.value()  + self.ui.sb_lefx_init_rel.value() + self.ui.sb_lefx_size.value()
@@ -373,56 +386,6 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_raw.plot(tmp_rig_x, gray_roi_rig[0::2, 1::2].mean(axis=0), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="bgG-object")
         self.ui.graph_raw.plot(tmp_rig_x, gray_roi_rig[0::2, 0::2].mean(axis=0), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine), name="bgB-object")
         
-
-
-    #def updatePlot_g_roi(self) -> None:
-    #    roi_g = self.roi_gray_main.getState()
-
-    #    self.ui.graph_2d_roi_gray.setImage(
-    #        self.jp.rgb[
-    #        int(roi_g["pos"].y()):int(roi_g["pos"].y() +roi_g["size"].y()), 
-    #        int(roi_g["pos"].x()):int(roi_g["pos"].x() +roi_g["size"].x()), 
-    #        :],
-    #        axes={"x":1, "y":0, "c":2},
-    #    )
-    #    print(roi_g)
-    #    # self.ui.sb_gray_top_pxl.blockSignals(True)
-    #    # self.ui.sb_gray_size_pxl.blockSignals(True)
-    #    # self.ui.sb_gray_top_pxl.setValue(roi_g["pos"].y())
-    #    # self.ui.sb_gray_size_pxl.setValue(roi_g["size"].y())
-    #    # self.ui.sb_horx_left_pxl.setValue(roi_g["pos"].x())
-    #    # self.ui.sb_gray_top_pxl.blockSignals(False)
-    #    # self.ui.sb_gray_size_pxl.blockSignals(False)
-    #    # self.ui.sb_gray_bot_pxl.setValue(roi_g["pos"].y() + roi_g["size"].y())
-    #    self.update_visual_2_raw_spectrum_section()
-
-    #    self.roi_gray_bglf.setPos(pos=(int(roi_g["pos"].x())-60,      int(roi_g["pos"].y())))
-    #    self.roi_gray_bgri.setPos(pos=(int(roi_g["pos"].x())+800+10, int(roi_g["pos"].y()))) # noqa
-
-
-    #def updatePlot_o_roi(self) -> None:
-    #    roi_o = self.roi_obje_main.getState()
-    #    #self.ui.graph_2d_roi_object.setImage(self.jp.rgb[:, :, :])
-
-    #    self.ui.graph_2d_roi_obje.setImage(
-    #        self.jp.rgb[
-    #        int(roi_o["pos"].y()):int(roi_o["pos"].y() +roi_o["size"].y()), 
-    #        int(roi_o["pos"].x()):int(roi_o["pos"].x() +roi_o["size"].x()), 
-    #        :],
-    #        axes={"x":1, "y":0, "c":2},
-    #    )
-    #    print(roi_o)
-
-    #    # self.ui.sb_obje_top_pxl.blockSignals(True)
-    #    # self.ui.sb_obje_size_pxl.blockSignals(True)
-    #    # self.ui.sb_obje_top_pxl.setValue(roi_o["pos"].y())
-    #    # self.ui.sb_obje_size_pxl.setValue(roi_o["size"].y())
-    #    # self.ui.sb_horx_left_pxl.setValue(roi_o["pos"].x())
-    #    # self.ui.sb_obje_top_pxl.blockSignals(False)
-    #    # self.ui.sb_obje_size_pxl.blockSignals(False)
-    #    # self.ui.sb_obje_bot_pxl.setValue(roi_o["pos"].y() + roi_o["size"].y())
-    #    self.update_visual_2_raw_spectrum_section()
-
 
     def toggle_filetype_visiblity(self, a: int) -> None:
         if a:
