@@ -24,6 +24,7 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import (
     QCheckBox,
+    QDoubleSpinBox,
     QFormLayout,
     QFrame,
     QGridLayout,
@@ -168,7 +169,7 @@ class Ui_MainWindow(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 423, 724))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 430, 724))
         self.verticalLayout_4 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.graph_2dimg = ImageView(self.scrollAreaWidgetContents_2)
@@ -205,70 +206,36 @@ class Ui_MainWindow(object):
         self.gb_control_panel.setObjectName("gb_control_panel")
         self.gridLayout_2 = QGridLayout(self.gb_control_panel)
         self.gridLayout_2.setObjectName("gridLayout_2")
-        self._l_7 = QLabel(self.gb_control_panel)
-        self._l_7.setObjectName("_l_7")
+        self.sb_waveperpixel = QDoubleSpinBox(self.gb_control_panel)
+        self.sb_waveperpixel.setObjectName("sb_waveperpixel")
+        self.sb_waveperpixel.setDecimals(4)
+        self.sb_waveperpixel.setMinimum(1.500000000000000)
+        self.sb_waveperpixel.setMaximum(2.500000000000000)
+        self.sb_waveperpixel.setSingleStep(0.010000000000000)
+        self.sb_waveperpixel.setValue(1.858300000000000)
 
-        self.gridLayout_2.addWidget(self._l_7, 3, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.sb_waveperpixel, 11, 1, 1, 1)
 
-        self.sb_midx_size = QSpinBox(self.gb_control_panel)
-        self.sb_midx_size.setObjectName("sb_midx_size")
-        self.sb_midx_size.setEnabled(False)
-        self.sb_midx_size.setMaximum(9999)
-        self.sb_midx_size.setValue(800)
+        self._l_5 = QLabel(self.gb_control_panel)
+        self._l_5.setObjectName("_l_5")
 
-        self.gridLayout_2.addWidget(self.sb_midx_size, 1, 2, 1, 1)
+        self.gridLayout_2.addWidget(self._l_5, 5, 3, 1, 1)
 
-        self._l_8 = QLabel(self.gb_control_panel)
-        self._l_8.setObjectName("_l_8")
+        self._l_11 = QLabel(self.gb_control_panel)
+        self._l_11.setObjectName("_l_11")
 
-        self.gridLayout_2.addWidget(self._l_8, 0, 1, 1, 1)
+        self.gridLayout_2.addWidget(self._l_11, 5, 1, 1, 1)
 
-        self._l_2 = QLabel(self.gb_control_panel)
-        self._l_2.setObjectName("_l_2")
+        self._l_1 = QLabel(self.gb_control_panel)
+        self._l_1.setObjectName("_l_1")
         palette = QPalette()
-        brush = QBrush(QColor(255, 0, 0, 255))
+        brush = QBrush(QColor(0, 170, 0, 255))
         brush.setStyle(Qt.SolidPattern)
         palette.setBrush(QPalette.Active, QPalette.WindowText, brush)
         palette.setBrush(QPalette.Inactive, QPalette.WindowText, brush)
-        self._l_2.setPalette(palette)
+        self._l_1.setPalette(palette)
 
-        self.gridLayout_2.addWidget(self._l_2, 6, 0, 1, 1)
-
-        self.sb_rigx_size = QSpinBox(self.gb_control_panel)
-        self.sb_rigx_size.setObjectName("sb_rigx_size")
-        self.sb_rigx_size.setMaximum(100)
-        self.sb_rigx_size.setValue(40)
-
-        self.gridLayout_2.addWidget(self.sb_rigx_size, 3, 2, 1, 1)
-
-        self.sb_rigx_ends = QSpinBox(self.gb_control_panel)
-        self.sb_rigx_ends.setObjectName("sb_rigx_ends")
-        self.sb_rigx_ends.setEnabled(False)
-        self.sb_rigx_ends.setMaximum(9999)
-
-        self.gridLayout_2.addWidget(self.sb_rigx_ends, 3, 3, 1, 1)
-
-        self.sb_gray_y_ends = QSpinBox(self.gb_control_panel)
-        self.sb_gray_y_ends.setObjectName("sb_gray_y_ends")
-        self.sb_gray_y_ends.setEnabled(False)
-        self.sb_gray_y_ends.setMaximum(99999999)
-
-        self.gridLayout_2.addWidget(self.sb_gray_y_ends, 6, 3, 1, 1)
-
-        self._line = QFrame(self.gb_control_panel)
-        self._line.setObjectName("_line")
-        self._line.setFrameShape(QFrame.Shape.HLine)
-        self._line.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.gridLayout_2.addWidget(self._line, 4, 0, 1, 4)
-
-        self.sb_lefx_init_rel = QSpinBox(self.gb_control_panel)
-        self.sb_lefx_init_rel.setObjectName("sb_lefx_init_rel")
-        self.sb_lefx_init_rel.setMinimum(-999)
-        self.sb_lefx_init_rel.setMaximum(9999)
-        self.sb_lefx_init_rel.setValue(-50)
-
-        self.gridLayout_2.addWidget(self.sb_lefx_init_rel, 2, 1, 1, 1)
+        self.gridLayout_2.addWidget(self._l_1, 1, 0, 1, 1)
 
         self.sb_midx_init = QSpinBox(self.gb_control_panel)
         self.sb_midx_init.setObjectName("sb_midx_init")
@@ -279,26 +246,142 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.sb_midx_init, 1, 1, 1, 1)
 
-        self._l_1 = QLabel(self.gb_control_panel)
-        self._l_1.setObjectName("_l_1")
-        palette1 = QPalette()
-        brush1 = QBrush(QColor(0, 170, 0, 255))
-        brush1.setStyle(Qt.SolidPattern)
-        palette1.setBrush(QPalette.Active, QPalette.WindowText, brush1)
-        palette1.setBrush(QPalette.Inactive, QPalette.WindowText, brush1)
-        self._l_1.setPalette(palette1)
+        self.sb_midx_size = QSpinBox(self.gb_control_panel)
+        self.sb_midx_size.setObjectName("sb_midx_size")
+        self.sb_midx_size.setEnabled(False)
+        self.sb_midx_size.setMaximum(9999)
+        self.sb_midx_size.setValue(700)
 
-        self.gridLayout_2.addWidget(self._l_1, 1, 0, 1, 1)
-
-        self._l_5 = QLabel(self.gb_control_panel)
-        self._l_5.setObjectName("_l_5")
-
-        self.gridLayout_2.addWidget(self._l_5, 5, 3, 1, 1)
+        self.gridLayout_2.addWidget(self.sb_midx_size, 1, 2, 1, 1)
 
         self._l_4 = QLabel(self.gb_control_panel)
         self._l_4.setObjectName("_l_4")
 
         self.gridLayout_2.addWidget(self._l_4, 5, 2, 1, 1)
+
+        self._line = QFrame(self.gb_control_panel)
+        self._line.setObjectName("_line")
+        self._line.setFrameShape(QFrame.Shape.HLine)
+        self._line.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.gridLayout_2.addWidget(self._line, 4, 0, 1, 4)
+
+        self.sb_rigx_init_rel = QSpinBox(self.gb_control_panel)
+        self.sb_rigx_init_rel.setObjectName("sb_rigx_init_rel")
+        self.sb_rigx_init_rel.setMaximum(9999)
+        self.sb_rigx_init_rel.setValue(810)
+
+        self.gridLayout_2.addWidget(self.sb_rigx_init_rel, 3, 1, 1, 1)
+
+        self.sb_rigx_size = QSpinBox(self.gb_control_panel)
+        self.sb_rigx_size.setObjectName("sb_rigx_size")
+        self.sb_rigx_size.setMaximum(100)
+        self.sb_rigx_size.setValue(40)
+
+        self.gridLayout_2.addWidget(self.sb_rigx_size, 3, 2, 1, 1)
+
+        self._l_2 = QLabel(self.gb_control_panel)
+        self._l_2.setObjectName("_l_2")
+        palette1 = QPalette()
+        brush1 = QBrush(QColor(255, 0, 0, 255))
+        brush1.setStyle(Qt.SolidPattern)
+        palette1.setBrush(QPalette.Active, QPalette.WindowText, brush1)
+        palette1.setBrush(QPalette.Inactive, QPalette.WindowText, brush1)
+        self._l_2.setPalette(palette1)
+
+        self.gridLayout_2.addWidget(self._l_2, 6, 0, 1, 1)
+
+        self._l_9 = QLabel(self.gb_control_panel)
+        self._l_9.setObjectName("_l_9")
+
+        self.gridLayout_2.addWidget(self._l_9, 0, 2, 1, 1)
+
+        self.sb_gray_y_init = QSpinBox(self.gb_control_panel)
+        self.sb_gray_y_init.setObjectName("sb_gray_y_init")
+        self.sb_gray_y_init.setMinimum(0)
+        self.sb_gray_y_init.setMaximum(20000)
+        self.sb_gray_y_init.setSingleStep(2)
+        self.sb_gray_y_init.setValue(1050)
+
+        self.gridLayout_2.addWidget(self.sb_gray_y_init, 6, 1, 1, 1)
+
+        self._l_7 = QLabel(self.gb_control_panel)
+        self._l_7.setObjectName("_l_7")
+
+        self.gridLayout_2.addWidget(self._l_7, 3, 0, 1, 1)
+
+        self.sb_rigx_ends = QSpinBox(self.gb_control_panel)
+        self.sb_rigx_ends.setObjectName("sb_rigx_ends")
+        self.sb_rigx_ends.setEnabled(False)
+        self.sb_rigx_ends.setMaximum(9999)
+
+        self.gridLayout_2.addWidget(self.sb_rigx_ends, 3, 3, 1, 1)
+
+        self.sb_lefx_init_rel = QSpinBox(self.gb_control_panel)
+        self.sb_lefx_init_rel.setObjectName("sb_lefx_init_rel")
+        self.sb_lefx_init_rel.setMinimum(-999)
+        self.sb_lefx_init_rel.setMaximum(9999)
+        self.sb_lefx_init_rel.setValue(-50)
+
+        self.gridLayout_2.addWidget(self.sb_lefx_init_rel, 2, 1, 1, 1)
+
+        self._l_8 = QLabel(self.gb_control_panel)
+        self._l_8.setObjectName("_l_8")
+
+        self.gridLayout_2.addWidget(self._l_8, 0, 1, 1, 1)
+
+        self.sb_lefx_size = QSpinBox(self.gb_control_panel)
+        self.sb_lefx_size.setObjectName("sb_lefx_size")
+        self.sb_lefx_size.setMaximum(100)
+        self.sb_lefx_size.setValue(40)
+
+        self.gridLayout_2.addWidget(self.sb_lefx_size, 2, 2, 1, 1)
+
+        self.sb_obje_y_size = QSpinBox(self.gb_control_panel)
+        self.sb_obje_y_size.setObjectName("sb_obje_y_size")
+        self.sb_obje_y_size.setMinimum(0)
+        self.sb_obje_y_size.setMaximum(20000)
+        self.sb_obje_y_size.setSingleStep(2)
+        self.sb_obje_y_size.setValue(50)
+
+        self.gridLayout_2.addWidget(self.sb_obje_y_size, 9, 2, 1, 1)
+
+        self.sb_gray_y_ends = QSpinBox(self.gb_control_panel)
+        self.sb_gray_y_ends.setObjectName("sb_gray_y_ends")
+        self.sb_gray_y_ends.setEnabled(False)
+        self.sb_gray_y_ends.setMaximum(99999999)
+
+        self.gridLayout_2.addWidget(self.sb_gray_y_ends, 6, 3, 1, 1)
+
+        self._l_3 = QLabel(self.gb_control_panel)
+        self._l_3.setObjectName("_l_3")
+        palette2 = QPalette()
+        brush2 = QBrush(QColor(0, 0, 255, 255))
+        brush2.setStyle(Qt.SolidPattern)
+        palette2.setBrush(QPalette.Active, QPalette.WindowText, brush2)
+        palette2.setBrush(QPalette.Inactive, QPalette.WindowText, brush2)
+        self._l_3.setPalette(palette2)
+
+        self.gridLayout_2.addWidget(self._l_3, 9, 0, 1, 1)
+
+        self._l_10 = QLabel(self.gb_control_panel)
+        self._l_10.setObjectName("_l_10")
+
+        self.gridLayout_2.addWidget(self._l_10, 0, 3, 1, 1)
+
+        self.sb_lefx_ends = QSpinBox(self.gb_control_panel)
+        self.sb_lefx_ends.setObjectName("sb_lefx_ends")
+        self.sb_lefx_ends.setEnabled(False)
+        self.sb_lefx_ends.setMaximum(9999)
+
+        self.gridLayout_2.addWidget(self.sb_lefx_ends, 2, 3, 1, 1)
+
+        self.sb_midx_ends = QSpinBox(self.gb_control_panel)
+        self.sb_midx_ends.setObjectName("sb_midx_ends")
+        self.sb_midx_ends.setEnabled(False)
+        self.sb_midx_ends.setMaximum(99999)
+
+        self.gridLayout_2.addWidget(self.sb_midx_ends, 1, 3, 1, 1)
 
         self.sb_obje_y_init = QSpinBox(self.gb_control_panel)
         self.sb_obje_y_init.setObjectName("sb_obje_y_init")
@@ -314,42 +397,12 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self._l_6, 2, 0, 1, 1)
 
-        self._l_10 = QLabel(self.gb_control_panel)
-        self._l_10.setObjectName("_l_10")
+        self.sb_obje_y_ends = QSpinBox(self.gb_control_panel)
+        self.sb_obje_y_ends.setObjectName("sb_obje_y_ends")
+        self.sb_obje_y_ends.setEnabled(False)
+        self.sb_obje_y_ends.setMaximum(999999999)
 
-        self.gridLayout_2.addWidget(self._l_10, 0, 3, 1, 1)
-
-        self.sb_midx_ends = QSpinBox(self.gb_control_panel)
-        self.sb_midx_ends.setObjectName("sb_midx_ends")
-        self.sb_midx_ends.setEnabled(False)
-        self.sb_midx_ends.setMaximum(99999)
-
-        self.gridLayout_2.addWidget(self.sb_midx_ends, 1, 3, 1, 1)
-
-        self._l_3 = QLabel(self.gb_control_panel)
-        self._l_3.setObjectName("_l_3")
-        palette2 = QPalette()
-        brush2 = QBrush(QColor(0, 0, 255, 255))
-        brush2.setStyle(Qt.SolidPattern)
-        palette2.setBrush(QPalette.Active, QPalette.WindowText, brush2)
-        palette2.setBrush(QPalette.Inactive, QPalette.WindowText, brush2)
-        self._l_3.setPalette(palette2)
-
-        self.gridLayout_2.addWidget(self._l_3, 9, 0, 1, 1)
-
-        self._l_9 = QLabel(self.gb_control_panel)
-        self._l_9.setObjectName("_l_9")
-
-        self.gridLayout_2.addWidget(self._l_9, 0, 2, 1, 1)
-
-        self.sb_obje_y_size = QSpinBox(self.gb_control_panel)
-        self.sb_obje_y_size.setObjectName("sb_obje_y_size")
-        self.sb_obje_y_size.setMinimum(0)
-        self.sb_obje_y_size.setMaximum(20000)
-        self.sb_obje_y_size.setSingleStep(2)
-        self.sb_obje_y_size.setValue(50)
-
-        self.gridLayout_2.addWidget(self.sb_obje_y_size, 9, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.sb_obje_y_ends, 9, 3, 1, 1)
 
         self.sb_gray_y_size = QSpinBox(self.gb_control_panel)
         self.sb_gray_y_size.setObjectName("sb_gray_y_size")
@@ -360,47 +413,22 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.sb_gray_y_size, 6, 2, 1, 1)
 
-        self.sb_gray_y_init = QSpinBox(self.gb_control_panel)
-        self.sb_gray_y_init.setObjectName("sb_gray_y_init")
-        self.sb_gray_y_init.setMinimum(0)
-        self.sb_gray_y_init.setMaximum(20000)
-        self.sb_gray_y_init.setSingleStep(2)
-        self.sb_gray_y_init.setValue(1050)
+        self.line_3 = QFrame(self.gb_control_panel)
+        self.line_3.setObjectName("line_3")
+        self.line_3.setFrameShape(QFrame.Shape.HLine)
+        self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.gridLayout_2.addWidget(self.sb_gray_y_init, 6, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.line_3, 10, 0, 1, 4)
 
-        self.sb_lefx_size = QSpinBox(self.gb_control_panel)
-        self.sb_lefx_size.setObjectName("sb_lefx_size")
-        self.sb_lefx_size.setMaximum(100)
-        self.sb_lefx_size.setValue(40)
+        self._l = QLabel(self.gb_control_panel)
+        self._l.setObjectName("_l")
 
-        self.gridLayout_2.addWidget(self.sb_lefx_size, 2, 2, 1, 1)
+        self.gridLayout_2.addWidget(self._l, 11, 0, 1, 1)
 
-        self._l_11 = QLabel(self.gb_control_panel)
-        self._l_11.setObjectName("_l_11")
+        self.pb_waveperpixel_reset = QPushButton(self.gb_control_panel)
+        self.pb_waveperpixel_reset.setObjectName("pb_waveperpixel_reset")
 
-        self.gridLayout_2.addWidget(self._l_11, 5, 1, 1, 1)
-
-        self.sb_obje_y_ends = QSpinBox(self.gb_control_panel)
-        self.sb_obje_y_ends.setObjectName("sb_obje_y_ends")
-        self.sb_obje_y_ends.setEnabled(False)
-        self.sb_obje_y_ends.setMaximum(999999999)
-
-        self.gridLayout_2.addWidget(self.sb_obje_y_ends, 9, 3, 1, 1)
-
-        self.sb_lefx_ends = QSpinBox(self.gb_control_panel)
-        self.sb_lefx_ends.setObjectName("sb_lefx_ends")
-        self.sb_lefx_ends.setEnabled(False)
-        self.sb_lefx_ends.setMaximum(9999)
-
-        self.gridLayout_2.addWidget(self.sb_lefx_ends, 2, 3, 1, 1)
-
-        self.sb_rigx_init_rel = QSpinBox(self.gb_control_panel)
-        self.sb_rigx_init_rel.setObjectName("sb_rigx_init_rel")
-        self.sb_rigx_init_rel.setMaximum(9999)
-        self.sb_rigx_init_rel.setValue(810)
-
-        self.gridLayout_2.addWidget(self.sb_rigx_init_rel, 3, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.pb_waveperpixel_reset, 11, 2, 1, 1)
 
         self.verticalLayout.addWidget(self.gb_control_panel)
 
@@ -419,7 +447,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 433, 772))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 429, 772))
         self.formLayout = QFormLayout(self.scrollAreaWidgetContents)
         self.formLayout.setObjectName("formLayout")
         self.label = QLabel(self.scrollAreaWidgetContents)
@@ -699,6 +727,24 @@ class Ui_MainWindow(object):
             QCoreApplication.translate("MainWindow", "Webcam + Meta Data Panel", None)
         )
         self.gb_control_panel.setTitle("")
+        self._l_5.setText(
+            QCoreApplication.translate("MainWindow", "Bottom (pixel)", None)
+        )
+        self._l_11.setText(
+            QCoreApplication.translate("MainWindow", "Top (pixel)", None)
+        )
+        self._l_1.setText(
+            QCoreApplication.translate("MainWindow", "Hor. (center)", None)
+        )
+        self._l_4.setText(
+            QCoreApplication.translate("MainWindow", "Height (pixel)", None)
+        )
+        self._l_2.setText(
+            QCoreApplication.translate("MainWindow", "Vert. Gray Pixel Range", None)
+        )
+        self._l_9.setText(
+            QCoreApplication.translate("MainWindow", "Width (pixel)", None)
+        )
         self._l_7.setText(
             QCoreApplication.translate(
                 "MainWindow", "Hor. (right) relative to center", None
@@ -707,34 +753,24 @@ class Ui_MainWindow(object):
         self._l_8.setText(
             QCoreApplication.translate("MainWindow", "Start (pixel)", None)
         )
-        self._l_2.setText(
-            QCoreApplication.translate("MainWindow", "Vert. Gray Pixel Range", None)
+        self._l_3.setText(
+            QCoreApplication.translate("MainWindow", "Vert. Object Pixel Range", None)
         )
-        self._l_1.setText(
-            QCoreApplication.translate("MainWindow", "Hor. (center)", None)
-        )
-        self._l_5.setText(
-            QCoreApplication.translate("MainWindow", "Bottom (pixel)", None)
-        )
-        self._l_4.setText(
-            QCoreApplication.translate("MainWindow", "Height (pixel)", None)
+        self._l_10.setText(
+            QCoreApplication.translate("MainWindow", "End (pixel)", None)
         )
         self._l_6.setText(
             QCoreApplication.translate(
                 "MainWindow", "Hor. (left) relative to center", None
             )
         )
-        self._l_10.setText(
-            QCoreApplication.translate("MainWindow", "End (pixel)", None)
+        self._l.setText(
+            QCoreApplication.translate(
+                "MainWindow", "Wavelength per pixel (nm/px)", None
+            )
         )
-        self._l_3.setText(
-            QCoreApplication.translate("MainWindow", "Vert. Object Pixel Range", None)
-        )
-        self._l_9.setText(
-            QCoreApplication.translate("MainWindow", "Width (pixel)", None)
-        )
-        self._l_11.setText(
-            QCoreApplication.translate("MainWindow", "Top (pixel)", None)
+        self.pb_waveperpixel_reset.setText(
+            QCoreApplication.translate("MainWindow", "Reset", None)
         )
         self.gp_spectral_panel.setTitle(
             QCoreApplication.translate("MainWindow", "Spectral Data Panel", None)

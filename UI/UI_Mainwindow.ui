@@ -99,7 +99,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>423</width>
+             <width>430</width>
              <height>724</height>
             </rect>
            </property>
@@ -146,130 +146,36 @@
            <string/>
           </property>
           <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0,0">
-           <item row="3" column="0">
-            <widget class="QLabel" name="_l_7">
-             <property name="text">
-              <string>Hor. (right) relative to center</string>
+           <item row="11" column="1">
+            <widget class="QDoubleSpinBox" name="sb_waveperpixel">
+             <property name="decimals">
+              <number>4</number>
              </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QSpinBox" name="sb_midx_size">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="maximum">
-              <number>9999</number>
-             </property>
-             <property name="value">
-              <number>800</number>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QLabel" name="_l_8">
-             <property name="text">
-              <string>Start (pixel)</string>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="_l_2">
-             <property name="palette">
-              <palette>
-               <active>
-                <colorrole role="WindowText">
-                 <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>255</red>
-                   <green>0</green>
-                   <blue>0</blue>
-                  </color>
-                 </brush>
-                </colorrole>
-               </active>
-               <inactive>
-                <colorrole role="WindowText">
-                 <brush brushstyle="SolidPattern">
-                  <color alpha="255">
-                   <red>255</red>
-                   <green>0</green>
-                   <blue>0</blue>
-                  </color>
-                 </brush>
-                </colorrole>
-               </inactive>
-               <disabled/>
-              </palette>
-             </property>
-             <property name="text">
-              <string>Vert. Gray Pixel Range</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="2">
-            <widget class="QSpinBox" name="sb_rigx_size">
-             <property name="maximum">
-              <number>100</number>
-             </property>
-             <property name="value">
-              <number>40</number>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="3">
-            <widget class="QSpinBox" name="sb_rigx_ends">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="maximum">
-              <number>9999</number>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="3">
-            <widget class="QSpinBox" name="sb_gray_y_ends">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="maximum">
-              <number>99999999</number>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0" colspan="4">
-            <widget class="Line" name="_line">
-             <property name="orientation">
-              <enum>Qt::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QSpinBox" name="sb_lefx_init_rel">
              <property name="minimum">
-              <number>-999</number>
+              <double>1.500000000000000</double>
              </property>
              <property name="maximum">
-              <number>9999</number>
-             </property>
-             <property name="value">
-              <number>-50</number>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QSpinBox" name="sb_midx_init">
-             <property name="minimum">
-              <number>0</number>
-             </property>
-             <property name="maximum">
-              <number>17000</number>
+              <double>2.500000000000000</double>
              </property>
              <property name="singleStep">
-              <number>2</number>
+              <double>0.010000000000000</double>
              </property>
              <property name="value">
-              <number>1350</number>
+              <double>1.858300000000000</double>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="3">
+            <widget class="QLabel" name="_l_5">
+             <property name="text">
+              <string>Bottom (pixel)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="1">
+            <widget class="QLabel" name="_l_11">
+             <property name="text">
+              <string>Top (pixel)</string>
              </property>
             </widget>
            </item>
@@ -307,10 +213,32 @@
              </property>
             </widget>
            </item>
-           <item row="5" column="3">
-            <widget class="QLabel" name="_l_5">
-             <property name="text">
-              <string>Bottom (pixel)</string>
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="sb_midx_init">
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>17000</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
+             </property>
+             <property name="value">
+              <number>1350</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QSpinBox" name="sb_midx_size">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="maximum">
+              <number>9999</number>
+             </property>
+             <property name="value">
+              <number>700</number>
              </property>
             </widget>
            </item>
@@ -321,8 +249,76 @@
              </property>
             </widget>
            </item>
-           <item row="9" column="1">
-            <widget class="QSpinBox" name="sb_obje_y_init">
+           <item row="4" column="0" colspan="4">
+            <widget class="Line" name="_line">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QSpinBox" name="sb_rigx_init_rel">
+             <property name="maximum">
+              <number>9999</number>
+             </property>
+             <property name="value">
+              <number>810</number>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QSpinBox" name="sb_rigx_size">
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>40</number>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="_l_2">
+             <property name="palette">
+              <palette>
+               <active>
+                <colorrole role="WindowText">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>255</red>
+                   <green>0</green>
+                   <blue>0</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+               </active>
+               <inactive>
+                <colorrole role="WindowText">
+                 <brush brushstyle="SolidPattern">
+                  <color alpha="255">
+                   <red>255</red>
+                   <green>0</green>
+                   <blue>0</blue>
+                  </color>
+                 </brush>
+                </colorrole>
+               </inactive>
+               <disabled/>
+              </palette>
+             </property>
+             <property name="text">
+              <string>Vert. Gray Pixel Range</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QLabel" name="_l_9">
+             <property name="text">
+              <string>Width (pixel)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="1">
+            <widget class="QSpinBox" name="sb_gray_y_init">
              <property name="minimum">
               <number>0</number>
              </property>
@@ -333,31 +329,80 @@
               <number>2</number>
              </property>
              <property name="value">
-              <number>1200</number>
+              <number>1050</number>
              </property>
             </widget>
            </item>
-           <item row="2" column="0">
-            <widget class="QLabel" name="_l_6">
+           <item row="3" column="0">
+            <widget class="QLabel" name="_l_7">
              <property name="text">
-              <string>Hor. (left) relative to center</string>
+              <string>Hor. (right) relative to center</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="3">
-            <widget class="QLabel" name="_l_10">
-             <property name="text">
-              <string>End (pixel)</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="3">
-            <widget class="QSpinBox" name="sb_midx_ends">
+           <item row="3" column="3">
+            <widget class="QSpinBox" name="sb_rigx_ends">
              <property name="enabled">
               <bool>false</bool>
              </property>
              <property name="maximum">
-              <number>99999</number>
+              <number>9999</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QSpinBox" name="sb_lefx_init_rel">
+             <property name="minimum">
+              <number>-999</number>
+             </property>
+             <property name="maximum">
+              <number>9999</number>
+             </property>
+             <property name="value">
+              <number>-50</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="_l_8">
+             <property name="text">
+              <string>Start (pixel)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QSpinBox" name="sb_lefx_size">
+             <property name="maximum">
+              <number>100</number>
+             </property>
+             <property name="value">
+              <number>40</number>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="2">
+            <widget class="QSpinBox" name="sb_obje_y_size">
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>20000</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
+             </property>
+             <property name="value">
+              <number>50</number>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="3">
+            <widget class="QSpinBox" name="sb_gray_y_ends">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="maximum">
+              <number>99999999</number>
              </property>
             </widget>
            </item>
@@ -395,15 +440,35 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="2">
-            <widget class="QLabel" name="_l_9">
+           <item row="0" column="3">
+            <widget class="QLabel" name="_l_10">
              <property name="text">
-              <string>Width (pixel)</string>
+              <string>End (pixel)</string>
              </property>
             </widget>
            </item>
-           <item row="9" column="2">
-            <widget class="QSpinBox" name="sb_obje_y_size">
+           <item row="2" column="3">
+            <widget class="QSpinBox" name="sb_lefx_ends">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="maximum">
+              <number>9999</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QSpinBox" name="sb_midx_ends">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="maximum">
+              <number>99999</number>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="1">
+            <widget class="QSpinBox" name="sb_obje_y_init">
              <property name="minimum">
               <number>0</number>
              </property>
@@ -414,7 +479,24 @@
               <number>2</number>
              </property>
              <property name="value">
-              <number>50</number>
+              <number>1200</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="_l_6">
+             <property name="text">
+              <string>Hor. (left) relative to center</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="3">
+            <widget class="QSpinBox" name="sb_obje_y_ends">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="maximum">
+              <number>999999999</number>
              </property>
             </widget>
            </item>
@@ -434,66 +516,24 @@
              </property>
             </widget>
            </item>
-           <item row="6" column="1">
-            <widget class="QSpinBox" name="sb_gray_y_init">
-             <property name="minimum">
-              <number>0</number>
-             </property>
-             <property name="maximum">
-              <number>20000</number>
-             </property>
-             <property name="singleStep">
-              <number>2</number>
-             </property>
-             <property name="value">
-              <number>1050</number>
+           <item row="10" column="0" colspan="4">
+            <widget class="Line" name="line_3">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
              </property>
             </widget>
            </item>
-           <item row="2" column="2">
-            <widget class="QSpinBox" name="sb_lefx_size">
-             <property name="maximum">
-              <number>100</number>
-             </property>
-             <property name="value">
-              <number>40</number>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="1">
-            <widget class="QLabel" name="_l_11">
+           <item row="11" column="0">
+            <widget class="QLabel" name="_l">
              <property name="text">
-              <string>Top (pixel)</string>
+              <string>Wavelength per pixel (nm/px)</string>
              </property>
             </widget>
            </item>
-           <item row="9" column="3">
-            <widget class="QSpinBox" name="sb_obje_y_ends">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="maximum">
-              <number>999999999</number>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="3">
-            <widget class="QSpinBox" name="sb_lefx_ends">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="maximum">
-              <number>9999</number>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QSpinBox" name="sb_rigx_init_rel">
-             <property name="maximum">
-              <number>9999</number>
-             </property>
-             <property name="value">
-              <number>810</number>
+           <item row="11" column="2">
+            <widget class="QPushButton" name="pb_waveperpixel_reset">
+             <property name="text">
+              <string>Reset</string>
              </property>
             </widget>
            </item>
@@ -524,7 +564,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>433</width>
+             <width>429</width>
              <height>772</height>
             </rect>
            </property>
