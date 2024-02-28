@@ -7,13 +7,14 @@ import platform
 from datetime import datetime
 from pathlib import Path
 import pyqtgraph as pg
+import time
 
 # ---------- Numerical Visual packages---------------------------------------------------------------------------------
 import numpy as np
 import cv2 as cv
 
 # ---------- GUI libraries --------------------------------------------------------------------------------------------
-from PySide6.QtWidgets import QMainWindow, QWidget, QFileSystemModel
+from PySide6.QtWidgets import QMainWindow, QWidget, QFileSystemModel, QMessageBox
 from PySide6.QtGui import QKeySequence, QShortcut, QColor
 from PySide6.QtCore import QModelIndex, QDir, Qt
 
@@ -23,6 +24,7 @@ from Custom_Libs.Lib_DataDirTree import DataDirTree
 # from Custom_Widgets.Lib_PlotConfigDialog import PlotConfigDialog
 from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import (
     JpegProcessor,  get_wavelength_array, # desalt_2d_array_by_vertically_median_filter,
+    background
 )
 
 # ---------- Some logging ---------------------------------------------------------------------------------------------
@@ -75,7 +77,7 @@ class FileSystemModel(QFileSystemModel):
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
         if role == Qt.ItemDataRole.ForegroundRole:
             text = index.data(Qt.ItemDataRole.DisplayRole)
-            if (".jpeg" in text) and (text.count("_") == 3):
+            if (".jpeg" in text) and (text.count("_") in (3, 4)) and text.replace(".jpeg", "").replace("_", "").isnumeric():
                 return QColor("#58cd1c")
 
             elif text.count("_") == 1 and (len(text) == 15) and text.replace("_", "").isnumeric():
@@ -95,7 +97,7 @@ class TheMainWindow(QMainWindow):
         self.ui.setupUi(self)
 
         self.ui.pb_calibrate_calculate.clicked.connect(self.call_calibrate_and_calculate)
-        #self.ui.pb_export.clicked.connect(self.call_export_data) TODOOOOOOOOOOOOOOOOOOO
+        self.ui.pb_export.clicked.connect(self.short_cut_export_raw_jpeg)
 
         # --------------- initialize the file system ----------------------------------
         self.fsmodel = FileSystemModel()                     # prev. QFileSystemModel()
@@ -103,9 +105,13 @@ class TheMainWindow(QMainWindow):
 
         self.ui.tv_dir.setModel(self.fsmodel)
         self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath(QDir.homePath()))
+        self.short_cut_goto_parent_dir()
         self.ui.tv_dir.doubleClicked.connect(self.call_tv_onItemClicked)
         # self.ui.cb_ft_filter.stateChanged.connect(self.fsmodel.setNameFilterDisables)
         self.ui.cb_ft_filter.stateChanged.connect(self.toggle_filetype_visiblity)
+        self.ui.cb_calc5_norm.stateChanged.connect(self.handle_cb_calc5_norming)
+        self.ui.sb_calc5_norm_zero.valueChanged.connect(self.handle_cb_calc5_norming)
+        self.ui.sb_calc5_norm_one.valueChanged.connect(self.handle_cb_calc5_norming)
         #self.ui.cb_bayer_show_geometry.stateChanged.connect(self.update_visual_1_rawbayer_img_section)
         self.ui.pb_waveperpixel_reset.clicked.connect(lambda: self.ui.sb_waveperpixel.setValue(1.8385))
 
@@ -117,6 +123,7 @@ class TheMainWindow(QMainWindow):
         self.init_2d_graph_hide_the_original_roi_buttons()
         self.init_all_6_roi()
         self.init_sb_signals()
+        self.init_all_pyqtgraph()
 
         self.init_keyboard_bindings()
         self.init_actions()
@@ -220,9 +227,9 @@ class TheMainWindow(QMainWindow):
         self.graph_desalted_graphs_sep_line_y0 = pg.InfiniteLine(pos=0, movable=False, angle=0)
         self.graph_desalted_graphs_sep_line_x0 = pg.InfiniteLine(pos=0, movable=False, angle=90)
         self.graph_desalted_graphs_sep_line_x1 = pg.InfiniteLine(pos=0, movable=False, angle=90)
-        self.ui.graph_2d_after_desalt.addItem(self.graph_desalted_graphs_sep_line_y0)
-        self.ui.graph_2d_after_desalt.addItem(self.graph_desalted_graphs_sep_line_x0)
-        self.ui.graph_2d_after_desalt.addItem(self.graph_desalted_graphs_sep_line_x1)
+        self.ui.graph_calc1_desalted_roi.addItem(self.graph_desalted_graphs_sep_line_y0)
+        self.ui.graph_calc1_desalted_roi.addItem(self.graph_desalted_graphs_sep_line_x0)
+        self.ui.graph_calc1_desalted_roi.addItem(self.graph_desalted_graphs_sep_line_x1)
 
 
 
@@ -232,12 +239,13 @@ class TheMainWindow(QMainWindow):
         self.text_for_desalted_img_label3 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">BG-Object</span></div>', anchor=(0, 0), border="w", fill=(100, 100, 100, 100))
         self.text_for_desalted_img_label4 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">Object</span></div>',    anchor=(0, 0), border="w", fill=(50,   50, 200, 100))
         self.text_for_desalted_img_label5 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">BG-Object</span></div>', anchor=(0, 0), border="w", fill=(100, 100, 100, 100))
-        self.ui.graph_2d_after_desalt.addItem(self.text_for_desalted_img_label0)
-        self.ui.graph_2d_after_desalt.addItem(self.text_for_desalted_img_label1)
-        self.ui.graph_2d_after_desalt.addItem(self.text_for_desalted_img_label2)
-        self.ui.graph_2d_after_desalt.addItem(self.text_for_desalted_img_label3)
-        self.ui.graph_2d_after_desalt.addItem(self.text_for_desalted_img_label4)
-        self.ui.graph_2d_after_desalt.addItem(self.text_for_desalted_img_label5)
+
+        self.ui.graph_calc1_desalted_roi.addItem(self.text_for_desalted_img_label0)
+        self.ui.graph_calc1_desalted_roi.addItem(self.text_for_desalted_img_label1)
+        self.ui.graph_calc1_desalted_roi.addItem(self.text_for_desalted_img_label2)
+        self.ui.graph_calc1_desalted_roi.addItem(self.text_for_desalted_img_label3)
+        self.ui.graph_calc1_desalted_roi.addItem(self.text_for_desalted_img_label4)
+        self.ui.graph_calc1_desalted_roi.addItem(self.text_for_desalted_img_label5)
 
     def init_sb_signals(self) -> None:
         self.ui.sb_gray_y_init.valueChanged.connect(self.update_raw_from_sb)
@@ -260,6 +268,110 @@ class TheMainWindow(QMainWindow):
         self.roi_obje_main.sigRegionChanged.connect(lambda: self.handle_roi_change("obje", "middle"))
         self.roi_obje_bglf.sigRegionChanged.connect(lambda: self.handle_roi_change("obje", "left"))
         self.roi_obje_bgri.sigRegionChanged.connect(lambda: self.handle_roi_change("obje", "right"))
+
+    def init_all_pyqtgraph(self) -> None:
+        # -------------------------------------------------------------------------------------------------------------
+        self.ui.graph_calc2_bg_gray.addLegend()
+        self.ui.graph_calc2_bg_obje.addLegend()
+
+        self.ui.graph_calc2_bg_gray.setLabel("left",   "Background",             units="DN")
+        self.ui.graph_calc2_bg_gray.setLabel("bottom", "Wavelenght",             units="nm")
+        self.ui.graph_calc2_bg_gray.setLabel("top",    "Gray Region Background")
+
+        self.ui.graph_calc2_bg_obje.setLabel("left",   "Background", units="DN")
+        self.ui.graph_calc2_bg_obje.setLabel("bottom", "Wavelenght", units="nm")
+        self.ui.graph_calc2_bg_obje.setLabel("top",    "Object Region Background")
+
+
+        self.graph2_curve_bg_gray_le_r = self.ui.graph_calc2_bg_gray.plot(symbol="o", symbolSize=9, symbolBrush=(000, 000, 255), pen=None, name="R-gray-left")
+        self.graph2_curve_bg_gray_le_g = self.ui.graph_calc2_bg_gray.plot(symbol="o", symbolSize=9, symbolBrush=(000, 255, 000), pen=None, name="G-gray-left")
+        self.graph2_curve_bg_gray_le_b = self.ui.graph_calc2_bg_gray.plot(symbol="o", symbolSize=9, symbolBrush=(255, 000, 000), pen=None, name="B-gray-left")
+        self.graph2_curve_bg_gray_re_r = self.ui.graph_calc2_bg_gray.plot(symbol="x", symbolSize=9, symbolBrush=(000, 000, 255), pen=None, name="R-gray-right")
+        self.graph2_curve_bg_gray_re_g = self.ui.graph_calc2_bg_gray.plot(symbol="x", symbolSize=9, symbolBrush=(000, 255, 000), pen=None, name="G-gray-right")
+        self.graph2_curve_bg_gray_re_b = self.ui.graph_calc2_bg_gray.plot(symbol="x", symbolSize=9, symbolBrush=(255, 000, 000), pen=None, name="B-gray-right")
+        self.graph2_curve_bg_gray_mi_r = self.ui.graph_calc2_bg_gray.plot(pen=pg.mkPen("r", width=0, style=Qt.PenStyle.SolidLine), name="Estimated-R-bg")
+        self.graph2_curve_bg_gray_mi_g = self.ui.graph_calc2_bg_gray.plot(pen=pg.mkPen("g", width=0, style=Qt.PenStyle.SolidLine), name="Estimated-G-bg")
+        self.graph2_curve_bg_gray_mi_b = self.ui.graph_calc2_bg_gray.plot(pen=pg.mkPen("b", width=0, style=Qt.PenStyle.SolidLine), name="Estimated-B-bg")
+
+
+        self.graph2_curve_bg_obje_le_r = self.ui.graph_calc2_bg_obje.plot(symbol="o", symbolSize=9, symbolBrush=(000, 000, 255), pen=None, name="R-obje-left")
+        self.graph2_curve_bg_obje_le_g = self.ui.graph_calc2_bg_obje.plot(symbol="o", symbolSize=9, symbolBrush=(000, 255, 000), pen=None, name="G-obje-left")
+        self.graph2_curve_bg_obje_le_b = self.ui.graph_calc2_bg_obje.plot(symbol="o", symbolSize=9, symbolBrush=(255, 000, 000), pen=None, name="B-obje-left")
+        self.graph2_curve_bg_obje_ri_r = self.ui.graph_calc2_bg_obje.plot(symbol="x", symbolSize=9, symbolBrush=(000, 000, 255), pen=None, name="R-obje-right")
+        self.graph2_curve_bg_obje_ri_g = self.ui.graph_calc2_bg_obje.plot(symbol="x", symbolSize=9, symbolBrush=(000, 255, 000), pen=None, name="G-obje-right")
+        self.graph2_curve_bg_obje_ri_b = self.ui.graph_calc2_bg_obje.plot(symbol="x", symbolSize=9, symbolBrush=(255, 000, 000), pen=None, name="B-obje-right")
+        self.graph2_curve_bg_obje_mi_r = self.ui.graph_calc2_bg_obje.plot(pen=pg.mkPen("r", width=0, style=Qt.PenStyle.SolidLine), name="Estimated-R-bg")
+        self.graph2_curve_bg_obje_mi_g = self.ui.graph_calc2_bg_obje.plot(pen=pg.mkPen("g", width=0, style=Qt.PenStyle.SolidLine), name="Estimated-G-bg")
+        self.graph2_curve_bg_obje_mi_b = self.ui.graph_calc2_bg_obje.plot(pen=pg.mkPen("b", width=0, style=Qt.PenStyle.SolidLine), name="Estimated-B-bg")
+
+        # --------graph 3:  759 calibration curves ---------------------------------------------------------------------
+        self.ui.graph_calc3_759_calib.clear()
+        self.ui.graph_calc3_759_calib.addLegend()
+        self.ui.graph_calc3_759_calib.addItem(
+            pg.InfiniteLine(
+                pos=759.3,
+                movable=False, angle=90, 
+                label="x={value:0.2f}nm", 
+                labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}))
+
+        self.ui.graph_calc3_759_calib.setLabel("left",   "Digital Number", units="DN")
+        self.ui.graph_calc3_759_calib.setLabel("bottom", "Wavelength",     units="nm")
+        self.ui.graph_calc3_759_calib.setLabel("top",    "After 759nm calibration")
+
+        self.graph3_curve_759_calib_gray_r = self.ui.graph_calc3_759_calib.plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="R-gray")
+        self.graph3_curve_759_calib_gray_g = self.ui.graph_calc3_759_calib.plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray")
+        self.graph3_curve_759_calib_gray_b = self.ui.graph_calc3_759_calib.plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="B-gray")
+        self.graph3_curve_759_calib_obje_r = self.ui.graph_calc3_759_calib.plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine),  name="R-object")
+        self.graph3_curve_759_calib_obje_g = self.ui.graph_calc3_759_calib.plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine),  name="G-object")
+        self.graph3_curve_759_calib_obje_b = self.ui.graph_calc3_759_calib.plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine),  name="B-object")
+        self.graph3_curve_759_calib_gray_r_bg = self.ui.graph_calc3_759_calib.plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DotLine),  name="BG: R-gray")
+        self.graph3_curve_759_calib_gray_g_bg = self.ui.graph_calc3_759_calib.plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DotLine),  name="BG: G-gray")
+        self.graph3_curve_759_calib_gray_b_bg = self.ui.graph_calc3_759_calib.plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DotLine),  name="BG: B-gray")
+        self.graph3_curve_759_calib_obje_r_bg = self.ui.graph_calc3_759_calib.plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DotLine),  name="BG: R-object")
+        self.graph3_curve_759_calib_obje_g_bg = self.ui.graph_calc3_759_calib.plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DotLine),  name="BG: G-object")
+        self.graph3_curve_759_calib_obje_b_bg = self.ui.graph_calc3_759_calib.plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DotLine),  name="BG: B-object")
+
+        # --------graph 4:  rgb refl  ---------------------------------------------------------------------
+        self.ui.graph_calc4_refl_rgb.clear()
+        self.ui.graph_calc4_refl_rgb.addLegend()
+        self.ui.graph_calc4_refl_rgb.addItem(
+            pg.InfiniteLine(
+                pos=759.3,
+                movable=False, angle=90, 
+                label="x={value:0.2f}nm", 
+                labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}))
+
+        self.ui.graph_calc4_refl_rgb.setLabel("left",   "Reflection")
+        self.ui.graph_calc4_refl_rgb.setLabel("bottom", "Wavelength",     units="nm")
+        self.ui.graph_calc4_refl_rgb.setLabel("top",    "Reflection RGB 3 channels")
+
+        self.graph4_curve_relf_r = self.ui.graph_calc4_refl_rgb.plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="R-refl")
+        self.graph4_curve_relf_g = self.ui.graph_calc4_refl_rgb.plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-refl")
+        self.graph4_curve_relf_b = self.ui.graph_calc4_refl_rgb.plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="B-refl")
+
+        # --------graph 5:  rgb     ---------------------------------------------------------------------
+        self.ui.graph_calc5_refl_final.clear()
+        self.ui.graph_calc5_refl_final.addLegend()
+
+        self.graph5_norm_zero_line = pg.InfiniteLine(
+                pos=self.ui.sb_calc5_norm_zero.value(),
+                movable=False, angle=90, 
+                label="x={value:0.2f}nm", 
+                labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True})
+        self.graph5_norm_one_line = pg.InfiniteLine(
+                pos=self.ui.sb_calc5_norm_one.value(),
+                movable=False, angle=90, 
+                label="x={value:0.2f}nm", 
+                labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True})
+
+        self.ui.graph_calc5_refl_final.setLabel("left",   "Reflection")
+        self.ui.graph_calc5_refl_final.setLabel("bottom", "Wavelength",     units="nm")
+        self.ui.graph_calc5_refl_final.setLabel("top",    "Reflection")
+
+        self.ui.graph_calc5_refl_final.addItem(self.graph5_norm_one_line)
+        self.ui.graph_calc5_refl_final.addItem(self.graph5_norm_zero_line)
+        self.graph5_curve_relf = self.ui.graph_calc5_refl_final.plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine), name="Reflection")
+        
 
     def all_sb_signal_block(self, b: bool) -> None:
         self.ui.sb_lefx_size.blockSignals(b)
@@ -420,6 +532,15 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_raw.plot(tmp_rig_x, gray_roi_rig[0::2, 0::2].mean(axis=0), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine), name="bgB-object")
         
 
+    def handle_cb_calc5_norming(self) -> None:
+        print("i was clicked")
+        self.ui.sb_calc5_norm_zero.setEnabled(self.ui.cb_calc5_norm.isChecked())
+        self.ui.sb_calc5_norm_one.setEnabled(self.ui.cb_calc5_norm.isChecked())
+        try:
+            self.call_calibrate_and_calculate_calc5_refl_n_norm()
+        except Exception as e:
+            print(e)
+
     def toggle_filetype_visiblity(self, a: int) -> None:
         if a:
             self.fsmodel.setNameFilters((["*.jpeg", "*.jpg", "*.json"]))
@@ -433,14 +554,10 @@ class TheMainWindow(QMainWindow):
 
         QShortcut(QKeySequence("Space"),     self).activated.connect(self.short_cut_preview_raw_jpeg)
         QShortcut(QKeySequence("Ctrl+R"),    self).activated.connect(self.call_calibrate_and_calculate)
-        #QShortcut(QKeySequence("Ctrl+E"),    self).activated.connect(self.short_cut_export_raw_jpeg)
-        #QShortcut(QKeySequence("Ctrl+O"),    self).activated.connect(self.short_cut_open_at_point)
-        #QShortcut(QKeySequence("Ctrl+H"),    self).activated.connect(self.open_help_page)
-        #QShortcut(QKeySequence("Ctrl+F"),    self).activated.connect(self.ui.cb_ft_filter.toggle)
-
-        # QShortcut(QKeySequence("Ctrl+Shift+E"), self).activated.connect(self.ex_type_dialog.exec)
-        # QShortcut(QKeySequence("Ctrl+P"), self).activated.connect(self.ref_pcon_dialog.exec)
-        # QShortcut(QKeySequence("Ctrl+Shift+P"), self).activated.connect(self.raw_pcon_dialog.exec)
+        QShortcut(QKeySequence("Ctrl+E"),    self).activated.connect(self.short_cut_export_raw_jpeg)
+        QShortcut(QKeySequence("Ctrl+O"),    self).activated.connect(self.short_cut_open_at_point)
+        QShortcut(QKeySequence("Ctrl+H"),    self).activated.connect(self.open_help_page)
+        QShortcut(QKeySequence("Ctrl+F"),    self).activated.connect(self.ui.cb_ft_filter.toggle)
 
     def init_actions(self) -> None:
         self.ui.action_help.triggered.connect(self.open_help_page)
@@ -488,8 +605,16 @@ class TheMainWindow(QMainWindow):
         basename = os.path.basename(tmppath)
         logging.info("space press "+ tmppath)
         if not os.path.isfile(tmppath):
+            dlg = QMessageBox(self)
+            dlg.setWindowTitle("Wrong File selected")
+            dlg.setText("Selected item is not a file.\n if this is directory/folder press ENTER to go inside of this folder")
+            dlg.exec()
             return False
-        if not ((".jpeg" in basename) and (basename.count("_") == 3)):
+        if not ((".jpeg" in basename) and (basename.count("_") in (3, 4))):
+            dlg = QMessageBox(self)
+            dlg.setWindowTitle("Wrong File selected")
+            dlg.setText("Selected item  is not JPEG file,\nPlease select JPEG file and try again")
+            dlg.exec()
             return False
 
         self.jpeg_path = tmppath
@@ -502,16 +627,10 @@ class TheMainWindow(QMainWindow):
             else np.zeros((10, 10, 3), dtype=np.uint8)
         )
         #self.jp_load_and_refresh_raw_image()
-        self.jp_load_newly_selected_jpeg_file()
+        #self.jp_load_newly_selected_jpeg_file()
+        self.jp.load_jpeg_file(self.jpeg_path, also_get_rgb_rerp=True)
         self.update_1_rawbayer_img_data_and_then_plot_below()
         return True
-
-    def short_cut_export_raw_jpeg(self) -> None:
-        """C-e: export"""
-        logging.info("exporting")
-        if self.short_cut_preview_raw_jpeg():    # checking the selected jpeg
-            #self.call_export_data() TODOOOOOOOOOOOOooo
-            pass
 
     def call_tv_onItemClicked(self, v: QModelIndex):
         tmp = self.fsmodel.filePath(v)
@@ -526,11 +645,37 @@ class TheMainWindow(QMainWindow):
             self.ddtree.set_ddir(self.dir_path)
             self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
             self.ui.limg_webcam.show_np_img(cv.imread(self.ddtree.webcamFP).astype(np.uint8))
-            self.jp_load_newly_selected_jpeg_file()
+            #self.jp_load_newly_selected_jpeg_file()
+            self.jp.load_jpeg_file(self.jpeg_path, also_get_rgb_rerp=True)
             self.update_1_rawbayer_img_data_and_then_plot_below()
 
     def call_calibrate_and_calculate(self) -> None:
-        #Aself.jp_load_and_refresh_raw_image() do I need this?
+        self.call_calibrate_and_calculate_calc1_desalt()           # done
+        self.ui.pbar_calc.setValue(0)
+        self.ui.tabWidget.setCurrentIndex(0)
+        time.sleep(.1)
+        self.call_calibrate_and_calculate_calc2_background()       # done
+        self.ui.pbar_calc.setValue(25)
+        self.ui.tabWidget.setCurrentIndex(1)
+        time.sleep(.1)
+        self.call_calibrate_and_calculate_calc3_759_calib()
+        self.ui.pbar_calc.setValue(50)
+        self.ui.tabWidget.setCurrentIndex(2)
+        time.sleep(.1)
+
+        self.call_calibrate_and_calculate_calc4_rgb_refl()
+        self.ui.pbar_calc.setValue(75)
+        self.ui.tabWidget.setCurrentIndex(3)
+        time.sleep(.1)
+
+        self.call_calibrate_and_calculate_calc5_refl_n_norm()
+        self.ui.pbar_calc.setValue(100)
+        self.ui.tabWidget.setCurrentIndex(4)
+        time.sleep(.1)
+
+        ######################################################################################
+
+    def call_calibrate_and_calculate_calc1_desalt(self) -> None:
         self.jp.set_roi_geometry(
             xWaveRng=(self.ui.sb_midx_init.value(), self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()),
             xLfBgRng=(self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value() + self.ui.sb_lefx_size.value()),
@@ -538,11 +683,11 @@ class TheMainWindow(QMainWindow):
             yGrayRng=(self.ui.sb_gray_y_init.value(), self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value()),
             yObjeRng=(self.ui.sb_obje_y_init.value(), self.ui.sb_obje_y_init.value() + self.ui.sb_obje_y_size.value()),
         )
+
         desaltedimg = np.concatenate(
             (np.concatenate((self.jp.gray_bgle.roi_desalted, self.jp.gray.roi_desalted, self.jp.gray_bgri.roi_desalted), axis=1), 
              np.concatenate((self.jp.obje_bgle.roi_desalted, self.jp.obje.roi_desalted, self.jp.obje_bgri.roi_desalted), axis=1)), 
-            axis=0,
-            dtype=np.int64
+            axis=0, dtype=np.int64
         )
         desalted_concatted_bayer_rgb_all_6roi = np.zeros((desaltedimg.shape[0], desaltedimg.shape[1], 3), dtype=np.int64)
         desalted_concatted_bayer_rgb_all_6roi[0::2, 0::2, 2] = desaltedimg[0::2, 0::2]
@@ -550,7 +695,7 @@ class TheMainWindow(QMainWindow):
         desalted_concatted_bayer_rgb_all_6roi[1::2, 0::2, 1] = desaltedimg[1::2, 0::2]
         desalted_concatted_bayer_rgb_all_6roi[1::2, 1::2, 0] = desaltedimg[1::2, 1::2]
 
-        self.ui.graph_2d_after_desalt.setImage(
+        self.ui.graph_calc1_desalted_roi.setImage(
             img=desalted_concatted_bayer_rgb_all_6roi,
             levels=(desalted_concatted_bayer_rgb_all_6roi.min(), desalted_concatted_bayer_rgb_all_6roi.max()),
             axes={"x":1, "y":0, "c":2}
@@ -567,34 +712,123 @@ class TheMainWindow(QMainWindow):
         self.text_for_desalted_img_label4.setPos(self.ui.sb_lefx_size.value() + self.ui.sb_midx_size.value()/2 , self.ui.sb_gray_y_size.value())
         self.text_for_desalted_img_label5.setPos(self.ui.sb_lefx_size.value() + self.ui.sb_midx_size.value()   , self.ui.sb_gray_y_size.value())
 
+    def call_calibrate_and_calculate_calc2_background(self) -> None:
+        self.jp.background_calculation()
+        
+        tmp_lef_x = get_wavelength_array(
+            init_pxl=self.ui.sb_lefx_init_rel.value()//2,
+            pxl_size=self.ui.sb_lefx_size.value()//2,
+            waveperpixel=self.ui.sb_waveperpixel.value(),
+        )
+        tmp_rig_x = get_wavelength_array(
+            init_pxl=self.ui.sb_rigx_init_rel.value()//2,
+            pxl_size=self.ui.sb_rigx_size.value()//2,
+            waveperpixel=self.ui.sb_waveperpixel.value(),
+        )
 
-    def jp_load_newly_selected_jpeg_file(self) -> None:
-        """Loads latest selected jpeg file and then bayer extraction"""
-        self.jp.load_jpeg_file(self.jpeg_path, also_get_rgb_rerp=True)
+        self.graph2_curve_bg_gray_le_r.setData(tmp_lef_x, self.jp.gray_bgle.rchan["dn"].values[:self.jp.gray_bgle.raw_hor_pxl]) 
+        self.graph2_curve_bg_gray_le_g.setData(tmp_lef_x, self.jp.gray_bgle.gchan["dn"].values[:self.jp.gray_bgle.raw_hor_pxl]) 
+        self.graph2_curve_bg_gray_le_b.setData(tmp_lef_x, self.jp.gray_bgle.bchan["dn"].values[:self.jp.gray_bgle.raw_hor_pxl]) 
+        self.graph2_curve_bg_gray_re_r.setData(tmp_rig_x, self.jp.gray_bgri.rchan["dn"].values[:self.jp.gray_bgri.raw_hor_pxl]) 
+        self.graph2_curve_bg_gray_re_g.setData(tmp_rig_x, self.jp.gray_bgri.gchan["dn"].values[:self.jp.gray_bgri.raw_hor_pxl]) 
+        self.graph2_curve_bg_gray_re_b.setData(tmp_rig_x, self.jp.gray_bgri.bchan["dn"].values[:self.jp.gray_bgri.raw_hor_pxl]) 
 
-        #self.jp.get_spectrum()
-        #self.jp.fixme()
-        #self.jp.fancy_reflectance()
+        self.graph2_curve_bg_obje_le_r.setData(tmp_lef_x, self.jp.obje_bgle.rchan["dn"].values[:self.jp.obje_bgle.raw_hor_pxl]) 
+        self.graph2_curve_bg_obje_le_g.setData(tmp_lef_x, self.jp.obje_bgle.gchan["dn"].values[:self.jp.obje_bgle.raw_hor_pxl]) 
+        self.graph2_curve_bg_obje_le_b.setData(tmp_lef_x, self.jp.obje_bgle.bchan["dn"].values[:self.jp.obje_bgle.raw_hor_pxl]) 
+        self.graph2_curve_bg_obje_ri_r.setData(tmp_rig_x, self.jp.obje_bgri.rchan["dn"].values[:self.jp.obje_bgri.raw_hor_pxl]) 
+        self.graph2_curve_bg_obje_ri_g.setData(tmp_rig_x, self.jp.obje_bgri.gchan["dn"].values[:self.jp.obje_bgri.raw_hor_pxl]) 
+        self.graph2_curve_bg_obje_ri_b.setData(tmp_rig_x, self.jp.obje_bgri.bchan["dn"].values[:self.jp.obje_bgri.raw_hor_pxl]) 
+
+        tmp_bgx = np.arange(tmp_lef_x.min(), tmp_rig_x.max(), 1)
+
+        self.graph2_curve_bg_gray_mi_r.setData(tmp_bgx, background(tmp_bgx, *(self.jp.bg_gray_r_popt)))
+        self.graph2_curve_bg_gray_mi_g.setData(tmp_bgx, background(tmp_bgx, *(self.jp.bg_gray_g_popt)))
+        self.graph2_curve_bg_gray_mi_b.setData(tmp_bgx, background(tmp_bgx, *(self.jp.bg_gray_b_popt)))
+        self.graph2_curve_bg_obje_mi_r.setData(tmp_bgx, background(tmp_bgx, *(self.jp.bg_obje_r_popt)))
+        self.graph2_curve_bg_obje_mi_g.setData(tmp_bgx, background(tmp_bgx, *(self.jp.bg_obje_g_popt)))
+        self.graph2_curve_bg_obje_mi_b.setData(tmp_bgx, background(tmp_bgx, *(self.jp.bg_obje_b_popt)))
+
+
+    def call_calibrate_and_calculate_calc3_759_calib(self) -> None:
+        self.jp.calibrate_n_calculate_final_output()
+        tmp_x = self.jp.gray.rchan_759nm_calibrated.index[-1000:]
+        self.graph3_curve_759_calib_gray_r.setData(tmp_x, np.array(self.jp.gray.rchan_759nm_calibrated["final"])[-1000:])
+        self.graph3_curve_759_calib_gray_g.setData(tmp_x, np.array(self.jp.gray.gchan_759nm_calibrated["final"])[-1000:])
+        self.graph3_curve_759_calib_gray_b.setData(tmp_x, np.array(self.jp.gray.bchan_759nm_calibrated["final"])[-1000:])
+        self.graph3_curve_759_calib_obje_r.setData(tmp_x, np.array(self.jp.obje.rchan_759nm_calibrated["final"])[-1000:])
+        self.graph3_curve_759_calib_obje_g.setData(tmp_x, np.array(self.jp.obje.gchan_759nm_calibrated["final"])[-1000:])
+        self.graph3_curve_759_calib_obje_b.setData(tmp_x, np.array(self.jp.obje.bchan_759nm_calibrated["final"])[-1000:])
+
+        self.graph3_curve_759_calib_gray_r_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_r_popt)))
+        self.graph3_curve_759_calib_gray_g_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_g_popt)))
+        self.graph3_curve_759_calib_gray_b_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_b_popt)))
+        self.graph3_curve_759_calib_obje_r_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_r_popt)))
+        self.graph3_curve_759_calib_obje_g_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_g_popt)))
+        self.graph3_curve_759_calib_obje_b_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_b_popt)))
+    
+    def call_calibrate_and_calculate_calc4_rgb_refl(self) -> None:
+        self.jp.fancy_reflectance()
+        tmp_x = self.jp.gray.rchan_759nm_calibrated.index[-1000:]
+        self.graph4_curve_relf_r.setData(tmp_x, self.jp.ref_fancy_r) # noqa
+        self.graph4_curve_relf_g.setData(tmp_x, self.jp.ref_fancy_g) # noqa
+        self.graph4_curve_relf_b.setData(tmp_x, self.jp.ref_fancy_b) # noqa
+
+
+    def call_calibrate_and_calculate_calc5_refl_n_norm(self) -> None:
+        self.jp.fancy_reflectance()
+        tmp_x = self.jp.gray.rchan_759nm_calibrated.index[-1000:]
+
+        if not self.ui.cb_calc5_norm.isChecked():
+            self.graph5_curve_relf.setData(tmp_x, self.jp.ref_fancy)
+        else:
+            zero_index = int((self.ui.sb_calc5_norm_zero.value() - 400) / 0.5)
+            one_index = int((self.ui.sb_calc5_norm_one.value() - 400 )/ 0.5)
+            self.jp.normalize_the_fancy(zero_index, one_index)
+            self.graph5_curve_relf.setData(tmp_x, self.jp.ref_fancy_normed)
+            self.ui.graph_calc5_refl_final.setYRange(-0.1, 1.1)
+            self.graph5_norm_one_line.setPos(self.ui.sb_calc5_norm_one.value())
+            self.graph5_norm_zero_line.setPos(self.ui.sb_calc5_norm_zero.value())
 
     def update_1_rawbayer_img_data_and_then_plot_below(self) -> None:
         self.ui.graph_2dimg.clear()
         self.ui.graph_2dimg.setImage(
             img=self.jp.rgb,
             levels=(0, 1024),
-            axes={"x":1, "y":0, "c":2}
-        )
+            axes={"x":1, "y":0, "c":2})
         self.update_raw_from_sb()
 
-    #def call_export_data(self) -> None:
-    #    """Export"""
-    #    os.makedirs(os.path.join(self.ddtree.ddir, "output"), exist_ok=True)
-    #    if self.ui.cb_export_bayer_as_npy.isChecked():
-    #        pass
-    #    if self.ui.cb_export_bayer_as_tif.isChecked():
-    #        pass
-    #    if self.ui.cb_export_bayer_as_mat.isChecked():
-    #        pass
-    #    if self.ui.cb_export_ref_plot_as_png.isChecked():
-    #        pass
-    #    if self.ui.cb_export_raw_plot_as_png.isChecked():
-    #        pass
+
+    def short_cut_export_raw_jpeg(self) -> None:
+        """C-e: export"""
+        if not self.short_cut_preview_raw_jpeg():    # checking the selected jpeg
+            return
+
+        self.call_calibrate_and_calculate()
+
+        os.makedirs(os.path.join(self.ddtree.ddir, "output"), exist_ok=True)
+        if self.ui.cb_export_bayer_as_npy.isChecked():
+            outfname = os.path.join(os.path.join(self.ddtree.ddir, "output", "bayer.npy"))
+            np.save(outfname, self.jp.data)
+        self.ui.pbar_export.setValue(25)
+        if self.ui.cb_export_bayer_as_mat.isChecked():
+            pass
+        self.ui.pbar_export.setValue(50)
+        if self.ui.cb_export_ref_CSV_simple.isChecked():
+            tmpcsv = np.zeros((1000, 3), dtype=np.float64)
+            tmpcsv[:, 0] = self.jp.gray.rchan_759nm_calibrated.index[-1000:]
+            tmpcsv[:, 1] = self.jp.ref_fancy
+            tmpcsv[:, 2] = self.jp.ref_fancy_normed if self.ui.cb_calc5_norm.isChecked() else 0
+            outfname = os.path.join(os.path.join(self.ddtree.ddir, "output", "refl_output.csv"))
+            print(outfname)
+            np.savetxt(outfname, 
+                       tmpcsv, 
+                       ("%3.1f", "%2.5f", "%2.5f"), 
+                       header=f"wave, refl, refl_norm_{self.ui.sb_calc5_norm_zero.value()}_{self.ui.sb_calc5_norm_one.value()}", 
+                       delimiter=",")
+        self.ui.pbar_export.setValue(100)
+
+        dlg = QMessageBox(self)
+        dlg.setWindowTitle("Exported")
+        dlg.setText("Export Finished")
+        dlg.exec()
