@@ -98,7 +98,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>0</y>
+             <y>-274</y>
              <width>458</width>
              <height>724</height>
             </rect>
@@ -107,7 +107,7 @@
             <item>
              <widget class="ImageView" name="graph_2dimg" native="true">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
                 <horstretch>200</horstretch>
                 <verstretch>200</verstretch>
                </sizepolicy>
@@ -115,7 +115,7 @@
               <property name="minimumSize">
                <size>
                 <width>400</width>
-                <height>400</height>
+                <height>200</height>
                </size>
               </property>
              </widget>
@@ -123,7 +123,7 @@
             <item>
              <widget class="PlotWidget" name="graph_raw" native="true">
               <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+               <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
                 <horstretch>0</horstretch>
                 <verstretch>200</verstretch>
                </sizepolicy>
@@ -131,7 +131,7 @@
               <property name="minimumSize">
                <size>
                 <width>400</width>
-                <height>300</height>
+                <height>200</height>
                </size>
               </property>
              </widget>

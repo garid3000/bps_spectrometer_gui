@@ -169,32 +169,32 @@ class Ui_MainWindow(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 458, 724))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, -274, 458, 724))
         self.verticalLayout_4 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.graph_2dimg = ImageView(self.scrollAreaWidgetContents_2)
         self.graph_2dimg.setObjectName("graph_2dimg")
         sizePolicy2 = QSizePolicy(
-            QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred
+            QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding
         )
         sizePolicy2.setHorizontalStretch(200)
         sizePolicy2.setVerticalStretch(200)
         sizePolicy2.setHeightForWidth(self.graph_2dimg.sizePolicy().hasHeightForWidth())
         self.graph_2dimg.setSizePolicy(sizePolicy2)
-        self.graph_2dimg.setMinimumSize(QSize(400, 400))
+        self.graph_2dimg.setMinimumSize(QSize(400, 200))
 
         self.verticalLayout_4.addWidget(self.graph_2dimg)
 
         self.graph_raw = PlotWidget(self.scrollAreaWidgetContents_2)
         self.graph_raw.setObjectName("graph_raw")
         sizePolicy3 = QSizePolicy(
-            QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred
+            QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding
         )
         sizePolicy3.setHorizontalStretch(0)
         sizePolicy3.setVerticalStretch(200)
         sizePolicy3.setHeightForWidth(self.graph_raw.sizePolicy().hasHeightForWidth())
         self.graph_raw.setSizePolicy(sizePolicy3)
-        self.graph_raw.setMinimumSize(QSize(400, 300))
+        self.graph_raw.setMinimumSize(QSize(400, 200))
 
         self.verticalLayout_4.addWidget(self.graph_raw)
 
