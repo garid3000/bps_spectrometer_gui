@@ -18,7 +18,6 @@ class QLabelClick(QLabel):
     def __init__(self, parent: QLabel | QGroupBox | None = None, id: int = 0) -> None:
         super(QLabelClick, self).__init__(parent)
         self.id = id
-        self.horScale = 1
 
     def setId(self, id: int) -> None:
         self.id = id

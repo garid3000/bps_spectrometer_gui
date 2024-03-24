@@ -12,8 +12,6 @@ import time
 # ---------- Numerical Visual packages---------------------------------------------------------------------------------
 import numpy as np
 import cv2 as cv
-from numpy._typing import NDArray
-from scipy.io import savemat
 
 # ---------- GUI libraries --------------------------------------------------------------------------------------------
 from PySide6.QtWidgets import QMainWindow, QWidget, QFileSystemModel, QMessageBox
@@ -69,7 +67,6 @@ def open_file_externally(filepath: str) -> None:
 
 class FileSystemModel(QFileSystemModel):
     # read from https://stackoverflow.com/a/40455027/14696853
-
     def __init__(self, *args, **kwargs):
         super(FileSystemModel, self).__init__(*args, **kwargs)
         self.setNameFilters((["*.jpeg", "*.jpg", "*.json"]))
@@ -78,12 +75,6 @@ class FileSystemModel(QFileSystemModel):
         # self.setNameFilterDisables(True)
 
     def data(self, index, role=Qt.ItemDataRole.DisplayRole):
-        """
-
-        :param index: 
-        :param role:  (Default value = Qt.ItemDataRole.DisplayRole)
-
-        """
         if role == Qt.ItemDataRole.ForegroundRole:
             text = index.data(Qt.ItemDataRole.DisplayRole)
             if (".jpeg" in text) and (text.count("_") in (3, 4)) and text.replace(".jpeg", "").replace("_", "").isnumeric():
@@ -576,8 +567,9 @@ class TheMainWindow(QMainWindow):
         self.ui.action_dir_goto_cur_child.triggered.connect(self.short_cut_goto_selected_child_dir)
         self.ui.action_dir_goto_parent.triggered.connect(self.short_cut_goto_parent_dir)
         self.ui.action_dir_ft_filter_toggle.triggered.connect(self.ui.cb_ft_filter.toggle)
-        self.ui.action_cur_jpeg_export.triggered.connect(self.try_to_export_data)
-        self.ui.action_cur_jpeg_preview.triggered.connect(self.try_to_preview_raw_jpeg_n_return)
+
+        self.ui.action_cur_jpeg_export.triggered.connect(self.short_cut_export_raw_jpeg)
+        self.ui.action_cur_jpeg_preview.triggered.connect(self.short_cut_preview_raw_jpeg)
         self.ui.action_cur_file_open.triggered.connect(self.short_cut_open_at_point)
 
     def open_help_page(self) -> None:
