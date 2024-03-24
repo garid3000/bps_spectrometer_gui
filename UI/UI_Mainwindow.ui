@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1004</width>
-    <height>521</height>
+    <width>1229</width>
+    <height>748</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -28,16 +28,25 @@
            <string>Directory Control Panel</string>
           </property>
           <layout class="QGridLayout" name="gridLayout_3">
-           <item row="1" column="0">
-            <widget class="QTreeView" name="tv_dir">
+           <item row="2" column="0">
+            <widget class="QLabelClick" name="limg_webcam">
+             <property name="text">
+              <string>....</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0">
+            <widget class="QTextBrowser" name="tb_meta_json">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
              <property name="font">
               <font>
                <family>Monospace</family>
-               <pointsize>10</pointsize>
               </font>
-             </property>
-             <property name="sortingEnabled">
-              <bool>true</bool>
              </property>
             </widget>
            </item>
@@ -54,65 +63,130 @@
              </property>
             </widget>
            </item>
+           <item row="1" column="0">
+            <widget class="QTreeView" name="tv_dir">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>10</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Monospace</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="sortingEnabled">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
           </layout>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QGroupBox" name="gp_webcam_meta">
+       <property name="title">
+        <string>Raw Bayer Image (ROI selection)</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <item>
+         <widget class="QScrollArea" name="scrollArea_2">
+          <property name="widgetResizable">
+           <bool>true</bool>
+          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_2">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>-274</y>
+             <width>458</width>
+             <height>724</height>
+            </rect>
+           </property>
+           <layout class="QVBoxLayout" name="verticalLayout_4">
+            <item>
+             <widget class="ImageView" name="graph_2dimg" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+                <horstretch>200</horstretch>
+                <verstretch>200</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>400</width>
+                <height>200</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="PlotWidget" name="graph_raw" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+                <horstretch>0</horstretch>
+                <verstretch>200</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>400</width>
+                <height>200</height>
+               </size>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
          </widget>
         </item>
         <item>
          <widget class="QGroupBox" name="gb_control_panel">
           <property name="title">
-           <string>Geometry control panel</string>
+           <string/>
           </property>
-          <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,1,1">
-           <item row="4" column="1">
-            <widget class="QSpinBox" name="sb_obje_top_pxl">
-             <property name="toolTip">
-              <string>Pixel lenght from top (only takes EVEN Value)</string>
+          <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0,0">
+           <item row="11" column="1">
+            <widget class="QDoubleSpinBox" name="sb_waveperpixel">
+             <property name="decimals">
+              <number>4</number>
              </property>
              <property name="minimum">
-              <number>500</number>
+              <double>1.500000000000000</double>
              </property>
              <property name="maximum">
-              <number>2000</number>
+              <double>2.500000000000000</double>
+             </property>
+             <property name="singleStep">
+              <double>0.010000000000000</double>
              </property>
              <property name="singleStep">
               <number>2</number>
              </property>
              <property name="value">
-              <number>1200</number>
+              <double>1.858300000000000</double>
              </property>
             </widget>
            </item>
-           <item row="6" column="1" colspan="2">
-            <widget class="QPushButton" name="pb_refresh">
-             <property name="toolTip">
-              <string>Redraw Plots</string>
-             </property>
+           <item row="5" column="3">
+            <widget class="QLabel" name="_l_5">
              <property name="text">
-              <string>Refresh (Ctrl+R)</string>
+              <string>Bottom (pixel)</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QSpinBox" name="sb_horx_left_pxl">
-             <property name="toolTip">
-              <string>Pixel lenght from left (only takes EVEN Value)</string>
-             </property>
-             <property name="minimum">
-              <number>900</number>
-             </property>
-             <property name="maximum">
-              <number>1700</number>
-             </property>
-             <property name="singleStep">
-              <number>2</number>
-             </property>
-             <property name="value">
-              <number>1350</number>
+           <item row="5" column="1">
+            <widget class="QLabel" name="_l_11">
+             <property name="text">
+              <string>Top (pixel)</string>
              </property>
             </widget>
            </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="_label_1">
+           <item row="1" column="0">
+            <widget class="QLabel" name="_l_1">
              <property name="palette">
               <palette>
                <active>
@@ -141,19 +215,84 @@
               </palette>
              </property>
              <property name="text">
-              <string>Horizontal Left Pixel</string>
+              <string>Hor. (center)</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="0" colspan="3">
+           <item row="1" column="1">
+            <widget class="QSpinBox" name="sb_midx_init">
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>17000</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
+             </property>
+             <property name="value">
+              <number>1350</number>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QSpinBox" name="sb_midx_size">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="maximum">
+              <number>9999</number>
+             </property>
+             <property name="value">
+              <number>700</number>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="2">
+            <widget class="QLabel" name="_l_4">
+             <property name="text">
+              <string>Height (pixel)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0" colspan="4">
             <widget class="Line" name="_line">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
             </widget>
            </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="_label_2">
+           <item row="3" column="1">
+            <widget class="QSpinBox" name="sb_rigx_init_rel">
+             <property name="minimum">
+              <number>700</number>
+             </property>
+             <property name="maximum">
+              <number>9999</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
+             </property>
+             <property name="value">
+              <number>710</number>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="2">
+            <widget class="QSpinBox" name="sb_rigx_size">
+             <property name="maximum">
+              <number>200</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
+             </property>
+             <property name="value">
+              <number>40</number>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="0">
+            <widget class="QLabel" name="_l_2">
              <property name="palette">
               <palette>
                <active>
@@ -186,34 +325,113 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QLabel" name="_label_4">
+           <item row="0" column="2">
+            <widget class="QLabel" name="_l_9">
              <property name="text">
-              <string>Horizontal Fraunhofer</string>
+              <string>Width (pixel)</string>
              </property>
             </widget>
            </item>
-           <item row="4" column="2">
-            <widget class="QSpinBox" name="sb_obje_bot_pxl">
-             <property name="toolTip">
-              <string>(only takes EVEN Value)</string>
-             </property>
+           <item row="6" column="1">
+            <widget class="QSpinBox" name="sb_gray_y_init">
              <property name="minimum">
-              <number>500</number>
+              <number>0</number>
              </property>
              <property name="maximum">
-              <number>2000</number>
+              <number>20000</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
              </property>
              <property name="singleStep">
               <number>2</number>
              </property>
              <property name="value">
-              <number>1250</number>
+              <number>1050</number>
              </property>
             </widget>
            </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="_label_3">
+           <item row="3" column="0">
+            <widget class="QLabel" name="_l_7">
+             <property name="text">
+              <string>Hor. (right) relative to center</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="3">
+            <widget class="QSpinBox" name="sb_rigx_ends">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="maximum">
+              <number>9999</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QSpinBox" name="sb_lefx_init_rel">
+             <property name="minimum">
+              <number>-250</number>
+             </property>
+             <property name="maximum">
+              <number>-200</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
+             </property>
+             <property name="value">
+              <number>-200</number>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLabel" name="_l_8">
+             <property name="text">
+              <string>Start (pixel)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="2">
+            <widget class="QSpinBox" name="sb_lefx_size">
+             <property name="maximum">
+              <number>200</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
+             </property>
+             <property name="value">
+              <number>100</number>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="2">
+            <widget class="QSpinBox" name="sb_obje_y_size">
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>20000</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
+             </property>
+             <property name="value">
+              <number>50</number>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="3">
+            <widget class="QSpinBox" name="sb_gray_y_ends">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="maximum">
+              <number>99999999</number>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="0">
+            <widget class="QLabel" name="_l_3">
              <property name="palette">
               <palette>
                <active>
@@ -246,68 +464,18 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="2">
-            <widget class="QCheckBox" name="cb_fraunhofer_calib">
-             <property name="toolTip">
-              <string comment="asdf" extracomment="hi htere does it working???">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable/Disable x axis calibration using Fraunhofer (759.32nm) Line.&lt;/p&gt;&lt;p&gt;If the data is outside measurement, then it's better to enable it.&lt;/p&gt;&lt;p&gt;If the data is inside measurement, then it's better to disable it.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="toolTipDuration">
-              <number>-1</number>
-             </property>
-             <property name="statusTip">
-              <string comment="zxcv" extracomment="asdf123"/>
-             </property>
-             <property name="whatsThis">
-              <string extracomment="asdf thi"/>
-             </property>
+           <item row="0" column="3">
+            <widget class="QLabel" name="_l_10">
              <property name="text">
-              <string>Calibrate</string>
+              <string>End (pixel)</string>
              </property>
              <property name="checked">
               <bool>true</bool>
              </property>
             </widget>
            </item>
-           <item row="3" column="2">
-            <widget class="QSpinBox" name="sb_gray_bot_pxl">
-             <property name="toolTip">
-              <string>(only takes EVEN Value)</string>
-             </property>
-             <property name="minimum">
-              <number>500</number>
-             </property>
-             <property name="maximum">
-              <number>2000</number>
-             </property>
-             <property name="singleStep">
-              <number>2</number>
-             </property>
-             <property name="value">
-              <number>1100</number>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QSpinBox" name="sb_gray_top_pxl">
-             <property name="toolTip">
-              <string>Pixel lenght from top (only takes EVEN Value)</string>
-             </property>
-             <property name="minimum">
-              <number>500</number>
-             </property>
-             <property name="maximum">
-              <number>2000</number>
-             </property>
-             <property name="singleStep">
-              <number>2</number>
-             </property>
-             <property name="value">
-              <number>1050</number>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QSpinBox" name="sb_horx_frau_pxl">
+           <item row="2" column="3">
+            <widget class="QSpinBox" name="sb_lefx_ends">
              <property name="enabled">
               <bool>false</bool>
              </property>
@@ -317,22 +485,85 @@
              <property name="maximum">
               <number>9999</number>
              </property>
-             <property name="value">
-              <number>190</number>
+            </widget>
+           </item>
+           <item row="1" column="3">
+            <widget class="QSpinBox" name="sb_midx_ends">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="maximum">
+              <number>99999</number>
              </property>
             </widget>
            </item>
-           <item row="5" column="0" colspan="3">
-            <widget class="Line" name="_line_2">
+           <item row="9" column="1">
+            <widget class="QSpinBox" name="sb_obje_y_init">
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>20000</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
+             </property>
+             <property name="value">
+              <number>1200</number>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="_l_6">
+             <property name="text">
+              <string>Hor. (left) relative to center</string>
+             </property>
+            </widget>
+           </item>
+           <item row="9" column="3">
+            <widget class="QSpinBox" name="sb_obje_y_ends">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="maximum">
+              <number>999999999</number>
+             </property>
+            </widget>
+           </item>
+           <item row="6" column="2">
+            <widget class="QSpinBox" name="sb_gray_y_size">
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>20000</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
+             </property>
+             <property name="value">
+              <number>50</number>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="0" colspan="4">
+            <widget class="Line" name="line_3">
              <property name="orientation">
               <enum>Qt::Horizontal</enum>
              </property>
             </widget>
            </item>
-           <item row="6" column="0">
-            <widget class="QProgressBar" name="pb_redraw_progress">
-             <property name="value">
-              <number>0</number>
+           <item row="11" column="0">
+            <widget class="QLabel" name="_l">
+             <property name="text">
+              <string>Wavelength per pixel (nm/px)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="2">
+            <widget class="QPushButton" name="pb_waveperpixel_reset">
+             <property name="text">
+              <string>Reset</string>
              </property>
             </widget>
            </item>
@@ -341,48 +572,29 @@
         </item>
        </layout>
       </widget>
-      <widget class="QGroupBox" name="gp_webcam_meta">
-       <property name="title">
-        <string>Webcam + Meta Data Panel</string>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout" stretch="2,1,0">
-        <item>
-         <widget class="QLabelClick" name="limg_webcam">
-          <property name="text">
-           <string>....</string>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QTextBrowser" name="tb_meta_json">
-          <property name="font">
-           <font>
-            <family>Monospace</family>
-           </font>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <spacer name="verticalSpacer_2">
-          <property name="orientation">
-           <enum>Qt::Vertical</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>20</width>
-            <height>40</height>
-           </size>
-          </property>
-         </spacer>
-        </item>
-       </layout>
-      </widget>
       <widget class="QGroupBox" name="gp_spectral_panel">
        <property name="title">
-        <string>Spectral Data Panel</string>
+        <string>Spectral Reflection Calculation</string>
        </property>
-       <layout class="QGridLayout" name="gridLayout_4">
-        <item row="0" column="0" colspan="4">
+       <layout class="QFormLayout" name="formLayout">
+        <item row="0" column="0">
+         <widget class="QPushButton" name="pb_calibrate_calculate">
+          <property name="text">
+           <string>Calculate (Ctrl+ R)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QProgressBar" name="pbar_calc">
+          <property name="maximum">
+           <number>100</number>
+          </property>
+          <property name="value">
+           <number>0</number>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" colspan="2">
          <widget class="QScrollArea" name="scrollArea">
           <property name="widgetResizable">
            <bool>true</bool>
@@ -392,252 +604,342 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>376</width>
-             <height>444</height>
+             <width>372</width>
+             <height>539</height>
             </rect>
            </property>
-           <layout class="QFormLayout" name="formLayout">
-            <item row="13" column="0" colspan="2">
-             <widget class="Line" name="line">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+           <layout class="QVBoxLayout" name="verticalLayout_8">
+            <item>
+             <widget class="QTabWidget" name="tabWidget">
+              <property name="currentIndex">
+               <number>0</number>
               </property>
-             </widget>
-            </item>
-            <item row="23" column="0" colspan="2">
-             <widget class="Line" name="line_2">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="25" column="0" colspan="2">
-             <widget class="QLabel" name="label_3">
-              <property name="font">
-               <font>
-                <pointsize>14</pointsize>
-                <bold>false</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>3. Spectrum (Reflectance)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0" colspan="2">
-             <widget class="QLabelClick" name="limg_bayer_full">
-              <property name="text">
-               <string>....</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="0" colspan="2">
-             <widget class="QLabelClick" name="limg_bayer_gray">
-              <property name="text">
-               <string>....</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0" colspan="2">
-             <widget class="QLabelClick" name="limg_bayer_obje">
-              <property name="text">
-               <string>....</string>
-              </property>
-             </widget>
-            </item>
-            <item row="17" column="0">
-             <widget class="QCheckBox" name="cb_rawspect_export_plot">
-              <property name="toolTip">
-               <string>Enable or Disable saving this plot-figure as PNG file</string>
-              </property>
-              <property name="text">
-               <string>Export Plot (PNG)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="17" column="1">
-             <widget class="QToolButton" name="tbtn_raw_spectrum_config">
-              <property name="text">
-               <string>Plot Config (Ctrl+Shift+P)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="0">
-             <widget class="QCheckBox" name="cb_rawbayer_export_npy">
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable or Disable saving Raw Bayer Image as &lt;/p&gt;&lt;p&gt;NPY (numpy data file).&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Shape are (2464 x 3280) &lt;/p&gt;&lt;p&gt;dtype is np.uint16&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-              <property name="text">
-               <string>Export Raw-Bayer (.NPY)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="2" column="1">
-             <widget class="QCheckBox" name="cb_rawbayer_export_tif">
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable or Disable saving Raw Bayer Image as &lt;/p&gt;&lt;p&gt;TIF (image).&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Shape are (2464 x 3280 x 1) &lt;/p&gt;&lt;p&gt;dtype is np.uint16.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-              <property name="text">
-               <string>Export Raw-Bayer (.TIF)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QCheckBox" name="cb_rawbayer_export_mat">
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable or Disable saving Raw Bayer Image as &lt;/p&gt;&lt;p&gt;MAT (matlab data file).&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Shape are (2464 x 3280) &lt;/p&gt;&lt;p&gt;dtype is np.uint16&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-              <property name="text">
-               <string>Export Raw-Bayer (.MAT)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="0" colspan="2">
-             <spacer name="verticalSpacer">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="22" column="0" colspan="2">
-             <spacer name="verticalSpacer_3">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="26" column="1">
-             <widget class="QToolButton" name="tbtn_ref_spectrum_config">
-              <property name="text">
-               <string>Plot Config (Ctrl+P)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="26" column="0">
-             <widget class="QCheckBox" name="cb_refspect_export_plot">
-              <property name="toolTip">
-               <string>Enable or Disable saving this plot-figure as PNG file</string>
-              </property>
-              <property name="text">
-               <string>Export Plot (PNG)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="27" column="0" colspan="2">
-             <widget class="QLabelClick" name="limg_ref_spectrum">
-              <property name="text">
-               <string>....</string>
-              </property>
-             </widget>
-            </item>
-            <item row="19" column="0" colspan="2">
-             <widget class="QLabelClick" name="limg_raw_spectrum">
-              <property name="text">
-               <string>....</string>
-              </property>
-             </widget>
-            </item>
-            <item row="16" column="0">
-             <widget class="QCheckBox" name="cb_raw_show_bg">
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;On plot figure, &lt;/p&gt;&lt;p&gt;Show background estimation.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;Whether it's on or off, &lt;/p&gt;&lt;p&gt;Background value is always export in the &amp;quot;Numerical Values (CSV)&amp;quot; .&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-              <property name="text">
-               <string>Show Backgroud Estimation</string>
-              </property>
-             </widget>
-            </item>
-            <item row="15" column="0" colspan="2">
-             <widget class="QLabel" name="label_2">
-              <property name="font">
-               <font>
-                <pointsize>14</pointsize>
-                <bold>false</bold>
-               </font>
-              </property>
-              <property name="text">
-               <string>2. Raw Spectrum (Ditigal Number)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="0" column="0" colspan="2">
-             <widget class="QLabel" name="label">
-              <property name="font">
-               <font>
-                <pointsize>14</pointsize>
-                <italic>false</italic>
-                <underline>false</underline>
-               </font>
-              </property>
-              <property name="text">
-               <string>1. Raw Bayer</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0">
-             <widget class="QCheckBox" name="cb_bayer_show_geometry">
-              <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Show geometry (arrows) on the Raw image below.&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;It would not appear on the exported file Raw-Bayer ( npy, mat, tif).&lt;/p&gt;&lt;p&gt;It would only appear on the image in GUI&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-              </property>
-              <property name="text">
-               <string>Show Geometry</string>
-              </property>
+              <widget class="QWidget" name="tab">
+               <attribute name="title">
+                <string>De-Salt</string>
+               </attribute>
+               <layout class="QVBoxLayout" name="verticalLayout_5">
+                <item>
+                 <widget class="QCheckBox" name="cb_calc1_desalt">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string>Median filtering (3px vertically) for SALT noise</string>
+                  </property>
+                  <property name="checkable">
+                   <bool>true</bool>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="ImageView" name="graph_calc1_desalted_roi" native="true">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>150</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QTextBrowser" name="txt_calc1_desalt">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>0</width>
+                    <height>0</height>
+                   </size>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>80</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="tab_2">
+               <attribute name="title">
+                <string>BG est.</string>
+               </attribute>
+               <layout class="QVBoxLayout" name="verticalLayout_6">
+                <item>
+                 <widget class="QCheckBox" name="cb_calc2_background">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string>Estimate and substract Background</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="PlotWidget" name="graph_calc2_bg_gray" native="true">
+                  <property name="minimumSize">
+                   <size>
+                    <width>100</width>
+                    <height>200</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="PlotWidget" name="graph_calc2_bg_obje" native="true"/>
+                </item>
+                <item>
+                 <widget class="QTextBrowser" name="txt_calc2_bg">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>80</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="tab_3">
+               <attribute name="title">
+                <string>759 calib.</string>
+               </attribute>
+               <layout class="QVBoxLayout" name="verticalLayout_7">
+                <item>
+                 <widget class="QCheckBox" name="cb_calc3_calibrate_759">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="text">
+                   <string>Calibrate Based on 759.3nm absorption</string>
+                  </property>
+                  <property name="checked">
+                   <bool>true</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="PlotWidget" name="graph_calc3_759_calib" native="true">
+                  <property name="sizePolicy">
+                   <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                    <horstretch>0</horstretch>
+                    <verstretch>200</verstretch>
+                   </sizepolicy>
+                  </property>
+                  <property name="minimumSize">
+                   <size>
+                    <width>300</width>
+                    <height>200</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <widget class="QTextBrowser" name="txt_calc3_cal759">
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>80</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="tab_4">
+               <attribute name="title">
+                <string>Refl. (RGB)</string>
+               </attribute>
+               <layout class="QVBoxLayout" name="verticalLayout_9">
+                <item>
+                 <widget class="PlotWidget" name="graph_calc4_refl_rgb" native="true"/>
+                </item>
+                <item>
+                 <widget class="QTextBrowser" name="txt_calc4_rgb">
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>80</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="tab_5">
+               <attribute name="title">
+                <string>Refl. (Final)</string>
+               </attribute>
+               <layout class="QFormLayout" name="formLayout_2">
+                <item row="1" column="0">
+                 <widget class="QLabel" name="_l_12">
+                  <property name="text">
+                   <string>0 ~ Wavelenght (nm)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QDoubleSpinBox" name="sb_calc5_norm_zero">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="decimals">
+                   <number>1</number>
+                  </property>
+                  <property name="minimum">
+                   <double>400.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>900.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.500000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>440.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="1">
+                 <widget class="QDoubleSpinBox" name="sb_calc5_norm_one">
+                  <property name="enabled">
+                   <bool>false</bool>
+                  </property>
+                  <property name="decimals">
+                   <number>1</number>
+                  </property>
+                  <property name="minimum">
+                   <double>400.000000000000000</double>
+                  </property>
+                  <property name="maximum">
+                   <double>900.000000000000000</double>
+                  </property>
+                  <property name="singleStep">
+                   <double>0.500000000000000</double>
+                  </property>
+                  <property name="value">
+                   <double>760.000000000000000</double>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="0" colspan="2">
+                 <widget class="PlotWidget" name="graph_calc5_refl_final" native="true">
+                  <property name="minimumSize">
+                   <size>
+                    <width>300</width>
+                    <height>300</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="0">
+                 <widget class="QLabel" name="_l_13">
+                  <property name="text">
+                   <string>1 ~ Wavelenght (nm)</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="0" colspan="2">
+                 <widget class="QCheckBox" name="cb_calc5_norm">
+                  <property name="text">
+                   <string>Normalize it</string>
+                  </property>
+                  <property name="checked">
+                   <bool>false</bool>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="0" colspan="2">
+                 <widget class="QTextBrowser" name="txt_calc5_refl_final">
+                  <property name="maximumSize">
+                   <size>
+                    <width>16777215</width>
+                    <height>80</height>
+                   </size>
+                  </property>
+                 </widget>
+                </item>
+               </layout>
+              </widget>
              </widget>
             </item>
            </layout>
           </widget>
          </widget>
         </item>
-        <item row="2" column="3">
-         <widget class="QPushButton" name="pb_export">
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export FIles:  (depending on each enable/disable):&lt;/p&gt;&lt;p&gt;&lt;br/&gt;&lt;/p&gt;&lt;p&gt;- Raw Bayer Image (TIF)&lt;/p&gt;&lt;p&gt;- Raw Bayer Image (NPY)&lt;/p&gt;&lt;p&gt;- Raw Bayer Image (MAT)&lt;/p&gt;&lt;p&gt;- Plot Figure: Raw Spectrum (PNG)&lt;/p&gt;&lt;p&gt;- Plot Figure: Reflectance Spectrum (PNG)&lt;/p&gt;&lt;p&gt;- Numerical Data (CSV)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+        <item row="2" column="0">
+         <widget class="QCheckBox" name="cb_export_bayer_as_npy">
+          <property name="enabled">
+           <bool>true</bool>
           </property>
           <property name="text">
-           <string>Export (Ctrl+E)</string>
+           <string>Export (Bayer as NPY)</string>
           </property>
          </widget>
         </item>
         <item row="2" column="1">
-         <widget class="QCheckBox" name="cb_export_numerical_vals">
-          <property name="toolTip">
-           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Export Numerical Values as CSV file:&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+         <widget class="QCheckBox" name="cb_export_bayer_as_mat">
+          <property name="enabled">
+           <bool>false</bool>
           </property>
           <property name="text">
-           <string>Export Numerical Values  (CSV)</string>
+           <string>Export (Bayer as MAT)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="0">
+         <widget class="QCheckBox" name="cb_export_ref_CSV_simple">
+          <property name="text">
+           <string>Export CSV (only reflection)</string>
           </property>
           <property name="checked">
            <bool>true</bool>
           </property>
          </widget>
         </item>
-        <item row="2" column="0">
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
+        <item row="3" column="1">
+         <widget class="QCheckBox" name="cb_export_ref_CSV_full">
+          <property name="enabled">
+           <bool>false</bool>
           </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
+          <property name="text">
+           <string>Export CSV (FULL)</string>
           </property>
-         </spacer>
+         </widget>
         </item>
-        <item row="2" column="2">
-         <widget class="QProgressBar" name="pb_export_progress">
+        <item row="4" column="0">
+         <widget class="QPushButton" name="pb_export">
+          <property name="text">
+           <string>Export (Ctrl+E)</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="1">
+         <widget class="QProgressBar" name="pbar_export">
           <property name="value">
            <number>0</number>
           </property>
@@ -655,7 +957,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1004</width>
+     <width>1229</width>
      <height>19</height>
     </rect>
    </property>
@@ -814,6 +1116,18 @@
    <class>QLabelClick</class>
    <extends>QLabel</extends>
    <header>Custom_Libs.Lib_QLabelClick_Widget_NoUI</header>
+  </customwidget>
+  <customwidget>
+   <class>PlotWidget</class>
+   <extends>QWidget</extends>
+   <header>pyqtgraph</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>ImageView</class>
+   <extends>QWidget</extends>
+   <header>pyqtgraph</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>
