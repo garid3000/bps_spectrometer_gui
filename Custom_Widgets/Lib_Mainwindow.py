@@ -811,11 +811,6 @@ class TheMainWindow(QMainWindow):
             axes={"x":1, "y":0, "c":2})
         self.update_raw_from_sb()
 
-            tmp = cv.line(tmp,
-                          (self.jp.xWaveRng[0] + 192 * 2, 0),
-                          (self.jp.xWaveRng[0] + 192 * 2, 2400),
-                          color=(100, 100, 100),
-                          thickness=4)
 
     def short_cut_export_raw_jpeg(self) -> None:
         """C-e: export"""
