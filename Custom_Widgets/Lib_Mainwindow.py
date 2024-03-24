@@ -100,7 +100,7 @@ class TheMainWindow(QMainWindow):
     ddtree: DataDirTree = DataDirTree()
     jp: JpegProcessor = JpegProcessor()
 
-    def __init__(self, parent: QWidget | None = None) -> None:  # "baa16d09-103c-474c-935d-eccf84960000-start"
+    def __init__(self, parent: QWidget | None = None) -> None:
         super(TheMainWindow, self).__init__(parent)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -551,11 +551,6 @@ class TheMainWindow(QMainWindow):
             print(e)
 
     def toggle_filetype_visiblity(self, a: int) -> None:
-        """
-
-        :param a: int: 
-
-        """
         if a:
             self.fsmodel.setNameFilters((["*.jpeg", "*.jpg", "*.json"]))
         else:
