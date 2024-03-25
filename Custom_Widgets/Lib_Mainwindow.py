@@ -87,7 +87,7 @@ class FileSystemModel(QFileSystemModel):
 class TheMainWindow(QMainWindow):
     dir_path: str = QDir.homePath()
     jpeg_path: str
-    help_html_path: str = os.path.join(QDir.currentPath(), "docs/help.html") # need change on the binary release
+    help_html_path: str = os.path.join(QDir.currentPath(), "docs/help.html") # need change on the binary release?
     ddtree: DataDirTree = DataDirTree()
     jp: JpegProcessor = JpegProcessor()
 
@@ -374,7 +374,8 @@ class TheMainWindow(QMainWindow):
         self.graph5_curve_relf = self.ui.graph_calc5_refl_final.plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine), name="Reflection")
         
 
-    def all_sb_signal_block(self, b: bool) -> None:
+    def all_sb_signal_enable_or_disable(self, b: bool) -> None:
+        """Temporaray block or not block the signals in order to 2 way control"""
         self.ui.sb_lefx_size.blockSignals(b)
         self.ui.sb_lefx_init_rel.blockSignals(b)
         self.ui.sb_lefx_ends.blockSignals(b)
@@ -392,7 +393,7 @@ class TheMainWindow(QMainWindow):
         self.ui.sb_obje_y_ends.blockSignals(b)
     
     def handle_roi_change(self, gray_or_obje: str, left_middle_right: str) -> None:
-        self.all_sb_signal_block(True)
+        self.all_sb_signal_enable_or_disable(True)
         print(self.roi_gray_main.getState()["pos"], self.roi_gray_bglf.getState()["pos"])
 
         if gray_or_obje == "gray":
@@ -422,7 +423,7 @@ class TheMainWindow(QMainWindow):
                 self.ui.sb_rigx_init_rel.setValue(- self.roi_gray_main.getState()["pos"].x() + self.roi_obje_bgri.getState()["pos"].x())
                 self.ui.sb_rigx_size.setValue(self.roi_obje_bgri.getState()["size"].x())
 
-        self.all_sb_signal_block(False)
+        self.all_sb_signal_enable_or_disable(False)
         self.update_raw_from_sb()
 
 
@@ -543,8 +544,7 @@ class TheMainWindow(QMainWindow):
             print(e)
 
     def toggle_filetype_visiblity(self, a: int) -> None:
-        if a:
-            #self.fsmodel.setNameFilters((["*.jpeg", "*.jpg", "*.json"]))
+        if a == 2:
             self.fsmodel.setNameFilters((["*.jpeg"]))
         else:
             self.fsmodel.setNameFilters((["*"]))
@@ -628,8 +628,6 @@ class TheMainWindow(QMainWindow):
             if os.path.isfile(self.ddtree.webcamFP)
             else np.zeros((10, 10, 3), dtype=np.uint8)
         )
-        #self.jp_load_and_refresh_raw_image()
-        #self.jp_load_newly_selected_jpeg_file()
         self.jp.load_jpeg_file(self.jpeg_path, also_get_rgb_rerp=True)
         self.update_1_rawbayer_img_data_and_then_plot_below()
         return True
@@ -675,7 +673,6 @@ class TheMainWindow(QMainWindow):
         self.ui.tabWidget.setCurrentIndex(4)
         time.sleep(.1)
 
-        ######################################################################################
 
     def call_calibrate_and_calculate_calc1_desalt(self) -> None:
         self.jp.set_roi_geometry(
