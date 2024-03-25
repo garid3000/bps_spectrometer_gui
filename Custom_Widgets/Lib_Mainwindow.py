@@ -99,6 +99,9 @@ class TheMainWindow(QMainWindow):
         self.ui.pb_calibrate_calculate.clicked.connect(self.call_calibrate_and_calculate)
         self.ui.pb_export.clicked.connect(self.short_cut_export_raw_jpeg)
         self.ui.pb_dir_goto_parent.clicked.connect(self.short_cut_goto_parent_dir)
+        #self.ui.cb_rawbayer_visual_demosiac.valueChanged(self.)
+        self.ui.cb_rawbayer_visual_demosiac.stateChanged.connect(self.update_1_rawbayer_img_data_and_then_plot_below)
+                                                         
 
         # --------------- initialize the file system ----------------------------------
         self.fsmodel = FileSystemModel()                     # prev. QFileSystemModel()
@@ -644,7 +647,8 @@ class TheMainWindow(QMainWindow):
             logging.info(self.dir_path + "\t" + self.jpeg_path)
             self.ddtree.set_ddir(self.dir_path)
             self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
-            self.ui.limg_webcam.show_np_img(cv.imread(self.ddtree.webcamFP).astype(np.uint8))
+            self.ui.limg_webcam.show_np_img(
+                cv.imread(self.ddtree.webcamFP).astype(np.uint8)[:, :, ::-1])
             #self.jp_load_newly_selected_jpeg_file()
             self.jp.load_jpeg_file(self.jpeg_path, also_get_rgb_rerp=True)
             self.update_1_rawbayer_img_data_and_then_plot_below()
@@ -792,7 +796,7 @@ class TheMainWindow(QMainWindow):
     def update_1_rawbayer_img_data_and_then_plot_below(self) -> None:
         self.ui.graph_2dimg.clear()
         self.ui.graph_2dimg.setImage(
-            img=self.jp.rgb,
+            img=self.jp.rgb if not self.ui.cb_rawbayer_visual_demosiac.isChecked() else self.jp.rgb_demosiac,
             levels=(0, 1024),
             axes={"x":1, "y":0, "c":2})
         self.update_raw_from_sb()

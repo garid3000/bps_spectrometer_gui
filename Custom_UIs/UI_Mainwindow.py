@@ -178,9 +178,14 @@ class Ui_MainWindow(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 458, 424))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 458, 450))
         self.verticalLayout_4 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
+        self.cb_rawbayer_visual_demosiac = QCheckBox(self.scrollAreaWidgetContents_2)
+        self.cb_rawbayer_visual_demosiac.setObjectName("cb_rawbayer_visual_demosiac")
+
+        self.verticalLayout_4.addWidget(self.cb_rawbayer_visual_demosiac)
+
         self.graph_2dimg = ImageView(self.scrollAreaWidgetContents_2)
         self.graph_2dimg.setObjectName("graph_2dimg")
         sizePolicy2 = QSizePolicy(
@@ -894,6 +899,9 @@ class Ui_MainWindow(object):
                 "Raw-Bayer Image: ROI (Region of Interest) selection",
                 None,
             )
+        )
+        self.cb_rawbayer_visual_demosiac.setText(
+            QCoreApplication.translate("MainWindow", "Demosiac", None)
         )
         self.gb_control_panel.setTitle("")
         self._l_5.setText(

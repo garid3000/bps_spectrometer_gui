@@ -119,10 +119,17 @@
              <x>0</x>
              <y>0</y>
              <width>458</width>
-             <height>424</height>
+             <height>450</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
+            <item>
+             <widget class="QCheckBox" name="cb_rawbayer_visual_demosiac">
+              <property name="text">
+               <string>Demosiac</string>
+              </property>
+             </widget>
+            </item>
             <item>
              <widget class="ImageView" name="graph_2dimg" native="true">
               <property name="sizePolicy">
