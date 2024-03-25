@@ -49,6 +49,7 @@ from PySide6.QtWidgets import (
 
 from Custom_Libs.Lib_QLabelClick_Widget_NoUI import QLabelClick
 from pyqtgraph import ImageView, PlotWidget
+import QRCs.main_resource
 
 
 class Ui_MainWindow(object):
@@ -139,6 +140,7 @@ class Ui_MainWindow(object):
         self.cb_ft_filter = QCheckBox(self.gb_dir_panel)
         self.cb_ft_filter.setObjectName("cb_ft_filter")
         self.cb_ft_filter.setChecked(True)
+        self.cb_ft_filter.setTristate(False)
 
         self.gridLayout.addWidget(self.cb_ft_filter, 0, 0, 1, 2)
 
@@ -150,7 +152,7 @@ class Ui_MainWindow(object):
         self.tb_meta_json = QTextBrowser(self.gb_dir_panel)
         self.tb_meta_json.setObjectName("tb_meta_json")
         sizePolicy1 = QSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
         )
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
@@ -510,15 +512,10 @@ class Ui_MainWindow(object):
 
         self.txt_calc1_desalt = QTextBrowser(self.tab)
         self.txt_calc1_desalt.setObjectName("txt_calc1_desalt")
-        sizePolicy6 = QSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
-        )
-        sizePolicy6.setHorizontalStretch(0)
-        sizePolicy6.setVerticalStretch(0)
-        sizePolicy6.setHeightForWidth(
+        sizePolicy1.setHeightForWidth(
             self.txt_calc1_desalt.sizePolicy().hasHeightForWidth()
         )
-        self.txt_calc1_desalt.setSizePolicy(sizePolicy6)
+        self.txt_calc1_desalt.setSizePolicy(sizePolicy1)
         self.txt_calc1_desalt.setMinimumSize(QSize(0, 0))
         self.txt_calc1_desalt.setMaximumSize(QSize(16777215, 80))
 
@@ -549,10 +546,10 @@ class Ui_MainWindow(object):
 
         self.txt_calc2_bg = QTextBrowser(self.tab_2)
         self.txt_calc2_bg.setObjectName("txt_calc2_bg")
-        sizePolicy6.setHeightForWidth(
+        sizePolicy1.setHeightForWidth(
             self.txt_calc2_bg.sizePolicy().hasHeightForWidth()
         )
-        self.txt_calc2_bg.setSizePolicy(sizePolicy6)
+        self.txt_calc2_bg.setSizePolicy(sizePolicy1)
         self.txt_calc2_bg.setMaximumSize(QSize(16777215, 80))
 
         self.verticalLayout_6.addWidget(self.txt_calc2_bg)
@@ -571,15 +568,15 @@ class Ui_MainWindow(object):
 
         self.graph_calc3_759_calib = PlotWidget(self.tab_3)
         self.graph_calc3_759_calib.setObjectName("graph_calc3_759_calib")
-        sizePolicy7 = QSizePolicy(
+        sizePolicy6 = QSizePolicy(
             QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
         )
-        sizePolicy7.setHorizontalStretch(0)
-        sizePolicy7.setVerticalStretch(200)
-        sizePolicy7.setHeightForWidth(
+        sizePolicy6.setHorizontalStretch(0)
+        sizePolicy6.setVerticalStretch(200)
+        sizePolicy6.setHeightForWidth(
             self.graph_calc3_759_calib.sizePolicy().hasHeightForWidth()
         )
-        self.graph_calc3_759_calib.setSizePolicy(sizePolicy7)
+        self.graph_calc3_759_calib.setSizePolicy(sizePolicy6)
         self.graph_calc3_759_calib.setMinimumSize(QSize(300, 200))
 
         self.verticalLayout_7.addWidget(self.graph_calc3_759_calib)
@@ -855,6 +852,15 @@ class Ui_MainWindow(object):
         self.gb_dir_panel.setTitle(
             QCoreApplication.translate("MainWindow", "Directory Control Panel", None)
         )
+        # if QT_CONFIG(tooltip)
+        self.pb_dir_goto_parent.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                "<html><head/><body><p>Go to parent folder</p></body></html>",
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
         self.pb_dir_goto_parent.setText(
             QCoreApplication.translate(
                 "MainWindow", "\u2b06 Go to parent (Backspace)", None
@@ -863,10 +869,21 @@ class Ui_MainWindow(object):
         # if QT_CONFIG(tooltip)
         self.cb_ft_filter.setToolTip(
             QCoreApplication.translate(
-                "MainWindow", "Filter out (CSV, JPEG, JPG) files", None
+                "MainWindow",
+                '<html><head/><body><p>Visually filter files by extension. (e.g. JPEG etc)<br/>Useful for <span style=" text-decoration: underline;">identifying</span> the <span style=" text-decoration: underline;">spectral image</span>.</p><p>- JPEG<br/>- JPEG + JPG + JSON<br/>- All</p><p>-------------------------------------------------------------------------<br/>Keyboard shortcut = (CTRL + F)</p><p><br/></p></body></html>',
+                None,
             )
         )
         # endif // QT_CONFIG(tooltip)
+        # if QT_CONFIG(whatsthis)
+        self.cb_ft_filter.setWhatsThis(
+            QCoreApplication.translate(
+                "MainWindow",
+                "<html><head/><body><p>this is what is this?</p></body></html>",
+                None,
+            )
+        )
+        # endif // QT_CONFIG(whatsthis)
         self.cb_ft_filter.setText(
             QCoreApplication.translate("MainWindow", "Filter File Type (Ctrl+F)", None)
         )
@@ -888,6 +905,15 @@ class Ui_MainWindow(object):
         self._l_1.setText(
             QCoreApplication.translate("MainWindow", "Hor. (center)", None)
         )
+        # if QT_CONFIG(tooltip)
+        self.sb_midx_init.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                '<html><head/><body><p><img src=":/asdf.png"/></p></body></html>',
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
         self._l_4.setText(
             QCoreApplication.translate("MainWindow", "Height (pixel)", None)
         )
