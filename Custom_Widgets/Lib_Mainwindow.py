@@ -23,8 +23,7 @@ from Custom_UIs.UI_Mainwindow import Ui_MainWindow
 from Custom_Libs.Lib_DataDirTree import DataDirTree
 # from Custom_Widgets.Lib_PlotConfigDialog import PlotConfigDialog
 from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import (
-    JpegProcessor,  get_wavelength_array, # desalt_2d_array_by_vertically_median_filter,
-    background
+    JpegProcessor,  get_wavelength_array, background # desalt_2d_array_by_vertically_median_filter,
 )
 
 # ---------- Some logging ---------------------------------------------------------------------------------------------
@@ -69,7 +68,8 @@ class FileSystemModel(QFileSystemModel):
     # read from https://stackoverflow.com/a/40455027/14696853
     def __init__(self, *args, **kwargs):
         super(FileSystemModel, self).__init__(*args, **kwargs)
-        self.setNameFilters((["*.jpeg", "*.jpg", "*.json"]))
+        #self.setNameFilters((["*.jpeg", "*.jpg", "*.json"]))
+        self.setNameFilters((["*.jpeg"]))
         # , "*.tiff", "*.npy", "*.mat", "*.png"]))
         # self.setNameFilterDisables(False)
         # self.setNameFilterDisables(True)
@@ -98,6 +98,7 @@ class TheMainWindow(QMainWindow):
 
         self.ui.pb_calibrate_calculate.clicked.connect(self.call_calibrate_and_calculate)
         self.ui.pb_export.clicked.connect(self.short_cut_export_raw_jpeg)
+        self.ui.pb_dir_goto_parent.clicked.connect(self.short_cut_goto_parent_dir)
 
         # --------------- initialize the file system ----------------------------------
         self.fsmodel = FileSystemModel()                     # prev. QFileSystemModel()
@@ -122,7 +123,7 @@ class TheMainWindow(QMainWindow):
 
         self.init_2d_graph_hide_the_original_roi_buttons()
         self.init_all_6_roi()
-        self.init_sb_signals()
+        self.init_sb_signals_for_ROI_controls()
         self.init_all_pyqtgraph()
 
         self.init_keyboard_bindings()
@@ -247,7 +248,7 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_calc1_desalted_roi.addItem(self.text_for_desalted_img_label4)
         self.ui.graph_calc1_desalted_roi.addItem(self.text_for_desalted_img_label5)
 
-    def init_sb_signals(self) -> None:
+    def init_sb_signals_for_ROI_controls(self) -> None:
         self.ui.sb_gray_y_init.valueChanged.connect(self.update_raw_from_sb)
         self.ui.sb_gray_y_size.valueChanged.connect(self.update_raw_from_sb)
         self.ui.sb_obje_y_init.valueChanged.connect(self.update_raw_from_sb)
@@ -543,7 +544,8 @@ class TheMainWindow(QMainWindow):
 
     def toggle_filetype_visiblity(self, a: int) -> None:
         if a:
-            self.fsmodel.setNameFilters((["*.jpeg", "*.jpg", "*.json"]))
+            #self.fsmodel.setNameFilters((["*.jpeg", "*.jpg", "*.json"]))
+            self.fsmodel.setNameFilters((["*.jpeg"]))
         else:
             self.fsmodel.setNameFilters((["*"]))
 
