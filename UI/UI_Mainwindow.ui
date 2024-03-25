@@ -27,43 +27,15 @@
           <property name="title">
            <string>Directory Control Panel</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout_3">
-           <item row="2" column="0">
-            <widget class="QLabelClick" name="limg_webcam">
-             <property name="text">
-              <string>....</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QTextBrowser" name="tb_meta_json">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <family>Monospace</family>
-              </font>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QCheckBox" name="cb_ft_filter">
-             <property name="toolTip">
-              <string>Filter out (CSV, JPEG, JPG) files</string>
-             </property>
-             <property name="text">
-              <string>File type filter (Ctrl-F)</string>
-             </property>
-             <property name="checked">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
+          <layout class="QGridLayout" name="gridLayout">
            <item row="1" column="0">
+            <widget class="QPushButton" name="pb_dir_goto_parent">
+             <property name="text">
+              <string>⬆ Go to parent (Backspace)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0" colspan="2">
             <widget class="QTreeView" name="tv_dir">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -82,6 +54,41 @@
              </property>
             </widget>
            </item>
+           <item row="0" column="0" colspan="2">
+            <widget class="QCheckBox" name="cb_ft_filter">
+             <property name="toolTip">
+              <string>Filter out (CSV, JPEG, JPG) files</string>
+             </property>
+             <property name="text">
+              <string>Filter File Type (Ctrl+F)</string>
+             </property>
+             <property name="checked">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="0" colspan="2">
+            <widget class="QLabelClick" name="limg_webcam">
+             <property name="text">
+              <string>....</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0" colspan="2">
+            <widget class="QTextBrowser" name="tb_meta_json">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Monospace</family>
+              </font>
+             </property>
+            </widget>
+           </item>
           </layout>
          </widget>
         </item>
@@ -89,7 +96,7 @@
       </widget>
       <widget class="QGroupBox" name="gp_webcam_meta">
        <property name="title">
-        <string>Raw Bayer Image (ROI selection)</string>
+        <string>Raw-Bayer Image: ROI (Region of Interest) selection</string>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
@@ -101,9 +108,9 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-274</y>
+             <y>0</y>
              <width>458</width>
-             <height>724</height>
+             <height>424</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
@@ -161,10 +168,7 @@
               <double>2.500000000000000</double>
              </property>
              <property name="singleStep">
-              <double>0.010000000000000</double>
-             </property>
-             <property name="singleStep">
-              <number>2</number>
+              <double>2.000000000000000</double>
              </property>
              <property name="value">
               <double>1.858300000000000</double>
@@ -343,9 +347,6 @@
              <property name="singleStep">
               <number>2</number>
              </property>
-             <property name="singleStep">
-              <number>2</number>
-             </property>
              <property name="value">
               <number>1050</number>
              </property>
@@ -469,7 +470,7 @@
              <property name="text">
               <string>End (pixel)</string>
              </property>
-             <property name="checked">
+             <property name="checked" stdset="0">
               <bool>true</bool>
              </property>
             </widget>
@@ -579,8 +580,14 @@
        <layout class="QFormLayout" name="formLayout">
         <item row="0" column="0">
          <widget class="QPushButton" name="pb_calibrate_calculate">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="MinimumExpanding" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="text">
-           <string>Calculate (Ctrl+ R)</string>
+           <string>Calculate (Ctrl+R)</string>
           </property>
          </widget>
         </item>
