@@ -49,7 +49,6 @@ from PySide6.QtWidgets import (
 
 from Custom_Libs.Lib_QLabelClick_Widget_NoUI import QLabelClick
 from pyqtgraph import ImageView, PlotWidget
-import QRCs.main_resource
 
 
 class Ui_MainWindow(object):
@@ -901,7 +900,9 @@ class Ui_MainWindow(object):
             )
         )
         self.cb_rawbayer_visual_demosiac.setText(
-            QCoreApplication.translate("MainWindow", "Demosiac", None)
+            QCoreApplication.translate(
+                "MainWindow", "Demosiac Bayer (Visually better)", None
+            )
         )
         self.gb_control_panel.setTitle("")
         self._l_5.setText(
@@ -917,7 +918,7 @@ class Ui_MainWindow(object):
         self.sb_midx_init.setToolTip(
             QCoreApplication.translate(
                 "MainWindow",
-                '<html><head/><body><p><img src=":/asdf.png"/></p></body></html>',
+                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_horizontal_center_start.png"/></p></body></html>',
                 None,
             )
         )
@@ -925,20 +926,74 @@ class Ui_MainWindow(object):
         self._l_4.setText(
             QCoreApplication.translate("MainWindow", "Height (pixel)", None)
         )
+        # if QT_CONFIG(tooltip)
+        self.sb_rigx_init_rel.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_horizontal_background_right_left.png"/></p></body></html>',
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
+        # if QT_CONFIG(tooltip)
+        self.sb_rigx_size.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_horizontal_background_right_right.png"/></p></body></html>',
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
         self._l_2.setText(
             QCoreApplication.translate("MainWindow", "Vert. Gray Pixel Range", None)
         )
         self._l_9.setText(
             QCoreApplication.translate("MainWindow", "Width (pixel)", None)
         )
+        # if QT_CONFIG(tooltip)
+        self.sb_gray_y_init.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_vert_gray_top.png"/></p></body></html>',
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
         self._l_7.setText(
             QCoreApplication.translate(
                 "MainWindow", "Hor. (right) relative to center", None
             )
         )
+        # if QT_CONFIG(tooltip)
+        self.sb_lefx_init_rel.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_horizontal_background_left_left.png"/></p></body></html>',
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
         self._l_8.setText(
             QCoreApplication.translate("MainWindow", "Start (pixel)", None)
         )
+        # if QT_CONFIG(tooltip)
+        self.sb_lefx_size.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_horizontal_background_left_right.png"/></p></body></html>',
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
+        # if QT_CONFIG(tooltip)
+        self.sb_obje_y_size.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_vert_obje_height.png"/></p></body></html>',
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
         self._l_3.setText(
             QCoreApplication.translate("MainWindow", "Vert. Object Pixel Range", None)
         )
@@ -950,11 +1005,29 @@ class Ui_MainWindow(object):
             QCoreApplication.translate("MainWindow", "Fraunhofer line (in pixel)", None)
         )
         # endif // QT_CONFIG(tooltip)
+        # if QT_CONFIG(tooltip)
+        self.sb_obje_y_init.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_vert_obje_top.png"/></p></body></html>',
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
         self._l_6.setText(
             QCoreApplication.translate(
                 "MainWindow", "Hor. (left) relative to center", None
             )
         )
+        # if QT_CONFIG(tooltip)
+        self.sb_gray_y_size.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_vert_gray_height.png"/></p></body></html>',
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
         self._l.setText(
             QCoreApplication.translate(
                 "MainWindow", "Wavelength per pixel (nm/px)", None

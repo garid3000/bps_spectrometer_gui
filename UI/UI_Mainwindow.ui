@@ -126,7 +126,7 @@
             <item>
              <widget class="QCheckBox" name="cb_rawbayer_visual_demosiac">
               <property name="text">
-               <string>Demosiac</string>
+               <string>Demosiac Bayer (Visually better)</string>
               </property>
              </widget>
             </item>
@@ -242,7 +242,7 @@
            <item row="1" column="1">
             <widget class="QSpinBox" name="sb_midx_init">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/asdf.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_horizontal_center_start.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="minimum">
               <number>0</number>
@@ -287,6 +287,9 @@
            </item>
            <item row="3" column="1">
             <widget class="QSpinBox" name="sb_rigx_init_rel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_horizontal_background_right_left.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="minimum">
               <number>700</number>
              </property>
@@ -303,6 +306,9 @@
            </item>
            <item row="3" column="2">
             <widget class="QSpinBox" name="sb_rigx_size">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_horizontal_background_right_right.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="maximum">
               <number>200</number>
              </property>
@@ -357,6 +363,9 @@
            </item>
            <item row="6" column="1">
             <widget class="QSpinBox" name="sb_gray_y_init">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_vert_gray_top.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="minimum">
               <number>0</number>
              </property>
@@ -390,6 +399,9 @@
            </item>
            <item row="2" column="1">
             <widget class="QSpinBox" name="sb_lefx_init_rel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_horizontal_background_left_left.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="minimum">
               <number>-250</number>
              </property>
@@ -413,6 +425,9 @@
            </item>
            <item row="2" column="2">
             <widget class="QSpinBox" name="sb_lefx_size">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_horizontal_background_left_right.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="maximum">
               <number>200</number>
              </property>
@@ -426,6 +441,9 @@
            </item>
            <item row="9" column="2">
             <widget class="QSpinBox" name="sb_obje_y_size">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_vert_obje_height.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="minimum">
               <number>0</number>
              </property>
@@ -519,6 +537,9 @@
            </item>
            <item row="9" column="1">
             <widget class="QSpinBox" name="sb_obje_y_init">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_vert_obje_top.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="minimum">
               <number>0</number>
              </property>
@@ -552,6 +573,9 @@
            </item>
            <item row="6" column="2">
             <widget class="QSpinBox" name="sb_gray_y_size">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_vert_gray_height.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
              <property name="minimum">
               <number>0</number>
              </property>
