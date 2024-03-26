@@ -608,6 +608,7 @@ class TheMainWindow(QMainWindow):
         """Open current directory"""
         sel_m_index = self.ui.tv_dir.rootIndex()
         tmpdirectory = self.fsmodel.filePath(sel_m_index)
+        print(tmpdirectory)
         open_file_externally(tmpdirectory)
 
     def short_cut_preview_raw_jpeg(self) -> bool:
