@@ -51,7 +51,6 @@ from Custom_Libs.Lib_QLabelClick_Widget_NoUI import QLabelClick
 from pyqtgraph import ImageView, PlotWidget
 import QRCs.main_resource
 
-
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow: QMainWindow) -> None:
         if not MainWindow.objectName():
@@ -196,7 +195,7 @@ class Ui_MainWindow(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 449, 450))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 439, 450))
         self.verticalLayout_4 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.cb_rawbayer_visual_demosiac = QCheckBox(self.scrollAreaWidgetContents_2)
@@ -501,7 +500,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 350, 525))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 344, 525))
         self.verticalLayout_8 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_8.setObjectName("verticalLayout_8")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -884,7 +883,7 @@ class Ui_MainWindow(object):
         self.label.setText(
             QCoreApplication.translate(
                 "MainWindow",
-                "\ud83d\udec8 Help: (Move the mouse-cursor here to see operation order)",
+                "Help: (Move the mouse-cursor here to see operation order)",
                 None,
             )
         )
@@ -901,9 +900,7 @@ class Ui_MainWindow(object):
         )
         # endif // QT_CONFIG(tooltip)
         self.pb_dir_goto_parent.setText(
-            QCoreApplication.translate(
-                "MainWindow", "\u2b06 Go to parent (Backspace)", None
-            )
+            QCoreApplication.translate("MainWindow", "Go to parent (Backspace)", None)
         )
         # if QT_CONFIG(tooltip)
         self.cb_ft_filter.setToolTip(

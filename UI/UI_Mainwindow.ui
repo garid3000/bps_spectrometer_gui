@@ -21,7 +21,7 @@
        <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/MAIN_howto.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="text">
-       <string>🛈 Help: (Move the mouse-cursor here to see operation order)</string>
+       <string>Help: (Move the mouse-cursor here to see operation order)</string>
       </property>
      </widget>
     </item>
@@ -50,7 +50,7 @@
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Go to parent folder&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="text">
-              <string>⬆ Go to parent (Backspace)</string>
+              <string>Go to parent (Backspace)</string>
              </property>
             </widget>
            </item>
@@ -147,7 +147,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>449</width>
+             <width>439</width>
              <height>450</height>
             </rect>
            </property>
@@ -683,7 +683,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>350</width>
+             <width>344</width>
              <height>525</height>
             </rect>
            </property>
