@@ -118,6 +118,7 @@ class TheMainWindow(QMainWindow):
         self.ui.sb_calc5_norm_one.valueChanged.connect(self.handle_cb_calc5_norming)
         #self.ui.cb_bayer_show_geometry.stateChanged.connect(self.update_visual_1_rawbayer_img_section)
         self.ui.pb_waveperpixel_reset.clicked.connect(lambda: self.ui.sb_waveperpixel.setValue(1.8385))
+        self.ui.pb_system_file_explorer.clicked.connect(self.open_directory_at_point)
 
         # -----------------------------------------------------------------------------
         #self.jp.set_xWaveRng(self.ui.sb_midx_init.value())
@@ -591,9 +592,9 @@ class TheMainWindow(QMainWindow):
 
     def short_cut_goto_selected_child_dir(self) -> None:
         """Enter: the directory"""
-        sel_m_index = self.ui.tv_dir.currentIndex()  # get
+        sel_m_index = self.ui.tv_dir.currentIndex().siblingAtColumn(0)  # get
         if self.fsmodel.hasChildren(sel_m_index):  # enter only if this has children
-            self.ui.tv_dir.setRootIndex(sel_m_index)
+            self.ui.tv_dir.setRootIndex(sel_m_index) # need if previously other column has selected
         else:
             pass  # need to update jpeg_path here
 
@@ -602,6 +603,12 @@ class TheMainWindow(QMainWindow):
         sel_m_index = self.ui.tv_dir.currentIndex()
         tmppath = self.fsmodel.filePath(sel_m_index)
         open_file_externally(tmppath)
+
+    def open_directory_at_point(self) -> None:
+        """Open current directory"""
+        sel_m_index = self.ui.tv_dir.rootIndex()
+        tmpdirectory = self.fsmodel.filePath(sel_m_index)
+        open_file_externally(tmpdirectory)
 
     def short_cut_preview_raw_jpeg(self) -> bool:
         """SPC"""
