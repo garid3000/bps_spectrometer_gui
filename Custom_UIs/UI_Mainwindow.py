@@ -49,6 +49,7 @@ from PySide6.QtWidgets import (
 
 from Custom_Libs.Lib_QLabelClick_Widget_NoUI import QLabelClick
 from pyqtgraph import ImageView, PlotWidget
+import QRCs.main_resource
 
 
 class Ui_MainWindow(object):
@@ -159,11 +160,17 @@ class Ui_MainWindow(object):
             self.tb_meta_json.sizePolicy().hasHeightForWidth()
         )
         self.tb_meta_json.setSizePolicy(sizePolicy1)
+        self.tb_meta_json.setMinimumSize(QSize(0, 5))
         font1 = QFont()
         font1.setFamilies(["Monospace"])
         self.tb_meta_json.setFont(font1)
 
         self.gridLayout.addWidget(self.tb_meta_json, 4, 0, 1, 2)
+
+        self.pb_system_file_explorer = QPushButton(self.gb_dir_panel)
+        self.pb_system_file_explorer.setObjectName("pb_system_file_explorer")
+
+        self.gridLayout.addWidget(self.pb_system_file_explorer, 1, 1, 1, 1)
 
         self.verticalLayout_2.addWidget(self.gb_dir_panel)
 
@@ -177,7 +184,7 @@ class Ui_MainWindow(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 458, 450))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 446, 450))
         self.verticalLayout_4 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.cb_rawbayer_visual_demosiac = QCheckBox(self.scrollAreaWidgetContents_2)
@@ -482,7 +489,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 372, 539))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 363, 539))
         self.verticalLayout_8 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_8.setObjectName("verticalLayout_8")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -763,7 +770,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(4)
 
         QMetaObject.connectSlotsByName(MainWindow)
 
@@ -892,6 +899,9 @@ class Ui_MainWindow(object):
             QCoreApplication.translate("MainWindow", "Filter File Type (Ctrl+F)", None)
         )
         self.limg_webcam.setText(QCoreApplication.translate("MainWindow", "....", None))
+        self.pb_system_file_explorer.setText(
+            QCoreApplication.translate("MainWindow", "Sys. File-explorer", None)
+        )
         self.gp_webcam_meta.setTitle(
             QCoreApplication.translate(
                 "MainWindow",
@@ -901,7 +911,7 @@ class Ui_MainWindow(object):
         )
         self.cb_rawbayer_visual_demosiac.setText(
             QCoreApplication.translate(
-                "MainWindow", "Demosiac Bayer (Visually better)", None
+                "MainWindow", "Demosiac Bayer (just for visual)", None
             )
         )
         self.gb_control_panel.setTitle("")
@@ -1102,6 +1112,15 @@ class Ui_MainWindow(object):
         self.cb_export_ref_CSV_full.setText(
             QCoreApplication.translate("MainWindow", "Export CSV (FULL)", None)
         )
+        # if QT_CONFIG(tooltip)
+        self.pb_export.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                '<html><head/><body><p><img src=":/newPrefix/Howto-export.png"/></p></body></html>',
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
         self.pb_export.setText(
             QCoreApplication.translate("MainWindow", "Export (Ctrl+E)", None)
         )

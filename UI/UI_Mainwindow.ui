@@ -91,10 +91,23 @@
                <verstretch>0</verstretch>
               </sizepolicy>
              </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>5</height>
+              </size>
+             </property>
              <property name="font">
               <font>
                <family>Monospace</family>
               </font>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="pb_system_file_explorer">
+             <property name="text">
+              <string>Sys. File-explorer</string>
              </property>
             </widget>
            </item>
@@ -118,7 +131,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>458</width>
+             <width>446</width>
              <height>450</height>
             </rect>
            </property>
@@ -126,7 +139,7 @@
             <item>
              <widget class="QCheckBox" name="cb_rawbayer_visual_demosiac">
               <property name="text">
-               <string>Demosiac Bayer (Visually better)</string>
+               <string>Demosiac Bayer (just for visual)</string>
               </property>
              </widget>
             </item>
@@ -654,7 +667,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>372</width>
+             <width>363</width>
              <height>539</height>
             </rect>
            </property>
@@ -662,7 +675,7 @@
             <item>
              <widget class="QTabWidget" name="tabWidget">
               <property name="currentIndex">
-               <number>0</number>
+               <number>4</number>
               </property>
               <widget class="QWidget" name="tab">
                <attribute name="title">
@@ -983,6 +996,9 @@
         </item>
         <item row="4" column="0">
          <widget class="QPushButton" name="pb_export">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/Howto-export.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
           <property name="text">
            <string>Export (Ctrl+E)</string>
           </property>
