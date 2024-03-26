@@ -639,7 +639,8 @@ class TheMainWindow(QMainWindow):
         tmp = self.fsmodel.filePath(v)
         if os.path.isdir(tmp):
             logging.info(f"call_tv_onItemClicked: {tmp}")
-            self.ui.tv_dir.setRootIndex(v)
+            # self.ui.tv_dir.setRootIndex(v)
+            self.ui.tv_dir.setRootIndex(v.siblingAtColumn(0))  # needed to choose only filename.
             logging.info(self.fsmodel.rootPath())
         else:
             self.jpeg_path = self.fsmodel.filePath(v)
