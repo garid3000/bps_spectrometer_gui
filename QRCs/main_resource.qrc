@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="newPrefix">
+    <file>MAIN_howto.png</file>
     <file>Howto-export.png</file>
     <file>raw_bayer_horizontal_center_start.png</file>
     <file>raw_bayer_base_horizontal_background_left_left.png</file>

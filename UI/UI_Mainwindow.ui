@@ -16,7 +16,23 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
+     <widget class="QLabel" name="label">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/MAIN_howto.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>🛈 Help: (Move the mouse-cursor here to see operation order)</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QSplitter" name="splitter">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="orientation">
        <enum>Qt::Horizontal</enum>
       </property>
@@ -107,7 +123,7 @@
            <item row="1" column="1">
             <widget class="QPushButton" name="pb_system_file_explorer">
              <property name="text">
-              <string>Sys. File-explorer</string>
+              <string>Open Sys. file-explorer</string>
              </property>
             </widget>
            </item>
@@ -131,7 +147,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>446</width>
+             <width>449</width>
              <height>450</height>
             </rect>
            </property>
@@ -667,8 +683,8 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>363</width>
-             <height>539</height>
+             <width>350</width>
+             <height>525</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_8">
@@ -1070,8 +1086,8 @@
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="separator"/>
     <addaction name="action_help"/>
-    <addaction name="action_about"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuTutorial"/>

@@ -103,8 +103,20 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
         self.verticalLayout_3 = QVBoxLayout(self.centralwidget)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.label = QLabel(self.centralwidget)
+        self.label.setObjectName("label")
+
+        self.verticalLayout_3.addWidget(self.label)
+
         self.splitter = QSplitter(self.centralwidget)
         self.splitter.setObjectName("splitter")
+        sizePolicy = QSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
+        )
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.splitter.sizePolicy().hasHeightForWidth())
+        self.splitter.setSizePolicy(sizePolicy)
         self.splitter.setOrientation(Qt.Orientation.Horizontal)
         self.layoutWidget = QWidget(self.splitter)
         self.layoutWidget.setObjectName("layoutWidget")
@@ -122,13 +134,13 @@ class Ui_MainWindow(object):
 
         self.tv_dir = QTreeView(self.gb_dir_panel)
         self.tv_dir.setObjectName("tv_dir")
-        sizePolicy = QSizePolicy(
+        sizePolicy1 = QSizePolicy(
             QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
         )
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(10)
-        sizePolicy.setHeightForWidth(self.tv_dir.sizePolicy().hasHeightForWidth())
-        self.tv_dir.setSizePolicy(sizePolicy)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(10)
+        sizePolicy1.setHeightForWidth(self.tv_dir.sizePolicy().hasHeightForWidth())
+        self.tv_dir.setSizePolicy(sizePolicy1)
         font = QFont()
         font.setFamilies(["Monospace"])
         font.setPointSize(10)
@@ -151,15 +163,15 @@ class Ui_MainWindow(object):
 
         self.tb_meta_json = QTextBrowser(self.gb_dir_panel)
         self.tb_meta_json.setObjectName("tb_meta_json")
-        sizePolicy1 = QSizePolicy(
+        sizePolicy2 = QSizePolicy(
             QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
         )
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(
             self.tb_meta_json.sizePolicy().hasHeightForWidth()
         )
-        self.tb_meta_json.setSizePolicy(sizePolicy1)
+        self.tb_meta_json.setSizePolicy(sizePolicy2)
         self.tb_meta_json.setMinimumSize(QSize(0, 5))
         font1 = QFont()
         font1.setFamilies(["Monospace"])
@@ -184,7 +196,7 @@ class Ui_MainWindow(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 446, 450))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 449, 450))
         self.verticalLayout_4 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.cb_rawbayer_visual_demosiac = QCheckBox(self.scrollAreaWidgetContents_2)
@@ -194,26 +206,26 @@ class Ui_MainWindow(object):
 
         self.graph_2dimg = ImageView(self.scrollAreaWidgetContents_2)
         self.graph_2dimg.setObjectName("graph_2dimg")
-        sizePolicy2 = QSizePolicy(
+        sizePolicy3 = QSizePolicy(
             QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding
         )
-        sizePolicy2.setHorizontalStretch(200)
-        sizePolicy2.setVerticalStretch(200)
-        sizePolicy2.setHeightForWidth(self.graph_2dimg.sizePolicy().hasHeightForWidth())
-        self.graph_2dimg.setSizePolicy(sizePolicy2)
+        sizePolicy3.setHorizontalStretch(200)
+        sizePolicy3.setVerticalStretch(200)
+        sizePolicy3.setHeightForWidth(self.graph_2dimg.sizePolicy().hasHeightForWidth())
+        self.graph_2dimg.setSizePolicy(sizePolicy3)
         self.graph_2dimg.setMinimumSize(QSize(400, 200))
 
         self.verticalLayout_4.addWidget(self.graph_2dimg)
 
         self.graph_raw = PlotWidget(self.scrollAreaWidgetContents_2)
         self.graph_raw.setObjectName("graph_raw")
-        sizePolicy3 = QSizePolicy(
+        sizePolicy4 = QSizePolicy(
             QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding
         )
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(200)
-        sizePolicy3.setHeightForWidth(self.graph_raw.sizePolicy().hasHeightForWidth())
-        self.graph_raw.setSizePolicy(sizePolicy3)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(200)
+        sizePolicy4.setHeightForWidth(self.graph_raw.sizePolicy().hasHeightForWidth())
+        self.graph_raw.setSizePolicy(sizePolicy4)
         self.graph_raw.setMinimumSize(QSize(400, 200))
 
         self.verticalLayout_4.addWidget(self.graph_raw)
@@ -465,15 +477,15 @@ class Ui_MainWindow(object):
         self.formLayout.setObjectName("formLayout")
         self.pb_calibrate_calculate = QPushButton(self.gp_spectral_panel)
         self.pb_calibrate_calculate.setObjectName("pb_calibrate_calculate")
-        sizePolicy4 = QSizePolicy(
+        sizePolicy5 = QSizePolicy(
             QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed
         )
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(
             self.pb_calibrate_calculate.sizePolicy().hasHeightForWidth()
         )
-        self.pb_calibrate_calculate.setSizePolicy(sizePolicy4)
+        self.pb_calibrate_calculate.setSizePolicy(sizePolicy5)
 
         self.formLayout.setWidget(0, QFormLayout.LabelRole, self.pb_calibrate_calculate)
 
@@ -489,7 +501,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 363, 539))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 350, 525))
         self.verticalLayout_8 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_8.setObjectName("verticalLayout_8")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -508,25 +520,25 @@ class Ui_MainWindow(object):
 
         self.graph_calc1_desalted_roi = ImageView(self.tab)
         self.graph_calc1_desalted_roi.setObjectName("graph_calc1_desalted_roi")
-        sizePolicy5 = QSizePolicy(
+        sizePolicy6 = QSizePolicy(
             QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding
         )
-        sizePolicy5.setHorizontalStretch(0)
-        sizePolicy5.setVerticalStretch(0)
-        sizePolicy5.setHeightForWidth(
+        sizePolicy6.setHorizontalStretch(0)
+        sizePolicy6.setVerticalStretch(0)
+        sizePolicy6.setHeightForWidth(
             self.graph_calc1_desalted_roi.sizePolicy().hasHeightForWidth()
         )
-        self.graph_calc1_desalted_roi.setSizePolicy(sizePolicy5)
+        self.graph_calc1_desalted_roi.setSizePolicy(sizePolicy6)
         self.graph_calc1_desalted_roi.setMinimumSize(QSize(150, 0))
 
         self.verticalLayout_5.addWidget(self.graph_calc1_desalted_roi)
 
         self.txt_calc1_desalt = QTextBrowser(self.tab)
         self.txt_calc1_desalt.setObjectName("txt_calc1_desalt")
-        sizePolicy1.setHeightForWidth(
+        sizePolicy2.setHeightForWidth(
             self.txt_calc1_desalt.sizePolicy().hasHeightForWidth()
         )
-        self.txt_calc1_desalt.setSizePolicy(sizePolicy1)
+        self.txt_calc1_desalt.setSizePolicy(sizePolicy2)
         self.txt_calc1_desalt.setMinimumSize(QSize(0, 0))
         self.txt_calc1_desalt.setMaximumSize(QSize(16777215, 80))
 
@@ -557,10 +569,10 @@ class Ui_MainWindow(object):
 
         self.txt_calc2_bg = QTextBrowser(self.tab_2)
         self.txt_calc2_bg.setObjectName("txt_calc2_bg")
-        sizePolicy1.setHeightForWidth(
+        sizePolicy2.setHeightForWidth(
             self.txt_calc2_bg.sizePolicy().hasHeightForWidth()
         )
-        self.txt_calc2_bg.setSizePolicy(sizePolicy1)
+        self.txt_calc2_bg.setSizePolicy(sizePolicy2)
         self.txt_calc2_bg.setMaximumSize(QSize(16777215, 80))
 
         self.verticalLayout_6.addWidget(self.txt_calc2_bg)
@@ -579,15 +591,15 @@ class Ui_MainWindow(object):
 
         self.graph_calc3_759_calib = PlotWidget(self.tab_3)
         self.graph_calc3_759_calib.setObjectName("graph_calc3_759_calib")
-        sizePolicy6 = QSizePolicy(
+        sizePolicy7 = QSizePolicy(
             QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding
         )
-        sizePolicy6.setHorizontalStretch(0)
-        sizePolicy6.setVerticalStretch(200)
-        sizePolicy6.setHeightForWidth(
+        sizePolicy7.setHorizontalStretch(0)
+        sizePolicy7.setVerticalStretch(200)
+        sizePolicy7.setHeightForWidth(
             self.graph_calc3_759_calib.sizePolicy().hasHeightForWidth()
         )
-        self.graph_calc3_759_calib.setSizePolicy(sizePolicy6)
+        self.graph_calc3_759_calib.setSizePolicy(sizePolicy7)
         self.graph_calc3_759_calib.setMinimumSize(QSize(300, 200))
 
         self.verticalLayout_7.addWidget(self.graph_calc3_759_calib)
@@ -765,8 +777,8 @@ class Ui_MainWindow(object):
         self.menuGeometry_Settings.addAction(
             self.actionSave_geometry_configuration_Ctrl_Shift_L
         )
+        self.menuTutorial.addSeparator()
         self.menuTutorial.addAction(self.action_help)
-        self.menuTutorial.addAction(self.action_about)
 
         self.retranslateUi(MainWindow)
 
@@ -860,6 +872,22 @@ class Ui_MainWindow(object):
                 "MainWindow", "Spectrum-Reflectance Tab (Ctrl+3) or (Alt+3)", None
             )
         )
+        # if QT_CONFIG(tooltip)
+        self.label.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                '<html><head/><body><p><img src=":/newPrefix/MAIN_howto.png"/></p></body></html>',
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
+        self.label.setText(
+            QCoreApplication.translate(
+                "MainWindow",
+                "\ud83d\udec8 Help: (Move the mouse-cursor here to see operation order)",
+                None,
+            )
+        )
         self.gb_dir_panel.setTitle(
             QCoreApplication.translate("MainWindow", "Directory Control Panel", None)
         )
@@ -900,7 +928,7 @@ class Ui_MainWindow(object):
         )
         self.limg_webcam.setText(QCoreApplication.translate("MainWindow", "....", None))
         self.pb_system_file_explorer.setText(
-            QCoreApplication.translate("MainWindow", "Sys. File-explorer", None)
+            QCoreApplication.translate("MainWindow", "Open Sys. file-explorer", None)
         )
         self.gp_webcam_meta.setTitle(
             QCoreApplication.translate(
