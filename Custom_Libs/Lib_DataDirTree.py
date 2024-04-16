@@ -22,7 +22,7 @@ class DataDirTree:
         self.jpegFnames   = [x for x in os.listdir(self.ddir) if ".jpeg" in x]
         self.jpegFnamesFP = [os.path.join(self.ddir, x) for x in self.jpegFnames]
         # self.webcamFP     = os.path.join(self.ddir, "cam.jpg")
-        tmpcamjpg         = [x for x in os.listdir(self.ddir) if (".jpg" in x)]
+        tmpcamjpg         = [os.path.join(self.ddir, x) for x in os.listdir(self.ddir) if (".jpg" in x)]
         self.webcamFP     = os.path.join(self.ddir, "cam.jpg") if (len(tmpcamjpg) == 0) else tmpcamjpg[0]
         self.metajsonFP   = os.path.join(self.ddir, "meta.json")
         self.metajsonText = self.metajson2string()
