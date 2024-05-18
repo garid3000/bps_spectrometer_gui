@@ -638,7 +638,11 @@ class TheMainWindow(QMainWindow):
         if not os.path.isfile(tmppath):
             dlg = QMessageBox(self)
             dlg.setWindowTitle("Wrong File selected")
-            dlg.setText("Selected item is not a file.\n if this is directory/folder press ENTER to go inside of this folder")
+            dlg.setText(
+                "Selected item is not a file.\n"
+                "If this is a folder press ENTER (or double mouseclick)"
+                "to enter this folder"
+            )
             dlg.exec()
             return False
         if not ((".jpeg" in basename) and (basename.count("_") in (3, 4))):
