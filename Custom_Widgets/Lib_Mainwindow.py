@@ -120,6 +120,7 @@ class TheMainWindow(QMainWindow):
         #self.ui.cb_bayer_show_geometry.stateChanged.connect(self.update_visual_1_rawbayer_img_section)
         self.ui.pb_waveperpixel_reset.clicked.connect(lambda: self.ui.sb_waveperpixel.setValue(1.8385))
         self.ui.pb_system_file_explorer.clicked.connect(self.open_directory_at_point)
+        self.ui.le_dir_find_search.textChanged.connect(self.dir_searching_based_regex)
 
         # -----------------------------------------------------------------------------
         #self.jp.set_xWaveRng(self.ui.sb_midx_init.value())
@@ -133,6 +134,20 @@ class TheMainWindow(QMainWindow):
 
         self.init_keyboard_bindings()
         self.init_actions()
+
+
+    def dir_searching_based_regex(self) -> None:
+        current_search_prompt = self.ui.le_dir_find_search.text()
+        if current_search_prompt == "":
+            #self.fsmodel.setFilter(QDir.Filter.Files |  QDir.Filter.AllDirs)
+            self.fsmodel.setFilter(QDir.Filter.Files |  QDir.Filter.AllDirs|  QDir.Filter.NoDotAndDotDot)
+            self.fsmodel.setNameFilters((["*.jpeg"]))
+            self.fsmodel.setNameFilterDisables(True)
+        else:
+            self.fsmodel.setFilter(QDir.Filter.Dirs|  QDir.Filter.NoDotAndDotDot)
+            self.fsmodel.setNameFilters((["*" + current_search_prompt.replace(" ", "*") + "*"]))
+            # need * regex on both side
+            self.fsmodel.setNameFilterDisables(False)
 
     def init_2d_graph_hide_the_original_roi_buttons(self) -> None:
         """Hides the ROI/Menu buttons from the 3 images"""
