@@ -101,7 +101,7 @@ class TheMainWindow(QMainWindow):
         self.ui.pb_dir_goto_parent.clicked.connect(self.short_cut_goto_parent_dir)
         #self.ui.cb_rawbayer_visual_demosiac.valueChanged(self.)
         self.ui.cb_rawbayer_visual_demosiac.stateChanged.connect(self.update_1_rawbayer_img_data_and_then_plot_below)
-                                                         
+
 
         # --------------- initialize the file system ----------------------------------
         self.fsmodel = FileSystemModel()                     # prev. QFileSystemModel()
@@ -139,16 +139,16 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_2dimg.ui.menuBtn.hide()
 
         self.roi_label_gray = pg.TextItem(
-            html='<div style="text-align: center"><span style="color: #FFF;">Gray-ROI</span></div>', 
-            anchor=(0, 1), 
-            border="w", 
+            html='<div style="text-align: center"><span style="color: #FFF;">Gray-ROI</span></div>',
+            anchor=(0, 1),
+            border="w",
             fill=(200, 50, 50, 100)
         )
 
         self.roi_label_obje = pg.TextItem(
-            html='<div style="text-align: center"><span style="color: #FFF;">Object-ROI</span></div>', 
-            anchor=(0, 1), 
-            border="w", 
+            html='<div style="text-align: center"><span style="color: #FFF;">Object-ROI</span></div>',
+            anchor=(0, 1),
+            border="w",
             fill=(50, 50, 200, 100)
         )
 
@@ -159,38 +159,38 @@ class TheMainWindow(QMainWindow):
         """Initializes ROI"""
 
         self.roi_gray_main = pg.ROI(
-            pos=[self.ui.sb_midx_init.value(), self.ui.sb_gray_y_init.value()],  
-            size=pg.Point(700, self.ui.sb_gray_y_size.value()), 
+            pos=[self.ui.sb_midx_init.value(), self.ui.sb_gray_y_init.value()],
+            size=pg.Point(700, self.ui.sb_gray_y_size.value()),
             movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
         )
-        
+
         self.roi_gray_bglf = pg.ROI(
-            pos=[self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_gray_y_init.value()],  
-            size=pg.Point(self.ui.sb_lefx_size.value(), self.ui.sb_gray_y_size.value()), 
+            pos=[self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_gray_y_init.value()],
+            size=pg.Point(self.ui.sb_lefx_size.value(), self.ui.sb_gray_y_size.value()),
             movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
         )
 
         self.roi_gray_bgri = pg.ROI(
-            pos=[self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_gray_y_init.value()],  
-            size=pg.Point(self.ui.sb_rigx_size.value(), self.ui.sb_gray_y_size.value()), 
+            pos=[self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_gray_y_init.value()],
+            size=pg.Point(self.ui.sb_rigx_size.value(), self.ui.sb_gray_y_size.value()),
             movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
         )
 
         self.roi_obje_main = pg.ROI(
-            pos=[self.ui.sb_midx_init.value(), self.ui.sb_obje_y_init.value()],  
-            size=pg.Point(700, self.ui.sb_obje_y_size.value()), 
+            pos=[self.ui.sb_midx_init.value(), self.ui.sb_obje_y_init.value()],
+            size=pg.Point(700, self.ui.sb_obje_y_size.value()),
             movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
         )
-        
+
         self.roi_obje_bglf = pg.ROI(
-            pos=[self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_obje_y_init.value()],  
-            size=pg.Point(self.ui.sb_lefx_size.value(), self.ui.sb_obje_y_size.value()), 
+            pos=[self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_obje_y_init.value()],
+            size=pg.Point(self.ui.sb_lefx_size.value(), self.ui.sb_obje_y_size.value()),
             movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
         )
 
         self.roi_obje_bgri = pg.ROI(
-            pos=[self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_obje_y_init.value()],  
-            size=pg.Point(self.ui.sb_rigx_size.value(), self.ui.sb_obje_y_size.value()), 
+            pos=[self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_obje_y_init.value()],
+            size=pg.Point(self.ui.sb_rigx_size.value(), self.ui.sb_obje_y_size.value()),
             movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
         )
 
@@ -224,11 +224,11 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_2dimg.addItem(self.roi_gray_bgri)
 
         self.graph_759nm_line_for_2dimg = pg.InfiniteLine(
-            pos=192*2 + self.ui.sb_midx_init.value(), movable=False, angle=90, label="759.3nm", 
+            pos=192*2 + self.ui.sb_midx_init.value(), movable=False, angle=90, label="759.3nm",
             #labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}
         )
         self.ui.graph_2dimg.addItem(self.graph_759nm_line_for_2dimg)
-        
+
         self.graph_desalted_graphs_sep_line_y0 = pg.InfiniteLine(pos=0, movable=False, angle=0)
         self.graph_desalted_graphs_sep_line_x0 = pg.InfiniteLine(pos=0, movable=False, angle=90)
         self.graph_desalted_graphs_sep_line_x1 = pg.InfiniteLine(pos=0, movable=False, angle=90)
@@ -315,8 +315,8 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_calc3_759_calib.addItem(
             pg.InfiniteLine(
                 pos=759.3,
-                movable=False, angle=90, 
-                label="x={value:0.2f}nm", 
+                movable=False, angle=90,
+                label="x={value:0.2f}nm",
                 labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}))
 
         self.ui.graph_calc3_759_calib.setLabel("left",   "Digital Number", units="DN")
@@ -342,8 +342,8 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_calc4_refl_rgb.addItem(
             pg.InfiniteLine(
                 pos=759.3,
-                movable=False, angle=90, 
-                label="x={value:0.2f}nm", 
+                movable=False, angle=90,
+                label="x={value:0.2f}nm",
                 labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}))
 
         self.ui.graph_calc4_refl_rgb.setLabel("left",   "Reflection")
@@ -360,13 +360,13 @@ class TheMainWindow(QMainWindow):
 
         self.graph5_norm_zero_line = pg.InfiniteLine(
                 pos=self.ui.sb_calc5_norm_zero.value(),
-                movable=False, angle=90, 
-                label="x={value:0.2f}nm", 
+                movable=False, angle=90,
+                label="x={value:0.2f}nm",
                 labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True})
         self.graph5_norm_one_line = pg.InfiniteLine(
                 pos=self.ui.sb_calc5_norm_one.value(),
-                movable=False, angle=90, 
-                label="x={value:0.2f}nm", 
+                movable=False, angle=90,
+                label="x={value:0.2f}nm",
                 labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True})
 
         self.ui.graph_calc5_refl_final.setLabel("left",   "Reflection")
@@ -376,7 +376,7 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_calc5_refl_final.addItem(self.graph5_norm_one_line)
         self.ui.graph_calc5_refl_final.addItem(self.graph5_norm_zero_line)
         self.graph5_curve_relf = self.ui.graph_calc5_refl_final.plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine), name="Reflection")
-        
+
 
     def all_sb_signal_enable_or_disable(self, b: bool) -> None:
         """Temporaray block or not block the signals in order to 2 way control"""
@@ -395,7 +395,7 @@ class TheMainWindow(QMainWindow):
         self.ui.sb_obje_y_init.blockSignals(b)
         self.ui.sb_obje_y_size.blockSignals(b)
         self.ui.sb_obje_y_ends.blockSignals(b)
-    
+
     def handle_roi_change(self, gray_or_obje: str, left_middle_right: str) -> None:
         self.all_sb_signal_enable_or_disable(True)
         print(self.roi_gray_main.getState()["pos"], self.roi_gray_bglf.getState()["pos"])
@@ -460,13 +460,13 @@ class TheMainWindow(QMainWindow):
         self.roi_obje_main.blockSignals(False)
         self.roi_obje_bglf.blockSignals(False)
         self.roi_obje_bgri.blockSignals(False)
-        
+
         # change the label position
         self.roi_label_gray.setPos(self.ui.sb_midx_init.value(), self.ui.sb_gray_y_init.value())
         self.roi_label_obje.setPos(self.ui.sb_midx_init.value(), self.ui.sb_obje_y_init.value())
 
         self.update_raw_roi_plot_when_sb_or_roi_moved()
-    
+
     def update_raw_roi_plot_when_sb_or_roi_moved(self) -> None:
         """update raw dn plot, when either spinbox or ROI dragged"""
         self.ui.graph_raw.clear()
@@ -474,8 +474,8 @@ class TheMainWindow(QMainWindow):
 
         inf1 = pg.InfiniteLine(
             pos=759.3,
-            movable=False, angle=90, 
-            label="x={value:0.2f}nm", 
+            movable=False, angle=90,
+            label="x={value:0.2f}nm",
             labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}
         )
         self.ui.graph_raw.addItem(inf1)
@@ -536,7 +536,7 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_raw.plot(tmp_rig_x, gray_roi_rig[1::2, 0::2].mean(axis=0), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="bgG-object")
         self.ui.graph_raw.plot(tmp_rig_x, gray_roi_rig[0::2, 1::2].mean(axis=0), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="bgG-object")
         self.ui.graph_raw.plot(tmp_rig_x, gray_roi_rig[0::2, 0::2].mean(axis=0), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine), name="bgB-object")
-        
+
 
     def handle_cb_calc5_norming(self) -> None:
         print("i was clicked")
@@ -697,8 +697,8 @@ class TheMainWindow(QMainWindow):
         )
 
         desaltedimg = np.concatenate(
-            (np.concatenate((self.jp.gray_bgle.roi_desalted, self.jp.gray.roi_desalted, self.jp.gray_bgri.roi_desalted), axis=1), 
-             np.concatenate((self.jp.obje_bgle.roi_desalted, self.jp.obje.roi_desalted, self.jp.obje_bgri.roi_desalted), axis=1)), 
+            (np.concatenate((self.jp.gray_bgle.roi_desalted, self.jp.gray.roi_desalted, self.jp.gray_bgri.roi_desalted), axis=1),
+             np.concatenate((self.jp.obje_bgle.roi_desalted, self.jp.obje.roi_desalted, self.jp.obje_bgri.roi_desalted), axis=1)),
             axis=0, dtype=np.int64
         )
         desalted_concatted_bayer_rgb_all_6roi = np.zeros((desaltedimg.shape[0], desaltedimg.shape[1], 3), dtype=np.int64)
@@ -726,7 +726,7 @@ class TheMainWindow(QMainWindow):
 
     def call_calibrate_and_calculate_calc2_background(self) -> None:
         self.jp.background_calculation()
-        
+
         tmp_lef_x = get_wavelength_array(
             init_pxl=self.ui.sb_lefx_init_rel.value()//2,
             pxl_size=self.ui.sb_lefx_size.value()//2,
@@ -738,19 +738,19 @@ class TheMainWindow(QMainWindow):
             waveperpixel=self.ui.sb_waveperpixel.value(),
         )
 
-        self.graph2_curve_bg_gray_le_r.setData(tmp_lef_x, self.jp.gray_bgle.rchan["dn"].values[:self.jp.gray_bgle.raw_hor_pxl]) 
-        self.graph2_curve_bg_gray_le_g.setData(tmp_lef_x, self.jp.gray_bgle.gchan["dn"].values[:self.jp.gray_bgle.raw_hor_pxl]) 
-        self.graph2_curve_bg_gray_le_b.setData(tmp_lef_x, self.jp.gray_bgle.bchan["dn"].values[:self.jp.gray_bgle.raw_hor_pxl]) 
-        self.graph2_curve_bg_gray_re_r.setData(tmp_rig_x, self.jp.gray_bgri.rchan["dn"].values[:self.jp.gray_bgri.raw_hor_pxl]) 
-        self.graph2_curve_bg_gray_re_g.setData(tmp_rig_x, self.jp.gray_bgri.gchan["dn"].values[:self.jp.gray_bgri.raw_hor_pxl]) 
-        self.graph2_curve_bg_gray_re_b.setData(tmp_rig_x, self.jp.gray_bgri.bchan["dn"].values[:self.jp.gray_bgri.raw_hor_pxl]) 
+        self.graph2_curve_bg_gray_le_r.setData(tmp_lef_x, self.jp.gray_bgle.rchan["dn"].values[:self.jp.gray_bgle.raw_hor_pxl])
+        self.graph2_curve_bg_gray_le_g.setData(tmp_lef_x, self.jp.gray_bgle.gchan["dn"].values[:self.jp.gray_bgle.raw_hor_pxl])
+        self.graph2_curve_bg_gray_le_b.setData(tmp_lef_x, self.jp.gray_bgle.bchan["dn"].values[:self.jp.gray_bgle.raw_hor_pxl])
+        self.graph2_curve_bg_gray_re_r.setData(tmp_rig_x, self.jp.gray_bgri.rchan["dn"].values[:self.jp.gray_bgri.raw_hor_pxl])
+        self.graph2_curve_bg_gray_re_g.setData(tmp_rig_x, self.jp.gray_bgri.gchan["dn"].values[:self.jp.gray_bgri.raw_hor_pxl])
+        self.graph2_curve_bg_gray_re_b.setData(tmp_rig_x, self.jp.gray_bgri.bchan["dn"].values[:self.jp.gray_bgri.raw_hor_pxl])
 
-        self.graph2_curve_bg_obje_le_r.setData(tmp_lef_x, self.jp.obje_bgle.rchan["dn"].values[:self.jp.obje_bgle.raw_hor_pxl]) 
-        self.graph2_curve_bg_obje_le_g.setData(tmp_lef_x, self.jp.obje_bgle.gchan["dn"].values[:self.jp.obje_bgle.raw_hor_pxl]) 
-        self.graph2_curve_bg_obje_le_b.setData(tmp_lef_x, self.jp.obje_bgle.bchan["dn"].values[:self.jp.obje_bgle.raw_hor_pxl]) 
-        self.graph2_curve_bg_obje_ri_r.setData(tmp_rig_x, self.jp.obje_bgri.rchan["dn"].values[:self.jp.obje_bgri.raw_hor_pxl]) 
-        self.graph2_curve_bg_obje_ri_g.setData(tmp_rig_x, self.jp.obje_bgri.gchan["dn"].values[:self.jp.obje_bgri.raw_hor_pxl]) 
-        self.graph2_curve_bg_obje_ri_b.setData(tmp_rig_x, self.jp.obje_bgri.bchan["dn"].values[:self.jp.obje_bgri.raw_hor_pxl]) 
+        self.graph2_curve_bg_obje_le_r.setData(tmp_lef_x, self.jp.obje_bgle.rchan["dn"].values[:self.jp.obje_bgle.raw_hor_pxl])
+        self.graph2_curve_bg_obje_le_g.setData(tmp_lef_x, self.jp.obje_bgle.gchan["dn"].values[:self.jp.obje_bgle.raw_hor_pxl])
+        self.graph2_curve_bg_obje_le_b.setData(tmp_lef_x, self.jp.obje_bgle.bchan["dn"].values[:self.jp.obje_bgle.raw_hor_pxl])
+        self.graph2_curve_bg_obje_ri_r.setData(tmp_rig_x, self.jp.obje_bgri.rchan["dn"].values[:self.jp.obje_bgri.raw_hor_pxl])
+        self.graph2_curve_bg_obje_ri_g.setData(tmp_rig_x, self.jp.obje_bgri.gchan["dn"].values[:self.jp.obje_bgri.raw_hor_pxl])
+        self.graph2_curve_bg_obje_ri_b.setData(tmp_rig_x, self.jp.obje_bgri.bchan["dn"].values[:self.jp.obje_bgri.raw_hor_pxl])
 
         tmp_bgx = np.arange(tmp_lef_x.min(), tmp_rig_x.max(), 1)
 
@@ -778,7 +778,7 @@ class TheMainWindow(QMainWindow):
         self.graph3_curve_759_calib_obje_r_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_r_popt)))
         self.graph3_curve_759_calib_obje_g_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_g_popt)))
         self.graph3_curve_759_calib_obje_b_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_b_popt)))
-    
+
     def call_calibrate_and_calculate_calc4_rgb_refl(self) -> None:
         self.jp.fancy_reflectance()
         tmp_x = self.jp.gray.rchan_759nm_calibrated.index[-1000:]
@@ -833,10 +833,10 @@ class TheMainWindow(QMainWindow):
             tmpcsv[:, 2] = self.jp.ref_fancy_normed if self.ui.cb_calc5_norm.isChecked() else 0
             outfname = os.path.join(os.path.join(self.ddtree.ddir, "output", "refl_output.csv"))
             print(outfname)
-            np.savetxt(outfname, 
-                       tmpcsv, 
-                       ("%3.1f", "%2.5f", "%2.5f"), 
-                       header=f"wave, refl, refl_norm_{self.ui.sb_calc5_norm_zero.value()}_{self.ui.sb_calc5_norm_one.value()}", 
+            np.savetxt(outfname,
+                       tmpcsv,
+                       ("%3.1f", "%2.5f", "%2.5f"),
+                       header=f"wave, refl, refl_norm_{self.ui.sb_calc5_norm_zero.value()}_{self.ui.sb_calc5_norm_one.value()}",
                        delimiter=",")
         self.ui.pbar_export.setValue(100)
 
