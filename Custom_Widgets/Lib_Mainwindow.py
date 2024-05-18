@@ -6,12 +6,14 @@ import subprocess
 import platform
 from datetime import datetime
 from pathlib import Path
+import shutil
 import pyqtgraph as pg
 import time
 
 # ---------- Numerical Visual packages---------------------------------------------------------------------------------
 import numpy as np
 import cv2 as cv
+import pandas as pd
 
 # ---------- GUI libraries --------------------------------------------------------------------------------------------
 from PySide6.QtWidgets import QMainWindow, QWidget, QFileSystemModel, QMessageBox
@@ -837,7 +839,7 @@ class TheMainWindow(QMainWindow):
 
         os.makedirs(os.path.join(self.ddtree.ddir, "output"), exist_ok=True)
         if self.ui.cb_export_bayer_as_npy.isChecked():
-            outfname = os.path.join(os.path.join(self.ddtree.ddir, "output", "bayer.npy"))
+            outfname = os.path.join(self.ddtree.ddir, "output", "bayer.npy")
             np.save(outfname, self.jp.data)
         self.ui.pbar_export.setValue(25)
         if self.ui.cb_export_bayer_as_mat.isChecked():
@@ -861,3 +863,96 @@ class TheMainWindow(QMainWindow):
         dlg.setWindowTitle("Exported")
         dlg.setText("Export Finished")
         dlg.exec()
+
+
+        self.write_export_log_calculation_parameters()
+
+    def get_current_calculation_parameters_as_dict(self):
+        resultDic = {
+            "date" : [datetime.now().strftime("%Y/%m/%d-%H:%M:%S")],
+            "midx_init" : [self.ui.sb_midx_init.value()],
+            "midx_size" : [700],
+            "lefx_init" : [self.ui.sb_lefx_init_rel.value()],
+            "lefx_size" : [self.ui.sb_lefx_size.value()],
+            "rigx_init_rel" : [self.ui.sb_rigx_init_rel.value()],
+            "rigx_size" : [self.ui.sb_rigx_size.value()],
+            "gray_y_init" : [self.ui.sb_gray_y_init.value()],
+            "gray_y_size" : [self.ui.sb_gray_y_size.value()],
+            "obje_y_init" : [self.ui.sb_obje_y_init.value()],
+            "obje_y_size" : [self.ui.sb_obje_y_size.value()],
+            "calc1_desalt"    : [self.ui.cb_calc1_desalt.isChecked()],
+            "calc2_background" : [self.ui.cb_calc2_background.isChecked()],
+            "calc3_calibrate" : [self.ui.cb_calc3_calibrate_759.isChecked()],
+            "calc5_norm"      : [self.ui.cb_calc5_norm.isChecked()],
+            "calc5_norm_zero" : [self.ui.sb_calc5_norm_zero.value()],
+            "calc5_norm_one"  : [self.ui.sb_calc5_norm_one.value()],
+        }
+        return resultDic
+
+    def write_export_log_calculation_parameters(self) -> None:
+        os.makedirs(os.path.join(self.ddtree.ddir, "output"), exist_ok=True) # just incase (probably unnecerserly)
+        paramLogPath = os.path.join(self.ddtree.ddir, "output", "export_log.csv")
+
+
+        if os.path.isfile(paramLogPath):
+            df_export_param = pd.read_csv(paramLogPath)
+            if self.check_export_log_pandas_has_correct_format(df_export_param):
+                # print("previously existing csv is correct")
+                df_export_param = pd.concat(
+                    (df_export_param, pd.DataFrame(self.get_current_calculation_parameters_as_dict())),
+                )
+            else:
+                # print("previously existing csv is INcorrect")
+                df_export_param = pd.DataFrame(self.get_current_calculation_parameters_as_dict())
+                shutil.copyfile(
+                    paramLogPath, f"{paramLogPath}.previous_log_file_(possibly_corrupted)_{datetime.now().strftime("%Y%m%d_%H%M%S")}"
+                )
+
+        else:
+            df_export_param = pd.DataFrame(self.get_current_calculation_parameters_as_dict())
+
+        df_export_param.to_csv(paramLogPath, index=False)
+
+    def check_export_log_pandas_has_correct_format(self, df: pd.DataFrame) -> bool:
+        if ("date"             not in df.columns or
+            "midx_init"        not in df.columns or
+            "midx_size"        not in df.columns or
+            "lefx_init"        not in df.columns or
+            "lefx_size"        not in df.columns or
+            "rigx_init_rel"    not in df.columns or
+            "rigx_size"        not in df.columns or
+            "gray_y_init"      not in df.columns or
+            "gray_y_size"      not in df.columns or
+            "obje_y_init"      not in df.columns or
+            "obje_y_size"      not in df.columns or
+            "calc1_desalt"     not in df.columns or
+            "calc2_background"  not in df.columns or
+            "calc3_calibrate"  not in df.columns or
+            "calc5_norm"       not in df.columns or
+            "calc5_norm_zero"  not in df.columns or
+            "calc5_norm_one"   not in df.columns):
+            #print("some column missing")
+            return False
+
+        if (df["date"            ].dtype != "O" or
+            df["midx_init"       ].dtype not in ("int64", "int32") or
+            df["midx_size"       ].dtype not in ("int64", "int32") or
+            df["lefx_init"       ].dtype not in ("int64", "int32") or
+            df["lefx_size"       ].dtype not in ("int64", "int32") or
+            df["rigx_init_rel"   ].dtype not in ("int64", "int32") or
+            df["rigx_size"       ].dtype not in ("int64", "int32") or
+            df["gray_y_init"     ].dtype not in ("int64", "int32") or
+            df["gray_y_size"     ].dtype not in ("int64", "int32") or
+            df["obje_y_init"     ].dtype not in ("int64", "int32") or
+            df["obje_y_size"     ].dtype not in ("int64", "int32") or
+            df["calc1_desalt"    ].dtype != "bool"             or
+            df["calc2_background"].dtype != "bool"             or
+            df["calc3_calibrate" ].dtype != "bool"             or
+            df["calc5_norm"      ].dtype != "bool"             or
+            df["calc5_norm_zero" ].dtype not in ("float64", "float32") or
+            df["calc5_norm_one"  ].dtype not in ("float64", "float32")):
+            #print("bad dtype in df")
+            return False
+
+
+        return True
