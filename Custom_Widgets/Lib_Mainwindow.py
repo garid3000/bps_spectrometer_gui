@@ -120,7 +120,7 @@ class TheMainWindow(QMainWindow):
         #self.ui.cb_bayer_show_geometry.stateChanged.connect(self.update_visual_1_rawbayer_img_section)
         self.ui.pb_waveperpixel_reset.clicked.connect(lambda: self.ui.sb_waveperpixel.setValue(1.8385))
         self.ui.pb_system_file_explorer.clicked.connect(self.open_directory_at_point)
-        self.ui.le_dir_find_search.textChanged.connect(self.dir_searching_based_regex)
+        self.ui.le_tv_name_narrower.textChanged.connect(self.dir_searching_based_regex)
 
         # -----------------------------------------------------------------------------
         #self.jp.set_xWaveRng(self.ui.sb_midx_init.value())
@@ -137,14 +137,14 @@ class TheMainWindow(QMainWindow):
 
 
     def dir_searching_based_regex(self) -> None:
-        current_search_prompt = self.ui.le_dir_find_search.text()
+        current_search_prompt = self.ui.le_tv_name_narrower.text()
         if current_search_prompt == "":
             #self.fsmodel.setFilter(QDir.Filter.Files |  QDir.Filter.AllDirs)
             self.fsmodel.setFilter(QDir.Filter.Files |  QDir.Filter.AllDirs|  QDir.Filter.NoDotAndDotDot)
             self.fsmodel.setNameFilters((["*.jpeg"]))
             self.fsmodel.setNameFilterDisables(True)
         else:
-            self.fsmodel.setFilter(QDir.Filter.Dirs|  QDir.Filter.NoDotAndDotDot)
+            #self.fsmodel.setFilter(QDir.Filter.Dirs|  QDir.Filter.NoDotAndDotDot)
             self.fsmodel.setNameFilters((["*" + current_search_prompt.replace(" ", "*") + "*"]))
             # need * regex on both side
             self.fsmodel.setNameFilterDisables(False)
@@ -582,6 +582,7 @@ class TheMainWindow(QMainWindow):
         QShortcut(QKeySequence("Ctrl+O"),    self).activated.connect(self.short_cut_open_at_point)
         QShortcut(QKeySequence("Ctrl+H"),    self).activated.connect(self.open_help_page)
         QShortcut(QKeySequence("Ctrl+F"),    self).activated.connect(self.ui.cb_ft_filter.toggle)
+        QShortcut(QKeySequence("Alt+F"),    self).activated.connect( lambda: self.ui.le_tv_name_narrower.setFocus())
 
     def init_actions(self) -> None:
         self.ui.action_help.triggered.connect(self.open_help_page)
@@ -607,6 +608,7 @@ class TheMainWindow(QMainWindow):
         parent_of_cur_root_index = self.fsmodel.parent(cur_root_index)  # get ..
         self.ui.tv_dir.setRootIndex(parent_of_cur_root_index)  # set ..
         self.ui.tv_dir.setCurrentIndex(parent_of_cur_root_index)  # idk why this needed
+        self.ui.le_tv_name_narrower.setText("") # needed to reset dir filter
 
     def short_cut_goto_selected_child_dir(self) -> None:
         """Enter: the directory"""
@@ -615,6 +617,7 @@ class TheMainWindow(QMainWindow):
             self.ui.tv_dir.setRootIndex(sel_m_index) # need if previously other column has selected
         else:
             pass  # need to update jpeg_path here
+        self.ui.le_tv_name_narrower.setText("") # needed to reset dir filter
 
     def short_cut_open_at_point(self) -> None:
         """C-o: opens file externally"""
@@ -667,6 +670,7 @@ class TheMainWindow(QMainWindow):
             logging.info(f"call_tv_onItemClicked: {tmp}")
             # self.ui.tv_dir.setRootIndex(v)
             self.ui.tv_dir.setRootIndex(v.siblingAtColumn(0))  # needed to choose only filename.
+            self.ui.le_tv_name_narrower.setText("")             # needed to reset dir filter
             logging.info(self.fsmodel.rootPath())
         else:
             self.jpeg_path = self.fsmodel.filePath(v)

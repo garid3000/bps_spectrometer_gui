@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'UI_Mainwindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.2
+## Created by: Qt User Interface Compiler version 6.7.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -30,6 +30,7 @@ from PySide6.QtWidgets import (
     QGridLayout,
     QGroupBox,
     QLabel,
+    QLineEdit,
     QMainWindow,
     QMenu,
     QMenuBar,
@@ -49,7 +50,7 @@ from PySide6.QtWidgets import (
 
 from Custom_Libs.Lib_QLabelClick_Widget_NoUI import QLabelClick
 from pyqtgraph import ImageView, PlotWidget
-import QRCs.main_resource
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow: QMainWindow) -> None:
@@ -126,11 +127,6 @@ class Ui_MainWindow(object):
         self.gb_dir_panel.setObjectName("gb_dir_panel")
         self.gridLayout = QGridLayout(self.gb_dir_panel)
         self.gridLayout.setObjectName("gridLayout")
-        self.pb_dir_goto_parent = QPushButton(self.gb_dir_panel)
-        self.pb_dir_goto_parent.setObjectName("pb_dir_goto_parent")
-
-        self.gridLayout.addWidget(self.pb_dir_goto_parent, 1, 0, 1, 1)
-
         self.tv_dir = QTreeView(self.gb_dir_panel)
         self.tv_dir.setObjectName("tv_dir")
         sizePolicy1 = QSizePolicy(
@@ -146,7 +142,17 @@ class Ui_MainWindow(object):
         self.tv_dir.setFont(font)
         self.tv_dir.setSortingEnabled(True)
 
-        self.gridLayout.addWidget(self.tv_dir, 2, 0, 1, 2)
+        self.gridLayout.addWidget(self.tv_dir, 3, 0, 1, 2)
+
+        self.pb_dir_goto_parent = QPushButton(self.gb_dir_panel)
+        self.pb_dir_goto_parent.setObjectName("pb_dir_goto_parent")
+
+        self.gridLayout.addWidget(self.pb_dir_goto_parent, 1, 0, 1, 1)
+
+        self.limg_webcam = QLabelClick(self.gb_dir_panel)
+        self.limg_webcam.setObjectName("limg_webcam")
+
+        self.gridLayout.addWidget(self.limg_webcam, 5, 0, 1, 2)
 
         self.cb_ft_filter = QCheckBox(self.gb_dir_panel)
         self.cb_ft_filter.setObjectName("cb_ft_filter")
@@ -154,11 +160,6 @@ class Ui_MainWindow(object):
         self.cb_ft_filter.setTristate(False)
 
         self.gridLayout.addWidget(self.cb_ft_filter, 0, 0, 1, 2)
-
-        self.limg_webcam = QLabelClick(self.gb_dir_panel)
-        self.limg_webcam.setObjectName("limg_webcam")
-
-        self.gridLayout.addWidget(self.limg_webcam, 3, 0, 1, 2)
 
         self.tb_meta_json = QTextBrowser(self.gb_dir_panel)
         self.tb_meta_json.setObjectName("tb_meta_json")
@@ -176,12 +177,22 @@ class Ui_MainWindow(object):
         font1.setFamilies(["Monospace"])
         self.tb_meta_json.setFont(font1)
 
-        self.gridLayout.addWidget(self.tb_meta_json, 4, 0, 1, 2)
+        self.gridLayout.addWidget(self.tb_meta_json, 6, 0, 1, 2)
 
         self.pb_system_file_explorer = QPushButton(self.gb_dir_panel)
         self.pb_system_file_explorer.setObjectName("pb_system_file_explorer")
 
         self.gridLayout.addWidget(self.pb_system_file_explorer, 1, 1, 1, 1)
+
+        self._l_14 = QLabel(self.gb_dir_panel)
+        self._l_14.setObjectName("_l_14")
+
+        self.gridLayout.addWidget(self._l_14, 4, 0, 1, 1)
+
+        self.le_tv_name_narrower = QLineEdit(self.gb_dir_panel)
+        self.le_tv_name_narrower.setObjectName("le_tv_name_narrower")
+
+        self.gridLayout.addWidget(self.le_tv_name_narrower, 4, 1, 1, 1)
 
         self.verticalLayout_2.addWidget(self.gb_dir_panel)
 
@@ -195,11 +206,12 @@ class Ui_MainWindow(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 439, 450))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 447, 450))
         self.verticalLayout_4 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.cb_rawbayer_visual_demosiac = QCheckBox(self.scrollAreaWidgetContents_2)
         self.cb_rawbayer_visual_demosiac.setObjectName("cb_rawbayer_visual_demosiac")
+        self.cb_rawbayer_visual_demosiac.setChecked(True)
 
         self.verticalLayout_4.addWidget(self.cb_rawbayer_visual_demosiac)
 
@@ -299,10 +311,10 @@ class Ui_MainWindow(object):
 
         self.sb_rigx_init_rel = QSpinBox(self.gb_control_panel)
         self.sb_rigx_init_rel.setObjectName("sb_rigx_init_rel")
-        self.sb_rigx_init_rel.setMinimum(700)
+        self.sb_rigx_init_rel.setMinimum(1300)
         self.sb_rigx_init_rel.setMaximum(9999)
         self.sb_rigx_init_rel.setSingleStep(2)
-        self.sb_rigx_init_rel.setValue(710)
+        self.sb_rigx_init_rel.setValue(1300)
 
         self.gridLayout_2.addWidget(self.sb_rigx_init_rel, 3, 1, 1, 1)
 
@@ -500,7 +512,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 344, 525))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 349, 525))
         self.verticalLayout_8 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_8.setObjectName("verticalLayout_8")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -902,6 +914,7 @@ class Ui_MainWindow(object):
         self.pb_dir_goto_parent.setText(
             QCoreApplication.translate("MainWindow", "Go to parent (Backspace)", None)
         )
+        self.limg_webcam.setText(QCoreApplication.translate("MainWindow", "....", None))
         # if QT_CONFIG(tooltip)
         self.cb_ft_filter.setToolTip(
             QCoreApplication.translate(
@@ -923,9 +936,20 @@ class Ui_MainWindow(object):
         self.cb_ft_filter.setText(
             QCoreApplication.translate("MainWindow", "Filter File Type (Ctrl+F)", None)
         )
-        self.limg_webcam.setText(QCoreApplication.translate("MainWindow", "....", None))
         self.pb_system_file_explorer.setText(
             QCoreApplication.translate("MainWindow", "Open Sys. file-explorer", None)
+        )
+        # if QT_CONFIG(tooltip)
+        self._l_14.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                "<html><head/><body><p>- Narrows file/directory names by given &quot;string&quot;.</p><p>- Helpful when you have too many files/directories</p><p><br/></p></body></html>",
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
+        self._l_14.setText(
+            QCoreApplication.translate("MainWindow", "Narrow by name (Alf+f)", None)
         )
         self.gp_webcam_meta.setTitle(
             QCoreApplication.translate(
