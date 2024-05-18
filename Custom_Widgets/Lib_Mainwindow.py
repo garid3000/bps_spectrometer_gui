@@ -644,7 +644,10 @@ class TheMainWindow(QMainWindow):
         if not ((".jpeg" in basename) and (basename.count("_") in (3, 4))):
             dlg = QMessageBox(self)
             dlg.setWindowTitle("Wrong File selected")
-            dlg.setText("Selected item  is not JPEG file,\nPlease select JPEG file and try again")
+            dlg.setText(
+                "Selected item is not (JPEG or Directory)\n"
+                "Please select JPEG or Directory"
+            )
             dlg.exec()
             return False
 
@@ -666,20 +669,22 @@ class TheMainWindow(QMainWindow):
         if os.path.isdir(tmp):
             logging.info(f"call_tv_onItemClicked: {tmp}")
             # self.ui.tv_dir.setRootIndex(v)
-            self.ui.tv_dir.setRootIndex(v.siblingAtColumn(0))  # needed to choose only filename.
-            self.ui.le_tv_name_narrower.setText("")             # needed to reset dir filter
-            logging.info(self.fsmodel.rootPath())
+            #self.ui.tv_dir.setRootIndex(v.siblingAtColumn(0))  # needed to choose only filename.
+            #self.ui.le_tv_name_narrower.setText("")             # needed to reset dir filter
+            self.short_cut_goto_selected_child_dir()
+            #logging.info(self.fsmodel.rootPath())
         else:
-            self.jpeg_path = self.fsmodel.filePath(v)
-            self.dir_path = os.path.dirname(self.jpeg_path)
-            logging.info(self.dir_path + "\t" + self.jpeg_path)
-            self.ddtree.set_ddir(self.dir_path)
-            self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
-            self.ui.limg_webcam.show_np_img(
-                cv.imread(self.ddtree.webcamFP).astype(np.uint8)[:, :, ::-1])
-            #self.jp_load_newly_selected_jpeg_file()
-            self.jp.load_jpeg_file(self.jpeg_path, also_get_rgb_rerp=True)
-            self.update_1_rawbayer_img_data_and_then_plot_below()
+            self.short_cut_preview_raw_jpeg()
+            #self.jpeg_path = self.fsmodel.filePath(v)
+            #self.dir_path = os.path.dirname(self.jpeg_path)
+            #logging.info(self.dir_path + "\t" + self.jpeg_path)
+            #self.ddtree.set_ddir(self.dir_path)
+            #self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
+            #self.ui.limg_webcam.show_np_img(
+            #    cv.imread(self.ddtree.webcamFP).astype(np.uint8)[:, :, ::-1])
+            ##self.jp_load_newly_selected_jpeg_file()
+            #self.jp.load_jpeg_file(self.jpeg_path, also_get_rgb_rerp=True)
+            #self.update_1_rawbayer_img_data_and_then_plot_below()
 
     def call_calibrate_and_calculate(self) -> None:
         self.call_calibrate_and_calculate_calc1_desalt()           # done
