@@ -70,6 +70,7 @@ class FileSystemModel(QFileSystemModel):
         super(FileSystemModel, self).__init__(*args, **kwargs)
         #self.setNameFilters((["*.jpeg", "*.jpg", "*.json"]))
         self.setNameFilters((["*.jpeg"]))
+        # self.setNameFilterDisables(False)
         # , "*.tiff", "*.npy", "*.mat", "*.png"]))
         # self.setNameFilterDisables(False)
         # self.setNameFilterDisables(True)
@@ -152,8 +153,10 @@ class TheMainWindow(QMainWindow):
             fill=(50, 50, 200, 100)
         )
 
-        self.ui.graph_2dimg.addItem(self.roi_label_obje)
-        self.ui.graph_2dimg.addItem(self.roi_label_gray)
+        #self.ui.graph_2dimg.addItem(self.roi_label_obje)
+        #self.ui.graph_2dimg.addItem(self.roi_label_gray)
+        self.ui.graph_2dimg.view.addItem(self.roi_label_obje)
+        self.ui.graph_2dimg.view.addItem(self.roi_label_gray)
 
     def init_all_6_roi(self) -> None:
         """Initializes ROI"""
@@ -216,25 +219,25 @@ class TheMainWindow(QMainWindow):
         self.roi_obje_bgri.setZValue(10)
 
 
-        self.ui.graph_2dimg.addItem(self.roi_obje_main)
-        self.ui.graph_2dimg.addItem(self.roi_obje_bgri)
-        self.ui.graph_2dimg.addItem(self.roi_obje_bglf)
-        self.ui.graph_2dimg.addItem(self.roi_gray_main)
-        self.ui.graph_2dimg.addItem(self.roi_gray_bglf)
-        self.ui.graph_2dimg.addItem(self.roi_gray_bgri)
+        self.ui.graph_2dimg.view.addItem(self.roi_obje_main)
+        self.ui.graph_2dimg.view.addItem(self.roi_obje_bgri)
+        self.ui.graph_2dimg.view.addItem(self.roi_obje_bglf)
+        self.ui.graph_2dimg.view.addItem(self.roi_gray_main)
+        self.ui.graph_2dimg.view.addItem(self.roi_gray_bglf)
+        self.ui.graph_2dimg.view.addItem(self.roi_gray_bgri)
 
         self.graph_759nm_line_for_2dimg = pg.InfiniteLine(
             pos=192*2 + self.ui.sb_midx_init.value(), movable=False, angle=90, label="759.3nm",
             #labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}
         )
-        self.ui.graph_2dimg.addItem(self.graph_759nm_line_for_2dimg)
+        self.ui.graph_2dimg.view.addItem(self.graph_759nm_line_for_2dimg)
 
         self.graph_desalted_graphs_sep_line_y0 = pg.InfiniteLine(pos=0, movable=False, angle=0)
         self.graph_desalted_graphs_sep_line_x0 = pg.InfiniteLine(pos=0, movable=False, angle=90)
         self.graph_desalted_graphs_sep_line_x1 = pg.InfiniteLine(pos=0, movable=False, angle=90)
-        self.ui.graph_calc1_desalted_roi.addItem(self.graph_desalted_graphs_sep_line_y0)
-        self.ui.graph_calc1_desalted_roi.addItem(self.graph_desalted_graphs_sep_line_x0)
-        self.ui.graph_calc1_desalted_roi.addItem(self.graph_desalted_graphs_sep_line_x1)
+        self.ui.graph_calc1_desalted_roi.view.addItem(self.graph_desalted_graphs_sep_line_y0)
+        self.ui.graph_calc1_desalted_roi.view.addItem(self.graph_desalted_graphs_sep_line_x0)
+        self.ui.graph_calc1_desalted_roi.view.addItem(self.graph_desalted_graphs_sep_line_x1)
 
 
 
@@ -245,12 +248,12 @@ class TheMainWindow(QMainWindow):
         self.text_for_desalted_img_label4 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">Object</span></div>',    anchor=(0, 0), border="w", fill=(50,   50, 200, 100))
         self.text_for_desalted_img_label5 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">BG-Object</span></div>', anchor=(0, 0), border="w", fill=(100, 100, 100, 100))
 
-        self.ui.graph_calc1_desalted_roi.addItem(self.text_for_desalted_img_label0)
-        self.ui.graph_calc1_desalted_roi.addItem(self.text_for_desalted_img_label1)
-        self.ui.graph_calc1_desalted_roi.addItem(self.text_for_desalted_img_label2)
-        self.ui.graph_calc1_desalted_roi.addItem(self.text_for_desalted_img_label3)
-        self.ui.graph_calc1_desalted_roi.addItem(self.text_for_desalted_img_label4)
-        self.ui.graph_calc1_desalted_roi.addItem(self.text_for_desalted_img_label5)
+        self.ui.graph_calc1_desalted_roi.view.addItem(self.text_for_desalted_img_label0)
+        self.ui.graph_calc1_desalted_roi.view.addItem(self.text_for_desalted_img_label1)
+        self.ui.graph_calc1_desalted_roi.view.addItem(self.text_for_desalted_img_label2)
+        self.ui.graph_calc1_desalted_roi.view.addItem(self.text_for_desalted_img_label3)
+        self.ui.graph_calc1_desalted_roi.view.addItem(self.text_for_desalted_img_label4)
+        self.ui.graph_calc1_desalted_roi.view.addItem(self.text_for_desalted_img_label5)
 
     def init_sb_signals_for_ROI_controls(self) -> None:
         self.ui.sb_gray_y_init.valueChanged.connect(self.update_raw_from_sb)
