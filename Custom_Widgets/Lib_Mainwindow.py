@@ -400,19 +400,14 @@ class TheMainWindow(QMainWindow):
         """Temporaray block or not block the signals in order to 2 way control"""
         self.ui.sb_lefx_size.blockSignals(b)
         self.ui.sb_lefx_init_rel.blockSignals(b)
-        self.ui.sb_lefx_ends.blockSignals(b)
         self.ui.sb_rigx_size.blockSignals(b)
         self.ui.sb_rigx_init_rel.blockSignals(b)
-        self.ui.sb_rigx_ends.blockSignals(b)
         self.ui.sb_midx_init.blockSignals(b)
         self.ui.sb_midx_size.blockSignals(b)
-        self.ui.sb_midx_ends.blockSignals(b)
         self.ui.sb_gray_y_init.blockSignals(b)
         self.ui.sb_gray_y_size.blockSignals(b)
-        self.ui.sb_gray_y_ends.blockSignals(b)
         self.ui.sb_obje_y_init.blockSignals(b)
         self.ui.sb_obje_y_size.blockSignals(b)
-        self.ui.sb_obje_y_ends.blockSignals(b)
 
     def handle_roi_change(self, gray_or_obje: str, left_middle_right: str) -> None:
         self.all_sb_signal_enable_or_disable(True)

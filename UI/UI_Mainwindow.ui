@@ -159,7 +159,7 @@
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>0</y>
+             <y>-82</y>
              <width>447</width>
              <height>450</height>
             </rect>
@@ -233,13 +233,6 @@
              </property>
              <property name="value">
               <double>1.858300000000000</double>
-             </property>
-            </widget>
-           </item>
-           <item row="5" column="3">
-            <widget class="QLabel" name="_l_5">
-             <property name="text">
-              <string>Bottom (pixel)</string>
              </property>
             </widget>
            </item>
@@ -319,14 +312,7 @@
            <item row="5" column="2">
             <widget class="QLabel" name="_l_4">
              <property name="text">
-              <string>Height (pixel)</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="0" colspan="4">
-            <widget class="Line" name="_line">
-             <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
+              <string>Height (in pixel)</string>
              </property>
             </widget>
            </item>
@@ -402,7 +388,7 @@
            <item row="0" column="2">
             <widget class="QLabel" name="_l_9">
              <property name="text">
-              <string>Width (pixel)</string>
+              <string>Width (in pixel)</string>
              </property>
             </widget>
            </item>
@@ -429,16 +415,6 @@
             <widget class="QLabel" name="_l_7">
              <property name="text">
               <string>Hor. (right) relative to center</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="3">
-            <widget class="QSpinBox" name="sb_rigx_ends">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="maximum">
-              <number>9999</number>
              </property>
             </widget>
            </item>
@@ -503,16 +479,6 @@
              </property>
             </widget>
            </item>
-           <item row="6" column="3">
-            <widget class="QSpinBox" name="sb_gray_y_ends">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="maximum">
-              <number>99999999</number>
-             </property>
-            </widget>
-           </item>
            <item row="9" column="0">
             <widget class="QLabel" name="_l_3">
              <property name="palette">
@@ -547,39 +513,6 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="3">
-            <widget class="QLabel" name="_l_10">
-             <property name="text">
-              <string>End (pixel)</string>
-             </property>
-             <property name="checked" stdset="0">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="3">
-            <widget class="QSpinBox" name="sb_lefx_ends">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="toolTip">
-              <string>Fraunhofer line (in pixel)</string>
-             </property>
-             <property name="maximum">
-              <number>9999</number>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="3">
-            <widget class="QSpinBox" name="sb_midx_ends">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="maximum">
-              <number>99999</number>
-             </property>
-            </widget>
-           </item>
            <item row="9" column="1">
             <widget class="QSpinBox" name="sb_obje_y_init">
              <property name="toolTip">
@@ -606,16 +539,6 @@
              </property>
             </widget>
            </item>
-           <item row="9" column="3">
-            <widget class="QSpinBox" name="sb_obje_y_ends">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="maximum">
-              <number>999999999</number>
-             </property>
-            </widget>
-           </item>
            <item row="6" column="2">
             <widget class="QSpinBox" name="sb_gray_y_size">
              <property name="toolTip">
@@ -635,13 +558,6 @@
              </property>
             </widget>
            </item>
-           <item row="10" column="0" colspan="4">
-            <widget class="Line" name="line_3">
-             <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
            <item row="11" column="0">
             <widget class="QLabel" name="_l">
              <property name="text">
@@ -653,6 +569,20 @@
             <widget class="QPushButton" name="pb_waveperpixel_reset">
              <property name="text">
               <string>Reset</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="0" colspan="3">
+            <widget class="Line" name="_line">
+             <property name="orientation">
+              <enum>Qt::Orientation::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="0" colspan="3">
+            <widget class="Line" name="line_3">
+             <property name="orientation">
+              <enum>Qt::Orientation::Horizontal</enum>
              </property>
             </widget>
            </item>
