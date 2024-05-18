@@ -144,7 +144,7 @@ class TheMainWindow(QMainWindow):
             self.fsmodel.setNameFilters((["*.jpeg"]))
             self.fsmodel.setNameFilterDisables(True)
         else:
-            #self.fsmodel.setFilter(QDir.Filter.Dirs|  QDir.Filter.NoDotAndDotDot)
+            self.fsmodel.setFilter(QDir.Filter.Files |  QDir.Filter.Dirs|  QDir.Filter.NoDotAndDotDot)
             self.fsmodel.setNameFilters((["*" + current_search_prompt.replace(" ", "*") + "*"]))
             # need * regex on both side
             self.fsmodel.setNameFilterDisables(False)
