@@ -94,6 +94,10 @@ class TheMainWindow(QMainWindow):
     ddtree: DataDirTree = DataDirTree()
     jp: JpegProcessor = JpegProcessor()
 
+    paramLogPath: str
+    dfParamHistory: pd.DataFrame
+    paramsChangingFromHistory: bool = False
+
     def __init__(self, parent: QWidget | None = None) -> None:
         super(TheMainWindow, self).__init__(parent)
         self.ui = Ui_MainWindow()
@@ -113,7 +117,7 @@ class TheMainWindow(QMainWindow):
         self.ui.tv_dir.setModel(self.fsmodel)
         self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath(QDir.homePath()))
         self.short_cut_goto_parent_dir()
-        self.ui.tv_dir.doubleClicked.connect(self.call_tv_onItemClicked)
+        self.ui.tv_dir.doubleClicked.connect(self.call_tv_onItemDoubleClicked)
         # self.ui.cb_ft_filter.stateChanged.connect(self.fsmodel.setNameFilterDisables)
         self.ui.cb_ft_filter.stateChanged.connect(self.toggle_filetype_visiblity)
         self.ui.cb_calc5_norm.stateChanged.connect(self.handle_cb_calc5_norming)
@@ -123,6 +127,7 @@ class TheMainWindow(QMainWindow):
         self.ui.pb_waveperpixel_reset.clicked.connect(lambda: self.ui.sb_waveperpixel.setValue(1.8385))
         self.ui.pb_system_file_explorer.clicked.connect(self.open_directory_at_point)
         self.ui.le_tv_name_narrower.textChanged.connect(self.dir_searching_based_regex)
+        self.ui.cb_parameter_history.currentTextChanged.connect(self.set_calculation_params_from_history_selection)
 
         # -----------------------------------------------------------------------------
         #self.jp.set_xWaveRng(self.ui.sb_midx_init.value())
@@ -482,8 +487,20 @@ class TheMainWindow(QMainWindow):
 
         self.update_raw_roi_plot_when_sb_or_roi_moved()
 
+        # when
+        if not self.paramsChangingFromHistory:
+            self.ui.cb_parameter_history.setCurrentIndex(0) # when change happens make it current
+
+        # say reflection is changed
+        #self.graph5_curve_relf.
+        #self.ui.graph_calc5_refl_final.clear()
+
+
     def update_raw_roi_plot_when_sb_or_roi_moved(self) -> None:
         """update raw dn plot, when either spinbox or ROI dragged"""
+        self.ui.cb_parameter_history.setCurrentIndex(0)
+        print("i changed")
+
         self.ui.graph_raw.clear()
         self.ui.graph_raw.addLegend()
 
@@ -666,29 +683,26 @@ class TheMainWindow(QMainWindow):
         )
         self.jp.load_jpeg_file(self.jpeg_path, also_get_rgb_rerp=True)
         self.update_1_rawbayer_img_data_and_then_plot_below()
+
+        # try to reset & repopulate paramHisotry combobox
+        self.repopulate_param_hist_combobox()
         return True
 
-    def call_tv_onItemClicked(self, v: QModelIndex):
+    def repopulate_param_hist_combobox(self) -> None:
+        self.paramLogPath = os.path.join(self.ddtree.ddir, "output", "export_log.csv")
+        self.dfParamHistory = self.read_param_history_file_and_handle_if_corrupted(self.paramLogPath)
+        self.ui.cb_parameter_history.clear()
+        self.ui.cb_parameter_history.addItem("Current")                               # <-- current different
+        self.ui.cb_parameter_history.addItems(list(self.dfParamHistory["date"]))
+
+
+    def call_tv_onItemDoubleClicked(self, v: QModelIndex):
         tmp = self.fsmodel.filePath(v)
         if os.path.isdir(tmp):
             logging.info(f"call_tv_onItemClicked: {tmp}")
-            # self.ui.tv_dir.setRootIndex(v)
-            #self.ui.tv_dir.setRootIndex(v.siblingAtColumn(0))  # needed to choose only filename.
-            #self.ui.le_tv_name_narrower.setText("")             # needed to reset dir filter
             self.short_cut_goto_selected_child_dir()
-            #logging.info(self.fsmodel.rootPath())
         else:
             self.short_cut_preview_raw_jpeg()
-            #self.jpeg_path = self.fsmodel.filePath(v)
-            #self.dir_path = os.path.dirname(self.jpeg_path)
-            #logging.info(self.dir_path + "\t" + self.jpeg_path)
-            #self.ddtree.set_ddir(self.dir_path)
-            #self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
-            #self.ui.limg_webcam.show_np_img(
-            #    cv.imread(self.ddtree.webcamFP).astype(np.uint8)[:, :, ::-1])
-            ##self.jp_load_newly_selected_jpeg_file()
-            #self.jp.load_jpeg_file(self.jpeg_path, also_get_rgb_rerp=True)
-            #self.update_1_rawbayer_img_data_and_then_plot_below()
 
     def call_calibrate_and_calculate(self) -> None:
         self.call_calibrate_and_calculate_calc1_desalt()           # done
@@ -800,12 +814,12 @@ class TheMainWindow(QMainWindow):
         self.graph3_curve_759_calib_obje_g.setData(tmp_x, np.array(self.jp.obje.gchan_759nm_calibrated["final"])[-1000:])
         self.graph3_curve_759_calib_obje_b.setData(tmp_x, np.array(self.jp.obje.bchan_759nm_calibrated["final"])[-1000:])
 
-        self.graph3_curve_759_calib_gray_r_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_r_popt)))
-        self.graph3_curve_759_calib_gray_g_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_g_popt)))
-        self.graph3_curve_759_calib_gray_b_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_b_popt)))
-        self.graph3_curve_759_calib_obje_r_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_r_popt)))
-        self.graph3_curve_759_calib_obje_g_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_g_popt)))
-        self.graph3_curve_759_calib_obje_b_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_b_popt)))
+        self.graph3_curve_759_calib_gray_r_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_r_popt)))   # type: ignore
+        self.graph3_curve_759_calib_gray_g_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_g_popt)))   # type: ignore
+        self.graph3_curve_759_calib_gray_b_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_b_popt)))   # type: ignore
+        self.graph3_curve_759_calib_obje_r_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_r_popt)))   # type: ignore
+        self.graph3_curve_759_calib_obje_g_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_g_popt)))   # type: ignore
+        self.graph3_curve_759_calib_obje_b_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_b_popt)))   # type: ignore
 
     def call_calibrate_and_calculate_calc4_rgb_refl(self) -> None:
         self.jp.fancy_reflectance()
@@ -873,15 +887,72 @@ class TheMainWindow(QMainWindow):
         dlg.setText("Export Finished")
         dlg.exec()
 
-
+        self.dfParamHistory = pd.concat(
+            (
+                self.get_current_calculation_parameters_as_pd_df(),
+                self.dfParamHistory,
+            )
+        )
         self.write_export_log_calculation_parameters()
+        self.repopulate_param_hist_combobox()
 
-    def get_current_calculation_parameters_as_dict(self):
+        # set to latest history# after exporting finishes
+        if (self.dfParamHistory.shape[0] != 0) and (self.ui.cb_parameter_history.count() >= 1):
+            # test history isn't empty
+
+            self.ui.cb_parameter_history.blockSignals(True)
+            self.ui.cb_parameter_history.setCurrentIndex(1)
+            self.ui.cb_parameter_history.blockSignals(False)
+            # briefly blocking signal and setting history to last
+            # wihtout blokcing singal here, export will
+            # self.call_calibrate_and_calculate() twice
+            # (once at begining, & then inside of self.ui.cb_parameter_history.setCurrentIndex(1))
+
+
+
+    def set_calculation_params_from_history_selection(self) -> None:
+        # when cb_parameter_history changes
+        selected_hist_date_str = self.ui.cb_parameter_history.currentText()
+
+        print(f"set_calculation_params_from_history_selection {self.ui.cb_parameter_history.currentText()=}")
+        if (selected_hist_date_str == "Current") or (selected_hist_date_str == ""): # it seems when the it's cleared it's running this method
+            return
+
+        # in order to not change: self.ui.cb_parameter_history
+        self.paramsChangingFromHistory = True
+
+        selrow_ind_hist_param = self.dfParamHistory.loc[self.dfParamHistory["date"] == selected_hist_date_str]       # type: ignore # noqa
+        print(f"set_calculation_params_from_history_selection {selected_hist_date_str=}")
+        print(f"set_calculation_params_from_history_selection {selrow_ind_hist_param=}")
+        self.ui.sb_midx_init.setValue(self.dfParamHistory["midx_init"][selrow_ind_hist_param.index[0]])              # type: ignore # noqa
+        self.ui.sb_midx_size.setValue(self.dfParamHistory["midx_size"][selrow_ind_hist_param.index[0]])              # type: ignore # noqa
+        self.ui.sb_lefx_init_rel.setValue(self.dfParamHistory["lefx_init_rel"][selrow_ind_hist_param.index[0]])      # type: ignore # noqa
+        self.ui.sb_lefx_size.setValue(self.dfParamHistory["lefx_size"][selrow_ind_hist_param.index[0]])              # type: ignore # noqa
+        self.ui.sb_rigx_init_rel.setValue(self.dfParamHistory["rigx_init_rel"][selrow_ind_hist_param.index[0]])      # type: ignore # noqa
+        self.ui.sb_rigx_size.setValue(self.dfParamHistory["rigx_size"][selrow_ind_hist_param.index[0]])              # type: ignore # noqa
+        self.ui.sb_gray_y_init.setValue(self.dfParamHistory["gray_y_init"][selrow_ind_hist_param.index[0]])          # type: ignore # noqa
+        self.ui.sb_gray_y_size.setValue(self.dfParamHistory["gray_y_size"][selrow_ind_hist_param.index[0]])          # type: ignore # noqa
+        self.ui.sb_obje_y_init.setValue(self.dfParamHistory["obje_y_init"][selrow_ind_hist_param.index[0]])          # type: ignore # noqa
+        self.ui.sb_obje_y_size.setValue(self.dfParamHistory["obje_y_size"][selrow_ind_hist_param.index[0]])          # type: ignore # noqa
+        self.ui.sb_waveperpixel.blockSignals(True)
+        self.ui.sb_waveperpixel.setValue(self.dfParamHistory["waveperpixel"][selrow_ind_hist_param.index[0]])        # type: ignore # noqa
+        self.ui.sb_waveperpixel.blockSignals(False)
+        # # # # # # 'calc1_desalt', 'calc2_background', 'calc3_calibrate', 'calc5_norm',                             # type: ignore # noqa
+        self.ui.cb_calc5_norm.setChecked(self.dfParamHistory["calc5_norm"][selrow_ind_hist_param.index[0]])          # type: ignore # noqa
+        self.ui.sb_calc5_norm_zero.setValue(self.dfParamHistory["calc5_norm_zero"][selrow_ind_hist_param.index[0]])  # type: ignore # noqa
+        self.ui.sb_calc5_norm_one.setValue(self.dfParamHistory["calc5_norm_one"][selrow_ind_hist_param.index[0]])    # type: ignore # noqa
+
+        self.paramsChangingFromHistory = False
+
+        # exporting
+        self.call_calibrate_and_calculate()
+
+    def get_current_calculation_parameters_as_pd_df(self) -> pd.DataFrame:
         resultDic = {
             "date" : [datetime.now().strftime("%Y/%m/%d-%H:%M:%S")],
             "midx_init" : [self.ui.sb_midx_init.value()],
             "midx_size" : [700],
-            "lefx_init" : [self.ui.sb_lefx_init_rel.value()],
+            "lefx_init_rel" : [self.ui.sb_lefx_init_rel.value()],
             "lefx_size" : [self.ui.sb_lefx_size.value()],
             "rigx_init_rel" : [self.ui.sb_rigx_init_rel.value()],
             "rigx_size" : [self.ui.sb_rigx_size.value()],
@@ -889,6 +960,7 @@ class TheMainWindow(QMainWindow):
             "gray_y_size" : [self.ui.sb_gray_y_size.value()],
             "obje_y_init" : [self.ui.sb_obje_y_init.value()],
             "obje_y_size" : [self.ui.sb_obje_y_size.value()],
+            "waveperpixel" : [self.ui.sb_waveperpixel.value()],
             "calc1_desalt"    : [self.ui.cb_calc1_desalt.isChecked()],
             "calc2_background" : [self.ui.cb_calc2_background.isChecked()],
             "calc3_calibrate" : [self.ui.cb_calc3_calibrate_759.isChecked()],
@@ -896,37 +968,19 @@ class TheMainWindow(QMainWindow):
             "calc5_norm_zero" : [self.ui.sb_calc5_norm_zero.value()],
             "calc5_norm_one"  : [self.ui.sb_calc5_norm_one.value()],
         }
-        return resultDic
+        print('sadf================================================================')
+        print(resultDic)
+        return pd.DataFrame(resultDic)
 
     def write_export_log_calculation_parameters(self) -> None:
         os.makedirs(os.path.join(self.ddtree.ddir, "output"), exist_ok=True) # just incase (probably unnecerserly)
-        paramLogPath = os.path.join(self.ddtree.ddir, "output", "export_log.csv")
-
-
-        if os.path.isfile(paramLogPath):
-            df_export_param = pd.read_csv(paramLogPath)
-            if self.check_export_log_pandas_has_correct_format(df_export_param):
-                # print("previously existing csv is correct")
-                df_export_param = pd.concat(
-                    (df_export_param, pd.DataFrame(self.get_current_calculation_parameters_as_dict())),
-                )
-            else:
-                # print("previously existing csv is INcorrect")
-                df_export_param = pd.DataFrame(self.get_current_calculation_parameters_as_dict())
-                shutil.copyfile(
-                    paramLogPath, f"{paramLogPath}.previous_log_file_(possibly_corrupted)_{datetime.now().strftime("%Y%m%d_%H%M%S")}"
-                )
-
-        else:
-            df_export_param = pd.DataFrame(self.get_current_calculation_parameters_as_dict())
-
-        df_export_param.to_csv(paramLogPath, index=False)
+        self.dfParamHistory.to_csv(self.paramLogPath, index=False)
 
     def check_export_log_pandas_has_correct_format(self, df: pd.DataFrame) -> bool:
         if ("date"             not in df.columns or
             "midx_init"        not in df.columns or
             "midx_size"        not in df.columns or
-            "lefx_init"        not in df.columns or
+            "lefx_init_rel"    not in df.columns or
             "lefx_size"        not in df.columns or
             "rigx_init_rel"    not in df.columns or
             "rigx_size"        not in df.columns or
@@ -934,8 +988,9 @@ class TheMainWindow(QMainWindow):
             "gray_y_size"      not in df.columns or
             "obje_y_init"      not in df.columns or
             "obje_y_size"      not in df.columns or
+            "waveperpixel"     not in df.columns or
             "calc1_desalt"     not in df.columns or
-            "calc2_background"  not in df.columns or
+            "calc2_background" not in df.columns or
             "calc3_calibrate"  not in df.columns or
             "calc5_norm"       not in df.columns or
             "calc5_norm_zero"  not in df.columns or
@@ -943,21 +998,22 @@ class TheMainWindow(QMainWindow):
             #print("some column missing")
             return False
 
-        if (df["date"            ].dtype != "O" or
-            df["midx_init"       ].dtype not in ("int64", "int32") or
-            df["midx_size"       ].dtype not in ("int64", "int32") or
-            df["lefx_init"       ].dtype not in ("int64", "int32") or
-            df["lefx_size"       ].dtype not in ("int64", "int32") or
-            df["rigx_init_rel"   ].dtype not in ("int64", "int32") or
-            df["rigx_size"       ].dtype not in ("int64", "int32") or
-            df["gray_y_init"     ].dtype not in ("int64", "int32") or
-            df["gray_y_size"     ].dtype not in ("int64", "int32") or
-            df["obje_y_init"     ].dtype not in ("int64", "int32") or
-            df["obje_y_size"     ].dtype not in ("int64", "int32") or
-            df["calc1_desalt"    ].dtype != "bool"             or
-            df["calc2_background"].dtype != "bool"             or
-            df["calc3_calibrate" ].dtype != "bool"             or
-            df["calc5_norm"      ].dtype != "bool"             or
+        if (df["date"            ].dtype != "O"                        or
+            df["midx_init"       ].dtype not in ("int64", "int32")     or
+            df["midx_size"       ].dtype not in ("int64", "int32")     or
+            df["lefx_init_rel"   ].dtype not in ("int64", "int32")     or
+            df["lefx_size"       ].dtype not in ("int64", "int32")     or
+            df["rigx_init_rel"   ].dtype not in ("int64", "int32")     or
+            df["rigx_size"       ].dtype not in ("int64", "int32")     or
+            df["gray_y_init"     ].dtype not in ("int64", "int32")     or
+            df["gray_y_size"     ].dtype not in ("int64", "int32")     or
+            df["obje_y_init"     ].dtype not in ("int64", "int32")     or
+            df["obje_y_size"     ].dtype not in ("int64", "int32")     or
+            df["waveperpixel"    ].dtype not in ("float64", "float32") or
+            df["calc1_desalt"    ].dtype != "bool"                     or
+            df["calc2_background"].dtype != "bool"                     or
+            df["calc3_calibrate" ].dtype != "bool"                     or
+            df["calc5_norm"      ].dtype != "bool"                     or
             df["calc5_norm_zero" ].dtype not in ("float64", "float32") or
             df["calc5_norm_one"  ].dtype not in ("float64", "float32")):
             #print("bad dtype in df")
@@ -965,3 +1021,33 @@ class TheMainWindow(QMainWindow):
 
 
         return True
+
+    def read_param_history_file_and_handle_if_corrupted(self, path: str) -> pd.DataFrame:
+        # reads csv file @ path and returns corect DF
+        # if corrupted saves old file
+        if not os.path.isfile(path):
+            return self.create_empty_param_history_pd_df()
+
+        # try to read pandas csv
+        try:
+            result = pd.read_csv(path)
+        except Exception:
+            # make copy of old corrupted csv file
+            shutil.copyfile(path, f"{path}.corrupted_{datetime.now().strftime("%Y%m%d_%H%M%S")}")
+            return self.create_empty_param_history_pd_df()
+
+        if self.check_export_log_pandas_has_correct_format(result):
+            return result
+        else:
+            # make copy of old corrupted csv file
+            shutil.copyfile(path, f"{path}.corrupted_{datetime.now().strftime("%Y%m%d_%H%M%S")}")
+            # returns empty dataframe
+            return self.create_empty_param_history_pd_df()
+
+    def create_empty_param_history_pd_df(self) -> pd.DataFrame:
+        return pd.DataFrame(
+            columns=["date", "midx_init", "midx_size", "lefx_init_rel", "lefx_size", "rigx_init_rel", "rigx_size",
+                     "gray_y_init", "gray_y_size", "obje_y_init", "obje_y_size", "waveperpixel", "calc1_desalt", "calc2_background",
+                     "calc3_calibrate", "calc5_norm", "calc5_norm_zero", "calc5_norm_one",]
+        )
+        # self.ui.sb_waveperpixel

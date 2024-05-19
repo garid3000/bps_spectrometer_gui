@@ -52,6 +52,7 @@ from PySide6.QtWidgets import (
 from Custom_Libs.Lib_QLabelClick_Widget_NoUI import QLabelClick
 from pyqtgraph import ImageView, PlotWidget
 
+import QRCs.main_resource
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow: QMainWindow) -> None:
@@ -250,31 +251,27 @@ class Ui_MainWindow(object):
         self.gb_control_panel.setObjectName("gb_control_panel")
         self.gridLayout_2 = QGridLayout(self.gb_control_panel)
         self.gridLayout_2.setObjectName("gridLayout_2")
-        self.sb_gray_y_size = QSpinBox(self.gb_control_panel)
-        self.sb_gray_y_size.setObjectName("sb_gray_y_size")
-        self.sb_gray_y_size.setMinimum(0)
-        self.sb_gray_y_size.setMaximum(20000)
-        self.sb_gray_y_size.setSingleStep(2)
-        self.sb_gray_y_size.setValue(50)
+        self._l_7 = QLabel(self.gb_control_panel)
+        self._l_7.setObjectName("_l_7")
 
-        self.gridLayout_2.addWidget(self.sb_gray_y_size, 7, 2, 1, 1)
+        self.gridLayout_2.addWidget(self._l_7, 4, 0, 1, 1)
 
-        self.sb_midx_size = QSpinBox(self.gb_control_panel)
-        self.sb_midx_size.setObjectName("sb_midx_size")
-        self.sb_midx_size.setEnabled(False)
-        self.sb_midx_size.setMaximum(9999)
-        self.sb_midx_size.setValue(700)
+        self._line = QFrame(self.gb_control_panel)
+        self._line.setObjectName("_line")
+        self._line.setFrameShape(QFrame.Shape.HLine)
+        self._line.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.gridLayout_2.addWidget(self.sb_midx_size, 2, 2, 1, 1)
+        self.gridLayout_2.addWidget(self._line, 5, 0, 1, 3)
 
-        self.sb_gray_y_init = QSpinBox(self.gb_control_panel)
-        self.sb_gray_y_init.setObjectName("sb_gray_y_init")
-        self.sb_gray_y_init.setMinimum(0)
-        self.sb_gray_y_init.setMaximum(20000)
-        self.sb_gray_y_init.setSingleStep(2)
-        self.sb_gray_y_init.setValue(1050)
+        self.pb_waveperpixel_reset = QPushButton(self.gb_control_panel)
+        self.pb_waveperpixel_reset.setObjectName("pb_waveperpixel_reset")
 
-        self.gridLayout_2.addWidget(self.sb_gray_y_init, 7, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.pb_waveperpixel_reset, 12, 2, 1, 1)
+
+        self._l = QLabel(self.gb_control_panel)
+        self._l.setObjectName("_l")
+
+        self.gridLayout_2.addWidget(self._l, 12, 0, 1, 1)
 
         self._l_2 = QLabel(self.gb_control_panel)
         self._l_2.setObjectName("_l_2")
@@ -287,32 +284,22 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self._l_2, 7, 0, 1, 1)
 
-        self.sb_obje_y_size = QSpinBox(self.gb_control_panel)
-        self.sb_obje_y_size.setObjectName("sb_obje_y_size")
-        self.sb_obje_y_size.setMinimum(0)
-        self.sb_obje_y_size.setMaximum(20000)
-        self.sb_obje_y_size.setSingleStep(2)
-        self.sb_obje_y_size.setValue(50)
+        self.sb_midx_size = QSpinBox(self.gb_control_panel)
+        self.sb_midx_size.setObjectName("sb_midx_size")
+        self.sb_midx_size.setEnabled(False)
+        self.sb_midx_size.setMaximum(9999)
+        self.sb_midx_size.setValue(700)
 
-        self.gridLayout_2.addWidget(self.sb_obje_y_size, 10, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.sb_midx_size, 2, 2, 1, 1)
 
-        self._l_4 = QLabel(self.gb_control_panel)
-        self._l_4.setObjectName("_l_4")
+        self.sb_gray_y_size = QSpinBox(self.gb_control_panel)
+        self.sb_gray_y_size.setObjectName("sb_gray_y_size")
+        self.sb_gray_y_size.setMinimum(0)
+        self.sb_gray_y_size.setMaximum(20000)
+        self.sb_gray_y_size.setSingleStep(2)
+        self.sb_gray_y_size.setValue(50)
 
-        self.gridLayout_2.addWidget(self._l_4, 6, 2, 1, 1)
-
-        self._l_6 = QLabel(self.gb_control_panel)
-        self._l_6.setObjectName("_l_6")
-
-        self.gridLayout_2.addWidget(self._l_6, 3, 0, 1, 1)
-
-        self.sb_rigx_size = QSpinBox(self.gb_control_panel)
-        self.sb_rigx_size.setObjectName("sb_rigx_size")
-        self.sb_rigx_size.setMaximum(200)
-        self.sb_rigx_size.setSingleStep(2)
-        self.sb_rigx_size.setValue(40)
-
-        self.gridLayout_2.addWidget(self.sb_rigx_size, 4, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.sb_gray_y_size, 7, 2, 1, 1)
 
         self._l_11 = QLabel(self.gb_control_panel)
         self._l_11.setObjectName("_l_11")
@@ -329,10 +316,23 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.sb_waveperpixel, 12, 1, 1, 1)
 
-        self.pb_waveperpixel_reset = QPushButton(self.gb_control_panel)
-        self.pb_waveperpixel_reset.setObjectName("pb_waveperpixel_reset")
+        self.sb_midx_init = QSpinBox(self.gb_control_panel)
+        self.sb_midx_init.setObjectName("sb_midx_init")
+        self.sb_midx_init.setMinimum(0)
+        self.sb_midx_init.setMaximum(17000)
+        self.sb_midx_init.setSingleStep(2)
+        self.sb_midx_init.setValue(1350)
 
-        self.gridLayout_2.addWidget(self.pb_waveperpixel_reset, 12, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.sb_midx_init, 2, 1, 1, 1)
+
+        self.sb_lefx_init_rel = QSpinBox(self.gb_control_panel)
+        self.sb_lefx_init_rel.setObjectName("sb_lefx_init_rel")
+        self.sb_lefx_init_rel.setMinimum(-250)
+        self.sb_lefx_init_rel.setMaximum(-200)
+        self.sb_lefx_init_rel.setSingleStep(2)
+        self.sb_lefx_init_rel.setValue(-200)
+
+        self.gridLayout_2.addWidget(self.sb_lefx_init_rel, 3, 1, 1, 1)
 
         self.sb_lefx_size = QSpinBox(self.gb_control_panel)
         self.sb_lefx_size.setObjectName("sb_lefx_size")
@@ -341,6 +341,22 @@ class Ui_MainWindow(object):
         self.sb_lefx_size.setValue(100)
 
         self.gridLayout_2.addWidget(self.sb_lefx_size, 3, 2, 1, 1)
+
+        self.line_3 = QFrame(self.gb_control_panel)
+        self.line_3.setObjectName("line_3")
+        self.line_3.setFrameShape(QFrame.Shape.HLine)
+        self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.gridLayout_2.addWidget(self.line_3, 11, 0, 1, 3)
+
+        self.sb_obje_y_init = QSpinBox(self.gb_control_panel)
+        self.sb_obje_y_init.setObjectName("sb_obje_y_init")
+        self.sb_obje_y_init.setMinimum(0)
+        self.sb_obje_y_init.setMaximum(20000)
+        self.sb_obje_y_init.setSingleStep(2)
+        self.sb_obje_y_init.setValue(1200)
+
+        self.gridLayout_2.addWidget(self.sb_obje_y_init, 10, 1, 1, 1)
 
         self._l_1 = QLabel(self.gb_control_panel)
         self._l_1.setObjectName("_l_1")
@@ -353,27 +369,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self._l_1, 2, 0, 1, 1)
 
-        self._line = QFrame(self.gb_control_panel)
-        self._line.setObjectName("_line")
-        self._line.setFrameShape(QFrame.Shape.HLine)
-        self._line.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.gridLayout_2.addWidget(self._line, 5, 0, 1, 3)
-
-        self._l_8 = QLabel(self.gb_control_panel)
-        self._l_8.setObjectName("_l_8")
-
-        self.gridLayout_2.addWidget(self._l_8, 1, 1, 1, 1)
-
-        self.sb_obje_y_init = QSpinBox(self.gb_control_panel)
-        self.sb_obje_y_init.setObjectName("sb_obje_y_init")
-        self.sb_obje_y_init.setMinimum(0)
-        self.sb_obje_y_init.setMaximum(20000)
-        self.sb_obje_y_init.setSingleStep(2)
-        self.sb_obje_y_init.setValue(1200)
-
-        self.gridLayout_2.addWidget(self.sb_obje_y_init, 10, 1, 1, 1)
-
         self._l_3 = QLabel(self.gb_control_panel)
         self._l_3.setObjectName("_l_3")
         palette2 = QPalette()
@@ -385,10 +380,27 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self._l_3, 10, 0, 1, 1)
 
-        self.label_2 = QLabel(self.gb_control_panel)
-        self.label_2.setObjectName("label_2")
+        self._l_8 = QLabel(self.gb_control_panel)
+        self._l_8.setObjectName("_l_8")
 
-        self.gridLayout_2.addWidget(self.label_2, 14, 0, 1, 1)
+        self.gridLayout_2.addWidget(self._l_8, 1, 1, 1, 1)
+
+        self.sb_rigx_size = QSpinBox(self.gb_control_panel)
+        self.sb_rigx_size.setObjectName("sb_rigx_size")
+        self.sb_rigx_size.setMaximum(200)
+        self.sb_rigx_size.setSingleStep(2)
+        self.sb_rigx_size.setValue(40)
+
+        self.gridLayout_2.addWidget(self.sb_rigx_size, 4, 2, 1, 1)
+
+        self.sb_obje_y_size = QSpinBox(self.gb_control_panel)
+        self.sb_obje_y_size.setObjectName("sb_obje_y_size")
+        self.sb_obje_y_size.setMinimum(0)
+        self.sb_obje_y_size.setMaximum(20000)
+        self.sb_obje_y_size.setSingleStep(2)
+        self.sb_obje_y_size.setValue(50)
+
+        self.gridLayout_2.addWidget(self.sb_obje_y_size, 10, 2, 1, 1)
 
         self.sb_rigx_init_rel = QSpinBox(self.gb_control_panel)
         self.sb_rigx_init_rel.setObjectName("sb_rigx_init_rel")
@@ -404,52 +416,24 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self._l_9, 1, 2, 1, 1)
 
-        self.cb_parameter_history = QComboBox(self.gb_control_panel)
-        self.cb_parameter_history.setObjectName("cb_parameter_history")
+        self._l_4 = QLabel(self.gb_control_panel)
+        self._l_4.setObjectName("_l_4")
 
-        self.gridLayout_2.addWidget(self.cb_parameter_history, 14, 1, 1, 2)
+        self.gridLayout_2.addWidget(self._l_4, 6, 2, 1, 1)
 
-        self.sb_midx_init = QSpinBox(self.gb_control_panel)
-        self.sb_midx_init.setObjectName("sb_midx_init")
-        self.sb_midx_init.setMinimum(0)
-        self.sb_midx_init.setMaximum(17000)
-        self.sb_midx_init.setSingleStep(2)
-        self.sb_midx_init.setValue(1350)
+        self.sb_gray_y_init = QSpinBox(self.gb_control_panel)
+        self.sb_gray_y_init.setObjectName("sb_gray_y_init")
+        self.sb_gray_y_init.setMinimum(0)
+        self.sb_gray_y_init.setMaximum(20000)
+        self.sb_gray_y_init.setSingleStep(2)
+        self.sb_gray_y_init.setValue(1050)
 
-        self.gridLayout_2.addWidget(self.sb_midx_init, 2, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.sb_gray_y_init, 7, 1, 1, 1)
 
-        self._l_7 = QLabel(self.gb_control_panel)
-        self._l_7.setObjectName("_l_7")
+        self._l_6 = QLabel(self.gb_control_panel)
+        self._l_6.setObjectName("_l_6")
 
-        self.gridLayout_2.addWidget(self._l_7, 4, 0, 1, 1)
-
-        self._l = QLabel(self.gb_control_panel)
-        self._l.setObjectName("_l")
-
-        self.gridLayout_2.addWidget(self._l, 12, 0, 1, 1)
-
-        self.sb_lefx_init_rel = QSpinBox(self.gb_control_panel)
-        self.sb_lefx_init_rel.setObjectName("sb_lefx_init_rel")
-        self.sb_lefx_init_rel.setMinimum(-250)
-        self.sb_lefx_init_rel.setMaximum(-200)
-        self.sb_lefx_init_rel.setSingleStep(2)
-        self.sb_lefx_init_rel.setValue(-200)
-
-        self.gridLayout_2.addWidget(self.sb_lefx_init_rel, 3, 1, 1, 1)
-
-        self.line_3 = QFrame(self.gb_control_panel)
-        self.line_3.setObjectName("line_3")
-        self.line_3.setFrameShape(QFrame.Shape.HLine)
-        self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.gridLayout_2.addWidget(self.line_3, 11, 0, 1, 3)
-
-        self.line = QFrame(self.gb_control_panel)
-        self.line.setObjectName("line")
-        self.line.setFrameShape(QFrame.Shape.HLine)
-        self.line.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.gridLayout_2.addWidget(self.line, 13, 0, 1, 3)
+        self.gridLayout_2.addWidget(self._l_6, 3, 0, 1, 1)
 
         self.verticalLayout.addWidget(self.gb_control_panel)
 
@@ -713,6 +697,23 @@ class Ui_MainWindow(object):
 
         self.formLayout.setWidget(4, QFormLayout.FieldRole, self.pbar_export)
 
+        self.label_2 = QLabel(self.gp_spectral_panel)
+        self.label_2.setObjectName("label_2")
+
+        self.formLayout.setWidget(6, QFormLayout.LabelRole, self.label_2)
+
+        self.cb_parameter_history = QComboBox(self.gp_spectral_panel)
+        self.cb_parameter_history.setObjectName("cb_parameter_history")
+
+        self.formLayout.setWidget(6, QFormLayout.FieldRole, self.cb_parameter_history)
+
+        self.line_2 = QFrame(self.gp_spectral_panel)
+        self.line_2.setObjectName("line_2")
+        self.line_2.setFrameShape(QFrame.Shape.HLine)
+        self.line_2.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.formLayout.setWidget(5, QFormLayout.SpanningRole, self.line_2)
+
         self.splitter.addWidget(self.gp_spectral_panel)
 
         self.verticalLayout_3.addWidget(self.splitter)
@@ -936,6 +937,22 @@ class Ui_MainWindow(object):
             )
         )
         self.gb_control_panel.setTitle("")
+        self._l_7.setText(
+            QCoreApplication.translate(
+                "MainWindow", "Hor. (right) relative to center", None
+            )
+        )
+        self.pb_waveperpixel_reset.setText(
+            QCoreApplication.translate("MainWindow", "Reset", None)
+        )
+        self._l.setText(
+            QCoreApplication.translate(
+                "MainWindow", "Wavelength per pixel (nm/px)", None
+            )
+        )
+        self._l_2.setText(
+            QCoreApplication.translate("MainWindow", "Vert. Gray Pixel Range", None)
+        )
         # if QT_CONFIG(tooltip)
         self.sb_gray_y_size.setToolTip(
             QCoreApplication.translate(
@@ -945,34 +962,53 @@ class Ui_MainWindow(object):
             )
         )
         # endif // QT_CONFIG(tooltip)
+        self._l_11.setText(
+            QCoreApplication.translate("MainWindow", "Top (pixel)", None)
+        )
         # if QT_CONFIG(tooltip)
-        self.sb_gray_y_init.setToolTip(
+        self.sb_midx_init.setToolTip(
             QCoreApplication.translate(
                 "MainWindow",
-                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_vert_gray_top.png"/></p></body></html>',
+                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_horizontal_center_start.png"/></p></body></html>',
                 None,
             )
         )
         # endif // QT_CONFIG(tooltip)
-        self._l_2.setText(
-            QCoreApplication.translate("MainWindow", "Vert. Gray Pixel Range", None)
-        )
         # if QT_CONFIG(tooltip)
-        self.sb_obje_y_size.setToolTip(
+        self.sb_lefx_init_rel.setToolTip(
             QCoreApplication.translate(
                 "MainWindow",
-                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_vert_obje_height.png"/></p></body></html>',
+                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_horizontal_background_left_left.png"/></p></body></html>',
                 None,
             )
         )
         # endif // QT_CONFIG(tooltip)
-        self._l_4.setText(
-            QCoreApplication.translate("MainWindow", "Height (in pixel)", None)
-        )
-        self._l_6.setText(
+        # if QT_CONFIG(tooltip)
+        self.sb_lefx_size.setToolTip(
             QCoreApplication.translate(
-                "MainWindow", "Hor. (left) relative to center", None
+                "MainWindow",
+                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_horizontal_background_left_right.png"/></p></body></html>',
+                None,
             )
+        )
+        # endif // QT_CONFIG(tooltip)
+        # if QT_CONFIG(tooltip)
+        self.sb_obje_y_init.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_vert_obje_top.png"/></p></body></html>',
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
+        self._l_1.setText(
+            QCoreApplication.translate("MainWindow", "Hor. (center)", None)
+        )
+        self._l_3.setText(
+            QCoreApplication.translate("MainWindow", "Vert. Object Pixel Range", None)
+        )
+        self._l_8.setText(
+            QCoreApplication.translate("MainWindow", "Start (pixel)", None)
         )
         # if QT_CONFIG(tooltip)
         self.sb_rigx_size.setToolTip(
@@ -983,51 +1019,15 @@ class Ui_MainWindow(object):
             )
         )
         # endif // QT_CONFIG(tooltip)
-        self._l_11.setText(
-            QCoreApplication.translate("MainWindow", "Top (pixel)", None)
-        )
-        self.pb_waveperpixel_reset.setText(
-            QCoreApplication.translate("MainWindow", "Reset", None)
-        )
         # if QT_CONFIG(tooltip)
-        self.sb_lefx_size.setToolTip(
+        self.sb_obje_y_size.setToolTip(
             QCoreApplication.translate(
                 "MainWindow",
-                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_horizontal_background_left_right.png"/></p></body></html>',
+                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_vert_obje_height.png"/></p></body></html>',
                 None,
             )
         )
         # endif // QT_CONFIG(tooltip)
-        self._l_1.setText(
-            QCoreApplication.translate("MainWindow", "Hor. (center)", None)
-        )
-        self._l_8.setText(
-            QCoreApplication.translate("MainWindow", "Start (pixel)", None)
-        )
-        # if QT_CONFIG(tooltip)
-        self.sb_obje_y_init.setToolTip(
-            QCoreApplication.translate(
-                "MainWindow",
-                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_vert_obje_top.png"/></p></body></html>',
-                None,
-            )
-        )
-        # endif // QT_CONFIG(tooltip)
-        self._l_3.setText(
-            QCoreApplication.translate("MainWindow", "Vert. Object Pixel Range", None)
-        )
-        # if QT_CONFIG(tooltip)
-        self.label_2.setToolTip(
-            QCoreApplication.translate(
-                "MainWindow",
-                "<html><head/><body><p>History of Geometrical Parameters of Previous usages on this data</p><p>(ie. you can get exact geometrical parameter when you calculated in the past)</p></body></html>",
-                None,
-            )
-        )
-        # endif // QT_CONFIG(tooltip)
-        self.label_2.setText(
-            QCoreApplication.translate("MainWindow", "Parameter History", None)
-        )
         # if QT_CONFIG(tooltip)
         self.sb_rigx_init_rel.setToolTip(
             QCoreApplication.translate(
@@ -1040,34 +1040,23 @@ class Ui_MainWindow(object):
         self._l_9.setText(
             QCoreApplication.translate("MainWindow", "Width (in pixel)", None)
         )
+        self._l_4.setText(
+            QCoreApplication.translate("MainWindow", "Height (in pixel)", None)
+        )
         # if QT_CONFIG(tooltip)
-        self.sb_midx_init.setToolTip(
+        self.sb_gray_y_init.setToolTip(
             QCoreApplication.translate(
                 "MainWindow",
-                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_horizontal_center_start.png"/></p></body></html>',
+                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_vert_gray_top.png"/></p></body></html>',
                 None,
             )
         )
         # endif // QT_CONFIG(tooltip)
-        self._l_7.setText(
+        self._l_6.setText(
             QCoreApplication.translate(
-                "MainWindow", "Hor. (right) relative to center", None
+                "MainWindow", "Hor. (left) relative to center", None
             )
         )
-        self._l.setText(
-            QCoreApplication.translate(
-                "MainWindow", "Wavelength per pixel (nm/px)", None
-            )
-        )
-        # if QT_CONFIG(tooltip)
-        self.sb_lefx_init_rel.setToolTip(
-            QCoreApplication.translate(
-                "MainWindow",
-                '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_horizontal_background_left_left.png"/></p></body></html>',
-                None,
-            )
-        )
-        # endif // QT_CONFIG(tooltip)
         self.gp_spectral_panel.setTitle(
             QCoreApplication.translate(
                 "MainWindow", "Spectral Reflection Calculation", None
@@ -1145,6 +1134,18 @@ class Ui_MainWindow(object):
         # endif // QT_CONFIG(tooltip)
         self.pb_export.setText(
             QCoreApplication.translate("MainWindow", "Export (Ctrl+E)", None)
+        )
+        # if QT_CONFIG(tooltip)
+        self.label_2.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                "<html><head/><body><p>History of Geometrical Parameters of Previous usages on this data</p><p>(ie. you can get exact geometrical parameter when you calculated in the past)</p></body></html>",
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
+        self.label_2.setText(
+            QCoreApplication.translate("MainWindow", "Export Parameter History:", None)
         )
         self.menuFile.setTitle(
             QCoreApplication.translate("MainWindow", "Operation", None)

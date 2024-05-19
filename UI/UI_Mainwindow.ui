@@ -217,54 +217,31 @@
            <string/>
           </property>
           <layout class="QGridLayout" name="gridLayout_2" columnstretch="0,0,0">
-           <item row="7" column="2">
-            <widget class="QSpinBox" name="sb_gray_y_size">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_vert_gray_height.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="minimum">
-              <number>0</number>
-             </property>
-             <property name="maximum">
-              <number>20000</number>
-             </property>
-             <property name="singleStep">
-              <number>2</number>
-             </property>
-             <property name="value">
-              <number>50</number>
+           <item row="4" column="0">
+            <widget class="QLabel" name="_l_7">
+             <property name="text">
+              <string>Hor. (right) relative to center</string>
              </property>
             </widget>
            </item>
-           <item row="2" column="2">
-            <widget class="QSpinBox" name="sb_midx_size">
-             <property name="enabled">
-              <bool>false</bool>
-             </property>
-             <property name="maximum">
-              <number>9999</number>
-             </property>
-             <property name="value">
-              <number>700</number>
+           <item row="5" column="0" colspan="3">
+            <widget class="Line" name="_line">
+             <property name="orientation">
+              <enum>Qt::Orientation::Horizontal</enum>
              </property>
             </widget>
            </item>
-           <item row="7" column="1">
-            <widget class="QSpinBox" name="sb_gray_y_init">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_vert_gray_top.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <item row="12" column="2">
+            <widget class="QPushButton" name="pb_waveperpixel_reset">
+             <property name="text">
+              <string>Reset</string>
              </property>
-             <property name="minimum">
-              <number>0</number>
-             </property>
-             <property name="maximum">
-              <number>20000</number>
-             </property>
-             <property name="singleStep">
-              <number>2</number>
-             </property>
-             <property name="value">
-              <number>1050</number>
+            </widget>
+           </item>
+           <item row="12" column="0">
+            <widget class="QLabel" name="_l">
+             <property name="text">
+              <string>Wavelength per pixel (nm/px)</string>
              </property>
             </widget>
            </item>
@@ -302,10 +279,23 @@
              </property>
             </widget>
            </item>
-           <item row="10" column="2">
-            <widget class="QSpinBox" name="sb_obje_y_size">
+           <item row="2" column="2">
+            <widget class="QSpinBox" name="sb_midx_size">
+             <property name="enabled">
+              <bool>false</bool>
+             </property>
+             <property name="maximum">
+              <number>9999</number>
+             </property>
+             <property name="value">
+              <number>700</number>
+             </property>
+            </widget>
+           </item>
+           <item row="7" column="2">
+            <widget class="QSpinBox" name="sb_gray_y_size">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_vert_obje_height.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_vert_gray_height.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="minimum">
               <number>0</number>
@@ -318,36 +308,6 @@
              </property>
              <property name="value">
               <number>50</number>
-             </property>
-            </widget>
-           </item>
-           <item row="6" column="2">
-            <widget class="QLabel" name="_l_4">
-             <property name="text">
-              <string>Height (in pixel)</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="0">
-            <widget class="QLabel" name="_l_6">
-             <property name="text">
-              <string>Hor. (left) relative to center</string>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="2">
-            <widget class="QSpinBox" name="sb_rigx_size">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_horizontal_background_right_right.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="maximum">
-              <number>200</number>
-             </property>
-             <property name="singleStep">
-              <number>2</number>
-             </property>
-             <property name="value">
-              <number>40</number>
              </property>
             </widget>
            </item>
@@ -377,10 +337,41 @@
              </property>
             </widget>
            </item>
-           <item row="12" column="2">
-            <widget class="QPushButton" name="pb_waveperpixel_reset">
-             <property name="text">
-              <string>Reset</string>
+           <item row="2" column="1">
+            <widget class="QSpinBox" name="sb_midx_init">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_horizontal_center_start.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>17000</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
+             </property>
+             <property name="value">
+              <number>1350</number>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QSpinBox" name="sb_lefx_init_rel">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_horizontal_background_left_left.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="minimum">
+              <number>-250</number>
+             </property>
+             <property name="maximum">
+              <number>-200</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
+             </property>
+             <property name="value">
+              <number>-200</number>
              </property>
             </widget>
            </item>
@@ -397,6 +388,32 @@
              </property>
              <property name="value">
               <number>100</number>
+             </property>
+            </widget>
+           </item>
+           <item row="11" column="0" colspan="3">
+            <widget class="Line" name="line_3">
+             <property name="orientation">
+              <enum>Qt::Orientation::Horizontal</enum>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="1">
+            <widget class="QSpinBox" name="sb_obje_y_init">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_vert_obje_top.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>20000</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
+             </property>
+             <property name="value">
+              <number>1200</number>
              </property>
             </widget>
            </item>
@@ -434,39 +451,6 @@
              </property>
             </widget>
            </item>
-           <item row="5" column="0" colspan="3">
-            <widget class="Line" name="_line">
-             <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QLabel" name="_l_8">
-             <property name="text">
-              <string>Start (pixel)</string>
-             </property>
-            </widget>
-           </item>
-           <item row="10" column="1">
-            <widget class="QSpinBox" name="sb_obje_y_init">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_vert_obje_top.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="minimum">
-              <number>0</number>
-             </property>
-             <property name="maximum">
-              <number>20000</number>
-             </property>
-             <property name="singleStep">
-              <number>2</number>
-             </property>
-             <property name="value">
-              <number>1200</number>
-             </property>
-            </widget>
-           </item>
            <item row="10" column="0">
             <widget class="QLabel" name="_l_3">
              <property name="palette">
@@ -501,13 +485,45 @@
              </property>
             </widget>
            </item>
-           <item row="14" column="0">
-            <widget class="QLabel" name="label_2">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;History of Geometrical Parameters of Previous usages on this data&lt;/p&gt;&lt;p&gt;(ie. you can get exact geometrical parameter when you calculated in the past)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
+           <item row="1" column="1">
+            <widget class="QLabel" name="_l_8">
              <property name="text">
-              <string>Parameter History</string>
+              <string>Start (pixel)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="4" column="2">
+            <widget class="QSpinBox" name="sb_rigx_size">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_horizontal_background_right_right.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="maximum">
+              <number>200</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
+             </property>
+             <property name="value">
+              <number>40</number>
+             </property>
+            </widget>
+           </item>
+           <item row="10" column="2">
+            <widget class="QSpinBox" name="sb_obje_y_size">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_vert_obje_height.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="minimum">
+              <number>0</number>
+             </property>
+             <property name="maximum">
+              <number>20000</number>
+             </property>
+             <property name="singleStep">
+              <number>2</number>
+             </property>
+             <property name="value">
+              <number>50</number>
              </property>
             </widget>
            </item>
@@ -537,72 +553,36 @@
              </property>
             </widget>
            </item>
-           <item row="14" column="1" colspan="2">
-            <widget class="QComboBox" name="cb_parameter_history"/>
+           <item row="6" column="2">
+            <widget class="QLabel" name="_l_4">
+             <property name="text">
+              <string>Height (in pixel)</string>
+             </property>
+            </widget>
            </item>
-           <item row="2" column="1">
-            <widget class="QSpinBox" name="sb_midx_init">
+           <item row="7" column="1">
+            <widget class="QSpinBox" name="sb_gray_y_init">
              <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_horizontal_center_start.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_vert_gray_top.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="minimum">
               <number>0</number>
              </property>
              <property name="maximum">
-              <number>17000</number>
+              <number>20000</number>
              </property>
              <property name="singleStep">
               <number>2</number>
              </property>
              <property name="value">
-              <number>1350</number>
+              <number>1050</number>
              </property>
             </widget>
            </item>
-           <item row="4" column="0">
-            <widget class="QLabel" name="_l_7">
+           <item row="3" column="0">
+            <widget class="QLabel" name="_l_6">
              <property name="text">
-              <string>Hor. (right) relative to center</string>
-             </property>
-            </widget>
-           </item>
-           <item row="12" column="0">
-            <widget class="QLabel" name="_l">
-             <property name="text">
-              <string>Wavelength per pixel (nm/px)</string>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1">
-            <widget class="QSpinBox" name="sb_lefx_init_rel">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_horizontal_background_left_left.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
-             <property name="minimum">
-              <number>-250</number>
-             </property>
-             <property name="maximum">
-              <number>-200</number>
-             </property>
-             <property name="singleStep">
-              <number>2</number>
-             </property>
-             <property name="value">
-              <number>-200</number>
-             </property>
-            </widget>
-           </item>
-           <item row="11" column="0" colspan="3">
-            <widget class="Line" name="line_3">
-             <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
-             </property>
-            </widget>
-           </item>
-           <item row="13" column="0" colspan="3">
-            <widget class="Line" name="line">
-             <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
+              <string>Hor. (left) relative to center</string>
              </property>
             </widget>
            </item>
@@ -990,6 +970,26 @@
          <widget class="QProgressBar" name="pbar_export">
           <property name="value">
            <number>0</number>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="0">
+         <widget class="QLabel" name="label_2">
+          <property name="toolTip">
+           <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;History of Geometrical Parameters of Previous usages on this data&lt;/p&gt;&lt;p&gt;(ie. you can get exact geometrical parameter when you calculated in the past)&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+          </property>
+          <property name="text">
+           <string>Export Parameter History:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="6" column="1">
+         <widget class="QComboBox" name="cb_parameter_history"/>
+        </item>
+        <item row="5" column="0" colspan="2">
+         <widget class="Line" name="line_2">
+          <property name="orientation">
+           <enum>Qt::Orientation::Horizontal</enum>
           </property>
          </widget>
         </item>
