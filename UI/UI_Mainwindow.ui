@@ -533,10 +533,10 @@
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_horizontal_background_right_left.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
              <property name="minimum">
-              <number>1300</number>
+              <number>70</number>
              </property>
              <property name="maximum">
-              <number>9999</number>
+              <number>1500</number>
              </property>
              <property name="singleStep">
               <number>2</number>

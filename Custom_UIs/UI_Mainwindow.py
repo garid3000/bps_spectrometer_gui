@@ -404,8 +404,8 @@ class Ui_MainWindow(object):
 
         self.sb_rigx_init_rel = QSpinBox(self.gb_control_panel)
         self.sb_rigx_init_rel.setObjectName("sb_rigx_init_rel")
-        self.sb_rigx_init_rel.setMinimum(1300)
-        self.sb_rigx_init_rel.setMaximum(9999)
+        self.sb_rigx_init_rel.setMinimum(70)
+        self.sb_rigx_init_rel.setMaximum(1500)
         self.sb_rigx_init_rel.setSingleStep(2)
         self.sb_rigx_init_rel.setValue(1300)
 
