@@ -150,18 +150,6 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.pb_system_file_explorer, 1, 1, 1, 1)
 
-        self.hs_target_distance = QSlider(self.gb_dir_panel)
-        self.hs_target_distance.setObjectName("hs_target_distance")
-        self.hs_target_distance.setMinimum(20)
-        self.hs_target_distance.setMaximum(400)
-        self.hs_target_distance.setSingleStep(10)
-        self.hs_target_distance.setSliderPosition(100)
-        self.hs_target_distance.setOrientation(Qt.Orientation.Horizontal)
-        self.hs_target_distance.setTickPosition(QSlider.TickPosition.TicksAbove)
-        self.hs_target_distance.setTickInterval(20)
-
-        self.gridLayout.addWidget(self.hs_target_distance, 6, 0, 1, 2)
-
         self.cb_ft_filter = QCheckBox(self.gb_dir_panel)
         self.cb_ft_filter.setObjectName("cb_ft_filter")
         self.cb_ft_filter.setChecked(True)
@@ -206,6 +194,23 @@ class Ui_MainWindow(object):
         self.graph_webcam.setObjectName("graph_webcam")
 
         self.gridLayout.addWidget(self.graph_webcam, 5, 0, 1, 2)
+
+        self.hs_target_distance = QSlider(self.gb_dir_panel)
+        self.hs_target_distance.setObjectName("hs_target_distance")
+        self.hs_target_distance.setMinimum(20)
+        self.hs_target_distance.setMaximum(400)
+        self.hs_target_distance.setSingleStep(10)
+        self.hs_target_distance.setSliderPosition(100)
+        self.hs_target_distance.setOrientation(Qt.Orientation.Horizontal)
+        self.hs_target_distance.setTickPosition(QSlider.TickPosition.TicksBothSides)
+        self.hs_target_distance.setTickInterval(20)
+
+        self.gridLayout.addWidget(self.hs_target_distance, 6, 1, 1, 1)
+
+        self.l_target_distance = QLabel(self.gb_dir_panel)
+        self.l_target_distance.setObjectName("l_target_distance")
+
+        self.gridLayout.addWidget(self.l_target_distance, 6, 0, 1, 1)
 
         self.verticalLayout_2.addWidget(self.gb_dir_panel)
 
@@ -933,6 +938,9 @@ class Ui_MainWindow(object):
         # endif // QT_CONFIG(tooltip)
         self.pb_dir_goto_parent.setText(
             QCoreApplication.translate("MainWindow", "Go to parent (Backspace)", None)
+        )
+        self.l_target_distance.setText(
+            QCoreApplication.translate("MainWindow", "Distance:", None)
         )
         self.gp_webcam_meta.setTitle(
             QCoreApplication.translate(

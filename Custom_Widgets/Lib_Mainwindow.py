@@ -129,6 +129,7 @@ class TheMainWindow(QMainWindow):
         self.ui.le_tv_name_narrower.textChanged.connect(self.dir_searching_based_regex)
         self.ui.cb_parameter_history.currentTextChanged.connect(self.set_calculation_params_from_history_selection)
 
+        self.ui.hs_target_distance.valueChanged.connect(self.update_fov_on_webcam)
         # -----------------------------------------------------------------------------
         #self.jp.set_xWaveRng(self.ui.sb_midx_init.value())
         #self.jp.set_yGrayRng((self.ui.sb_gray_y_init.value(), self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value())) # noqa
@@ -286,6 +287,10 @@ class TheMainWindow(QMainWindow):
         )
         self.roi_webcam_fov.setZValue(10)
         self.ui.graph_webcam.view.addItem(self.roi_webcam_fov)
+
+        self.ui.graph_webcam.ui.roiBtn.hide()
+        self.ui.graph_webcam.ui.menuBtn.hide()
+
 
     def init_sb_signals_for_ROI_controls(self) -> None:
         self.ui.sb_gray_y_init.valueChanged.connect(self.update_raw_from_sb)
@@ -484,12 +489,6 @@ class TheMainWindow(QMainWindow):
         self.roi_obje_bgri.setSize((self.ui.sb_rigx_size.value(), self.ui.sb_obje_y_size.value()))
         self.graph_759nm_line_for_2dimg.setPos(pos=self.ui.sb_midx_init.value() + 192*2)
 
-        fov_pw1 = self.pxlspec_to_pxlweb_formula(self.ui.hs_target_distance.value(), self.ui.sb_obje_y_init.value())
-        fov_pw2 = self.pxlspec_to_pxlweb_formula(self.ui.hs_target_distance.value(), self.ui.sb_obje_y_init.value() + self.ui.sb_obje_y_size.value())
-
-        self.roi_webcam_fov.setPos((310, fov_pw1))
-        self.roi_webcam_fov.setSize((20, fov_pw2-fov_pw1))
-
         self.roi_gray_main.blockSignals(False)
         self.roi_gray_bglf.blockSignals(False)
         self.roi_gray_bgri.blockSignals(False)
@@ -510,6 +509,16 @@ class TheMainWindow(QMainWindow):
         # say reflection is changed
         #self.graph5_curve_relf.
         #self.ui.graph_calc5_refl_final.clear()
+
+        self.update_fov_on_webcam()
+
+    def update_fov_on_webcam(self) -> None:
+        self.ui.l_target_distance.setText(f"Distance: {self.ui.hs_target_distance.value()}cm")
+        fov_pw1 = self.pxlspec_to_pxlweb_formula(self.ui.hs_target_distance.value(), self.ui.sb_obje_y_init.value())
+        fov_pw2 = self.pxlspec_to_pxlweb_formula(self.ui.hs_target_distance.value(), self.ui.sb_obje_y_init.value() + self.ui.sb_obje_y_size.value())
+        self.roi_webcam_fov.setPos((310, fov_pw1))
+        self.roi_webcam_fov.setSize((20, fov_pw2-fov_pw1))
+
 
 
     def update_raw_roi_plot_when_sb_or_roi_moved(self) -> None:
