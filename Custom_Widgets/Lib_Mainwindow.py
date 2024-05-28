@@ -677,7 +677,10 @@ class TheMainWindow(QMainWindow):
         self.ddtree.set_ddir(self.dir_path)
         self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
         self.ui.limg_webcam.show_np_img(
-            cv.imread(self.ddtree.webcamFP).astype(np.uint8)[:, :, ::-1]
+            cv.imdecode( # cv.imread have input of unicode path. so needed to read to byte array then decode to cv image
+                np.fromfile(self.ddtree.webcamFP, dtype=np.uint8),
+                cv.IMREAD_UNCHANGED,
+            ).astype(np.uint8)[:, :, ::-1]
             if os.path.isfile(self.ddtree.webcamFP)
             else np.zeros((10, 10, 3), dtype=np.uint8)
         )
