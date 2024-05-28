@@ -63,20 +63,35 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="0">
-            <widget class="QPushButton" name="pb_dir_goto_parent">
-             <property name="toolTip">
-              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Go to parent folder&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-             </property>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="pb_system_file_explorer">
              <property name="text">
-              <string>Go to parent (Backspace)</string>
+              <string>Open Sys. file-explorer</string>
              </property>
             </widget>
            </item>
-           <item row="5" column="0" colspan="2">
-            <widget class="QLabelClick" name="limg_webcam">
-             <property name="text">
-              <string>....</string>
+           <item row="6" column="0" colspan="2">
+            <widget class="QSlider" name="hs_target_distance">
+             <property name="minimum">
+              <number>20</number>
+             </property>
+             <property name="maximum">
+              <number>400</number>
+             </property>
+             <property name="singleStep">
+              <number>10</number>
+             </property>
+             <property name="sliderPosition">
+              <number>100</number>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Orientation::Horizontal</enum>
+             </property>
+             <property name="tickPosition">
+              <enum>QSlider::TickPosition::TicksAbove</enum>
+             </property>
+             <property name="tickInterval">
+              <number>20</number>
              </property>
             </widget>
            </item>
@@ -99,34 +114,6 @@
              </property>
             </widget>
            </item>
-           <item row="6" column="0" colspan="2">
-            <widget class="QTextBrowser" name="tb_meta_json">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>5</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <family>Monospace</family>
-              </font>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QPushButton" name="pb_system_file_explorer">
-             <property name="text">
-              <string>Open Sys. file-explorer</string>
-             </property>
-            </widget>
-           </item>
            <item row="4" column="0">
             <widget class="QLabel" name="_l_14">
              <property name="toolTip">
@@ -137,8 +124,42 @@
              </property>
             </widget>
            </item>
+           <item row="7" column="0" colspan="2">
+            <widget class="QTextBrowser" name="tb_meta_json">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>0</width>
+               <height>1</height>
+              </size>
+             </property>
+             <property name="font">
+              <font>
+               <family>Monospace</family>
+              </font>
+             </property>
+            </widget>
+           </item>
            <item row="4" column="1">
             <widget class="QLineEdit" name="le_tv_name_narrower"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QPushButton" name="pb_dir_goto_parent">
+             <property name="toolTip">
+              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Go to parent folder&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             </property>
+             <property name="text">
+              <string>Go to parent (Backspace)</string>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0" colspan="2">
+            <widget class="ImageView" name="graph_webcam" native="true"/>
            </item>
           </layout>
          </widget>
@@ -1160,11 +1181,6 @@
   </action>
  </widget>
  <customwidgets>
-  <customwidget>
-   <class>QLabelClick</class>
-   <extends>QLabel</extends>
-   <header>Custom_Libs.Lib_QLabelClick_Widget_NoUI</header>
-  </customwidget>
   <customwidget>
    <class>PlotWidget</class>
    <extends>QWidget</extends>

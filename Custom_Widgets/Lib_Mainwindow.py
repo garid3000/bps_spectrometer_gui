@@ -136,6 +136,7 @@ class TheMainWindow(QMainWindow):
 
         self.init_2d_graph_hide_the_original_roi_buttons()
         self.init_all_6_roi()
+        self.init_1_webfov_roi()
         self.init_sb_signals_for_ROI_controls()
         self.init_all_pyqtgraph()
 
@@ -276,6 +277,15 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_calc1_desalted_roi.view.addItem(self.text_for_desalted_img_label3)
         self.ui.graph_calc1_desalted_roi.view.addItem(self.text_for_desalted_img_label4)
         self.ui.graph_calc1_desalted_roi.view.addItem(self.text_for_desalted_img_label5)
+
+    def init_1_webfov_roi(self) -> None:
+        self.roi_webcam_fov = pg.ROI(
+            pos=[100, 100],        # x, y
+            size=pg.Point(30, 40 ),
+            movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
+        )
+        self.roi_webcam_fov.setZValue(10)
+        self.ui.graph_webcam.view.addItem(self.roi_webcam_fov)
 
     def init_sb_signals_for_ROI_controls(self) -> None:
         self.ui.sb_gray_y_init.valueChanged.connect(self.update_raw_from_sb)
@@ -473,6 +483,12 @@ class TheMainWindow(QMainWindow):
         self.roi_obje_bglf.setSize((self.ui.sb_lefx_size.value(), self.ui.sb_obje_y_size.value()))
         self.roi_obje_bgri.setSize((self.ui.sb_rigx_size.value(), self.ui.sb_obje_y_size.value()))
         self.graph_759nm_line_for_2dimg.setPos(pos=self.ui.sb_midx_init.value() + 192*2)
+
+        fov_pw1 = self.pxlspec_to_pxlweb_formula(self.ui.hs_target_distance.value(), self.ui.sb_obje_y_init.value())
+        fov_pw2 = self.pxlspec_to_pxlweb_formula(self.ui.hs_target_distance.value(), self.ui.sb_obje_y_init.value() + self.ui.sb_obje_y_size.value())
+
+        self.roi_webcam_fov.setPos((310, fov_pw1))
+        self.roi_webcam_fov.setSize((20, fov_pw2-fov_pw1))
 
         self.roi_gray_main.blockSignals(False)
         self.roi_gray_bglf.blockSignals(False)
@@ -676,14 +692,24 @@ class TheMainWindow(QMainWindow):
         self.dir_path = os.path.dirname(self.jpeg_path)
         self.ddtree.set_ddir(self.dir_path)
         self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
-        self.ui.limg_webcam.show_np_img(
-            cv.imdecode( # cv.imread have input of unicode path. so needed to read to byte array then decode to cv image
+        #self.ui.limg_webcam.show_np_img(
+        #    cv.imdecode( # cv.imread have input of unicode path. so needed to read to byte array then decode to cv image
+        #        np.fromfile(self.ddtree.webcamFP, dtype=np.uint8),
+        #        cv.IMREAD_UNCHANGED,
+        #    ).astype(np.uint8)[:, :, ::-1]
+        #    if os.path.isfile(self.ddtree.webcamFP)
+        #    else np.zeros((10, 10, 3), dtype=np.uint8)
+        #)
+        self.ui.graph_webcam.setImage(
+            img= cv.imdecode(
                 np.fromfile(self.ddtree.webcamFP, dtype=np.uint8),
                 cv.IMREAD_UNCHANGED,
-            ).astype(np.uint8)[:, :, ::-1]
-            if os.path.isfile(self.ddtree.webcamFP)
-            else np.zeros((10, 10, 3), dtype=np.uint8)
+            ).astype(np.uint8)[:, :, ::-1] if os.path.isfile(self.ddtree.webcamFP)
+            else np.zeros((10, 10, 3), dtype=np.uint8),
+            #levels=(desalted_concatted_bayer_rgb_all_6roi.min(), desalted_concatted_bayer_rgb_all_6roi.max()),
+            axes={"x":1, "y":0, "c":2},
         )
+
         self.jp.load_jpeg_file(self.jpeg_path, also_get_rgb_rerp=True)
         self.update_1_rawbayer_img_data_and_then_plot_below()
 
@@ -971,7 +997,6 @@ class TheMainWindow(QMainWindow):
             "calc5_norm_zero" : [self.ui.sb_calc5_norm_zero.value()],
             "calc5_norm_one"  : [self.ui.sb_calc5_norm_one.value()],
         }
-        print('sadf================================================================')
         print(resultDic)
         return pd.DataFrame(resultDic)
 
@@ -1054,3 +1079,6 @@ class TheMainWindow(QMainWindow):
                      "calc3_calibrate", "calc5_norm", "calc5_norm_zero", "calc5_norm_one",]
         )
         # self.ui.sb_waveperpixel
+
+    def pxlspec_to_pxlweb_formula(self, distance_in_cm: float, pxl_spec: int) -> float:
+        return ( -0.212 + 0.316 / (distance_in_cm + 0.258)) * pxl_spec + 2351.944 / (distance_in_cm + 8.423) + 519.806

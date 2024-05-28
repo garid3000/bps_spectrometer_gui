@@ -39,6 +39,7 @@ from PySide6.QtWidgets import (
     QPushButton,
     QScrollArea,
     QSizePolicy,
+    QSlider,
     QSpinBox,
     QSplitter,
     QStatusBar,
@@ -49,10 +50,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from Custom_Libs.Lib_QLabelClick_Widget_NoUI import QLabelClick
 from pyqtgraph import ImageView, PlotWidget
 
-import QRCs.main_resource
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow: QMainWindow) -> None:
@@ -146,15 +145,22 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.tv_dir, 3, 0, 1, 2)
 
-        self.pb_dir_goto_parent = QPushButton(self.gb_dir_panel)
-        self.pb_dir_goto_parent.setObjectName("pb_dir_goto_parent")
+        self.pb_system_file_explorer = QPushButton(self.gb_dir_panel)
+        self.pb_system_file_explorer.setObjectName("pb_system_file_explorer")
 
-        self.gridLayout.addWidget(self.pb_dir_goto_parent, 1, 0, 1, 1)
+        self.gridLayout.addWidget(self.pb_system_file_explorer, 1, 1, 1, 1)
 
-        self.limg_webcam = QLabelClick(self.gb_dir_panel)
-        self.limg_webcam.setObjectName("limg_webcam")
+        self.hs_target_distance = QSlider(self.gb_dir_panel)
+        self.hs_target_distance.setObjectName("hs_target_distance")
+        self.hs_target_distance.setMinimum(20)
+        self.hs_target_distance.setMaximum(400)
+        self.hs_target_distance.setSingleStep(10)
+        self.hs_target_distance.setSliderPosition(100)
+        self.hs_target_distance.setOrientation(Qt.Orientation.Horizontal)
+        self.hs_target_distance.setTickPosition(QSlider.TickPosition.TicksAbove)
+        self.hs_target_distance.setTickInterval(20)
 
-        self.gridLayout.addWidget(self.limg_webcam, 5, 0, 1, 2)
+        self.gridLayout.addWidget(self.hs_target_distance, 6, 0, 1, 2)
 
         self.cb_ft_filter = QCheckBox(self.gb_dir_panel)
         self.cb_ft_filter.setObjectName("cb_ft_filter")
@@ -162,6 +168,11 @@ class Ui_MainWindow(object):
         self.cb_ft_filter.setTristate(False)
 
         self.gridLayout.addWidget(self.cb_ft_filter, 0, 0, 1, 2)
+
+        self._l_14 = QLabel(self.gb_dir_panel)
+        self._l_14.setObjectName("_l_14")
+
+        self.gridLayout.addWidget(self._l_14, 4, 0, 1, 1)
 
         self.tb_meta_json = QTextBrowser(self.gb_dir_panel)
         self.tb_meta_json.setObjectName("tb_meta_json")
@@ -174,27 +185,27 @@ class Ui_MainWindow(object):
             self.tb_meta_json.sizePolicy().hasHeightForWidth()
         )
         self.tb_meta_json.setSizePolicy(sizePolicy2)
-        self.tb_meta_json.setMinimumSize(QSize(0, 5))
+        self.tb_meta_json.setMinimumSize(QSize(0, 1))
         font1 = QFont()
         font1.setFamilies(["Monospace"])
         self.tb_meta_json.setFont(font1)
 
-        self.gridLayout.addWidget(self.tb_meta_json, 6, 0, 1, 2)
-
-        self.pb_system_file_explorer = QPushButton(self.gb_dir_panel)
-        self.pb_system_file_explorer.setObjectName("pb_system_file_explorer")
-
-        self.gridLayout.addWidget(self.pb_system_file_explorer, 1, 1, 1, 1)
-
-        self._l_14 = QLabel(self.gb_dir_panel)
-        self._l_14.setObjectName("_l_14")
-
-        self.gridLayout.addWidget(self._l_14, 4, 0, 1, 1)
+        self.gridLayout.addWidget(self.tb_meta_json, 7, 0, 1, 2)
 
         self.le_tv_name_narrower = QLineEdit(self.gb_dir_panel)
         self.le_tv_name_narrower.setObjectName("le_tv_name_narrower")
 
         self.gridLayout.addWidget(self.le_tv_name_narrower, 4, 1, 1, 1)
+
+        self.pb_dir_goto_parent = QPushButton(self.gb_dir_panel)
+        self.pb_dir_goto_parent.setObjectName("pb_dir_goto_parent")
+
+        self.gridLayout.addWidget(self.pb_dir_goto_parent, 1, 0, 1, 1)
+
+        self.graph_webcam = ImageView(self.gb_dir_panel)
+        self.graph_webcam.setObjectName("graph_webcam")
+
+        self.gridLayout.addWidget(self.graph_webcam, 5, 0, 1, 2)
 
         self.verticalLayout_2.addWidget(self.gb_dir_panel)
 
@@ -875,19 +886,9 @@ class Ui_MainWindow(object):
         self.gb_dir_panel.setTitle(
             QCoreApplication.translate("MainWindow", "Directory Control Panel", None)
         )
-        # if QT_CONFIG(tooltip)
-        self.pb_dir_goto_parent.setToolTip(
-            QCoreApplication.translate(
-                "MainWindow",
-                "<html><head/><body><p>Go to parent folder</p></body></html>",
-                None,
-            )
+        self.pb_system_file_explorer.setText(
+            QCoreApplication.translate("MainWindow", "Open Sys. file-explorer", None)
         )
-        # endif // QT_CONFIG(tooltip)
-        self.pb_dir_goto_parent.setText(
-            QCoreApplication.translate("MainWindow", "Go to parent (Backspace)", None)
-        )
-        self.limg_webcam.setText(QCoreApplication.translate("MainWindow", "....", None))
         # if QT_CONFIG(tooltip)
         self.cb_ft_filter.setToolTip(
             QCoreApplication.translate(
@@ -909,9 +910,6 @@ class Ui_MainWindow(object):
         self.cb_ft_filter.setText(
             QCoreApplication.translate("MainWindow", "Filter File Type (Ctrl+F)", None)
         )
-        self.pb_system_file_explorer.setText(
-            QCoreApplication.translate("MainWindow", "Open Sys. file-explorer", None)
-        )
         # if QT_CONFIG(tooltip)
         self._l_14.setToolTip(
             QCoreApplication.translate(
@@ -923,6 +921,18 @@ class Ui_MainWindow(object):
         # endif // QT_CONFIG(tooltip)
         self._l_14.setText(
             QCoreApplication.translate("MainWindow", "Narrow by name (Alf+f)", None)
+        )
+        # if QT_CONFIG(tooltip)
+        self.pb_dir_goto_parent.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                "<html><head/><body><p>Go to parent folder</p></body></html>",
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
+        self.pb_dir_goto_parent.setText(
+            QCoreApplication.translate("MainWindow", "Go to parent (Backspace)", None)
         )
         self.gp_webcam_meta.setTitle(
             QCoreApplication.translate(
