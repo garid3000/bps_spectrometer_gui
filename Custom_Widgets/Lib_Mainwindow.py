@@ -1036,14 +1036,14 @@ class TheMainWindow(QMainWindow):
             result = pd.read_csv(path)
         except Exception:
             # make copy of old corrupted csv file
-            shutil.copyfile(path, f"{path}.corrupted_{datetime.now().strftime("%Y%m%d_%H%M%S")}")
+            shutil.copyfile(path, f"{path}.corrupted_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
             return self.create_empty_param_history_pd_df()
 
         if self.check_export_log_pandas_has_correct_format(result):
             return result
         else:
             # make copy of old corrupted csv file
-            shutil.copyfile(path, f"{path}.corrupted_{datetime.now().strftime("%Y%m%d_%H%M%S")}")
+            shutil.copyfile(path, f"{path}.corrupted_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
             # returns empty dataframe
             return self.create_empty_param_history_pd_df()
 
