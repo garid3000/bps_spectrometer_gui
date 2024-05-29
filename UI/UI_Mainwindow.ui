@@ -14,18 +14,8 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_3">
-    <item>
-     <widget class="QLabel" name="label">
-      <property name="toolTip">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/MAIN_howto.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="text">
-       <string>Help: (Move the mouse-cursor here to see operation order)</string>
-      </property>
-     </widget>
-    </item>
-    <item>
+   <layout class="QGridLayout" name="gridLayout_4">
+    <item row="1" column="0">
      <widget class="QSplitter" name="splitter">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
@@ -43,33 +33,7 @@
           <property name="title">
            <string>Directory Control Panel</string>
           </property>
-          <layout class="QGridLayout" name="gridLayout">
-           <item row="3" column="0" colspan="2">
-            <widget class="QTreeView" name="tv_dir">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-               <horstretch>0</horstretch>
-               <verstretch>10</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="font">
-              <font>
-               <family>Monospace</family>
-               <pointsize>10</pointsize>
-              </font>
-             </property>
-             <property name="sortingEnabled">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QPushButton" name="pb_system_file_explorer">
-             <property name="text">
-              <string>Open Sys. file-explorer</string>
-             </property>
-            </widget>
-           </item>
+          <layout class="QGridLayout" name="gridLayout" rowstretch="0,0,0,10,0,10,10,0">
            <item row="0" column="0" colspan="2">
             <widget class="QCheckBox" name="cb_ft_filter">
              <property name="toolTip">
@@ -99,30 +63,6 @@
              </property>
             </widget>
            </item>
-           <item row="7" column="0" colspan="2">
-            <widget class="QTextBrowser" name="tb_meta_json">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="minimumSize">
-              <size>
-               <width>0</width>
-               <height>1</height>
-              </size>
-             </property>
-             <property name="font">
-              <font>
-               <family>Monospace</family>
-              </font>
-             </property>
-            </widget>
-           </item>
-           <item row="4" column="1">
-            <widget class="QLineEdit" name="le_tv_name_narrower"/>
-           </item>
            <item row="1" column="0">
             <widget class="QPushButton" name="pb_dir_goto_parent">
              <property name="toolTip">
@@ -133,38 +73,124 @@
              </property>
             </widget>
            </item>
-           <item row="5" column="0" colspan="2">
-            <widget class="ImageView" name="graph_webcam" native="true"/>
+           <item row="4" column="1">
+            <widget class="QLineEdit" name="le_tv_name_narrower"/>
            </item>
-           <item row="6" column="1">
-            <widget class="QSlider" name="hs_target_distance">
-             <property name="minimum">
-              <number>20</number>
-             </property>
-             <property name="maximum">
-              <number>400</number>
-             </property>
-             <property name="singleStep">
-              <number>10</number>
-             </property>
-             <property name="sliderPosition">
-              <number>100</number>
-             </property>
-             <property name="orientation">
-              <enum>Qt::Orientation::Horizontal</enum>
-             </property>
-             <property name="tickPosition">
-              <enum>QSlider::TickPosition::TicksBothSides</enum>
-             </property>
-             <property name="tickInterval">
-              <number>20</number>
+           <item row="1" column="1">
+            <widget class="QPushButton" name="pb_system_file_explorer">
+             <property name="text">
+              <string>Open Sys. file-explorer</string>
              </property>
             </widget>
            </item>
-           <item row="6" column="0">
-            <widget class="QLabel" name="l_target_distance">
+           <item row="3" column="0" colspan="2">
+            <widget class="QTreeView" name="tv_dir">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+               <horstretch>0</horstretch>
+               <verstretch>10</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="font">
+              <font>
+               <family>Monospace</family>
+               <pointsize>10</pointsize>
+              </font>
+             </property>
+             <property name="sortingEnabled">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item row="5" column="0" colspan="2">
+            <widget class="ImageView" name="graph_webcam" native="true"/>
+           </item>
+           <item row="6" column="0" colspan="2">
+            <widget class="QTabWidget" name="tabWidget_2">
+             <property name="currentIndex">
+              <number>1</number>
+             </property>
+             <widget class="QWidget" name="tab_6">
+              <attribute name="title">
+               <string>Tab 1</string>
+              </attribute>
+              <layout class="QHBoxLayout" name="horizontalLayout">
+               <item>
+                <widget class="QLabel" name="l_target_distance">
+                 <property name="text">
+                  <string>Distance:</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QSlider" name="hs_target_distance">
+                 <property name="minimum">
+                  <number>1</number>
+                 </property>
+                 <property name="maximum">
+                  <number>400</number>
+                 </property>
+                 <property name="singleStep">
+                  <number>10</number>
+                 </property>
+                 <property name="sliderPosition">
+                  <number>100</number>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
+                 </property>
+                 <property name="tickPosition">
+                  <enum>QSlider::TickPosition::TicksBothSides</enum>
+                 </property>
+                 <property name="tickInterval">
+                  <number>20</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tab_7">
+              <attribute name="title">
+               <string>Tab 2</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_3">
+               <item row="1" column="0">
+                <widget class="QSlider" name="hs_physical_height">
+                 <property name="maximum">
+                  <number>200</number>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="GraphicsLayoutWidget" name="graph_physical_orientation" native="true"/>
+               </item>
+               <item row="2" column="0">
+                <widget class="QSlider" name="hs_physical_elv">
+                 <property name="minimum">
+                  <number>-90</number>
+                 </property>
+                 <property name="maximum">
+                  <number>0</number>
+                 </property>
+                 <property name="value">
+                  <number>-45</number>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+            </widget>
+           </item>
+           <item row="7" column="0" colspan="2">
+            <widget class="QLabel" name="tb_meta_json">
              <property name="text">
-              <string>Distance:</string>
+              <string>TextLabel</string>
              </property>
             </widget>
            </item>
@@ -1025,6 +1051,16 @@
       </widget>
      </widget>
     </item>
+    <item row="0" column="0">
+     <widget class="QLabel" name="label">
+      <property name="toolTip">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/MAIN_howto.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="text">
+       <string>Help: (Move the mouse-cursor here to see operation order)</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
@@ -1196,6 +1232,12 @@
   </customwidget>
   <customwidget>
    <class>ImageView</class>
+   <extends>QWidget</extends>
+   <header>pyqtgraph</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GraphicsLayoutWidget</class>
    <extends>QWidget</extends>
    <header>pyqtgraph</header>
    <container>1</container>

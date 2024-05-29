@@ -30,6 +30,7 @@ from PySide6.QtWidgets import (
     QFrame,
     QGridLayout,
     QGroupBox,
+    QHBoxLayout,
     QLabel,
     QLineEdit,
     QMainWindow,
@@ -50,7 +51,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from pyqtgraph import ImageView, PlotWidget
+from pyqtgraph import GraphicsLayoutWidget, ImageView, PlotWidget
 
 
 class Ui_MainWindow(object):
@@ -102,13 +103,8 @@ class Ui_MainWindow(object):
         self.action_tabs_show_tab3.setObjectName("action_tabs_show_tab3")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.verticalLayout_3 = QVBoxLayout(self.centralwidget)
-        self.verticalLayout_3.setObjectName("verticalLayout_3")
-        self.label = QLabel(self.centralwidget)
-        self.label.setObjectName("label")
-
-        self.verticalLayout_3.addWidget(self.label)
-
+        self.gridLayout_4 = QGridLayout(self.centralwidget)
+        self.gridLayout_4.setObjectName("gridLayout_4")
         self.splitter = QSplitter(self.centralwidget)
         self.splitter.setObjectName("splitter")
         sizePolicy = QSizePolicy(
@@ -128,6 +124,33 @@ class Ui_MainWindow(object):
         self.gb_dir_panel.setObjectName("gb_dir_panel")
         self.gridLayout = QGridLayout(self.gb_dir_panel)
         self.gridLayout.setObjectName("gridLayout")
+        self.cb_ft_filter = QCheckBox(self.gb_dir_panel)
+        self.cb_ft_filter.setObjectName("cb_ft_filter")
+        self.cb_ft_filter.setChecked(True)
+        self.cb_ft_filter.setTristate(False)
+
+        self.gridLayout.addWidget(self.cb_ft_filter, 0, 0, 1, 2)
+
+        self._l_14 = QLabel(self.gb_dir_panel)
+        self._l_14.setObjectName("_l_14")
+
+        self.gridLayout.addWidget(self._l_14, 4, 0, 1, 1)
+
+        self.pb_dir_goto_parent = QPushButton(self.gb_dir_panel)
+        self.pb_dir_goto_parent.setObjectName("pb_dir_goto_parent")
+
+        self.gridLayout.addWidget(self.pb_dir_goto_parent, 1, 0, 1, 1)
+
+        self.le_tv_name_narrower = QLineEdit(self.gb_dir_panel)
+        self.le_tv_name_narrower.setObjectName("le_tv_name_narrower")
+
+        self.gridLayout.addWidget(self.le_tv_name_narrower, 4, 1, 1, 1)
+
+        self.pb_system_file_explorer = QPushButton(self.gb_dir_panel)
+        self.pb_system_file_explorer.setObjectName("pb_system_file_explorer")
+
+        self.gridLayout.addWidget(self.pb_system_file_explorer, 1, 1, 1, 1)
+
         self.tv_dir = QTreeView(self.gb_dir_panel)
         self.tv_dir.setObjectName("tv_dir")
         sizePolicy1 = QSizePolicy(
@@ -145,59 +168,25 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.tv_dir, 3, 0, 1, 2)
 
-        self.pb_system_file_explorer = QPushButton(self.gb_dir_panel)
-        self.pb_system_file_explorer.setObjectName("pb_system_file_explorer")
-
-        self.gridLayout.addWidget(self.pb_system_file_explorer, 1, 1, 1, 1)
-
-        self.cb_ft_filter = QCheckBox(self.gb_dir_panel)
-        self.cb_ft_filter.setObjectName("cb_ft_filter")
-        self.cb_ft_filter.setChecked(True)
-        self.cb_ft_filter.setTristate(False)
-
-        self.gridLayout.addWidget(self.cb_ft_filter, 0, 0, 1, 2)
-
-        self._l_14 = QLabel(self.gb_dir_panel)
-        self._l_14.setObjectName("_l_14")
-
-        self.gridLayout.addWidget(self._l_14, 4, 0, 1, 1)
-
-        self.tb_meta_json = QTextBrowser(self.gb_dir_panel)
-        self.tb_meta_json.setObjectName("tb_meta_json")
-        sizePolicy2 = QSizePolicy(
-            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
-        )
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(
-            self.tb_meta_json.sizePolicy().hasHeightForWidth()
-        )
-        self.tb_meta_json.setSizePolicy(sizePolicy2)
-        self.tb_meta_json.setMinimumSize(QSize(0, 1))
-        font1 = QFont()
-        font1.setFamilies(["Monospace"])
-        self.tb_meta_json.setFont(font1)
-
-        self.gridLayout.addWidget(self.tb_meta_json, 7, 0, 1, 2)
-
-        self.le_tv_name_narrower = QLineEdit(self.gb_dir_panel)
-        self.le_tv_name_narrower.setObjectName("le_tv_name_narrower")
-
-        self.gridLayout.addWidget(self.le_tv_name_narrower, 4, 1, 1, 1)
-
-        self.pb_dir_goto_parent = QPushButton(self.gb_dir_panel)
-        self.pb_dir_goto_parent.setObjectName("pb_dir_goto_parent")
-
-        self.gridLayout.addWidget(self.pb_dir_goto_parent, 1, 0, 1, 1)
-
         self.graph_webcam = ImageView(self.gb_dir_panel)
         self.graph_webcam.setObjectName("graph_webcam")
 
         self.gridLayout.addWidget(self.graph_webcam, 5, 0, 1, 2)
 
-        self.hs_target_distance = QSlider(self.gb_dir_panel)
+        self.tabWidget_2 = QTabWidget(self.gb_dir_panel)
+        self.tabWidget_2.setObjectName("tabWidget_2")
+        self.tab_6 = QWidget()
+        self.tab_6.setObjectName("tab_6")
+        self.horizontalLayout = QHBoxLayout(self.tab_6)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.l_target_distance = QLabel(self.tab_6)
+        self.l_target_distance.setObjectName("l_target_distance")
+
+        self.horizontalLayout.addWidget(self.l_target_distance)
+
+        self.hs_target_distance = QSlider(self.tab_6)
         self.hs_target_distance.setObjectName("hs_target_distance")
-        self.hs_target_distance.setMinimum(20)
+        self.hs_target_distance.setMinimum(1)
         self.hs_target_distance.setMaximum(400)
         self.hs_target_distance.setSingleStep(10)
         self.hs_target_distance.setSliderPosition(100)
@@ -205,12 +194,46 @@ class Ui_MainWindow(object):
         self.hs_target_distance.setTickPosition(QSlider.TickPosition.TicksBothSides)
         self.hs_target_distance.setTickInterval(20)
 
-        self.gridLayout.addWidget(self.hs_target_distance, 6, 1, 1, 1)
+        self.horizontalLayout.addWidget(self.hs_target_distance)
 
-        self.l_target_distance = QLabel(self.gb_dir_panel)
-        self.l_target_distance.setObjectName("l_target_distance")
+        self.tabWidget_2.addTab(self.tab_6, "")
+        self.tab_7 = QWidget()
+        self.tab_7.setObjectName("tab_7")
+        self.gridLayout_3 = QGridLayout(self.tab_7)
+        self.gridLayout_3.setObjectName("gridLayout_3")
+        self.hs_physical_height = QSlider(self.tab_7)
+        self.hs_physical_height.setObjectName("hs_physical_height")
+        self.hs_physical_height.setMaximum(200)
+        self.hs_physical_height.setOrientation(Qt.Orientation.Horizontal)
 
-        self.gridLayout.addWidget(self.l_target_distance, 6, 0, 1, 1)
+        self.gridLayout_3.addWidget(self.hs_physical_height, 1, 0, 1, 1)
+
+        self.graph_physical_orientation = GraphicsLayoutWidget(self.tab_7)
+        self.graph_physical_orientation.setObjectName("graph_physical_orientation")
+
+        self.gridLayout_3.addWidget(self.graph_physical_orientation, 0, 0, 1, 1)
+
+        self.hs_physical_elv = QSlider(self.tab_7)
+        self.hs_physical_elv.setObjectName("hs_physical_elv")
+        self.hs_physical_elv.setMinimum(-90)
+        self.hs_physical_elv.setMaximum(0)
+        self.hs_physical_elv.setValue(-45)
+        self.hs_physical_elv.setOrientation(Qt.Orientation.Horizontal)
+
+        self.gridLayout_3.addWidget(self.hs_physical_elv, 2, 0, 1, 1)
+
+        self.tabWidget_2.addTab(self.tab_7, "")
+
+        self.gridLayout.addWidget(self.tabWidget_2, 6, 0, 1, 2)
+
+        self.tb_meta_json = QLabel(self.gb_dir_panel)
+        self.tb_meta_json.setObjectName("tb_meta_json")
+
+        self.gridLayout.addWidget(self.tb_meta_json, 7, 0, 1, 2)
+
+        self.gridLayout.setRowStretch(3, 10)
+        self.gridLayout.setRowStretch(5, 10)
+        self.gridLayout.setRowStretch(6, 10)
 
         self.verticalLayout_2.addWidget(self.gb_dir_panel)
 
@@ -235,26 +258,26 @@ class Ui_MainWindow(object):
 
         self.graph_2dimg = ImageView(self.scrollAreaWidgetContents_2)
         self.graph_2dimg.setObjectName("graph_2dimg")
-        sizePolicy3 = QSizePolicy(
+        sizePolicy2 = QSizePolicy(
             QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding
         )
-        sizePolicy3.setHorizontalStretch(200)
-        sizePolicy3.setVerticalStretch(200)
-        sizePolicy3.setHeightForWidth(self.graph_2dimg.sizePolicy().hasHeightForWidth())
-        self.graph_2dimg.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHorizontalStretch(200)
+        sizePolicy2.setVerticalStretch(200)
+        sizePolicy2.setHeightForWidth(self.graph_2dimg.sizePolicy().hasHeightForWidth())
+        self.graph_2dimg.setSizePolicy(sizePolicy2)
         self.graph_2dimg.setMinimumSize(QSize(400, 200))
 
         self.verticalLayout_4.addWidget(self.graph_2dimg)
 
         self.graph_raw = PlotWidget(self.scrollAreaWidgetContents_2)
         self.graph_raw.setObjectName("graph_raw")
-        sizePolicy4 = QSizePolicy(
+        sizePolicy3 = QSizePolicy(
             QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding
         )
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(200)
-        sizePolicy4.setHeightForWidth(self.graph_raw.sizePolicy().hasHeightForWidth())
-        self.graph_raw.setSizePolicy(sizePolicy4)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(200)
+        sizePolicy3.setHeightForWidth(self.graph_raw.sizePolicy().hasHeightForWidth())
+        self.graph_raw.setSizePolicy(sizePolicy3)
         self.graph_raw.setMinimumSize(QSize(400, 200))
 
         self.verticalLayout_4.addWidget(self.graph_raw)
@@ -460,15 +483,15 @@ class Ui_MainWindow(object):
         self.formLayout.setObjectName("formLayout")
         self.pb_calibrate_calculate = QPushButton(self.gp_spectral_panel)
         self.pb_calibrate_calculate.setObjectName("pb_calibrate_calculate")
-        sizePolicy5 = QSizePolicy(
+        sizePolicy4 = QSizePolicy(
             QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed
         )
-        sizePolicy5.setHorizontalStretch(0)
-        sizePolicy5.setVerticalStretch(0)
-        sizePolicy5.setHeightForWidth(
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(
             self.pb_calibrate_calculate.sizePolicy().hasHeightForWidth()
         )
-        self.pb_calibrate_calculate.setSizePolicy(sizePolicy5)
+        self.pb_calibrate_calculate.setSizePolicy(sizePolicy4)
 
         self.formLayout.setWidget(0, QFormLayout.LabelRole, self.pb_calibrate_calculate)
 
@@ -503,25 +526,30 @@ class Ui_MainWindow(object):
 
         self.graph_calc1_desalted_roi = ImageView(self.tab)
         self.graph_calc1_desalted_roi.setObjectName("graph_calc1_desalted_roi")
-        sizePolicy6 = QSizePolicy(
+        sizePolicy5 = QSizePolicy(
             QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding
         )
-        sizePolicy6.setHorizontalStretch(0)
-        sizePolicy6.setVerticalStretch(0)
-        sizePolicy6.setHeightForWidth(
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(
             self.graph_calc1_desalted_roi.sizePolicy().hasHeightForWidth()
         )
-        self.graph_calc1_desalted_roi.setSizePolicy(sizePolicy6)
+        self.graph_calc1_desalted_roi.setSizePolicy(sizePolicy5)
         self.graph_calc1_desalted_roi.setMinimumSize(QSize(150, 0))
 
         self.verticalLayout_5.addWidget(self.graph_calc1_desalted_roi)
 
         self.txt_calc1_desalt = QTextBrowser(self.tab)
         self.txt_calc1_desalt.setObjectName("txt_calc1_desalt")
-        sizePolicy2.setHeightForWidth(
+        sizePolicy6 = QSizePolicy(
+            QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum
+        )
+        sizePolicy6.setHorizontalStretch(0)
+        sizePolicy6.setVerticalStretch(0)
+        sizePolicy6.setHeightForWidth(
             self.txt_calc1_desalt.sizePolicy().hasHeightForWidth()
         )
-        self.txt_calc1_desalt.setSizePolicy(sizePolicy2)
+        self.txt_calc1_desalt.setSizePolicy(sizePolicy6)
         self.txt_calc1_desalt.setMinimumSize(QSize(0, 0))
         self.txt_calc1_desalt.setMaximumSize(QSize(16777215, 80))
 
@@ -552,10 +580,10 @@ class Ui_MainWindow(object):
 
         self.txt_calc2_bg = QTextBrowser(self.tab_2)
         self.txt_calc2_bg.setObjectName("txt_calc2_bg")
-        sizePolicy2.setHeightForWidth(
+        sizePolicy6.setHeightForWidth(
             self.txt_calc2_bg.sizePolicy().hasHeightForWidth()
         )
-        self.txt_calc2_bg.setSizePolicy(sizePolicy2)
+        self.txt_calc2_bg.setSizePolicy(sizePolicy6)
         self.txt_calc2_bg.setMaximumSize(QSize(16777215, 80))
 
         self.verticalLayout_6.addWidget(self.txt_calc2_bg)
@@ -732,7 +760,12 @@ class Ui_MainWindow(object):
 
         self.splitter.addWidget(self.gp_spectral_panel)
 
-        self.verticalLayout_3.addWidget(self.splitter)
+        self.gridLayout_4.addWidget(self.splitter, 1, 0, 1, 1)
+
+        self.label = QLabel(self.centralwidget)
+        self.label.setObjectName("label")
+
+        self.gridLayout_4.addWidget(self.label, 0, 0, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
@@ -782,6 +815,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
+        self.tabWidget_2.setCurrentIndex(1)
         self.tabWidget.setCurrentIndex(4)
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -872,27 +906,8 @@ class Ui_MainWindow(object):
                 "MainWindow", "Spectrum-Reflectance Tab (Ctrl+3) or (Alt+3)", None
             )
         )
-        # if QT_CONFIG(tooltip)
-        self.label.setToolTip(
-            QCoreApplication.translate(
-                "MainWindow",
-                '<html><head/><body><p><img src=":/newPrefix/MAIN_howto.png"/></p></body></html>',
-                None,
-            )
-        )
-        # endif // QT_CONFIG(tooltip)
-        self.label.setText(
-            QCoreApplication.translate(
-                "MainWindow",
-                "Help: (Move the mouse-cursor here to see operation order)",
-                None,
-            )
-        )
         self.gb_dir_panel.setTitle(
             QCoreApplication.translate("MainWindow", "Directory Control Panel", None)
-        )
-        self.pb_system_file_explorer.setText(
-            QCoreApplication.translate("MainWindow", "Open Sys. file-explorer", None)
         )
         # if QT_CONFIG(tooltip)
         self.cb_ft_filter.setToolTip(
@@ -939,8 +954,22 @@ class Ui_MainWindow(object):
         self.pb_dir_goto_parent.setText(
             QCoreApplication.translate("MainWindow", "Go to parent (Backspace)", None)
         )
+        self.pb_system_file_explorer.setText(
+            QCoreApplication.translate("MainWindow", "Open Sys. file-explorer", None)
+        )
         self.l_target_distance.setText(
             QCoreApplication.translate("MainWindow", "Distance:", None)
+        )
+        self.tabWidget_2.setTabText(
+            self.tabWidget_2.indexOf(self.tab_6),
+            QCoreApplication.translate("MainWindow", "Tab 1", None),
+        )
+        self.tabWidget_2.setTabText(
+            self.tabWidget_2.indexOf(self.tab_7),
+            QCoreApplication.translate("MainWindow", "Tab 2", None),
+        )
+        self.tb_meta_json.setText(
+            QCoreApplication.translate("MainWindow", "TextLabel", None)
         )
         self.gp_webcam_meta.setTitle(
             QCoreApplication.translate(
@@ -1164,6 +1193,22 @@ class Ui_MainWindow(object):
         # endif // QT_CONFIG(tooltip)
         self.label_2.setText(
             QCoreApplication.translate("MainWindow", "Export Parameter History:", None)
+        )
+        # if QT_CONFIG(tooltip)
+        self.label.setToolTip(
+            QCoreApplication.translate(
+                "MainWindow",
+                '<html><head/><body><p><img src=":/newPrefix/MAIN_howto.png"/></p></body></html>',
+                None,
+            )
+        )
+        # endif // QT_CONFIG(tooltip)
+        self.label.setText(
+            QCoreApplication.translate(
+                "MainWindow",
+                "Help: (Move the mouse-cursor here to see operation order)",
+                None,
+            )
         )
         self.menuFile.setTitle(
             QCoreApplication.translate("MainWindow", "Operation", None)

@@ -144,6 +144,12 @@ class TheMainWindow(QMainWindow):
         self.init_keyboard_bindings()
         self.init_actions()
 
+        #self.update_physical_graph()
+
+        self.init_physical_repr_graph()
+        self.ui.hs_physical_elv.valueChanged.connect(self.update_physical_graph)
+        self.ui.hs_physical_height.valueChanged.connect(self.update_physical_graph)
+
 
     def dir_searching_based_regex(self) -> None:
         current_search_prompt = self.ui.le_tv_name_narrower.text()
@@ -1091,3 +1097,102 @@ class TheMainWindow(QMainWindow):
 
     def pxlspec_to_pxlweb_formula(self, distance_in_cm: float, pxl_spec: int) -> float:
         return ( -0.212 + 0.316 / (distance_in_cm + 0.258)) * pxl_spec + 2351.944 / (distance_in_cm + 8.423) + 519.806
+
+    def init_physical_repr_graph(self) -> None:
+        v = self.ui.graph_physical_orientation.addViewBox() # noqa # type: ignore
+        v.setAspectLocked()
+
+        self.graph_physical_spectrometer_shape = pg.GraphItem()
+        v.addItem(self.graph_physical_spectrometer_shape)
+
+        self.graph_physical_spectrometer_shape_vertex = np.array(
+            [ [0.0,   0.0 - 2.5],  # 0
+              [0.0,   5.0 - 2.5],  # 1
+              [-9.6,  5.0 - 2.5],  # 2
+              [-9.6,  8.0 - 2.5],  # 3
+              [-10.3, 8.6 - 2.5],  # 4
+              [-10.3, 9.0 - 2.5],  # 5
+              [-14.7, 9.0 - 2.5],  # 6
+              [-14.7, 0.0 - 2.5],  # 7
+            ]
+        )
+        self.graph_physical_spectrometer_shape_edges = np.array(
+            [ [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0]]
+        )
+
+        self.graph_physical_spectrometer_shape_edges_colors = np.array(
+            [
+                (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1),
+                (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1),
+            ],
+            dtype=[
+                ("red", np.ubyte),
+                ("green", np.ubyte),
+                ("blue", np.ubyte),
+                ("alpha", np.ubyte),
+                ("width", float),
+            ],
+        )
+        # ------------------------------------------------------------------------------------------------------------
+        self.graph_physical_vfov_ground_projection_shape = pg.GraphItem()
+        v.addItem(self.graph_physical_vfov_ground_projection_shape)
+
+        self.graph_physical_vfov_ground_proj_vertex = np.array(
+            [ [0.0,   0.0],  # 0
+              [0,   -self.ui.hs_physical_height.value()],  # 1
+              [self.ui.hs_physical_height.value()* np.tan(np.pi/2 + np.radians(self.ui.hs_physical_elv.value() -1.85)),   -self.ui.hs_physical_height.value()],  # 2
+              [self.ui.hs_physical_height.value()* np.tan(np.pi/2 + np.radians(self.ui.hs_physical_elv.value()      )),   -self.ui.hs_physical_height.value()],  # 3
+              [self.ui.hs_physical_height.value()* np.tan(np.pi/2 + np.radians(self.ui.hs_physical_elv.value() +5.61)),   -self.ui.hs_physical_height.value()],  # 4
+            ]
+        )
+        self.graph_physical_vfov_ground_proj_edges = np.array(
+            [ [0, 1], [0,2], [0,3], [0,4], [1, 4]]
+        )
+
+        self.graph_physical_vfov_ground_proj_edges_colors = np.array(
+            [
+                (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), #(255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1),
+            ],
+            dtype=[
+                ("red", np.ubyte),
+                ("green", np.ubyte),
+                ("blue", np.ubyte),
+                ("alpha", np.ubyte),
+                ("width", float),
+            ],
+        )
+
+        self.update_physical_graph()
+
+    def update_physical_graph(self) -> None:
+        print("I updateing")
+        rad_elv = np.radians(self.ui.hs_physical_elv.value())
+        rot_mat = np.array([
+            [np.cos(rad_elv), -np.sin(rad_elv)],
+            [np.sin(rad_elv),  np.cos(rad_elv)],
+        ])
+
+        self.graph_physical_spectrometer_shape.setData(
+            pos=(rot_mat @ self.graph_physical_spectrometer_shape_vertex.T).T,
+            adj=self.graph_physical_spectrometer_shape_edges,
+            pen=self.graph_physical_spectrometer_shape_edges_colors,
+            size=0,
+            pxMode=False,
+        )
+
+        self.graph_physical_vfov_ground_proj_vertex = np.array(
+            [ [0.0,   0.0],  # 0
+              [0,   -self.ui.hs_physical_height.value()],  # 1
+              [self.ui.hs_physical_height.value()* np.tan(np.pi/2 + np.radians(self.ui.hs_physical_elv.value() -1.85)),   -self.ui.hs_physical_height.value()],  # 2
+              [self.ui.hs_physical_height.value()* np.tan(np.pi/2 + np.radians(self.ui.hs_physical_elv.value()      )),   -self.ui.hs_physical_height.value()],  # 3
+              [self.ui.hs_physical_height.value()* np.tan(np.pi/2 + np.radians(self.ui.hs_physical_elv.value() +5.61)),   -self.ui.hs_physical_height.value()],  # 4
+            ]
+        )
+
+        self.graph_physical_vfov_ground_projection_shape.setData(
+            pos=self.graph_physical_vfov_ground_proj_vertex,
+            adj=self.graph_physical_vfov_ground_proj_edges,
+            pen=self.graph_physical_vfov_ground_proj_edges_colors,
+            size=0,
+            pxMode=False,
+        )
