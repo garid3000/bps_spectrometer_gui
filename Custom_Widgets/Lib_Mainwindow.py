@@ -1169,12 +1169,12 @@ class TheMainWindow(QMainWindow):
         self.update_physical_graph()
 
     def update_physical_graph(self) -> None:
-        print("I updateing")
         rad_elv = np.radians(self.ui.hs_physical_elv.value())
         rot_mat = np.array([
             [np.cos(rad_elv), -np.sin(rad_elv)],
             [np.sin(rad_elv),  np.cos(rad_elv)],
         ])
+        d = self.ui.hs_physical_height.value() / np.sin(- rad_elv)
 
         self.graph_physical_spectrometer_shape.setData(
             pos=(rot_mat @ self.graph_physical_spectrometer_shape_vertex.T).T,
@@ -1200,3 +1200,10 @@ class TheMainWindow(QMainWindow):
             size=0,
             pxMode=False,
         )
+
+        self.ui.l_physical_elv.setText(f"Pitch: {self.ui.hs_physical_elv.value()}deg")
+        self.ui.l_physical_height.setText(f"Height: {self.ui.hs_physical_height.value()}cm")
+        self.ui.l_physical_distance.setText(f"Distance: {d:.1f}cm")
+
+        # controll the other tab
+        self.ui.hs_target_distance.setValue(d)

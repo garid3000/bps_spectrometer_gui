@@ -108,7 +108,7 @@
            <item row="6" column="0" colspan="2">
             <widget class="QTabWidget" name="tabWidget_2">
              <property name="currentIndex">
-              <number>1</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="tab_6">
               <attribute name="title">
@@ -155,22 +155,16 @@
               </attribute>
               <layout class="QGridLayout" name="gridLayout_3">
                <item row="1" column="0">
-                <widget class="QSlider" name="hs_physical_height">
-                 <property name="maximum">
-                  <number>300</number>
-                 </property>
-                 <property name="value">
-                  <number>150</number>
-                 </property>
-                 <property name="orientation">
-                  <enum>Qt::Orientation::Horizontal</enum>
+                <widget class="QLabel" name="l_physical_height">
+                 <property name="text">
+                  <string>Height: </string>
                  </property>
                 </widget>
                </item>
-               <item row="0" column="0">
+               <item row="0" column="0" colspan="2">
                 <widget class="GraphicsLayoutWidget" name="graph_physical_orientation" native="true"/>
                </item>
-               <item row="2" column="0">
+               <item row="2" column="1">
                 <widget class="QSlider" name="hs_physical_elv">
                  <property name="minimum">
                   <number>-90</number>
@@ -186,6 +180,39 @@
                  </property>
                 </widget>
                </item>
+               <item row="1" column="1">
+                <widget class="QSlider" name="hs_physical_height">
+                 <property name="maximum">
+                  <number>300</number>
+                 </property>
+                 <property name="value">
+                  <number>150</number>
+                 </property>
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="l_physical_elv">
+                 <property name="text">
+                  <string>Pitch:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0" colspan="2">
+                <widget class="QLabel" name="l_physical_distance">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="text">
+                  <string>Distance:</string>
+                 </property>
+                </widget>
+               </item>
               </layout>
              </widget>
             </widget>
@@ -193,7 +220,7 @@
            <item row="7" column="0" colspan="2">
             <widget class="QLabel" name="tb_meta_json">
              <property name="text">
-              <string>TextLabel</string>
+              <string/>
              </property>
             </widget>
            </item>
