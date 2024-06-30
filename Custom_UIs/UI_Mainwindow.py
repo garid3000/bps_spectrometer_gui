@@ -203,7 +203,8 @@ class Ui_MainWindow(object):
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.hs_physical_height = QSlider(self.tab_7)
         self.hs_physical_height.setObjectName("hs_physical_height")
-        self.hs_physical_height.setMaximum(200)
+        self.hs_physical_height.setMaximum(300)
+        self.hs_physical_height.setValue(150)
         self.hs_physical_height.setOrientation(Qt.Orientation.Horizontal)
 
         self.gridLayout_3.addWidget(self.hs_physical_height, 1, 0, 1, 1)
@@ -247,14 +248,24 @@ class Ui_MainWindow(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 438, 450))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 438, 452))
         self.verticalLayout_4 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
+        self.horizontalLayout_2 = QHBoxLayout()
+        self.horizontalLayout_2.setObjectName("horizontalLayout_2")
         self.cb_rawbayer_visual_demosiac = QCheckBox(self.scrollAreaWidgetContents_2)
         self.cb_rawbayer_visual_demosiac.setObjectName("cb_rawbayer_visual_demosiac")
         self.cb_rawbayer_visual_demosiac.setChecked(True)
 
-        self.verticalLayout_4.addWidget(self.cb_rawbayer_visual_demosiac)
+        self.horizontalLayout_2.addWidget(self.cb_rawbayer_visual_demosiac)
+
+        self.cb_invert_y_axis_of_rawbayer = QCheckBox(self.scrollAreaWidgetContents_2)
+        self.cb_invert_y_axis_of_rawbayer.setObjectName("cb_invert_y_axis_of_rawbayer")
+        self.cb_invert_y_axis_of_rawbayer.setChecked(True)
+
+        self.horizontalLayout_2.addWidget(self.cb_invert_y_axis_of_rawbayer)
+
+        self.verticalLayout_4.addLayout(self.horizontalLayout_2)
 
         self.graph_2dimg = ImageView(self.scrollAreaWidgetContents_2)
         self.graph_2dimg.setObjectName("graph_2dimg")
@@ -982,6 +993,9 @@ class Ui_MainWindow(object):
             QCoreApplication.translate(
                 "MainWindow", "Demosiac Bayer (just for visual)", None
             )
+        )
+        self.cb_invert_y_axis_of_rawbayer.setText(
+            QCoreApplication.translate("MainWindow", "Invert Y axis", None)
         )
         self.gb_control_panel.setTitle("")
         self._l_7.setText(

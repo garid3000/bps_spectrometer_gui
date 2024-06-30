@@ -157,7 +157,10 @@
                <item row="1" column="0">
                 <widget class="QSlider" name="hs_physical_height">
                  <property name="maximum">
-                  <number>200</number>
+                  <number>300</number>
+                 </property>
+                 <property name="value">
+                  <number>150</number>
                  </property>
                  <property name="orientation">
                   <enum>Qt::Orientation::Horizontal</enum>
@@ -215,19 +218,33 @@
              <x>0</x>
              <y>0</y>
              <width>438</width>
-             <height>450</height>
+             <height>452</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
             <item>
-             <widget class="QCheckBox" name="cb_rawbayer_visual_demosiac">
-              <property name="text">
-               <string>Demosiac Bayer (just for visual)</string>
-              </property>
-              <property name="checked">
-               <bool>true</bool>
-              </property>
-             </widget>
+             <layout class="QHBoxLayout" name="horizontalLayout_2">
+              <item>
+               <widget class="QCheckBox" name="cb_rawbayer_visual_demosiac">
+                <property name="text">
+                 <string>Demosiac Bayer (just for visual)</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QCheckBox" name="cb_invert_y_axis_of_rawbayer">
+                <property name="text">
+                 <string>Invert Y axis</string>
+                </property>
+                <property name="checked">
+                 <bool>true</bool>
+                </property>
+               </widget>
+              </item>
+             </layout>
             </item>
             <item>
              <widget class="ImageView" name="graph_2dimg" native="true">

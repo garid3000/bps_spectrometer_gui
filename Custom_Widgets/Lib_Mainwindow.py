@@ -134,6 +134,10 @@ class TheMainWindow(QMainWindow):
         #self.jp.set_xWaveRng(self.ui.sb_midx_init.value())
         #self.jp.set_yGrayRng((self.ui.sb_gray_y_init.value(), self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value())) # noqa
         #self.jp.set_yObjeRng((self.ui.sb_obje_y_init.value(), self.ui.sb_obje_y_init.value() + self.ui.sb_obje_y_size.value())) # noqa
+        self.ui.graph_2dimg.view.invertY(not self.ui.cb_invert_y_axis_of_rawbayer.isChecked())
+        self.ui.cb_invert_y_axis_of_rawbayer.stateChanged.connect(
+            lambda: self.ui.graph_2dimg.view.invertY(not self.ui.cb_invert_y_axis_of_rawbayer.isChecked())
+        )
 
         self.init_2d_graph_hide_the_original_roi_buttons()
         self.init_all_6_roi()
