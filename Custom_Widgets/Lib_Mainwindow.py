@@ -917,16 +917,18 @@ class TheMainWindow(QMainWindow):
             pass
         self.ui.pbar_export.setValue(50)
         if self.ui.cb_export_ref_CSV_simple.isChecked():
-            tmpcsv = np.zeros((1000, 3), dtype=np.float64)
+            tmpcsv = np.zeros((1000, 5), dtype=np.float64)
             tmpcsv[:, 0] = self.jp.gray.rchan_759nm_calibrated.index[-1000:]
             tmpcsv[:, 1] = self.jp.ref_fancy
             tmpcsv[:, 2] = self.jp.ref_fancy_normed if self.ui.cb_calc5_norm.isChecked() else 0
+            tmpcsv[:, 3] = self.jp.obje_fancy_dn_bg_substracted
+            tmpcsv[:, 4] = self.jp.gray_fancy_dn_bg_substracted
             outfname = os.path.join(os.path.join(self.ddtree.ddir, "output", "refl_output.csv"))
             print(outfname)
             np.savetxt(outfname,
                        tmpcsv,
-                       ("%3.1f", "%2.5f", "%2.5f"),
-                       header=f"wave, refl, refl_norm_{self.ui.sb_calc5_norm_zero.value()}_{self.ui.sb_calc5_norm_one.value()}",
+                       ("%3.1f", "%2.5f", "%2.5f", "%3.2f", "%3.2f"),
+                       header=f"wave, refl, refl_norm_{self.ui.sb_calc5_norm_zero.value()}_{self.ui.sb_calc5_norm_one.value()}, DN-obje(bg-substracted), DN-gray(bg-substracted)",
                        delimiter=",")
         self.ui.pbar_export.setValue(100)
 
