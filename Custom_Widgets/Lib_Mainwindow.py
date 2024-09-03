@@ -923,7 +923,7 @@ class TheMainWindow(QMainWindow):
             tmpcsv[:, 2] = self.jp.ref_fancy_normed if self.ui.cb_calc5_norm.isChecked() else 0
             tmpcsv[:, 3] = self.jp.obje_fancy_dn_bg_substracted
             tmpcsv[:, 4] = self.jp.gray_fancy_dn_bg_substracted
-            outfname = os.path.join(os.path.join(self.ddtree.ddir, "output", "refl_output.csv"))
+            outfname = os.path.join(os.path.join(self.ddtree.ddir, "output", datetime.now().strftime("refl_output_on_%Y%m%d_%H%M%S.csv")))
             print(outfname)
             np.savetxt(outfname,
                        tmpcsv,
