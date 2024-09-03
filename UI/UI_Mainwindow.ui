@@ -108,7 +108,7 @@
            <item row="6" column="0" colspan="2">
             <widget class="QTabWidget" name="tabWidget_2">
              <property name="currentIndex">
-              <number>0</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="tab_6">
               <attribute name="title">
@@ -735,7 +735,7 @@
             <item>
              <widget class="QTabWidget" name="tabWidget">
               <property name="currentIndex">
-               <number>4</number>
+               <number>3</number>
               </property>
               <widget class="QWidget" name="tab">
                <attribute name="title">
@@ -890,6 +890,16 @@
                    </size>
                   </property>
                  </widget>
+                </item>
+               </layout>
+              </widget>
+              <widget class="QWidget" name="tab_8">
+               <attribute name="title">
+                <string>gray-to-white</string>
+               </attribute>
+               <layout class="QGridLayout" name="gridLayout_5">
+                <item row="0" column="0">
+                 <widget class="PlotWidget" name="graph_gray2white" native="true"/>
                 </item>
                </layout>
               </widget>

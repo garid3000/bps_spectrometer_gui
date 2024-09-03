@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'UI_Mainwindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.0
+## Created by: Qt User Interface Compiler version 6.7.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -657,6 +657,16 @@ class Ui_MainWindow(object):
         self.verticalLayout_7.addWidget(self.txt_calc3_cal759)
 
         self.tabWidget.addTab(self.tab_3, "")
+        self.tab_8 = QWidget()
+        self.tab_8.setObjectName("tab_8")
+        self.gridLayout_5 = QGridLayout(self.tab_8)
+        self.gridLayout_5.setObjectName("gridLayout_5")
+        self.graph_gray2white = PlotWidget(self.tab_8)
+        self.graph_gray2white.setObjectName("graph_gray2white")
+
+        self.gridLayout_5.addWidget(self.graph_gray2white, 0, 0, 1, 1)
+
+        self.tabWidget.addTab(self.tab_8, "")
         self.tab_4 = QWidget()
         self.tab_4.setObjectName("tab_4")
         self.verticalLayout_9 = QVBoxLayout(self.tab_4)
@@ -850,8 +860,8 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget_2.setCurrentIndex(0)
-        self.tabWidget.setCurrentIndex(4)
+        self.tabWidget_2.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(3)
 
         QMetaObject.connectSlotsByName(MainWindow)
 
@@ -1183,6 +1193,10 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tab_3),
             QCoreApplication.translate("MainWindow", "759 calib.", None),
+        )
+        self.tabWidget.setTabText(
+            self.tabWidget.indexOf(self.tab_8),
+            QCoreApplication.translate("MainWindow", "gray-to-white", None),
         )
         self.tabWidget.setTabText(
             self.tabWidget.indexOf(self.tab_4),

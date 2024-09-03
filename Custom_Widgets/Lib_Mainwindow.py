@@ -386,6 +386,12 @@ class TheMainWindow(QMainWindow):
         self.graph3_curve_759_calib_obje_g_bg = self.ui.graph_calc3_759_calib.plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DotLine),  name="BG: G-object")
         self.graph3_curve_759_calib_obje_b_bg = self.ui.graph_calc3_759_calib.plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DotLine),  name="BG: B-object")
 
+        # graph3.5 for the sh
+        self.graph3_5_gray2white_r = self.ui.graph_gray2white.plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DotLine),  name="red")
+        self.graph3_5_gray2white_g = self.ui.graph_gray2white.plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DotLine),  name="green")
+        self.graph3_5_gray2white_b = self.ui.graph_gray2white.plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DotLine),  name="blue")
+        self.graph3_5_gray2white_k = self.ui.graph_gray2white.plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine),  name="black")
+
         # --------graph 4:  rgb refl  ---------------------------------------------------------------------
         self.ui.graph_calc4_refl_rgb.clear()
         self.ui.graph_calc4_refl_rgb.addLegend()
@@ -766,14 +772,21 @@ class TheMainWindow(QMainWindow):
         self.ui.tabWidget.setCurrentIndex(2)
         time.sleep(.1)
 
+        # gray 2 white
+        #self.call_calibrate_and_calculate_calc3_759_calib()
+        self.call_calibrate_and_calculate_calc3_5_gray2white()
+        self.ui.pbar_calc.setValue(60)
+        self.ui.tabWidget.setCurrentIndex(3)
+        time.sleep(.1)
+
         self.call_calibrate_and_calculate_calc4_rgb_refl()
         self.ui.pbar_calc.setValue(75)
-        self.ui.tabWidget.setCurrentIndex(3)
+        self.ui.tabWidget.setCurrentIndex(4)
         time.sleep(.1)
 
         self.call_calibrate_and_calculate_calc5_refl_n_norm()
         self.ui.pbar_calc.setValue(100)
-        self.ui.tabWidget.setCurrentIndex(4)
+        self.ui.tabWidget.setCurrentIndex(5)
         time.sleep(.1)
 
 
@@ -868,6 +881,16 @@ class TheMainWindow(QMainWindow):
         self.graph3_curve_759_calib_obje_r_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_r_popt)))   # type: ignore
         self.graph3_curve_759_calib_obje_g_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_g_popt)))   # type: ignore
         self.graph3_curve_759_calib_obje_b_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_b_popt)))   # type: ignore
+
+
+    def call_calibrate_and_calculate_calc3_5_gray2white(self) -> None:
+        self.jp.calibrate_n_calculate_final_output()
+        tmp_x = self.jp.mgray2white[:, 0]
+
+        self.graph3_5_gray2white_r.setData(tmp_x, self.jp.mgray2white[:, 4])
+        self.graph3_5_gray2white_g.setData(tmp_x, self.jp.mgray2white[:, 2])
+        self.graph3_5_gray2white_b.setData(tmp_x, self.jp.mgray2white[:, 1])
+        self.graph3_5_gray2white_k.setData(tmp_x, self.jp.mgray2white[:, 5])
 
     def call_calibrate_and_calculate_calc4_rgb_refl(self) -> None:
         self.jp.fancy_reflectance()
