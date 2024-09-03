@@ -3,3 +3,8 @@
 app.1.log
 /build
 /dist
+.main.py.~undo-tree~
+Custom_Widgets/.Lib_Mainwindow.py.~undo-tree~
+user-history.db
+symbology-style.db
+main.spec
