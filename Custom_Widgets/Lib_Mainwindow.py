@@ -19,7 +19,7 @@ import pandas as pd
 # ---------- GUI libraries --------------------------------------------------------------------------------------------
 from PySide6.QtWidgets import QMainWindow, QWidget, QFileSystemModel, QMessageBox
 from PySide6.QtGui import QKeySequence, QShortcut, QColor
-from PySide6.QtCore import QModelIndex, QDir, Qt, QPersistentModelIndex
+from PySide6.QtCore import QModelIndex, QDir, Qt, QPersistentModelIndex, QPointF
 
 # ---------- Custom libs ----------------------------------------------------------------------------------------------
 from Custom_UIs.UI_Mainwindow import Ui_MainWindow
@@ -245,10 +245,116 @@ class TheMainWindow(QMainWindow):
         self.graph4_curve_relf_g = self.ui.graph_calc4_refl_rgb.getPlotItem().plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-refl")
         self.graph4_curve_relf_b = self.ui.graph_calc4_refl_rgb.getPlotItem().plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="B-refl")
 
+        #   -----------------------------------------------------------------------------------------------------------
+        self.graph_759nm_line_for_2dimg = pg.InfiniteLine(
+            pos=192*2 + self.ui.sb_midx_init.value(), movable=False, angle=90, label="759.3nm",
+            #labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}
+        )
+        self.ui.graph_2dimg.getView().addItem(self.graph_759nm_line_for_2dimg)
+
+        self.graph_desalted_graphs_sep_line_y0 = pg.InfiniteLine(pos=0, movable=False, angle=0)
+        self.graph_desalted_graphs_sep_line_x0 = pg.InfiniteLine(pos=0, movable=False, angle=90)
+        self.graph_desalted_graphs_sep_line_x1 = pg.InfiniteLine(pos=0, movable=False, angle=90)
+
+        self.text_for_desalted_img_label0 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">BG-Gray</span></div>',   anchor=(0, 0), border="w", fill=(100, 100, 100, 100))
+        self.text_for_desalted_img_label1 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">Gray</span></div>',      anchor=(0, 0), border="w", fill=(200,  50,  50, 100))
+        self.text_for_desalted_img_label2 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">BG-Gray</span></div>',   anchor=(0, 0), border="w", fill=(100, 100, 100, 100))
+        self.text_for_desalted_img_label3 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">BG-Object</span></div>', anchor=(0, 0), border="w", fill=(100, 100, 100, 100))
+        self.text_for_desalted_img_label4 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">Object</span></div>',    anchor=(0, 0), border="w", fill=(50,   50, 200, 100))
+        self.text_for_desalted_img_label5 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">BG-Object</span></div>', anchor=(0, 0), border="w", fill=(100, 100, 100, 100))
+
+        #   -----------------------------------------------------------------------------------------------------------
+        # def init_1_webfov_roi(self) -> None:
+        self.roi_webcam_fov = pg.ROI(
+            pos=[100, 100],        # x, y
+            size=pg.Point(30, 40 ),
+            movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
+        )
+        self.roi_webcam_fov.setZValue(10)
+        self.ui.graph_webcam.getView().addItem(self.roi_webcam_fov)
+
+        self.ui.graph_webcam.ui.roiBtn.hide()
+        self.ui.graph_webcam.ui.menuBtn.hide()
+
+
+        # -------------------------------------------------------------------------------------------------------------
+        self.graph5_curve_relf = self.ui.graph_calc5_refl_final.getPlotItem().plot(
+            pen=pg.mkPen(
+                "k",
+                width=1, style=Qt.PenStyle.SolidLine
+            ), name="Reflection")
+        self.graph5_norm_zero_line = pg.InfiniteLine(
+                pos=self.ui.sb_calc5_norm_zero.value(),
+                movable=False, angle=90,
+                label="x={value:0.2f}nm",
+                labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True})
+        self.graph5_norm_one_line = pg.InfiniteLine(
+                pos=self.ui.sb_calc5_norm_one.value(),
+                movable=False, angle=90,
+                label="x={value:0.2f}nm",
+                labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True})
+        #   -----------------------------------------------------------------------------------------------------------
+
+        self.graph_physical_spectrometer_shape = pg.GraphItem()
+        self.graph_physical_spectrometer_shape_vertex = np.array(
+            [ [0.0,   0.0 - 2.5],  # 0
+              [0.0,   5.0 - 2.5],  # 1
+              [-9.6,  5.0 - 2.5],  # 2
+              [-9.6,  8.0 - 2.5],  # 3
+              [-10.3, 8.6 - 2.5],  # 4
+              [-10.3, 9.0 - 2.5],  # 5
+              [-14.7, 9.0 - 2.5],  # 6
+              [-14.7, 0.0 - 2.5],  # 7
+            ]
+        )
+        self.graph_physical_spectrometer_shape_edges = np.array(
+            [ [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0]]
+        )
+
+        self.graph_physical_spectrometer_shape_edges_colors = np.array(
+            [
+                (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1),
+                (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1),
+            ],
+            dtype=[
+                ("red", np.ubyte),
+                ("green", np.ubyte),
+                ("blue", np.ubyte),
+                ("alpha", np.ubyte),
+                ("width", float),
+            ],
+        )
+        # ------------------------------------------------------------------------------------------------------------
+        self.graph_physical_vfov_ground_projection_shape = pg.GraphItem()
+        self.graph_physical_vfov_ground_proj_vertex = np.array(
+            [ [0.0,   0.0],  # 0
+              [0,   -self.ui.hs_physical_height.value()],  # 1
+              [self.ui.hs_physical_height.value()* np.tan(np.pi/2 + np.radians(self.ui.hs_physical_elv.value() -1.85)),   -self.ui.hs_physical_height.value()],  # 2
+              [self.ui.hs_physical_height.value()* np.tan(np.pi/2 + np.radians(self.ui.hs_physical_elv.value()      )),   -self.ui.hs_physical_height.value()],  # 3
+              [self.ui.hs_physical_height.value()* np.tan(np.pi/2 + np.radians(self.ui.hs_physical_elv.value() +5.61)),   -self.ui.hs_physical_height.value()],  # 4
+            ]
+        )
+        self.graph_physical_vfov_ground_proj_edges = np.array(
+            [ [0, 1], [0,2], [0,3], [0,4], [1, 4]]
+        )
+
+        self.graph_physical_vfov_ground_proj_edges_colors = np.array(
+            [
+                (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), #(255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1),
+            ],
+            dtype=[
+                ("red", np.ubyte),
+                ("green", np.ubyte),
+                ("blue", np.ubyte),
+                ("alpha", np.ubyte),
+                ("width", float),
+            ],
+        )
+        #   -----------------------------------------------------------------------------------------------------------
 
         self.init_2d_graph_hide_the_original_roi_buttons()
         self.init_all_6_roi()
-        self.init_1_webfov_roi()
+        # self.init_1_webfov_roi()
         self.init_sb_signals_for_ROI_controls()
         self.init_all_pyqtgraph()
 
@@ -286,7 +392,6 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_2dimg.getView().addItem(self.roi_label_gray)
 
     def init_all_6_roi(self) -> None:
-
         _ = self.roi_obje_main.addScaleHandle([0.5, 1], [0.5, 0])
         _ = self.roi_gray_main.addScaleHandle([0.5, 1], [0.5, 0])
 
@@ -315,27 +420,11 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.graph_2dimg.getView().addItem(self.roi_gray_bglf)
         _ = self.ui.graph_2dimg.getView().addItem(self.roi_gray_bgri)
 
-        self.graph_759nm_line_for_2dimg = pg.InfiniteLine(
-            pos=192*2 + self.ui.sb_midx_init.value(), movable=False, angle=90, label="759.3nm",
-            #labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}
-        )
-        self.ui.graph_2dimg.view.addItem(self.graph_759nm_line_for_2dimg)
-
-        self.graph_desalted_graphs_sep_line_y0 = pg.InfiniteLine(pos=0, movable=False, angle=0)
-        self.graph_desalted_graphs_sep_line_x0 = pg.InfiniteLine(pos=0, movable=False, angle=90)
-        self.graph_desalted_graphs_sep_line_x1 = pg.InfiniteLine(pos=0, movable=False, angle=90)
         self.ui.graph_calc1_desalted_roi.getView().addItem(self.graph_desalted_graphs_sep_line_y0)
         self.ui.graph_calc1_desalted_roi.getView().addItem(self.graph_desalted_graphs_sep_line_x0)
         self.ui.graph_calc1_desalted_roi.getView().addItem(self.graph_desalted_graphs_sep_line_x1)
 
 
-
-        self.text_for_desalted_img_label0 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">BG-Gray</span></div>',   anchor=(0, 0), border="w", fill=(100, 100, 100, 100))
-        self.text_for_desalted_img_label1 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">Gray</span></div>',      anchor=(0, 0), border="w", fill=(200,  50,  50, 100))
-        self.text_for_desalted_img_label2 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">BG-Gray</span></div>',   anchor=(0, 0), border="w", fill=(100, 100, 100, 100))
-        self.text_for_desalted_img_label3 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">BG-Object</span></div>', anchor=(0, 0), border="w", fill=(100, 100, 100, 100))
-        self.text_for_desalted_img_label4 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">Object</span></div>',    anchor=(0, 0), border="w", fill=(50,   50, 200, 100))
-        self.text_for_desalted_img_label5 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">BG-Object</span></div>', anchor=(0, 0), border="w", fill=(100, 100, 100, 100))
 
         self.ui.graph_calc1_desalted_roi.getView().addItem(self.text_for_desalted_img_label0)
         self.ui.graph_calc1_desalted_roi.getView().addItem(self.text_for_desalted_img_label1)
@@ -344,17 +433,6 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_calc1_desalted_roi.getView().addItem(self.text_for_desalted_img_label4)
         self.ui.graph_calc1_desalted_roi.getView().addItem(self.text_for_desalted_img_label5)
 
-    def init_1_webfov_roi(self) -> None:
-        self.roi_webcam_fov = pg.ROI(
-            pos=[100, 100],        # x, y
-            size=pg.Point(30, 40 ),
-            movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
-        )
-        self.roi_webcam_fov.setZValue(10)
-        self.ui.graph_webcam.getView().addItem(self.roi_webcam_fov)
-
-        self.ui.graph_webcam.ui.roiBtn.hide()
-        self.ui.graph_webcam.ui.menuBtn.hide()
 
 
     def init_sb_signals_for_ROI_controls(self) -> None:
@@ -426,16 +504,6 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_calc5_refl_final.getPlotItem().clear()
         _ = self.ui.graph_calc5_refl_final.getPlotItem().addLegend()
 
-        self.graph5_norm_zero_line = pg.InfiniteLine(
-                pos=self.ui.sb_calc5_norm_zero.value(),
-                movable=False, angle=90,
-                label="x={value:0.2f}nm",
-                labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True})
-        self.graph5_norm_one_line = pg.InfiniteLine(
-                pos=self.ui.sb_calc5_norm_one.value(),
-                movable=False, angle=90,
-                label="x={value:0.2f}nm",
-                labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True})
 
         self.ui.graph_calc5_refl_final.getPlotItem().setLabel("left",   "Reflection")
         self.ui.graph_calc5_refl_final.getPlotItem().setLabel("bottom", "Wavelength",     units="nm")
@@ -443,11 +511,6 @@ class TheMainWindow(QMainWindow):
 
         self.ui.graph_calc5_refl_final.getPlotItem().addItem(self.graph5_norm_one_line)
         self.ui.graph_calc5_refl_final.getPlotItem().addItem(self.graph5_norm_zero_line)
-        self.graph5_curve_relf = self.ui.graph_calc5_refl_final.getPlotItem().plot(
-            pen=pg.mkPen(
-                "k",
-                width=1, style=Qt.PenStyle.SolidLine
-            ), name="Reflection")
 
 
     def all_sb_signal_enable_or_disable(self, b: bool) -> None:
@@ -469,33 +532,78 @@ class TheMainWindow(QMainWindow):
 
         if gray_or_obje == "gray":
             if left_middle_right == "middle":
-                self.ui.sb_midx_init.setValue(self.roi_gray_main.getState()["pos"].x() )
-                self.ui.sb_midx_size.setValue(self.roi_gray_main.getState()["size"].x())
-                self.ui.sb_gray_y_init.setValue(self.roi_gray_main.getState()["pos"].y() )
-                self.ui.sb_gray_y_size.setValue(self.roi_gray_main.getState()["size"].y())
+                gray_posx, gray_posy, gray_sizex, gray_sizey = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_main.getState())
+
+                self.ui.sb_midx_init.setValue(gray_posx)
+                self.ui.sb_midx_size.setValue(gray_sizex)
+                self.ui.sb_gray_y_init.setValue(gray_posy)
+                self.ui.sb_gray_y_size.setValue(gray_sizey)
+
+                # self.ui.sb_midx_init.setValue(self.roi_gray_main.getState()["pos"].x()  )
+                # self.ui.sb_midx_size.setValue(self.roi_gray_main.getState()["size"].x())
+                # self.ui.sb_gray_y_init.setValue(self.roi_gray_main.getState()["pos"].y() )
+                # self.ui.sb_gray_y_size.setValue(self.roi_gray_main.getState()["size"].y())
                 #self.ui.sb_midx_ends.setValue()
+
             elif left_middle_right == "left":
-                self.ui.sb_lefx_init_rel.setValue(- self.roi_gray_main.getState()["pos"].x() + self.roi_gray_bglf.getState()["pos"].x())
-                self.ui.sb_lefx_size.setValue(self.roi_gray_bglf.getState()["size"].x())
+                gray_posx, _,          _, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_main.getState())
+                bglf_posx, _, bglf_sizex, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_bglf.getState())
+                self.ui.sb_lefx_init_rel.setValue(- gray_posx + bglf_posx)
+                self.ui.sb_lefx_size.setValue(bglf_sizex)
+
+                #self.ui.sb_lefx_init_rel.setValue(- self.roi_gray_main.getState()["pos"].x() + self.roi_gray_bglf.getState()["pos"].x())
+                #self.ui.sb_lefx_size.setValue(self.roi_gray_bglf.getState()["size"].x())
             elif left_middle_right == "right":
-                self.ui.sb_rigx_init_rel.setValue(- self.roi_gray_main.getState()["pos"].x() + self.roi_gray_bgri.getState()["pos"].x())
-                self.ui.sb_rigx_size.setValue(self.roi_gray_bgri.getState()["size"].x())
+                gray_posx, _,          _, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_main.getState())
+                bgri_posx, _, bgri_sizex, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_bgri.getState())
+                self.ui.sb_rigx_init_rel.setValue(- gray_posx + bgri_posx)
+                self.ui.sb_rigx_size.setValue(bgri_sizex)
+
+                #self.ui.sb_rigx_init_rel.setValue(- self.roi_gray_main.getState()["pos"].x() + self.roi_gray_bgri.getState()["pos"].x())
+                #self.ui.sb_rigx_size.setValue(self.roi_gray_bgri.getState()["size"].x())
         elif gray_or_obje == "obje":
             if left_middle_right == "middle":
-                self.ui.sb_midx_init.setValue(self.roi_obje_main.getState()["pos"].x() )
-                self.ui.sb_midx_size.setValue(self.roi_obje_main.getState()["size"].x())
-                self.ui.sb_obje_y_init.setValue(self.roi_obje_main.getState()["pos"].y() )
-                self.ui.sb_obje_y_size.setValue(self.roi_obje_main.getState()["size"].y())
+                obje_posx, obje_posy, obje_sizex, obje_sizey = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_obje_main.getState())
+
+                self.ui.sb_midx_init.setValue(obje_posx)
+                self.ui.sb_midx_size.setValue(obje_sizex)
+                self.ui.sb_obje_y_init.setValue(obje_posy)
+                self.ui.sb_obje_y_size.setValue(obje_sizey)
+                # self.ui.sb_midx_init.setValue(self.roi_obje_main.getState()["pos"].x() )
+                # self.ui.sb_midx_size.setValue(self.roi_obje_main.getState()["size"].x())
+                # self.ui.sb_obje_y_init.setValue(self.roi_obje_main.getState()["pos"].y() )
+                # self.ui.sb_obje_y_size.setValue(self.roi_obje_main.getState()["size"].y())
                 #self.ui.sb_midx_ends.setValue()
             elif left_middle_right == "left":
-                self.ui.sb_lefx_init_rel.setValue(- self.roi_gray_main.getState()["pos"].x() + self.roi_obje_bglf.getState()["pos"].x())
-                self.ui.sb_lefx_size.setValue(self.roi_obje_bglf.getState()["size"].x())
+                gray_posx, _,          _, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_main.getState())
+                bglf_posx, _, bglf_sizex, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_obje_bglf.getState())
+
+                self.ui.sb_lefx_init_rel.setValue(- gray_posx + bglf_posx)
+                self.ui.sb_lefx_size.setValue(bglf_sizex)
+
+                #self.ui.sb_lefx_init_rel.setValue(- self.roi_gray_main.getState()["pos"].x() + self.roi_obje_bglf.getState()["pos"].x())
+                #self.ui.sb_lefx_size.setValue(self.roi_obje_bglf.getState()["size"].x())
             elif left_middle_right == "right":
-                self.ui.sb_rigx_init_rel.setValue(- self.roi_gray_main.getState()["pos"].x() + self.roi_obje_bgri.getState()["pos"].x())
-                self.ui.sb_rigx_size.setValue(self.roi_obje_bgri.getState()["size"].x())
+                gray_posx, _,          _, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_main.getState())
+                bgri_posx, _, bgri_sizex, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_obje_bgri.getState())
+
+                self.ui.sb_rigx_init_rel.setValue(- gray_posx + bgri_posx)
+                self.ui.sb_rigx_size.setValue(bgri_sizex)
+
+                # self.ui.sb_rigx_init_rel.setValue(- self.roi_gray_main.getState()["pos"].x() + self.roi_obje_bgri.getState()["pos"].x())
+                # self.ui.sb_rigx_size.setValue(self.roi_obje_bgri.getState()["size"].x())
 
         self.all_sb_signal_enable_or_disable(False)
         self.update_raw_from_sb()
+
+    def get_posx_posy_sizex_sizy_cleaner_carefuler_way(self, tmp_roi_state: dict[str, pg.Point|float]) -> tuple[int, int, int, int]:
+        #tmp_roi_state = tmp_roi.getState()
+        assert ("pos" in tmp_roi_state) and ("size" in tmp_roi_state), "Err while returning roi"
+        tmp_roi_pos = tmp_roi_state["pos"]
+        tmp_roi_size = tmp_roi_state["size"]
+        assert isinstance(tmp_roi_pos, QPointF) and isinstance(tmp_roi_size, QPointF), "Err while returning self.roi_gray_main.getState()"
+
+        return int(tmp_roi_pos.x()), int(tmp_roi_pos.y()), int(tmp_roi_size.x()), int(tmp_roi_size.y())
 
 
     def update_raw_from_sb(self) -> None:
@@ -970,7 +1078,7 @@ class TheMainWindow(QMainWindow):
         dlg = QMessageBox(self)
         dlg.setWindowTitle("Exported")
         dlg.setText("Export Finished")
-        dlg.exec()
+        _ = dlg.exec()
 
         self.dfParamHistory = pd.concat(
             (
@@ -1142,67 +1250,8 @@ class TheMainWindow(QMainWindow):
     def init_physical_repr_graph(self) -> None:
         v = self.ui.graph_physical_orientation.addViewBox() # noqa # type: ignore
         v.setAspectLocked()
-
-        self.graph_physical_spectrometer_shape = pg.GraphItem()
         v.addItem(self.graph_physical_spectrometer_shape)
-
-        self.graph_physical_spectrometer_shape_vertex = np.array(
-            [ [0.0,   0.0 - 2.5],  # 0
-              [0.0,   5.0 - 2.5],  # 1
-              [-9.6,  5.0 - 2.5],  # 2
-              [-9.6,  8.0 - 2.5],  # 3
-              [-10.3, 8.6 - 2.5],  # 4
-              [-10.3, 9.0 - 2.5],  # 5
-              [-14.7, 9.0 - 2.5],  # 6
-              [-14.7, 0.0 - 2.5],  # 7
-            ]
-        )
-        self.graph_physical_spectrometer_shape_edges = np.array(
-            [ [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0]]
-        )
-
-        self.graph_physical_spectrometer_shape_edges_colors = np.array(
-            [
-                (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1),
-                (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1),
-            ],
-            dtype=[
-                ("red", np.ubyte),
-                ("green", np.ubyte),
-                ("blue", np.ubyte),
-                ("alpha", np.ubyte),
-                ("width", float),
-            ],
-        )
-        # ------------------------------------------------------------------------------------------------------------
-        self.graph_physical_vfov_ground_projection_shape = pg.GraphItem()
         v.addItem(self.graph_physical_vfov_ground_projection_shape)
-
-        self.graph_physical_vfov_ground_proj_vertex = np.array(
-            [ [0.0,   0.0],  # 0
-              [0,   -self.ui.hs_physical_height.value()],  # 1
-              [self.ui.hs_physical_height.value()* np.tan(np.pi/2 + np.radians(self.ui.hs_physical_elv.value() -1.85)),   -self.ui.hs_physical_height.value()],  # 2
-              [self.ui.hs_physical_height.value()* np.tan(np.pi/2 + np.radians(self.ui.hs_physical_elv.value()      )),   -self.ui.hs_physical_height.value()],  # 3
-              [self.ui.hs_physical_height.value()* np.tan(np.pi/2 + np.radians(self.ui.hs_physical_elv.value() +5.61)),   -self.ui.hs_physical_height.value()],  # 4
-            ]
-        )
-        self.graph_physical_vfov_ground_proj_edges = np.array(
-            [ [0, 1], [0,2], [0,3], [0,4], [1, 4]]
-        )
-
-        self.graph_physical_vfov_ground_proj_edges_colors = np.array(
-            [
-                (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), #(255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1),
-            ],
-            dtype=[
-                ("red", np.ubyte),
-                ("green", np.ubyte),
-                ("blue", np.ubyte),
-                ("alpha", np.ubyte),
-                ("width", float),
-            ],
-        )
-
         self.update_physical_graph()
 
     def update_physical_graph(self) -> None:
@@ -1243,4 +1292,5 @@ class TheMainWindow(QMainWindow):
         self.ui.l_physical_distance.setText(f"Distance: {d:.1f}cm")
 
         # controll the other tab
-        self.ui.hs_target_distance.setValue(d)
+        # self.ui.hs_target_distance.setValue(d)
+        self.ui.hs_target_distance.setValue(int(d))
