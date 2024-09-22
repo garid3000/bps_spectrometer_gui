@@ -13,6 +13,7 @@ import time
 
 # ---------- Numerical Visual packages---------------------------------------------------------------------------------
 import numpy as np
+from numpy.typing import NDArray
 import cv2 as cv
 import pandas as pd
 
@@ -473,7 +474,7 @@ class TheMainWindow(QMainWindow):
 
 
         # --------graph 3:  759 calibration curves ---------------------------------------------------------------------
-        self.ui.graph_calc3_759_calib.getPlotItem().clear()
+        # self.ui.graph_calc3_759_calib.getPlotItem().clear()
         _ = self.ui.graph_calc3_759_calib.getPlotItem().addLegend()
         self.ui.graph_calc3_759_calib.getPlotItem().addItem(
             pg.InfiniteLine(
@@ -487,7 +488,7 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_calc3_759_calib.getPlotItem().setLabel("top",    "After 759nm calibration")
 
         # --------graph 4:  rgb refl  ---------------------------------------------------------------------
-        self.ui.graph_calc4_refl_rgb.getPlotItem().clear()
+        # self.ui.graph_calc4_refl_rgb.getPlotItem().clear()
         _ = self.ui.graph_calc4_refl_rgb.getPlotItem().addLegend()
         self.ui.graph_calc4_refl_rgb.getPlotItem().addItem(
             pg.InfiniteLine(
@@ -501,7 +502,7 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_calc4_refl_rgb.getPlotItem().setLabel("top",    "Reflection RGB 3 channels")
 
         # --------graph 5:  rgb     ---------------------------------------------------------------------
-        self.ui.graph_calc5_refl_final.getPlotItem().clear()
+        # self.ui.graph_calc5_refl_final.getPlotItem().clear()
         _ = self.ui.graph_calc5_refl_final.getPlotItem().addLegend()
 
 
@@ -683,24 +684,27 @@ class TheMainWindow(QMainWindow):
             waveperpixel=self.ui.sb_waveperpixel.value(),
         )
 
-        gray_roi_mid = self.jp.data[
+        gray_roi_mid: NDArray[np.uint16] = self.jp.data[
             self.ui.sb_gray_y_init.value() : self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value(),
             self.ui.sb_midx_init.value()   : self.ui.sb_midx_init.value()   + self.ui.sb_midx_size.value()
         ]
-        obje_roi_mid = self.jp.data[
+        obje_roi_mid: NDArray[np.uint16] = self.jp.data[
             self.ui.sb_obje_y_init.value() : self.ui.sb_obje_y_init.value() + self.ui.sb_obje_y_size.value(),
             self.ui.sb_midx_init.value()   : self.ui.sb_midx_init.value()   + self.ui.sb_midx_size.value()
         ]
+        assert isinstance(gray_roi_mid, np.ndarray) and (gray_roi_mid.dtype == np.uint16)
+        assert isinstance(obje_roi_mid, np.ndarray) and (obje_roi_mid.dtype == np.uint16)
+        print(obje_roi_mid.dtype)
 
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[1::2, 1::2].mean(axis=0), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="R-gray")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[1::2, 0::2].mean(axis=0), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[0::2, 1::2].mean(axis=0), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[0::2, 0::2].mean(axis=0), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="B-gray")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[1::2, 1::2].mean(axis=0).astype(np.float64), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="R-gray")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[1::2, 0::2].mean(axis=0).astype(np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[0::2, 1::2].mean(axis=0).astype(np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[0::2, 0::2].mean(axis=0).astype(np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="B-gray")
 
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[1::2, 1::2].mean(axis=0), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine), name="R-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[1::2, 0::2].mean(axis=0), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="G-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[0::2, 1::2].mean(axis=0), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="G-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[0::2, 0::2].mean(axis=0), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine), name="B-object")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[1::2, 1::2].mean(axis=0).astype(np.float64), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine), name="R-object")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[1::2, 0::2].mean(axis=0).astype(np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="G-object")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[0::2, 1::2].mean(axis=0).astype(np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="G-object")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[0::2, 0::2].mean(axis=0).astype(np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine), name="B-object")
 
 
         tmp_lef_x = get_wavelength_array(
@@ -975,7 +979,7 @@ class TheMainWindow(QMainWindow):
         self.graph2_curve_bg_obje_ri_g.setData(tmp_rig_x, self.jp.obje_bgri.gchan["dn"].values[:self.jp.obje_bgri.raw_hor_pxl])
         self.graph2_curve_bg_obje_ri_b.setData(tmp_rig_x, self.jp.obje_bgri.bchan["dn"].values[:self.jp.obje_bgri.raw_hor_pxl])
 
-        tmp_bgx = np.arange(tmp_lef_x.min(), tmp_rig_x.max(), 1)
+        tmp_bgx: NDArray[np.float64] = np.arange(tmp_lef_x.min(), tmp_rig_x.max(), 1, dtype=np.float64)
 
         self.graph2_curve_bg_gray_mi_r.setData(tmp_bgx, background(tmp_bgx, *(self.jp.bg_gray_r_popt)))
         self.graph2_curve_bg_gray_mi_g.setData(tmp_bgx, background(tmp_bgx, *(self.jp.bg_gray_g_popt)))
@@ -987,7 +991,12 @@ class TheMainWindow(QMainWindow):
 
     def call_calibrate_and_calculate_calc3_759_calib(self) -> None:
         self.jp.calibrate_n_calculate_final_output()
-        tmp_x = self.jp.gray.rchan_759nm_calibrated.index[-1000:]
+        tmp_x: NDArray[np.float64] = np.array(self.jp.gray.rchan_759nm_calibrated.index[-1000:], dtype=np.float64)
+        print("tmp_x", tmp_x.shape, tmp_x.dtype, type(tmp_x))
+        assert isinstance(tmp_x, np.ndarray)
+        assert (tmp_x.dtype == np.float64)
+        #assert isinstance(tmp_x, NDArray[np.float64])
+        print('hi')
         self.graph3_curve_759_calib_gray_r.setData(tmp_x, np.array(self.jp.gray.rchan_759nm_calibrated["final"])[-1000:])
         self.graph3_curve_759_calib_gray_g.setData(tmp_x, np.array(self.jp.gray.gchan_759nm_calibrated["final"])[-1000:])
         self.graph3_curve_759_calib_gray_b.setData(tmp_x, np.array(self.jp.gray.bchan_759nm_calibrated["final"])[-1000:])
@@ -995,12 +1004,14 @@ class TheMainWindow(QMainWindow):
         self.graph3_curve_759_calib_obje_g.setData(tmp_x, np.array(self.jp.obje.gchan_759nm_calibrated["final"])[-1000:])
         self.graph3_curve_759_calib_obje_b.setData(tmp_x, np.array(self.jp.obje.bchan_759nm_calibrated["final"])[-1000:])
 
+        print('hi1')
         self.graph3_curve_759_calib_gray_r_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_r_popt)))   # type: ignore
         self.graph3_curve_759_calib_gray_g_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_g_popt)))   # type: ignore
         self.graph3_curve_759_calib_gray_b_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_b_popt)))   # type: ignore
         self.graph3_curve_759_calib_obje_r_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_r_popt)))   # type: ignore
         self.graph3_curve_759_calib_obje_g_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_g_popt)))   # type: ignore
         self.graph3_curve_759_calib_obje_b_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_b_popt)))   # type: ignore
+        print('hi2')
 
 
     def call_calibrate_and_calculate_calc3_5_gray2white(self) -> None:
@@ -1014,7 +1025,8 @@ class TheMainWindow(QMainWindow):
 
     def call_calibrate_and_calculate_calc4_rgb_refl(self) -> None:
         self.jp.fancy_reflectance()
-        tmp_x = self.jp.gray.rchan_759nm_calibrated.index[-1000:]
+        tmp_x = np.array(self.jp.gray.rchan_759nm_calibrated.index[-1000:], dtype=np.float64)
+        assert isinstance(tmp_x, np.ndarray) and (tmp_x.dtype == np.float64)
         self.graph4_curve_relf_r.setData(tmp_x, self.jp.ref_fancy_r) # noqa
         self.graph4_curve_relf_g.setData(tmp_x, self.jp.ref_fancy_g) # noqa
         self.graph4_curve_relf_b.setData(tmp_x, self.jp.ref_fancy_b) # noqa
@@ -1022,7 +1034,8 @@ class TheMainWindow(QMainWindow):
 
     def call_calibrate_and_calculate_calc5_refl_n_norm(self) -> None:
         self.jp.fancy_reflectance()
-        tmp_x = self.jp.gray.rchan_759nm_calibrated.index[-1000:]
+        tmp_x = np.array(self.jp.gray.rchan_759nm_calibrated.index[-1000:], dtype=np.float64)
+        assert isinstance(tmp_x, np.ndarray) and (tmp_x.dtype == np.float64)
 
         if not self.ui.cb_calc5_norm.isChecked():
             self.graph5_curve_relf.setData(tmp_x, self.jp.ref_fancy)
