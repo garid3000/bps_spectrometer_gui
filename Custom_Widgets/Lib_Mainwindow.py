@@ -966,19 +966,31 @@ class TheMainWindow(QMainWindow):
             waveperpixel=self.ui.sb_waveperpixel.value(),
         )
 
-        self.graph2_curve_bg_gray_le_r.setData(tmp_lef_x, self.jp.gray_bgle.rchan["dn"].values[:self.jp.gray_bgle.raw_hor_pxl])
-        self.graph2_curve_bg_gray_le_g.setData(tmp_lef_x, self.jp.gray_bgle.gchan["dn"].values[:self.jp.gray_bgle.raw_hor_pxl])
-        self.graph2_curve_bg_gray_le_b.setData(tmp_lef_x, self.jp.gray_bgle.bchan["dn"].values[:self.jp.gray_bgle.raw_hor_pxl])
-        self.graph2_curve_bg_gray_re_r.setData(tmp_rig_x, self.jp.gray_bgri.rchan["dn"].values[:self.jp.gray_bgri.raw_hor_pxl])
-        self.graph2_curve_bg_gray_re_g.setData(tmp_rig_x, self.jp.gray_bgri.gchan["dn"].values[:self.jp.gray_bgri.raw_hor_pxl])
-        self.graph2_curve_bg_gray_re_b.setData(tmp_rig_x, self.jp.gray_bgri.bchan["dn"].values[:self.jp.gray_bgri.raw_hor_pxl])
+        # self.graph2_curve_bg_gray_le_r.setData(tmp_lef_x, self.jp.gray_bgle.rchan["dn"].values[:self.jp.gray_bgle.raw_hor_pxl])
+        # self.graph2_curve_bg_gray_le_g.setData(tmp_lef_x, self.jp.gray_bgle.gchan["dn"].values[:self.jp.gray_bgle.raw_hor_pxl])
+        # self.graph2_curve_bg_gray_le_b.setData(tmp_lef_x, self.jp.gray_bgle.bchan["dn"].values[:self.jp.gray_bgle.raw_hor_pxl])
+        # self.graph2_curve_bg_gray_re_r.setData(tmp_rig_x, self.jp.gray_bgri.rchan["dn"].values[:self.jp.gray_bgri.raw_hor_pxl])
+        # self.graph2_curve_bg_gray_re_g.setData(tmp_rig_x, self.jp.gray_bgri.gchan["dn"].values[:self.jp.gray_bgri.raw_hor_pxl])
+        # self.graph2_curve_bg_gray_re_b.setData(tmp_rig_x, self.jp.gray_bgri.bchan["dn"].values[:self.jp.gray_bgri.raw_hor_pxl])
+        self.graph2_curve_bg_gray_le_r.setData(self.jp.gray_bgle.rchan_wavelenght, self.jp.gray_bgle.rchan_dn)
+        self.graph2_curve_bg_gray_le_g.setData(self.jp.gray_bgle.gchan_wavelenght, self.jp.gray_bgle.gchan_dn)
+        self.graph2_curve_bg_gray_le_b.setData(self.jp.gray_bgle.bchan_wavelenght, self.jp.gray_bgle.bchan_dn)
+        self.graph2_curve_bg_gray_re_r.setData(self.jp.gray_bgri.rchan_wavelenght, self.jp.gray_bgri.rchan_dn)
+        self.graph2_curve_bg_gray_re_g.setData(self.jp.gray_bgri.gchan_wavelenght, self.jp.gray_bgri.gchan_dn)
+        self.graph2_curve_bg_gray_re_b.setData(self.jp.gray_bgri.bchan_wavelenght, self.jp.gray_bgri.bchan_dn)
 
-        self.graph2_curve_bg_obje_le_r.setData(tmp_lef_x, self.jp.obje_bgle.rchan["dn"].values[:self.jp.obje_bgle.raw_hor_pxl])
-        self.graph2_curve_bg_obje_le_g.setData(tmp_lef_x, self.jp.obje_bgle.gchan["dn"].values[:self.jp.obje_bgle.raw_hor_pxl])
-        self.graph2_curve_bg_obje_le_b.setData(tmp_lef_x, self.jp.obje_bgle.bchan["dn"].values[:self.jp.obje_bgle.raw_hor_pxl])
-        self.graph2_curve_bg_obje_ri_r.setData(tmp_rig_x, self.jp.obje_bgri.rchan["dn"].values[:self.jp.obje_bgri.raw_hor_pxl])
-        self.graph2_curve_bg_obje_ri_g.setData(tmp_rig_x, self.jp.obje_bgri.gchan["dn"].values[:self.jp.obje_bgri.raw_hor_pxl])
-        self.graph2_curve_bg_obje_ri_b.setData(tmp_rig_x, self.jp.obje_bgri.bchan["dn"].values[:self.jp.obje_bgri.raw_hor_pxl])
+        # self.graph2_curve_bg_obje_le_r.setData(tmp_lef_x, self.jp.obje_bgle.rchan["dn"].values[:self.jp.obje_bgle.raw_hor_pxl])
+        # self.graph2_curve_bg_obje_le_g.setData(tmp_lef_x, self.jp.obje_bgle.gchan["dn"].values[:self.jp.obje_bgle.raw_hor_pxl])
+        # self.graph2_curve_bg_obje_le_b.setData(tmp_lef_x, self.jp.obje_bgle.bchan["dn"].values[:self.jp.obje_bgle.raw_hor_pxl])
+        # self.graph2_curve_bg_obje_ri_r.setData(tmp_rig_x, self.jp.obje_bgri.rchan["dn"].values[:self.jp.obje_bgri.raw_hor_pxl])
+        # self.graph2_curve_bg_obje_ri_g.setData(tmp_rig_x, self.jp.obje_bgri.gchan["dn"].values[:self.jp.obje_bgri.raw_hor_pxl])
+        # self.graph2_curve_bg_obje_ri_b.setData(tmp_rig_x, self.jp.obje_bgri.bchan["dn"].values[:self.jp.obje_bgri.raw_hor_pxl])
+        self.graph2_curve_bg_obje_le_r.setData(self.jp.obje_bgle.rchan_wavelenght, self.jp.obje_bgle.rchan_dn)
+        self.graph2_curve_bg_obje_le_g.setData(self.jp.obje_bgle.gchan_wavelenght, self.jp.obje_bgle.gchan_dn)
+        self.graph2_curve_bg_obje_le_b.setData(self.jp.obje_bgle.bchan_wavelenght, self.jp.obje_bgle.bchan_dn)
+        self.graph2_curve_bg_obje_ri_r.setData(self.jp.obje_bgri.rchan_wavelenght, self.jp.obje_bgri.rchan_dn)
+        self.graph2_curve_bg_obje_ri_g.setData(self.jp.obje_bgri.gchan_wavelenght, self.jp.obje_bgri.gchan_dn)
+        self.graph2_curve_bg_obje_ri_b.setData(self.jp.obje_bgri.bchan_wavelenght, self.jp.obje_bgri.bchan_dn)
 
         tmp_bgx: NDArray[np.float64] = np.arange(tmp_lef_x.min(), tmp_rig_x.max(), 1, dtype=np.float64)
 
@@ -992,16 +1004,22 @@ class TheMainWindow(QMainWindow):
 
     def call_calibrate_and_calculate_calc3_759_calib(self) -> None:
         self.jp.calibrate_n_calculate_final_output()
-        tmp_x: NDArray[np.float64] = self.jp.gray.rchan_759nm_calibrated.index.to_numpy(dtype=np.float64)[-1000:]
-        assert isinstance(tmp_x, np.ndarray)
-        assert (tmp_x.dtype == np.float64)
+        tmp_x = self.jp.gray.itp_hor_nm_array
         #assert isinstance(tmp_x, NDArray[np.float64])
-        self.graph3_curve_759_calib_gray_r.setData(tmp_x, np.array(self.jp.gray.rchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
-        self.graph3_curve_759_calib_gray_g.setData(tmp_x, np.array(self.jp.gray.gchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
-        self.graph3_curve_759_calib_gray_b.setData(tmp_x, np.array(self.jp.gray.bchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
-        self.graph3_curve_759_calib_obje_r.setData(tmp_x, np.array(self.jp.obje.rchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
-        self.graph3_curve_759_calib_obje_g.setData(tmp_x, np.array(self.jp.obje.gchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
-        self.graph3_curve_759_calib_obje_b.setData(tmp_x, np.array(self.jp.obje.bchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
+        # self.graph3_curve_759_calib_gray_r.setData(tmp_x, np.array(self.jp.gray.rchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
+        # self.graph3_curve_759_calib_gray_g.setData(tmp_x, np.array(self.jp.gray.gchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
+        # self.graph3_curve_759_calib_gray_b.setData(tmp_x, np.array(self.jp.gray.bchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
+        # self.graph3_curve_759_calib_obje_r.setData(tmp_x, np.array(self.jp.obje.rchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
+        # self.graph3_curve_759_calib_obje_g.setData(tmp_x, np.array(self.jp.obje.gchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
+        # self.graph3_curve_759_calib_obje_b.setData(tmp_x, np.array(self.jp.obje.bchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
+
+        self.graph3_curve_759_calib_gray_r.setData(tmp_x, self.jp.gray.rchan_smdn_itp_after_759nm_calib)
+        self.graph3_curve_759_calib_gray_g.setData(tmp_x, self.jp.gray.gchan_smdn_itp_after_759nm_calib)
+        self.graph3_curve_759_calib_gray_b.setData(tmp_x, self.jp.gray.bchan_smdn_itp_after_759nm_calib)
+
+        self.graph3_curve_759_calib_obje_r.setData(tmp_x, self.jp.obje.rchan_smdn_itp_after_759nm_calib)
+        self.graph3_curve_759_calib_obje_g.setData(tmp_x, self.jp.obje.gchan_smdn_itp_after_759nm_calib)
+        self.graph3_curve_759_calib_obje_b.setData(tmp_x, self.jp.obje.bchan_smdn_itp_after_759nm_calib)
 
         self.graph3_curve_759_calib_gray_r_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_r_popt)))
         self.graph3_curve_759_calib_gray_g_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_g_popt)))
@@ -1022,8 +1040,7 @@ class TheMainWindow(QMainWindow):
 
     def call_calibrate_and_calculate_calc4_rgb_refl(self) -> None:
         self.jp.fancy_reflectance()
-        tmp_x: NDArray[np.float64] = self.jp.gray.rchan_759nm_calibrated.index.to_numpy(dtype=np.float64)[-1000:]
-        assert isinstance(tmp_x, np.ndarray) and (tmp_x.dtype == np.float64)
+        tmp_x = self.jp.gray.itp_hor_nm_array
         self.graph4_curve_relf_r.setData(tmp_x, self.jp.ref_fancy_r) # noqa
         self.graph4_curve_relf_g.setData(tmp_x, self.jp.ref_fancy_g) # noqa
         self.graph4_curve_relf_b.setData(tmp_x, self.jp.ref_fancy_b) # noqa
@@ -1031,8 +1048,7 @@ class TheMainWindow(QMainWindow):
 
     def call_calibrate_and_calculate_calc5_refl_n_norm(self) -> None:
         self.jp.fancy_reflectance()
-        tmp_x: NDArray[np.float64] = self.jp.gray.rchan_759nm_calibrated.index.to_numpy(dtype=np.float64)[-1000:]
-        assert isinstance(tmp_x, np.ndarray) and (tmp_x.dtype == np.float64)
+        tmp_x = self.jp.gray.itp_hor_nm_array
 
         if not self.ui.cb_calc5_norm.isChecked():
             self.graph5_curve_relf.setData(tmp_x, self.jp.ref_fancy)
@@ -1071,7 +1087,8 @@ class TheMainWindow(QMainWindow):
         self.ui.pbar_export.setValue(50)
         if self.ui.cb_export_ref_CSV_simple.isChecked():
             tmpcsv = np.zeros((1000, 5), dtype=np.float64)
-            tmpcsv[:, 0] = self.jp.gray.rchan_759nm_calibrated.index.to_numpy(dtype=np.float64)[-1000:]
+            #tmpcsv[:, 0] = self.jp.gray.rchan_759nm_calibrated.index.to_numpy(dtype=np.float64)[-1000:]
+            tmpcsv[:, 0] = self.jp.gray.itp_hor_nm_array
             tmpcsv[:, 1] = self.jp.ref_fancy
             tmpcsv[:, 2] = self.jp.ref_fancy_normed if self.ui.cb_calc5_norm.isChecked() else 0
             tmpcsv[:, 3] = self.jp.obje_fancy_dn_bg_substracted
