@@ -16,6 +16,7 @@ import numpy as np
 from numpy.typing import NDArray
 import cv2 as cv
 import pandas as pd
+import math
 
 # ---------- GUI libraries --------------------------------------------------------------------------------------------
 from PySide6.QtWidgets import QMainWindow, QWidget, QFileSystemModel, QMessageBox
@@ -330,9 +331,9 @@ class TheMainWindow(QMainWindow):
         self.graph_physical_vfov_ground_proj_vertex = np.array(
             [ [0.0,   0.0],  # 0
               [0,   -self.ui.hs_physical_height.value()],  # 1
-              [self.ui.hs_physical_height.value()* np.tan(np.pi/2 + np.radians(self.ui.hs_physical_elv.value() -1.85)),   -self.ui.hs_physical_height.value()],  # 2
-              [self.ui.hs_physical_height.value()* np.tan(np.pi/2 + np.radians(self.ui.hs_physical_elv.value()      )),   -self.ui.hs_physical_height.value()],  # 3
-              [self.ui.hs_physical_height.value()* np.tan(np.pi/2 + np.radians(self.ui.hs_physical_elv.value() +5.61)),   -self.ui.hs_physical_height.value()],  # 4
+              [self.ui.hs_physical_height.value()* math.tan(math.pi/2 + math.radians(self.ui.hs_physical_elv.value() -1.85)),   -self.ui.hs_physical_height.value()],  # 2
+              [self.ui.hs_physical_height.value()* math.tan(math.pi/2 + math.radians(self.ui.hs_physical_elv.value()      )),   -self.ui.hs_physical_height.value()],  # 3
+              [self.ui.hs_physical_height.value()* math.tan(math.pi/2 + math.radians(self.ui.hs_physical_elv.value() +5.61)),   -self.ui.hs_physical_height.value()],  # 4
             ]
         )
         self.graph_physical_vfov_ground_proj_edges = np.array(
@@ -1288,9 +1289,9 @@ class TheMainWindow(QMainWindow):
         self.graph_physical_vfov_ground_proj_vertex = np.array(
             [ [0.0,   0.0],  # 0
               [0,   -self.ui.hs_physical_height.value()],  # 1
-              [self.ui.hs_physical_height.value()* np.tan(np.pi/2 + np.radians(self.ui.hs_physical_elv.value() -1.85)),   -self.ui.hs_physical_height.value()],  # 2
-              [self.ui.hs_physical_height.value()* np.tan(np.pi/2 + np.radians(self.ui.hs_physical_elv.value()      )),   -self.ui.hs_physical_height.value()],  # 3
-              [self.ui.hs_physical_height.value()* np.tan(np.pi/2 + np.radians(self.ui.hs_physical_elv.value() +5.61)),   -self.ui.hs_physical_height.value()],  # 4
+              [self.ui.hs_physical_height.value()* math.tan(math.pi/2 + math.radians(self.ui.hs_physical_elv.value() -1.85)),   -self.ui.hs_physical_height.value()],  # 2
+              [self.ui.hs_physical_height.value()* math.tan(math.pi/2 + math.radians(self.ui.hs_physical_elv.value()      )),   -self.ui.hs_physical_height.value()],  # 3
+              [self.ui.hs_physical_height.value()* math.tan(math.pi/2 + math.radians(self.ui.hs_physical_elv.value() +5.61)),   -self.ui.hs_physical_height.value()],  # 4
             ]
         )
 
