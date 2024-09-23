@@ -20,7 +20,7 @@ import pandas as pd
 # ---------- GUI libraries --------------------------------------------------------------------------------------------
 from PySide6.QtWidgets import QMainWindow, QWidget, QFileSystemModel, QMessageBox
 from PySide6.QtGui import QKeySequence, QShortcut, QColor
-from PySide6.QtCore import QModelIndex, QDir, Qt, QPersistentModelIndex, QPointF
+from PySide6.QtCore import QModelIndex, QDir, Qt, QPersistentModelIndex, QPointF, QObject
 
 # ---------- Custom libs ----------------------------------------------------------------------------------------------
 from Custom_UIs.UI_Mainwindow import Ui_MainWindow
@@ -70,7 +70,7 @@ def open_file_externally(filepath: str) -> None:
 
 class FileSystemModel(QFileSystemModel):
     # read from https://stackoverflow.com/a/40455027/14696853
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: QObject | None, **kwargs: QObject | None) -> None:
         super(FileSystemModel, self).__init__(*args, **kwargs)
         #self.setNameFilters((["*.jpeg", "*.jpg", "*.json"]))
         self.setNameFilters((["*.jpeg"]))
@@ -687,24 +687,24 @@ class TheMainWindow(QMainWindow):
         gray_roi_mid: NDArray[np.uint16] = self.jp.data[
             self.ui.sb_gray_y_init.value() : self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value(),
             self.ui.sb_midx_init.value()   : self.ui.sb_midx_init.value()   + self.ui.sb_midx_size.value()
-        ]
+        ].astype(np.uint16)
         obje_roi_mid: NDArray[np.uint16] = self.jp.data[
             self.ui.sb_obje_y_init.value() : self.ui.sb_obje_y_init.value() + self.ui.sb_obje_y_size.value(),
             self.ui.sb_midx_init.value()   : self.ui.sb_midx_init.value()   + self.ui.sb_midx_size.value()
-        ]
+        ].astype(np.uint16)
         assert isinstance(gray_roi_mid, np.ndarray) and (gray_roi_mid.dtype == np.uint16)
         assert isinstance(obje_roi_mid, np.ndarray) and (obje_roi_mid.dtype == np.uint16)
         print(obje_roi_mid.dtype)
 
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[1::2, 1::2].mean(axis=0).astype(np.float64), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="R-gray")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[1::2, 0::2].mean(axis=0).astype(np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[0::2, 1::2].mean(axis=0).astype(np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[0::2, 0::2].mean(axis=0).astype(np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="B-gray")
-
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[1::2, 1::2].mean(axis=0).astype(np.float64), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine), name="R-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[1::2, 0::2].mean(axis=0).astype(np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="G-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[0::2, 1::2].mean(axis=0).astype(np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="G-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[0::2, 0::2].mean(axis=0).astype(np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine), name="B-object")
+        #tmp = self.jp.data[:].astype(np.uint16)
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[1::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="R-gray")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[1::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[0::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[0::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="B-gray")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[1::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine), name="R-object")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[1::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="G-object")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[0::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="G-object")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[0::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine), name="B-object")
 
 
         tmp_lef_x = get_wavelength_array(
@@ -728,14 +728,14 @@ class TheMainWindow(QMainWindow):
             self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value() : self.ui.sb_midx_init.value()  + self.ui.sb_rigx_init_rel.value() + self.ui.sb_rigx_size.value()
         ]
 
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_lef_x, gray_roi_lef[1::2, 1::2].mean(axis=0), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="bgR-gray")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_lef_x, gray_roi_lef[1::2, 0::2].mean(axis=0), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="bgG-gray")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_lef_x, gray_roi_lef[0::2, 1::2].mean(axis=0), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="bgG-gray")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_lef_x, gray_roi_lef[0::2, 0::2].mean(axis=0), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="bgB-gray")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[1::2, 1::2].mean(axis=0), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine), name="bgR-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[1::2, 0::2].mean(axis=0), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="bgG-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[0::2, 1::2].mean(axis=0), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="bgG-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[0::2, 0::2].mean(axis=0), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine), name="bgB-object")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_lef_x, gray_roi_lef[1::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="bgR-gray")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_lef_x, gray_roi_lef[1::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="bgG-gray")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_lef_x, gray_roi_lef[0::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="bgG-gray")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_lef_x, gray_roi_lef[0::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="bgB-gray")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[1::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine), name="bgR-object")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[1::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="bgG-object")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[0::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="bgG-object")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[0::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine), name="bgB-object")
 
 
     def handle_cb_calc5_norming(self) -> None:
@@ -928,7 +928,7 @@ class TheMainWindow(QMainWindow):
              np.concatenate((self.jp.obje_bgle.roi_desalted, self.jp.obje.roi_desalted, self.jp.obje_bgri.roi_desalted), axis=1)),
             axis=0, dtype=np.int64
         )
-        desalted_concatted_bayer_rgb_all_6roi = np.zeros((desaltedimg.shape[0], desaltedimg.shape[1], 3), dtype=np.int64)
+        desalted_concatted_bayer_rgb_all_6roi = np.zeros(shape=(desaltedimg.shape[0], desaltedimg.shape[1], 3), dtype=np.int64)
         desalted_concatted_bayer_rgb_all_6roi[0::2, 0::2, 2] = desaltedimg[0::2, 0::2]
         desalted_concatted_bayer_rgb_all_6roi[0::2, 1::2, 1] = desaltedimg[0::2, 1::2]
         desalted_concatted_bayer_rgb_all_6roi[1::2, 0::2, 1] = desaltedimg[1::2, 0::2]
@@ -1044,7 +1044,7 @@ class TheMainWindow(QMainWindow):
             one_index = int((self.ui.sb_calc5_norm_one.value() - 400 )/ 0.5)
             self.jp.normalize_the_fancy(zero_index, one_index)
             self.graph5_curve_relf.setData(tmp_x, self.jp.ref_fancy_normed)
-            self.ui.graph_calc5_refl_final.setYRange(-0.1, 1.1)
+            self.ui.graph_calc5_refl_final.getPlotItem().getViewBox().setYRange(-0.1, 1.1)
             self.graph5_norm_one_line.setPos(self.ui.sb_calc5_norm_one.value())
             self.graph5_norm_zero_line.setPos(self.ui.sb_calc5_norm_zero.value())
 
@@ -1261,7 +1261,9 @@ class TheMainWindow(QMainWindow):
         return ( -0.212 + 0.316 / (distance_in_cm + 0.258)) * pxl_spec + 2351.944 / (distance_in_cm + 8.423) + 519.806
 
     def init_physical_repr_graph(self) -> None:
-        v = self.ui.graph_physical_orientation.addViewBox() # noqa # type: ignore
+        #v = self.ui.graph_physical_orientation.addViewBox() # noqa # type: ignore
+        v = self.ui.graph_physical_orientation.ci.addViewBox()
+        print("init_physical_repr_graph")
         v.setAspectLocked()
         v.addItem(self.graph_physical_spectrometer_shape)
         v.addItem(self.graph_physical_vfov_ground_projection_shape)
