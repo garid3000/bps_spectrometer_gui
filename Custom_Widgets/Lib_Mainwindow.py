@@ -992,23 +992,23 @@ class TheMainWindow(QMainWindow):
 
     def call_calibrate_and_calculate_calc3_759_calib(self) -> None:
         self.jp.calibrate_n_calculate_final_output()
-        tmp_x: NDArray[np.float64] = np.array(self.jp.gray.rchan_759nm_calibrated.index[-1000:], dtype=np.float64)
+        tmp_x: NDArray[np.float64] = self.jp.gray.rchan_759nm_calibrated.index.to_numpy(dtype=np.float64)[-1000:]
         assert isinstance(tmp_x, np.ndarray)
         assert (tmp_x.dtype == np.float64)
         #assert isinstance(tmp_x, NDArray[np.float64])
-        self.graph3_curve_759_calib_gray_r.setData(tmp_x, np.array(self.jp.gray.rchan_759nm_calibrated["final"])[-1000:])
-        self.graph3_curve_759_calib_gray_g.setData(tmp_x, np.array(self.jp.gray.gchan_759nm_calibrated["final"])[-1000:])
-        self.graph3_curve_759_calib_gray_b.setData(tmp_x, np.array(self.jp.gray.bchan_759nm_calibrated["final"])[-1000:])
-        self.graph3_curve_759_calib_obje_r.setData(tmp_x, np.array(self.jp.obje.rchan_759nm_calibrated["final"])[-1000:])
-        self.graph3_curve_759_calib_obje_g.setData(tmp_x, np.array(self.jp.obje.gchan_759nm_calibrated["final"])[-1000:])
-        self.graph3_curve_759_calib_obje_b.setData(tmp_x, np.array(self.jp.obje.bchan_759nm_calibrated["final"])[-1000:])
+        self.graph3_curve_759_calib_gray_r.setData(tmp_x, np.array(self.jp.gray.rchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
+        self.graph3_curve_759_calib_gray_g.setData(tmp_x, np.array(self.jp.gray.gchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
+        self.graph3_curve_759_calib_gray_b.setData(tmp_x, np.array(self.jp.gray.bchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
+        self.graph3_curve_759_calib_obje_r.setData(tmp_x, np.array(self.jp.obje.rchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
+        self.graph3_curve_759_calib_obje_g.setData(tmp_x, np.array(self.jp.obje.gchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
+        self.graph3_curve_759_calib_obje_b.setData(tmp_x, np.array(self.jp.obje.bchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
 
-        self.graph3_curve_759_calib_gray_r_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_r_popt)))   # type: ignore
-        self.graph3_curve_759_calib_gray_g_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_g_popt)))   # type: ignore
-        self.graph3_curve_759_calib_gray_b_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_b_popt)))   # type: ignore
-        self.graph3_curve_759_calib_obje_r_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_r_popt)))   # type: ignore
-        self.graph3_curve_759_calib_obje_g_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_g_popt)))   # type: ignore
-        self.graph3_curve_759_calib_obje_b_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_b_popt)))   # type: ignore
+        self.graph3_curve_759_calib_gray_r_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_r_popt)))
+        self.graph3_curve_759_calib_gray_g_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_g_popt)))
+        self.graph3_curve_759_calib_gray_b_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_b_popt)))
+        self.graph3_curve_759_calib_obje_r_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_r_popt)))
+        self.graph3_curve_759_calib_obje_g_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_g_popt)))
+        self.graph3_curve_759_calib_obje_b_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_b_popt)))
 
 
     def call_calibrate_and_calculate_calc3_5_gray2white(self) -> None:
@@ -1022,7 +1022,7 @@ class TheMainWindow(QMainWindow):
 
     def call_calibrate_and_calculate_calc4_rgb_refl(self) -> None:
         self.jp.fancy_reflectance()
-        tmp_x = np.array(self.jp.gray.rchan_759nm_calibrated.index[-1000:], dtype=np.float64)
+        tmp_x: NDArray[np.float64] = self.jp.gray.rchan_759nm_calibrated.index.to_numpy(dtype=np.float64)[-1000:]
         assert isinstance(tmp_x, np.ndarray) and (tmp_x.dtype == np.float64)
         self.graph4_curve_relf_r.setData(tmp_x, self.jp.ref_fancy_r) # noqa
         self.graph4_curve_relf_g.setData(tmp_x, self.jp.ref_fancy_g) # noqa
@@ -1031,7 +1031,7 @@ class TheMainWindow(QMainWindow):
 
     def call_calibrate_and_calculate_calc5_refl_n_norm(self) -> None:
         self.jp.fancy_reflectance()
-        tmp_x = np.array(self.jp.gray.rchan_759nm_calibrated.index[-1000:], dtype=np.float64)
+        tmp_x: NDArray[np.float64] = self.jp.gray.rchan_759nm_calibrated.index.to_numpy(dtype=np.float64)[-1000:]
         assert isinstance(tmp_x, np.ndarray) and (tmp_x.dtype == np.float64)
 
         if not self.ui.cb_calc5_norm.isChecked():
@@ -1071,7 +1071,7 @@ class TheMainWindow(QMainWindow):
         self.ui.pbar_export.setValue(50)
         if self.ui.cb_export_ref_CSV_simple.isChecked():
             tmpcsv = np.zeros((1000, 5), dtype=np.float64)
-            tmpcsv[:, 0] = self.jp.gray.rchan_759nm_calibrated.index[-1000:]
+            tmpcsv[:, 0] = self.jp.gray.rchan_759nm_calibrated.index.to_numpy(dtype=np.float64)[-1000:]
             tmpcsv[:, 1] = self.jp.ref_fancy
             tmpcsv[:, 2] = self.jp.ref_fancy_normed if self.ui.cb_calc5_norm.isChecked() else 0
             tmpcsv[:, 3] = self.jp.obje_fancy_dn_bg_substracted
