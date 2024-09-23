@@ -1033,17 +1033,17 @@ class TheMainWindow(QMainWindow):
         self.jp.calibrate_n_calculate_final_output()
         tmp_x = self.jp.mgray2white[:, 0]
 
-        self.graph3_5_gray2white_r.setData(tmp_x, self.jp.mgray2white[:, 4])
+        self.graph3_5_gray2white_r.setData(tmp_x, self.jp.mgray2white[:, 3])
         self.graph3_5_gray2white_g.setData(tmp_x, self.jp.mgray2white[:, 2])
         self.graph3_5_gray2white_b.setData(tmp_x, self.jp.mgray2white[:, 1])
-        self.graph3_5_gray2white_k.setData(tmp_x, self.jp.mgray2white[:, 5])
+        self.graph3_5_gray2white_k.setData(tmp_x, self.jp.mgray2white[:, 4])
 
     def call_calibrate_and_calculate_calc4_rgb_refl(self) -> None:
         self.jp.fancy_reflectance()
         tmp_x = self.jp.gray.itp_hor_nm_array
-        self.graph4_curve_relf_r.setData(tmp_x, self.jp.ref_fancy_r) # noqa
-        self.graph4_curve_relf_g.setData(tmp_x, self.jp.ref_fancy_g) # noqa
-        self.graph4_curve_relf_b.setData(tmp_x, self.jp.ref_fancy_b) # noqa
+        self.graph4_curve_relf_r.setData(tmp_x[:-100], self.jp.ref_fancy_r[:-100]) # noqa
+        self.graph4_curve_relf_g.setData(tmp_x[:-100], self.jp.ref_fancy_g[:-100]) # noqa
+        self.graph4_curve_relf_b.setData(tmp_x[:-100], self.jp.ref_fancy_b[:-100]) # noqa
 
 
     def call_calibrate_and_calculate_calc5_refl_n_norm(self) -> None:
@@ -1051,12 +1051,12 @@ class TheMainWindow(QMainWindow):
         tmp_x = self.jp.gray.itp_hor_nm_array
 
         if not self.ui.cb_calc5_norm.isChecked():
-            self.graph5_curve_relf.setData(tmp_x, self.jp.ref_fancy)
+            self.graph5_curve_relf.setData(tmp_x[:-100], self.jp.ref_fancy[:-100])
         else:
             zero_index = int((self.ui.sb_calc5_norm_zero.value() - 400) / 0.5)
             one_index = int((self.ui.sb_calc5_norm_one.value() - 400 )/ 0.5)
             self.jp.normalize_the_fancy(zero_index, one_index)
-            self.graph5_curve_relf.setData(tmp_x, self.jp.ref_fancy_normed)
+            self.graph5_curve_relf.setData(tmp_x[:-100], self.jp.ref_fancy_normed[:-100])
             self.ui.graph_calc5_refl_final.getPlotItem().getViewBox().setYRange(-0.1, 1.1)
             self.graph5_norm_one_line.setPos(self.ui.sb_calc5_norm_one.value())
             self.graph5_norm_zero_line.setPos(self.ui.sb_calc5_norm_zero.value())

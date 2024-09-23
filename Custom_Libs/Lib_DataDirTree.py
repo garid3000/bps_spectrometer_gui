@@ -1,4 +1,3 @@
-from typing import List
 import os
 import json
 
@@ -8,8 +7,8 @@ class DataDirTree:
     data directory and it's files.
     """
     ddir         : str
-    jpegFnames   : List[str]
-    jpegFnamesFP : List[str]     # Full path
+    jpegFnames   : list[str]
+    jpegFnamesFP : list[str]     # Full path
     webcamFP     : str
     metajsonText : str
     metajsonFP   : str
