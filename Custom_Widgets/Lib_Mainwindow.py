@@ -993,11 +993,9 @@ class TheMainWindow(QMainWindow):
     def call_calibrate_and_calculate_calc3_759_calib(self) -> None:
         self.jp.calibrate_n_calculate_final_output()
         tmp_x: NDArray[np.float64] = np.array(self.jp.gray.rchan_759nm_calibrated.index[-1000:], dtype=np.float64)
-        print("tmp_x", tmp_x.shape, tmp_x.dtype, type(tmp_x))
         assert isinstance(tmp_x, np.ndarray)
         assert (tmp_x.dtype == np.float64)
         #assert isinstance(tmp_x, NDArray[np.float64])
-        print('hi')
         self.graph3_curve_759_calib_gray_r.setData(tmp_x, np.array(self.jp.gray.rchan_759nm_calibrated["final"])[-1000:])
         self.graph3_curve_759_calib_gray_g.setData(tmp_x, np.array(self.jp.gray.gchan_759nm_calibrated["final"])[-1000:])
         self.graph3_curve_759_calib_gray_b.setData(tmp_x, np.array(self.jp.gray.bchan_759nm_calibrated["final"])[-1000:])
@@ -1005,14 +1003,12 @@ class TheMainWindow(QMainWindow):
         self.graph3_curve_759_calib_obje_g.setData(tmp_x, np.array(self.jp.obje.gchan_759nm_calibrated["final"])[-1000:])
         self.graph3_curve_759_calib_obje_b.setData(tmp_x, np.array(self.jp.obje.bchan_759nm_calibrated["final"])[-1000:])
 
-        print('hi1')
         self.graph3_curve_759_calib_gray_r_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_r_popt)))   # type: ignore
         self.graph3_curve_759_calib_gray_g_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_g_popt)))   # type: ignore
         self.graph3_curve_759_calib_gray_b_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_b_popt)))   # type: ignore
         self.graph3_curve_759_calib_obje_r_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_r_popt)))   # type: ignore
         self.graph3_curve_759_calib_obje_g_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_g_popt)))   # type: ignore
         self.graph3_curve_759_calib_obje_b_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_b_popt)))   # type: ignore
-        print('hi2')
 
 
     def call_calibrate_and_calculate_calc3_5_gray2white(self) -> None:
@@ -1131,7 +1127,9 @@ class TheMainWindow(QMainWindow):
         selrow_ind_hist_param = self.dfParamHistory.loc[self.dfParamHistory["date"] == selected_hist_date_str]       # type: ignore # noqa
         print(f"set_calculation_params_from_history_selection {selected_hist_date_str=}")
         print(f"set_calculation_params_from_history_selection {selrow_ind_hist_param=}")
-        self.ui.sb_midx_init.setValue(self.dfParamHistory["midx_init"][selrow_ind_hist_param.index[0]])              # type: ignore # noqa
+        self.ui.sb_midx_init.setValue(
+            self.dfParamHistory["midx_init"][
+            selrow_ind_hist_param.index[0]])              # type: ignore # noqa
         self.ui.sb_midx_size.setValue(self.dfParamHistory["midx_size"][selrow_ind_hist_param.index[0]])              # type: ignore # noqa
         self.ui.sb_lefx_init_rel.setValue(self.dfParamHistory["lefx_init_rel"][selrow_ind_hist_param.index[0]])      # type: ignore # noqa
         self.ui.sb_lefx_size.setValue(self.dfParamHistory["lefx_size"][selrow_ind_hist_param.index[0]])              # type: ignore # noqa
@@ -1204,27 +1202,26 @@ class TheMainWindow(QMainWindow):
             #print("some column missing")
             return False
 
-        if (df["date"            ].dtype != "O"                        or
-            df["midx_init"       ].dtype not in ("int64", "int32")     or
-            df["midx_size"       ].dtype not in ("int64", "int32")     or
-            df["lefx_init_rel"   ].dtype not in ("int64", "int32")     or
-            df["lefx_size"       ].dtype not in ("int64", "int32")     or
-            df["rigx_init_rel"   ].dtype not in ("int64", "int32")     or
-            df["rigx_size"       ].dtype not in ("int64", "int32")     or
-            df["gray_y_init"     ].dtype not in ("int64", "int32")     or
-            df["gray_y_size"     ].dtype not in ("int64", "int32")     or
-            df["obje_y_init"     ].dtype not in ("int64", "int32")     or
-            df["obje_y_size"     ].dtype not in ("int64", "int32")     or
-            df["waveperpixel"    ].dtype not in ("float64", "float32") or
-            df["calc1_desalt"    ].dtype != "bool"                     or
-            df["calc2_background"].dtype != "bool"                     or
-            df["calc3_calibrate" ].dtype != "bool"                     or
-            df["calc5_norm"      ].dtype != "bool"                     or
-            df["calc5_norm_zero" ].dtype not in ("float64", "float32") or
-            df["calc5_norm_one"  ].dtype not in ("float64", "float32")):
-            #print("bad dtype in df")
+        if (df["date"].dtype              != np.dtype("O") or
+            df["midx_init"].dtype         not in (np.dtype("int64"), np.dtype("int32")) or
+            df["midx_size"].dtype         not in (np.dtype("int64"), np.dtype("int32")) or
+            df["lefx_init_rel"].dtype     not in (np.dtype("int64"), np.dtype("int32")) or
+            df["lefx_size"].dtype         not in (np.dtype("int64"), np.dtype("int32")) or
+            df["rigx_init_rel"].dtype     not in (np.dtype("int64"), np.dtype("int32")) or
+            df["rigx_size"].dtype         not in (np.dtype("int64"), np.dtype("int32")) or
+            df["gray_y_init"].dtype       not in (np.dtype("int64"), np.dtype("int32")) or
+            df["gray_y_size"].dtype       not in (np.dtype("int64"), np.dtype("int32")) or
+            df["obje_y_init"].dtype       not in (np.dtype("int64"), np.dtype("int32")) or
+            df["obje_y_size"].dtype       not in (np.dtype("int64"), np.dtype("int32")) or
+            df["waveperpixel"].dtype      not in (np.dtype("float64"), np.dtype("float32")) or
+            df["calc1_desalt"].dtype      != np.dtype("bool") or
+            df["calc2_background"].dtype  != np.dtype("bool") or
+            df["calc3_calibrate"].dtype   != np.dtype("bool") or
+            df["calc5_norm"].dtype        != np.dtype("bool") or
+            df["calc5_norm_zero"].dtype   not in (np.dtype("float64"), np.dtype("float32")) or
+            df["calc5_norm_one"].dtype    not in (np.dtype("float64"), np.dtype("float32"))):
+            print(f"df history bad csv column type: {df.dtypes=}")
             return False
-
 
         return True
 
