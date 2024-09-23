@@ -702,10 +702,10 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[1::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray")
         _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[0::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray")
         _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[0::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="B-gray")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[1::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine), name="R-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[1::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="G-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[0::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="G-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[0::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine), name="B-object")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[1::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine),  name="R-object")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[1::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine),  name="G-object")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[0::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine),  name="G-object")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[0::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine),  name="B-object")
 
 
         tmp_lef_x = get_wavelength_array(
@@ -733,10 +733,10 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.graph_raw.getPlotItem().plot(tmp_lef_x, gray_roi_lef[1::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="bgG-gray")
         _ = self.ui.graph_raw.getPlotItem().plot(tmp_lef_x, gray_roi_lef[0::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="bgG-gray")
         _ = self.ui.graph_raw.getPlotItem().plot(tmp_lef_x, gray_roi_lef[0::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="bgB-gray")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[1::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine), name="bgR-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[1::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="bgG-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[0::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="bgG-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[0::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine), name="bgB-object")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[1::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine),  name="bgR-object")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[1::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine),  name="bgG-object")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[0::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine),  name="bgG-object")
+        _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[0::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine),  name="bgB-object")
 
 
     def handle_cb_calc5_norming(self) -> None:
@@ -872,7 +872,7 @@ class TheMainWindow(QMainWindow):
         self.dfParamHistory = self.read_param_history_file_and_handle_if_corrupted(self.paramLogPath)
         self.ui.cb_parameter_history.clear()
         self.ui.cb_parameter_history.addItem("Current")                               # <-- current different
-        self.ui.cb_parameter_history.addItems(list(self.dfParamHistory["date"]))
+        self.ui.cb_parameter_history.addItems(self.dfParamHistory["date"].astype(str).tolist())
 
 
     def call_tv_onItemDoubleClicked(self, v: QModelIndex):
@@ -1124,54 +1124,50 @@ class TheMainWindow(QMainWindow):
         # in order to not change: self.ui.cb_parameter_history
         self.paramsChangingFromHistory = True
 
-        selrow_ind_hist_param = self.dfParamHistory.loc[self.dfParamHistory["date"] == selected_hist_date_str]       # type: ignore # noqa
-        print(f"set_calculation_params_from_history_selection {selected_hist_date_str=}")
-        print(f"set_calculation_params_from_history_selection {selrow_ind_hist_param=}")
-        self.ui.sb_midx_init.setValue(
-            self.dfParamHistory["midx_init"][
-            selrow_ind_hist_param.index[0]])              # type: ignore # noqa
-        self.ui.sb_midx_size.setValue(self.dfParamHistory["midx_size"][selrow_ind_hist_param.index[0]])              # type: ignore # noqa
-        self.ui.sb_lefx_init_rel.setValue(self.dfParamHistory["lefx_init_rel"][selrow_ind_hist_param.index[0]])      # type: ignore # noqa
-        self.ui.sb_lefx_size.setValue(self.dfParamHistory["lefx_size"][selrow_ind_hist_param.index[0]])              # type: ignore # noqa
-        self.ui.sb_rigx_init_rel.setValue(self.dfParamHistory["rigx_init_rel"][selrow_ind_hist_param.index[0]])      # type: ignore # noqa
-        self.ui.sb_rigx_size.setValue(self.dfParamHistory["rigx_size"][selrow_ind_hist_param.index[0]])              # type: ignore # noqa
-        self.ui.sb_gray_y_init.setValue(self.dfParamHistory["gray_y_init"][selrow_ind_hist_param.index[0]])          # type: ignore # noqa
-        self.ui.sb_gray_y_size.setValue(self.dfParamHistory["gray_y_size"][selrow_ind_hist_param.index[0]])          # type: ignore # noqa
-        self.ui.sb_obje_y_init.setValue(self.dfParamHistory["obje_y_init"][selrow_ind_hist_param.index[0]])          # type: ignore # noqa
-        self.ui.sb_obje_y_size.setValue(self.dfParamHistory["obje_y_size"][selrow_ind_hist_param.index[0]])          # type: ignore # noqa
+        #tmp = self.dfParamHistory.index[self.dfParamHistory["date"] == selected_hist_date_str]
+        selected_row_num = (self.dfParamHistory["date"] == selected_hist_date_str).tolist().index(True)
+
+        self.ui.sb_midx_init.setValue(      self.dfParamHistory["midx_init"].astype(int).iloc[selected_row_num])
+        self.ui.sb_midx_size.setValue(      self.dfParamHistory["midx_size"].astype(int).iloc[selected_row_num])
+        self.ui.sb_lefx_init_rel.setValue(  self.dfParamHistory["lefx_init_rel"].astype(int).iloc[selected_row_num])
+        self.ui.sb_lefx_size.setValue(      self.dfParamHistory["lefx_size"].astype(int).iloc[selected_row_num])
+        self.ui.sb_rigx_init_rel.setValue(  self.dfParamHistory["rigx_init_rel"].astype(int).iloc[selected_row_num])
+        self.ui.sb_rigx_size.setValue(      self.dfParamHistory["rigx_size"].astype(int).iloc[selected_row_num])
+        self.ui.sb_gray_y_init.setValue(    self.dfParamHistory["gray_y_init"].astype(int).iloc[selected_row_num])
+        self.ui.sb_gray_y_size.setValue(    self.dfParamHistory["gray_y_size"].astype(int).iloc[selected_row_num])
+        self.ui.sb_obje_y_init.setValue(    self.dfParamHistory["obje_y_init"].astype(int).iloc[selected_row_num])
+        self.ui.sb_obje_y_size.setValue(    self.dfParamHistory["obje_y_size"].astype(int).iloc[selected_row_num])
         _ = self.ui.sb_waveperpixel.blockSignals(True)
-        self.ui.sb_waveperpixel.setValue(self.dfParamHistory["waveperpixel"][selrow_ind_hist_param.index[0]])        # type: ignore # noqa
+        self.ui.sb_waveperpixel.setValue(   self.dfParamHistory["waveperpixel"].astype(int).iloc[selected_row_num])
         _ = self.ui.sb_waveperpixel.blockSignals(False)
-        # # # # # # 'calc1_desalt', 'calc2_background', 'calc3_calibrate', 'calc5_norm',                             # type: ignore # noqa
-        self.ui.cb_calc5_norm.setChecked(self.dfParamHistory["calc5_norm"][selrow_ind_hist_param.index[0]])          # type: ignore # noqa
-        self.ui.sb_calc5_norm_zero.setValue(self.dfParamHistory["calc5_norm_zero"][selrow_ind_hist_param.index[0]])  # type: ignore # noqa
-        self.ui.sb_calc5_norm_one.setValue(self.dfParamHistory["calc5_norm_one"][selrow_ind_hist_param.index[0]])    # type: ignore # noqa
+        self.ui.cb_calc5_norm.setChecked(   self.dfParamHistory["calc5_norm"].astype(bool).iloc[selected_row_num])
+        self.ui.sb_calc5_norm_zero.setValue(self.dfParamHistory["calc5_norm_zero"].astype(int).iloc[selected_row_num])
+        self.ui.sb_calc5_norm_one.setValue( self.dfParamHistory["calc5_norm_one"].astype(int).iloc[selected_row_num])
 
         self.paramsChangingFromHistory = False
-
         # exporting
         self.call_calibrate_and_calculate()
 
     def get_current_calculation_parameters_as_pd_df(self) -> pd.DataFrame:
         resultDic = {
-            "date" : [datetime.now().strftime("%Y/%m/%d-%H:%M:%S")],
-            "midx_init" : [self.ui.sb_midx_init.value()],
-            "midx_size" : [700],
-            "lefx_init_rel" : [self.ui.sb_lefx_init_rel.value()],
-            "lefx_size" : [self.ui.sb_lefx_size.value()],
-            "rigx_init_rel" : [self.ui.sb_rigx_init_rel.value()],
-            "rigx_size" : [self.ui.sb_rigx_size.value()],
-            "gray_y_init" : [self.ui.sb_gray_y_init.value()],
-            "gray_y_size" : [self.ui.sb_gray_y_size.value()],
-            "obje_y_init" : [self.ui.sb_obje_y_init.value()],
-            "obje_y_size" : [self.ui.sb_obje_y_size.value()],
-            "waveperpixel" : [self.ui.sb_waveperpixel.value()],
-            "calc1_desalt"    : [self.ui.cb_calc1_desalt.isChecked()],
+            "date"             : [datetime.now().strftime("%Y/%m/%d-%H:%M:%S")],
+            "midx_init"        : [self.ui.sb_midx_init.value()],
+            "midx_size"        : [700],
+            "lefx_init_rel"    : [self.ui.sb_lefx_init_rel.value()],
+            "lefx_size"        : [self.ui.sb_lefx_size.value()],
+            "rigx_init_rel"    : [self.ui.sb_rigx_init_rel.value()],
+            "rigx_size"        : [self.ui.sb_rigx_size.value()],
+            "gray_y_init"      : [self.ui.sb_gray_y_init.value()],
+            "gray_y_size"      : [self.ui.sb_gray_y_size.value()],
+            "obje_y_init"      : [self.ui.sb_obje_y_init.value()],
+            "obje_y_size"      : [self.ui.sb_obje_y_size.value()],
+            "waveperpixel"     : [self.ui.sb_waveperpixel.value()],
+            "calc1_desalt"     : [self.ui.cb_calc1_desalt.isChecked()],
             "calc2_background" : [self.ui.cb_calc2_background.isChecked()],
-            "calc3_calibrate" : [self.ui.cb_calc3_calibrate_759.isChecked()],
-            "calc5_norm"      : [self.ui.cb_calc5_norm.isChecked()],
-            "calc5_norm_zero" : [self.ui.sb_calc5_norm_zero.value()],
-            "calc5_norm_one"  : [self.ui.sb_calc5_norm_one.value()],
+            "calc3_calibrate"  : [self.ui.cb_calc3_calibrate_759.isChecked()],
+            "calc5_norm"       : [self.ui.cb_calc5_norm.isChecked()],
+            "calc5_norm_zero"  : [self.ui.sb_calc5_norm_zero.value()],
+            "calc5_norm_one"   : [self.ui.sb_calc5_norm_one.value()],
         }
         print(resultDic)
         return pd.DataFrame(resultDic)
