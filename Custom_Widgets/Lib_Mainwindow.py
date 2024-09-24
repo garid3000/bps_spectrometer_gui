@@ -844,14 +844,19 @@ class TheMainWindow(QMainWindow):
         self.dir_path = os.path.dirname(self.jpeg_path)
         _ = self.ddtree.set_ddir(self.dir_path)
         self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
-        logging.info(f"short_cut_preview_raw_jpeg: {self.ddtree.webcamFP=}, {os.path.isfile(self.ddtree.webcamFP)=}")
-        if os.path.isfile(self.ddtree.webcamFP):
+        logging.info(f"short_cut_preview_raw_jpeg: {self.ddtree.webcamFP=}")
+
+        if self.ddtree.webcamFP is not None:
             tmp_file_bytes = np.fromfile(self.ddtree.webcamFP, dtype=np.uint8)
             logging.debug(f"short_cut_preview_raw_jpeg: {tmp_file_bytes=}, {tmp_file_bytes.shape=}")
-            tmp_img_npy: NDArray[np.uint8] = cv.imdecode(tmp_file_bytes, cv.IMREAD_UNCHANGED).astype(np.uint8)[:, :, ::-1]
-            logging.debug(f"short_cut_preview_raw_jpeg: {tmp_img_npy=}, {tmp_img_npy.shape=}")
-            self.ui.graph_webcam.setImage(img=tmp_img_npy, axes={"x":1, "y":0, "c":2})
+            tmp_img_npy: NDArray[np.uint8] | None = cv.imdecode(tmp_file_bytes, cv.IMREAD_UNCHANGED)#.astype(np.uint8)[:, :, ::-1]
+            if tmp_img_npy is None:
+                self.ui.graph_webcam.setImage(np.zeros((10, 10, 3), dtype=np.uint8), axes={"x":1, "y":0, "c":2})
+            else:
+                self.ui.graph_webcam.setImage(img=tmp_img_npy, axes={"x":1, "y":0, "c":2})
+                logging.debug(f"short_cut_preview_raw_jpeg: {tmp_img_npy=}, {tmp_img_npy.shape=}")
         else:
+            # webcam image didn't found
             self.ui.graph_webcam.setImage(np.zeros((10, 10, 3), dtype=np.uint8), axes={"x":1, "y":0, "c":2})
 
         _ = self.jp.load_jpeg_file(self.jpeg_path, also_get_rgb_rerp=True)
