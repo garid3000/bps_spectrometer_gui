@@ -52,6 +52,7 @@ from PySide6.QtWidgets import (
 )
 
 from pyqtgraph import GraphicsLayoutWidget, ImageView, PlotWidget
+from QRCs.main_resource import *
 
 
 class Ui_MainWindow(object):
