@@ -14,7 +14,8 @@ import time
 # ---------- Numerical Visual packages---------------------------------------------------------------------------------
 import numpy as np
 from numpy.typing import NDArray
-import cv2 as cv
+#import cv2 as cv # only reason I have cv is for readin JPG file.
+from PIL import Image
 import pandas as pd
 import math
 
@@ -847,17 +848,27 @@ class TheMainWindow(QMainWindow):
         logging.info(f"short_cut_preview_raw_jpeg: {self.ddtree.webcamFP=}")
 
         if self.ddtree.webcamFP is not None:
-            tmp_file_bytes = np.fromfile(self.ddtree.webcamFP, dtype=np.uint8)
-            logging.debug(f"short_cut_preview_raw_jpeg: {tmp_file_bytes=}, {tmp_file_bytes.shape=}")
-            tmp_img_npy: NDArray[np.uint8] | None = cv.imdecode(tmp_file_bytes, cv.IMREAD_UNCHANGED)#.astype(np.uint8)[:, :, ::-1]
-            if tmp_img_npy is None:
-                self.ui.graph_webcam.setImage(np.zeros((10, 10, 3), dtype=np.uint8), axes={"x":1, "y":0, "c":2})
-            else:
-                self.ui.graph_webcam.setImage(img=tmp_img_npy, axes={"x":1, "y":0, "c":2})
-                logging.debug(f"short_cut_preview_raw_jpeg: {tmp_img_npy=}, {tmp_img_npy.shape=}")
-        else:
-            # webcam image didn't found
-            self.ui.graph_webcam.setImage(np.zeros((10, 10, 3), dtype=np.uint8), axes={"x":1, "y":0, "c":2})
+            try:
+                webcam_img = Image.open(self.ddtree.webcamFP)
+                webcam = np.array(webcam_img)
+                logging.debug(f"short_cut_preview_raw_jpeg: {webcam=}, {webcam.shape=}")
+            except ValueError:
+                logging.info(f"PIL-ValueError: while openning {self.ddtree.webcamFP}")
+                webcam = np.zeros((10, 10, 3), dtype=np.uint8)
+                _ = QMessageBox.warning(self, "file read error", f"{self.ddtree.webcamFP} read Value-error", QMessageBox.StandardButton.Ignore, QMessageBox.StandardButton.Ignore)
+            except TypeError:
+                logging.info(f"PIL-TypeError: while openning {self.ddtree.webcamFP}")
+                webcam = np.zeros((10, 10, 3), dtype=np.uint8)
+                _ = QMessageBox.warning(self, "file read error", f"{self.ddtree.webcamFP} read Type-error", QMessageBox.StandardButton.Ignore, QMessageBox.StandardButton.Ignore)
+            except Exception as e:
+                logging.info(f"PIL-{e}: while openning {self.ddtree.webcamFP}")
+                webcam = np.zeros((10, 10, 3), dtype=np.uint8)
+                _ = QMessageBox.warning(self, "file read error", f"{self.ddtree.webcamFP} read {e} error", QMessageBox.StandardButton.Ignore, QMessageBox.StandardButton.Ignore)
+        else: # webcam image didn't found
+            webcam = np.zeros((10, 10, 3), dtype=np.uint8)
+            _ = QMessageBox.warning(self, "file not found", "webcam's cam.jpg not found", QMessageBox.StandardButton.Ignore, QMessageBox.StandardButton.Ignore)
+
+        self.ui.graph_webcam.setImage(webcam, axes={"x":1, "y":0, "c":2})
 
         _ = self.jp.load_jpeg_file(self.jpeg_path, also_get_rgb_rerp=True)
         self.update_1_rawbayer_img_data_and_then_plot_below()
