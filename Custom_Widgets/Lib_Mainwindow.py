@@ -844,23 +844,15 @@ class TheMainWindow(QMainWindow):
         self.dir_path = os.path.dirname(self.jpeg_path)
         _ = self.ddtree.set_ddir(self.dir_path)
         self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
-        #self.ui.limg_webcam.show_np_img(
-        #    cv.imdecode( # cv.imread have input of unicode path. so needed to read to byte array then decode to cv image
-        #        np.fromfile(self.ddtree.webcamFP, dtype=np.uint8),
-        #        cv.IMREAD_UNCHANGED,
-        #    ).astype(np.uint8)[:, :, ::-1]
-        #    if os.path.isfile(self.ddtree.webcamFP)
-        #    else np.zeros((10, 10, 3), dtype=np.uint8)
-        #)
-        self.ui.graph_webcam.setImage(
-            img= cv.imdecode(
-                np.fromfile(self.ddtree.webcamFP, dtype=np.uint8),
-                cv.IMREAD_UNCHANGED,
-            ).astype(np.uint8)[:, :, ::-1] if os.path.isfile(self.ddtree.webcamFP)
-            else np.zeros((10, 10, 3), dtype=np.uint8),
-            #levels=(desalted_concatted_bayer_rgb_all_6roi.min(), desalted_concatted_bayer_rgb_all_6roi.max()),
-            axes={"x":1, "y":0, "c":2},
-        )
+        logging.info(f"short_cut_preview_raw_jpeg: {self.ddtree.webcamFP=}, {os.path.isfile(self.ddtree.webcamFP)=}")
+        if os.path.isfile(self.ddtree.webcamFP):
+            tmp_file_bytes = np.fromfile(self.ddtree.webcamFP, dtype=np.uint8)
+            logging.debug(f"short_cut_preview_raw_jpeg: {tmp_file_bytes=}, {tmp_file_bytes.shape=}")
+            tmp_img_npy: NDArray[np.uint8] = cv.imdecode(tmp_file_bytes, cv.IMREAD_UNCHANGED).astype(np.uint8)[:, :, ::-1]
+            logging.debug(f"short_cut_preview_raw_jpeg: {tmp_img_npy=}, {tmp_img_npy.shape=}")
+            self.ui.graph_webcam.setImage(img=tmp_img_npy, axes={"x":1, "y":0, "c":2})
+        else:
+            self.ui.graph_webcam.setImage(np.zeros((10, 10, 3), dtype=np.uint8), axes={"x":1, "y":0, "c":2})
 
         _ = self.jp.load_jpeg_file(self.jpeg_path, also_get_rgb_rerp=True)
         self.update_1_rawbayer_img_data_and_then_plot_below()
