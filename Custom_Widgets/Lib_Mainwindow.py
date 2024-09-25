@@ -246,10 +246,42 @@ class TheMainWindow(QMainWindow):
         self.graph3_5_gray2white_b = self.ui.graph_gray2white.getPlotItem().plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DotLine),  name="blue")
         self.graph3_5_gray2white_k = self.ui.graph_gray2white.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine),  name="black")
 
+        # -------------------------------------------------------------------------------------------------------------------------
         self.graph4_curve_relf_r = self.ui.graph_calc4_refl_rgb.getPlotItem().plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="R-refl")
         self.graph4_curve_relf_g = self.ui.graph_calc4_refl_rgb.getPlotItem().plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-refl")
         self.graph4_curve_relf_b = self.ui.graph_calc4_refl_rgb.getPlotItem().plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="B-refl")
 
+        # self.ui.graph_calc4_refl_rgb.getPlotItem().setLabels() # left="axis 1"
+        self.p2 = pg.ViewBox()
+        self.ui.graph_calc4_refl_rgb.getPlotItem().showAxis("right")
+        self.ui.graph_calc4_refl_rgb.getPlotItem().scene().addItem(self.p2)
+        self.ui.graph_calc4_refl_rgb.getPlotItem().getAxis("right").linkToView(self.p2)
+        self.p2.setXLink(self.ui.graph_calc4_refl_rgb.getPlotItem())
+        self.ui.graph_calc4_refl_rgb.getPlotItem().getAxis("right").setLabel("Weight of combination", color="#3f3f3f")
+
+
+        def updateViews():
+            #_ = self.ui.graph_calc4_refl_rgb.getPlotItem().addLegend()
+            self.p2.setGeometry(self.ui.graph_calc4_refl_rgb.getPlotItem().getViewBox().sceneBoundingRect())
+            self.p2.linkedViewChanged(self.ui.graph_calc4_refl_rgb.getPlotItem().getViewBox(), self.p2.XAxis)
+
+        self.ui.graph_calc4_refl_rgb.getPlotItem().vb.sigResized.connect(updateViews)
+
+        self.p2_weight_r = pg.PlotDataItem(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine), name="R-weight")
+        self.p2_weight_g = pg.PlotDataItem(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="G-weight")
+        self.p2_weight_b = pg.PlotDataItem(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine), name="B-weight")
+
+        self.p2.addItem(self.p2_weight_r)
+        self.p2.addItem(self.p2_weight_g)
+        self.p2.addItem(self.p2_weight_b)
+
+        tmp_x = self.jp.gray.itp_hor_nm_array
+
+        self.p2_weight_r.setData(tmp_x[:-100], self.jp.weight_r[:-100])
+        self.p2_weight_g.setData(tmp_x[:-100], self.jp.weight_g[:-100])
+        self.p2_weight_b.setData(tmp_x[:-100], self.jp.weight_b[:-100])
+
+        updateViews()
         #   -----------------------------------------------------------------------------------------------------------
         self.graph_759nm_line_for_2dimg = pg.InfiniteLine(
             pos=192*2 + self.ui.sb_midx_init.value(), movable=False, angle=90, label="759.3nm",
@@ -544,28 +576,18 @@ class TheMainWindow(QMainWindow):
                 self.ui.sb_gray_y_init.setValue(gray_posy)
                 self.ui.sb_gray_y_size.setValue(gray_sizey)
 
-                # self.ui.sb_midx_init.setValue(self.roi_gray_main.getState()["pos"].x()  )
-                # self.ui.sb_midx_size.setValue(self.roi_gray_main.getState()["size"].x())
-                # self.ui.sb_gray_y_init.setValue(self.roi_gray_main.getState()["pos"].y() )
-                # self.ui.sb_gray_y_size.setValue(self.roi_gray_main.getState()["size"].y())
-                #self.ui.sb_midx_ends.setValue()
-
             elif left_middle_right == "left":
                 gray_posx, _,          _, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_main.getState())
                 bglf_posx, _, bglf_sizex, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_bglf.getState())
                 self.ui.sb_lefx_init_rel.setValue(- gray_posx + bglf_posx)
                 self.ui.sb_lefx_size.setValue(bglf_sizex)
 
-                #self.ui.sb_lefx_init_rel.setValue(- self.roi_gray_main.getState()["pos"].x() + self.roi_gray_bglf.getState()["pos"].x())
-                #self.ui.sb_lefx_size.setValue(self.roi_gray_bglf.getState()["size"].x())
             elif left_middle_right == "right":
                 gray_posx, _,          _, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_main.getState())
                 bgri_posx, _, bgri_sizex, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_bgri.getState())
                 self.ui.sb_rigx_init_rel.setValue(- gray_posx + bgri_posx)
                 self.ui.sb_rigx_size.setValue(bgri_sizex)
 
-                #self.ui.sb_rigx_init_rel.setValue(- self.roi_gray_main.getState()["pos"].x() + self.roi_gray_bgri.getState()["pos"].x())
-                #self.ui.sb_rigx_size.setValue(self.roi_gray_bgri.getState()["size"].x())
         elif gray_or_obje == "obje":
             if left_middle_right == "middle":
                 obje_posx, obje_posy, obje_sizex, obje_sizey = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_obje_main.getState())
@@ -574,11 +596,7 @@ class TheMainWindow(QMainWindow):
                 self.ui.sb_midx_size.setValue(obje_sizex)
                 self.ui.sb_obje_y_init.setValue(obje_posy)
                 self.ui.sb_obje_y_size.setValue(obje_sizey)
-                # self.ui.sb_midx_init.setValue(self.roi_obje_main.getState()["pos"].x() )
-                # self.ui.sb_midx_size.setValue(self.roi_obje_main.getState()["size"].x())
-                # self.ui.sb_obje_y_init.setValue(self.roi_obje_main.getState()["pos"].y() )
-                # self.ui.sb_obje_y_size.setValue(self.roi_obje_main.getState()["size"].y())
-                #self.ui.sb_midx_ends.setValue()
+
             elif left_middle_right == "left":
                 gray_posx, _,          _, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_main.getState())
                 bglf_posx, _, bglf_sizex, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_obje_bglf.getState())
@@ -586,17 +604,12 @@ class TheMainWindow(QMainWindow):
                 self.ui.sb_lefx_init_rel.setValue(- gray_posx + bglf_posx)
                 self.ui.sb_lefx_size.setValue(bglf_sizex)
 
-                #self.ui.sb_lefx_init_rel.setValue(- self.roi_gray_main.getState()["pos"].x() + self.roi_obje_bglf.getState()["pos"].x())
-                #self.ui.sb_lefx_size.setValue(self.roi_obje_bglf.getState()["size"].x())
             elif left_middle_right == "right":
                 gray_posx, _,          _, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_main.getState())
                 bgri_posx, _, bgri_sizex, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_obje_bgri.getState())
 
                 self.ui.sb_rigx_init_rel.setValue(- gray_posx + bgri_posx)
                 self.ui.sb_rigx_size.setValue(bgri_sizex)
-
-                # self.ui.sb_rigx_init_rel.setValue(- self.roi_gray_main.getState()["pos"].x() + self.roi_obje_bgri.getState()["pos"].x())
-                # self.ui.sb_rigx_size.setValue(self.roi_obje_bgri.getState()["size"].x())
 
         self.all_sb_signal_enable_or_disable(False)
         self.update_raw_from_sb()
@@ -663,7 +676,6 @@ class TheMainWindow(QMainWindow):
         fov_pw2 = self.pxlspec_to_pxlweb_formula(self.ui.hs_target_distance.value(), self.ui.sb_obje_y_init.value() + self.ui.sb_obje_y_size.value())
         self.roi_webcam_fov.setPos((310, fov_pw1))
         self.roi_webcam_fov.setSize((20, fov_pw2-fov_pw1))
-
 
 
     def update_raw_roi_plot_when_sb_or_roi_moved(self) -> None:
@@ -851,7 +863,7 @@ class TheMainWindow(QMainWindow):
             try:
                 webcam_img = Image.open(self.ddtree.webcamFP)
                 webcam = np.array(webcam_img)
-                logging.debug(f"short_cut_preview_raw_jpeg: {webcam=}, {webcam.shape=}")
+                logging.debug(f"short_cut_preview_raw_jpeg: {webcam.dtype=}, {webcam.shape=}")
             except ValueError:
                 logging.info(f"PIL-ValueError: while openning {self.ddtree.webcamFP}")
                 webcam = np.zeros((10, 10, 3), dtype=np.uint8)
@@ -963,7 +975,7 @@ class TheMainWindow(QMainWindow):
         self.text_for_desalted_img_label5.setPos(self.ui.sb_lefx_size.value() + self.ui.sb_midx_size.value()   , self.ui.sb_gray_y_size.value())
 
     def call_calibrate_and_calculate_calc2_background(self) -> None:
-        self.jp.background_calculation()
+        self.jp.background_calculation_on_all_channels_seperately()
 
         tmp_lef_x = get_wavelength_array(
             init_pxl=self.ui.sb_lefx_init_rel.value()//2,
@@ -976,31 +988,19 @@ class TheMainWindow(QMainWindow):
             waveperpixel=self.ui.sb_waveperpixel.value(),
         )
 
-        # self.graph2_curve_bg_gray_le_r.setData(tmp_lef_x, self.jp.gray_bgle.rchan["dn"].values[:self.jp.gray_bgle.raw_hor_pxl])
-        # self.graph2_curve_bg_gray_le_g.setData(tmp_lef_x, self.jp.gray_bgle.gchan["dn"].values[:self.jp.gray_bgle.raw_hor_pxl])
-        # self.graph2_curve_bg_gray_le_b.setData(tmp_lef_x, self.jp.gray_bgle.bchan["dn"].values[:self.jp.gray_bgle.raw_hor_pxl])
-        # self.graph2_curve_bg_gray_re_r.setData(tmp_rig_x, self.jp.gray_bgri.rchan["dn"].values[:self.jp.gray_bgri.raw_hor_pxl])
-        # self.graph2_curve_bg_gray_re_g.setData(tmp_rig_x, self.jp.gray_bgri.gchan["dn"].values[:self.jp.gray_bgri.raw_hor_pxl])
-        # self.graph2_curve_bg_gray_re_b.setData(tmp_rig_x, self.jp.gray_bgri.bchan["dn"].values[:self.jp.gray_bgri.raw_hor_pxl])
-        self.graph2_curve_bg_gray_le_r.setData(self.jp.gray_bgle.rchan_wavelenght, self.jp.gray_bgle.rchan_dn)
-        self.graph2_curve_bg_gray_le_g.setData(self.jp.gray_bgle.gchan_wavelenght, self.jp.gray_bgle.gchan_dn)
-        self.graph2_curve_bg_gray_le_b.setData(self.jp.gray_bgle.bchan_wavelenght, self.jp.gray_bgle.bchan_dn)
-        self.graph2_curve_bg_gray_re_r.setData(self.jp.gray_bgri.rchan_wavelenght, self.jp.gray_bgri.rchan_dn)
-        self.graph2_curve_bg_gray_re_g.setData(self.jp.gray_bgri.gchan_wavelenght, self.jp.gray_bgri.gchan_dn)
-        self.graph2_curve_bg_gray_re_b.setData(self.jp.gray_bgri.bchan_wavelenght, self.jp.gray_bgri.bchan_dn)
+        self.graph2_curve_bg_gray_le_r.setData(self.jp.gray_bgle.rchan_wl, self.jp.gray_bgle.rchan_dn)
+        self.graph2_curve_bg_gray_le_g.setData(self.jp.gray_bgle.gchan_wl, self.jp.gray_bgle.gchan_dn)
+        self.graph2_curve_bg_gray_le_b.setData(self.jp.gray_bgle.bchan_wl, self.jp.gray_bgle.bchan_dn)
+        self.graph2_curve_bg_gray_re_r.setData(self.jp.gray_bgri.rchan_wl, self.jp.gray_bgri.rchan_dn)
+        self.graph2_curve_bg_gray_re_g.setData(self.jp.gray_bgri.gchan_wl, self.jp.gray_bgri.gchan_dn)
+        self.graph2_curve_bg_gray_re_b.setData(self.jp.gray_bgri.bchan_wl, self.jp.gray_bgri.bchan_dn)
 
-        # self.graph2_curve_bg_obje_le_r.setData(tmp_lef_x, self.jp.obje_bgle.rchan["dn"].values[:self.jp.obje_bgle.raw_hor_pxl])
-        # self.graph2_curve_bg_obje_le_g.setData(tmp_lef_x, self.jp.obje_bgle.gchan["dn"].values[:self.jp.obje_bgle.raw_hor_pxl])
-        # self.graph2_curve_bg_obje_le_b.setData(tmp_lef_x, self.jp.obje_bgle.bchan["dn"].values[:self.jp.obje_bgle.raw_hor_pxl])
-        # self.graph2_curve_bg_obje_ri_r.setData(tmp_rig_x, self.jp.obje_bgri.rchan["dn"].values[:self.jp.obje_bgri.raw_hor_pxl])
-        # self.graph2_curve_bg_obje_ri_g.setData(tmp_rig_x, self.jp.obje_bgri.gchan["dn"].values[:self.jp.obje_bgri.raw_hor_pxl])
-        # self.graph2_curve_bg_obje_ri_b.setData(tmp_rig_x, self.jp.obje_bgri.bchan["dn"].values[:self.jp.obje_bgri.raw_hor_pxl])
-        self.graph2_curve_bg_obje_le_r.setData(self.jp.obje_bgle.rchan_wavelenght, self.jp.obje_bgle.rchan_dn)
-        self.graph2_curve_bg_obje_le_g.setData(self.jp.obje_bgle.gchan_wavelenght, self.jp.obje_bgle.gchan_dn)
-        self.graph2_curve_bg_obje_le_b.setData(self.jp.obje_bgle.bchan_wavelenght, self.jp.obje_bgle.bchan_dn)
-        self.graph2_curve_bg_obje_ri_r.setData(self.jp.obje_bgri.rchan_wavelenght, self.jp.obje_bgri.rchan_dn)
-        self.graph2_curve_bg_obje_ri_g.setData(self.jp.obje_bgri.gchan_wavelenght, self.jp.obje_bgri.gchan_dn)
-        self.graph2_curve_bg_obje_ri_b.setData(self.jp.obje_bgri.bchan_wavelenght, self.jp.obje_bgri.bchan_dn)
+        self.graph2_curve_bg_obje_le_r.setData(self.jp.obje_bgle.rchan_wl, self.jp.obje_bgle.rchan_dn)
+        self.graph2_curve_bg_obje_le_g.setData(self.jp.obje_bgle.gchan_wl, self.jp.obje_bgle.gchan_dn)
+        self.graph2_curve_bg_obje_le_b.setData(self.jp.obje_bgle.bchan_wl, self.jp.obje_bgle.bchan_dn)
+        self.graph2_curve_bg_obje_ri_r.setData(self.jp.obje_bgri.rchan_wl, self.jp.obje_bgri.rchan_dn)
+        self.graph2_curve_bg_obje_ri_g.setData(self.jp.obje_bgri.gchan_wl, self.jp.obje_bgri.gchan_dn)
+        self.graph2_curve_bg_obje_ri_b.setData(self.jp.obje_bgri.bchan_wl, self.jp.obje_bgri.bchan_dn)
 
         tmp_bgx: NDArray[np.float64] = np.arange(tmp_lef_x.min(), tmp_rig_x.max(), 1, dtype=np.float64)
 
@@ -1015,13 +1015,6 @@ class TheMainWindow(QMainWindow):
     def call_calibrate_and_calculate_calc3_759_calib(self) -> None:
         self.jp.calibrate_n_calculate_final_output()
         tmp_x = self.jp.gray.itp_hor_nm_array
-        #assert isinstance(tmp_x, NDArray[np.float64])
-        # self.graph3_curve_759_calib_gray_r.setData(tmp_x, np.array(self.jp.gray.rchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
-        # self.graph3_curve_759_calib_gray_g.setData(tmp_x, np.array(self.jp.gray.gchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
-        # self.graph3_curve_759_calib_gray_b.setData(tmp_x, np.array(self.jp.gray.bchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
-        # self.graph3_curve_759_calib_obje_r.setData(tmp_x, np.array(self.jp.obje.rchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
-        # self.graph3_curve_759_calib_obje_g.setData(tmp_x, np.array(self.jp.obje.gchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
-        # self.graph3_curve_759_calib_obje_b.setData(tmp_x, np.array(self.jp.obje.bchan_759nm_calibrated["final"].astype(float), dtype=np.float64)[-1000:])
 
         self.graph3_curve_759_calib_gray_r.setData(tmp_x, self.jp.gray.rchan_smdn_itp_after_759nm_calib)
         self.graph3_curve_759_calib_gray_g.setData(tmp_x, self.jp.gray.gchan_smdn_itp_after_759nm_calib)

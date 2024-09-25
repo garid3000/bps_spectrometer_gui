@@ -17,6 +17,7 @@ strict = true
 [tool.basedpyright]
 reportUnknownParameterType = false
 # reportUnknownMemberType = false
+stubPath = "typings/"
 reportAny = false
 
 [tool.autopep8]
