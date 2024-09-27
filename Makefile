@@ -1,10 +1,15 @@
+pull_stubs:
+	git clone https://github.com/garid3000/scipy-stubs     ./typings/scipy-stubs
+	git clone https://github.com/garid3000/pandas-stubs    ./typings/pandas-stubs
+	git clone https://github.com/garid3000/pyqtgraph-stubs ./typings/pyqtgraph-stubs
+
 pull_sub_module:
 	git submodule update --init --recursive
 
 convert:
 	find UI -name "*.ui" | cut -d/ -f2 | cut -d. -f1 | xargs -I {} pyside6-uic "UI/{}.ui" -o "Custom_UIs/{}.py"
-	#pyside6-uic UI/Single_4BC.ui                  -o Custom_UIs/Single_4BC.py
-	#pyside6-uic UI/Mainwindow.ui                  -o Custom_UIs/Mainwindow.py
+	# pyside6-uic UI/Single_4BC.ui                  -o Custom_UIs/Single_4BC.py
+	# pyside6-uic UI/Mainwindow.ui                  -o Custom_UIs/Mainwindow.py
 
 convert_fix:
 	find Custom_UIs -name "*.py" | xargs -I {} misc/Fix-pyside-conversion-types.sh {}

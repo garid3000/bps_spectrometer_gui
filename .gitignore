@@ -1,6 +1,6 @@
 *.pyc
-*.py~
-app.1.log
+*~
+/typings/
 /build
 /dist
 .main.py.~undo-tree~
