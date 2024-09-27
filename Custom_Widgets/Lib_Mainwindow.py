@@ -205,16 +205,9 @@ class TheMainWindow(QMainWindow):
         self.graph2_curve_bg_gray_re_r = self.ui.graph_calc2_bg_gray.getPlotItem().plot(symbol="x", symbolSize=9, symbolBrush=(255, 000, 000), pen=None, name="R-gray-right")
         self.graph2_curve_bg_gray_re_g = self.ui.graph_calc2_bg_gray.getPlotItem().plot(symbol="x", symbolSize=9, symbolBrush=(000, 255, 000), pen=None, name="G-gray-right")
         self.graph2_curve_bg_gray_re_b = self.ui.graph_calc2_bg_gray.getPlotItem().plot(symbol="x", symbolSize=9, symbolBrush=(000, 000, 255), pen=None, name="B-gray-right")
-
-        _ = pg.mkPen("r", width=0, style=Qt.PenStyle.SolidLine)
-
-        self.graph2_curve_bg_gray_mi_r = self.ui.graph_calc2_bg_gray.getPlotItem().plot(
-            pen=pg.mkPen("r", width=0, style=Qt.PenStyle.SolidLine),
-            name="Estimated-R-bg"
-        )
+        self.graph2_curve_bg_gray_mi_r = self.ui.graph_calc2_bg_gray.getPlotItem().plot(pen=pg.mkPen("r", width=0, style=Qt.PenStyle.SolidLine), name="Estimated-R-bg")
         self.graph2_curve_bg_gray_mi_g = self.ui.graph_calc2_bg_gray.getPlotItem().plot(pen=pg.mkPen("g", width=0, style=Qt.PenStyle.SolidLine), name="Estimated-G-bg")
         self.graph2_curve_bg_gray_mi_b = self.ui.graph_calc2_bg_gray.getPlotItem().plot(pen=pg.mkPen("b", width=0, style=Qt.PenStyle.SolidLine), name="Estimated-B-bg")
-
 
         self.graph2_curve_bg_obje_le_r = self.ui.graph_calc2_bg_obje.getPlotItem().plot(symbol="o", symbolSize=9, symbolBrush=(255, 000, 000), pen=None, name="R-obje-left")
         self.graph2_curve_bg_obje_le_g = self.ui.graph_calc2_bg_obje.getPlotItem().plot(symbol="o", symbolSize=9, symbolBrush=(000, 255, 000), pen=None, name="G-obje-left")
@@ -256,7 +249,7 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_calc4_refl_rgb.getPlotItem().showAxis("right")
         self.ui.graph_calc4_refl_rgb.getPlotItem().scene().addItem(self.p2)
         self.ui.graph_calc4_refl_rgb.getPlotItem().getAxis("right").linkToView(self.p2)
-        self.p2.setXLink(self.ui.graph_calc4_refl_rgb.getPlotItem())
+        self.p2.setXLink(self.ui.graph_calc4_refl_rgb.getPlotItem().getViewBox())
         self.ui.graph_calc4_refl_rgb.getPlotItem().getAxis("right").setLabel("Weight of combination", color="#3f3f3f")
 
 
@@ -271,15 +264,16 @@ class TheMainWindow(QMainWindow):
         self.p2_weight_g = pg.PlotDataItem(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine), name="G-weight")
         self.p2_weight_b = pg.PlotDataItem(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine), name="B-weight")
 
+
         self.p2.addItem(self.p2_weight_r)
         self.p2.addItem(self.p2_weight_g)
         self.p2.addItem(self.p2_weight_b)
 
         tmp_x = self.jp.gray.itp_hor_nm_array
 
-        self.p2_weight_r.setData(tmp_x[:-100], self.jp.weight_r[:-100])
-        self.p2_weight_g.setData(tmp_x[:-100], self.jp.weight_g[:-100])
-        self.p2_weight_b.setData(tmp_x[:-100], self.jp.weight_b[:-100])
+        self.p2_weight_r.setData(tmp_x[:-100] / 10**9, self.jp.weight_r[:-100])
+        self.p2_weight_g.setData(tmp_x[:-100] / 10**9, self.jp.weight_g[:-100])
+        self.p2_weight_b.setData(tmp_x[:-100] / 10**9, self.jp.weight_b[:-100])
 
         updateViews()
         #   -----------------------------------------------------------------------------------------------------------
@@ -321,12 +315,12 @@ class TheMainWindow(QMainWindow):
                 width=1, style=Qt.PenStyle.SolidLine
             ), name="Reflection")
         self.graph5_norm_zero_line = pg.InfiniteLine(
-                pos=self.ui.sb_calc5_norm_zero.value(),
+                pos=self.ui.sb_calc5_norm_zero.value() / 10**9,
                 movable=False, angle=90,
                 label="x={value:0.2f}nm",
                 labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True})
         self.graph5_norm_one_line = pg.InfiniteLine(
-                pos=self.ui.sb_calc5_norm_one.value(),
+                pos=self.ui.sb_calc5_norm_one.value() / 10**9,
                 movable=False, angle=90,
                 label="x={value:0.2f}nm",
                 labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True})
@@ -499,14 +493,13 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.graph_calc2_bg_gray.getPlotItem().addLegend()
         _ = self.ui.graph_calc2_bg_obje.getPlotItem().addLegend()
 
-        self.ui.graph_calc2_bg_gray.getPlotItem().setLabel("left",   "Background",             units="DN")
-        self.ui.graph_calc2_bg_gray.getPlotItem().setLabel("bottom", "Wavelenght",             units="nm")
-        self.ui.graph_calc2_bg_gray.getPlotItem().setLabel("top",    "Gray Region Background")
+        self.ui.graph_calc2_bg_gray.getPlotItem().setLabel("left",   "Background", units="DN")
+        self.ui.graph_calc2_bg_gray.getPlotItem().setLabel("bottom", "Wavelenght", units="m")
+        self.ui.graph_calc2_bg_gray.getPlotItem().setTitle("Gray Region Background")
 
         self.ui.graph_calc2_bg_obje.getPlotItem().setLabel("left",   "Background", units="DN")
-        self.ui.graph_calc2_bg_obje.getPlotItem().setLabel("bottom", "Wavelenght", units="nm")
-        self.ui.graph_calc2_bg_obje.getPlotItem().setLabel("top",    "Object Region Background")
-
+        self.ui.graph_calc2_bg_obje.getPlotItem().setLabel("bottom", "Wavelenght", units="m")
+        self.ui.graph_calc2_bg_obje.getPlotItem().setTitle("Object Region Background")
 
 
         # --------graph 3:  759 calibration curves ---------------------------------------------------------------------
@@ -514,40 +507,46 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.graph_calc3_759_calib.getPlotItem().addLegend()
         self.ui.graph_calc3_759_calib.getPlotItem().addItem(
             pg.InfiniteLine(
-                pos=759.3,
+                pos=759.37 / 10**9,
                 movable=False, angle=90,
                 label="x={value:0.2f}nm",
                 labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}))
 
         self.ui.graph_calc3_759_calib.getPlotItem().setLabel("left",   "Digital Number", units="DN")
-        self.ui.graph_calc3_759_calib.getPlotItem().setLabel("bottom", "Wavelength",     units="nm")
-        self.ui.graph_calc3_759_calib.getPlotItem().setLabel("top",    "After 759nm calibration")
+        self.ui.graph_calc3_759_calib.getPlotItem().setLabel("bottom", "Wavelength",     units="m") #, unitPrefix= "n")
+        self.ui.graph_calc3_759_calib.getPlotItem().setTitle("After 759nm calibration")
 
         # --------graph 4:  rgb refl  ---------------------------------------------------------------------
         # self.ui.graph_calc4_refl_rgb.getPlotItem().clear()
         _ = self.ui.graph_calc4_refl_rgb.getPlotItem().addLegend()
         self.ui.graph_calc4_refl_rgb.getPlotItem().addItem(
             pg.InfiniteLine(
-                pos=759.3,
+                pos=759.37 / 10**9,
                 movable=False, angle=90,
                 label="x={value:0.2f}nm",
                 labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}))
 
         self.ui.graph_calc4_refl_rgb.getPlotItem().setLabel("left",   "Reflection")
-        self.ui.graph_calc4_refl_rgb.getPlotItem().setLabel("bottom", "Wavelength",     units="nm")
-        self.ui.graph_calc4_refl_rgb.getPlotItem().setLabel("top",    "Reflection RGB 3 channels")
+        self.ui.graph_calc4_refl_rgb.getPlotItem().setLabel("bottom", "Wavelength", units="m")
+        self.ui.graph_calc4_refl_rgb.getPlotItem().setTitle("Reflection RGB 3 channels")
+
+        # --
+        self.ui.graph_gray2white.getPlotItem().setLabel("left", "Ratio")
+        self.ui.graph_gray2white.getPlotItem().setLabel("bottom", "Wavelength", units="m")
+        self.ui.graph_gray2white.getPlotItem().setTitle("White / Gray")
+        _ = self.ui.graph_gray2white.getPlotItem().addLegend()
 
         # --------graph 5:  rgb     ---------------------------------------------------------------------
         # self.ui.graph_calc5_refl_final.getPlotItem().clear()
-        _ = self.ui.graph_calc5_refl_final.getPlotItem().addLegend()
 
 
-        self.ui.graph_calc5_refl_final.getPlotItem().setLabel("left",   "Reflection")
-        self.ui.graph_calc5_refl_final.getPlotItem().setLabel("bottom", "Wavelength",     units="nm")
-        self.ui.graph_calc5_refl_final.getPlotItem().setLabel("top",    "Reflection")
+        self.ui.graph_calc5_refl_final.getPlotItem().setLabel("left", "Reflection")
+        self.ui.graph_calc5_refl_final.getPlotItem().setLabel("bottom", "Wavelength", units="m")
+        self.ui.graph_calc5_refl_final.getPlotItem().setTitle("Reflection")
 
         self.ui.graph_calc5_refl_final.getPlotItem().addItem(self.graph5_norm_one_line)
         self.ui.graph_calc5_refl_final.getPlotItem().addItem(self.graph5_norm_zero_line)
+        _ = self.ui.graph_calc5_refl_final.getPlotItem().addLegend()
 
 
     def all_sb_signal_enable_or_disable(self, b: bool) -> None:
@@ -686,13 +685,14 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_raw.getPlotItem().clear()
         _ = self.ui.graph_raw.getPlotItem().addLegend()
 
-        inf1 = pg.InfiniteLine(
-            pos=759.3,
-            movable=False, angle=90,
-            label="x={value:0.2f}nm",
-            labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}
+        self.ui.graph_raw.addItem(
+            pg.InfiniteLine(
+                pos=759.37,
+                movable=False, angle=90,
+                label="x={value:0.2f}nm",
+                labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}
+            )
         )
-        self.ui.graph_raw.addItem(inf1)
 
         tmp_x = get_wavelength_array(
             init_pxl=0,
@@ -988,65 +988,64 @@ class TheMainWindow(QMainWindow):
             waveperpixel=self.ui.sb_waveperpixel.value(),
         )
 
-        self.graph2_curve_bg_gray_le_r.setData(self.jp.gray_bgle.rchan_wl, self.jp.gray_bgle.rchan_dn)
-        self.graph2_curve_bg_gray_le_g.setData(self.jp.gray_bgle.gchan_wl, self.jp.gray_bgle.gchan_dn)
-        self.graph2_curve_bg_gray_le_b.setData(self.jp.gray_bgle.bchan_wl, self.jp.gray_bgle.bchan_dn)
-        self.graph2_curve_bg_gray_re_r.setData(self.jp.gray_bgri.rchan_wl, self.jp.gray_bgri.rchan_dn)
-        self.graph2_curve_bg_gray_re_g.setData(self.jp.gray_bgri.gchan_wl, self.jp.gray_bgri.gchan_dn)
-        self.graph2_curve_bg_gray_re_b.setData(self.jp.gray_bgri.bchan_wl, self.jp.gray_bgri.bchan_dn)
+        self.graph2_curve_bg_gray_le_r.setData(self.jp.gray_bgle.rchan_wl / 10**9, self.jp.gray_bgle.rchan_dn)
+        self.graph2_curve_bg_gray_le_g.setData(self.jp.gray_bgle.gchan_wl / 10**9, self.jp.gray_bgle.gchan_dn)
+        self.graph2_curve_bg_gray_le_b.setData(self.jp.gray_bgle.bchan_wl / 10**9, self.jp.gray_bgle.bchan_dn)
+        self.graph2_curve_bg_gray_re_r.setData(self.jp.gray_bgri.rchan_wl / 10**9, self.jp.gray_bgri.rchan_dn)
+        self.graph2_curve_bg_gray_re_g.setData(self.jp.gray_bgri.gchan_wl / 10**9, self.jp.gray_bgri.gchan_dn)
+        self.graph2_curve_bg_gray_re_b.setData(self.jp.gray_bgri.bchan_wl / 10**9, self.jp.gray_bgri.bchan_dn)
 
-        self.graph2_curve_bg_obje_le_r.setData(self.jp.obje_bgle.rchan_wl, self.jp.obje_bgle.rchan_dn)
-        self.graph2_curve_bg_obje_le_g.setData(self.jp.obje_bgle.gchan_wl, self.jp.obje_bgle.gchan_dn)
-        self.graph2_curve_bg_obje_le_b.setData(self.jp.obje_bgle.bchan_wl, self.jp.obje_bgle.bchan_dn)
-        self.graph2_curve_bg_obje_ri_r.setData(self.jp.obje_bgri.rchan_wl, self.jp.obje_bgri.rchan_dn)
-        self.graph2_curve_bg_obje_ri_g.setData(self.jp.obje_bgri.gchan_wl, self.jp.obje_bgri.gchan_dn)
-        self.graph2_curve_bg_obje_ri_b.setData(self.jp.obje_bgri.bchan_wl, self.jp.obje_bgri.bchan_dn)
+        self.graph2_curve_bg_obje_le_r.setData(self.jp.obje_bgle.rchan_wl / 10**9, self.jp.obje_bgle.rchan_dn)
+        self.graph2_curve_bg_obje_le_g.setData(self.jp.obje_bgle.gchan_wl / 10**9, self.jp.obje_bgle.gchan_dn)
+        self.graph2_curve_bg_obje_le_b.setData(self.jp.obje_bgle.bchan_wl / 10**9, self.jp.obje_bgle.bchan_dn)
+        self.graph2_curve_bg_obje_ri_r.setData(self.jp.obje_bgri.rchan_wl / 10**9, self.jp.obje_bgri.rchan_dn)
+        self.graph2_curve_bg_obje_ri_g.setData(self.jp.obje_bgri.gchan_wl / 10**9, self.jp.obje_bgri.gchan_dn)
+        self.graph2_curve_bg_obje_ri_b.setData(self.jp.obje_bgri.bchan_wl / 10**9, self.jp.obje_bgri.bchan_dn)
 
         tmp_bgx: NDArray[np.float64] = np.arange(tmp_lef_x.min(), tmp_rig_x.max(), 1, dtype=np.float64)
 
-        self.graph2_curve_bg_gray_mi_r.setData(tmp_bgx, background(tmp_bgx, *(self.jp.bg_gray_r_popt)))
-        self.graph2_curve_bg_gray_mi_g.setData(tmp_bgx, background(tmp_bgx, *(self.jp.bg_gray_g_popt)))
-        self.graph2_curve_bg_gray_mi_b.setData(tmp_bgx, background(tmp_bgx, *(self.jp.bg_gray_b_popt)))
-        self.graph2_curve_bg_obje_mi_r.setData(tmp_bgx, background(tmp_bgx, *(self.jp.bg_obje_r_popt)))
-        self.graph2_curve_bg_obje_mi_g.setData(tmp_bgx, background(tmp_bgx, *(self.jp.bg_obje_g_popt)))
-        self.graph2_curve_bg_obje_mi_b.setData(tmp_bgx, background(tmp_bgx, *(self.jp.bg_obje_b_popt)))
+        self.graph2_curve_bg_gray_mi_r.setData(tmp_bgx / 10**9, background(tmp_bgx, *(self.jp.bg_gray_r_popt)))
+        self.graph2_curve_bg_gray_mi_g.setData(tmp_bgx / 10**9, background(tmp_bgx, *(self.jp.bg_gray_g_popt)))
+        self.graph2_curve_bg_gray_mi_b.setData(tmp_bgx / 10**9, background(tmp_bgx, *(self.jp.bg_gray_b_popt)))
+        self.graph2_curve_bg_obje_mi_r.setData(tmp_bgx / 10**9, background(tmp_bgx, *(self.jp.bg_obje_r_popt)))
+        self.graph2_curve_bg_obje_mi_g.setData(tmp_bgx / 10**9, background(tmp_bgx, *(self.jp.bg_obje_g_popt)))
+        self.graph2_curve_bg_obje_mi_b.setData(tmp_bgx / 10**9, background(tmp_bgx, *(self.jp.bg_obje_b_popt)))
 
 
     def call_calibrate_and_calculate_calc3_759_calib(self) -> None:
         self.jp.calibrate_n_calculate_final_output()
         tmp_x = self.jp.gray.itp_hor_nm_array
 
-        self.graph3_curve_759_calib_gray_r.setData(tmp_x, self.jp.gray.rchan_smdn_itp_after_759nm_calib)
-        self.graph3_curve_759_calib_gray_g.setData(tmp_x, self.jp.gray.gchan_smdn_itp_after_759nm_calib)
-        self.graph3_curve_759_calib_gray_b.setData(tmp_x, self.jp.gray.bchan_smdn_itp_after_759nm_calib)
+        self.graph3_curve_759_calib_gray_r.setData(tmp_x/ 10**9, self.jp.gray.rchan_smdn_itp_after_759nm_calib)
+        self.graph3_curve_759_calib_gray_g.setData(tmp_x/ 10**9, self.jp.gray.gchan_smdn_itp_after_759nm_calib)
+        self.graph3_curve_759_calib_gray_b.setData(tmp_x/ 10**9, self.jp.gray.bchan_smdn_itp_after_759nm_calib)
+        self.graph3_curve_759_calib_obje_r.setData(tmp_x/ 10**9, self.jp.obje.rchan_smdn_itp_after_759nm_calib)
+        self.graph3_curve_759_calib_obje_g.setData(tmp_x/ 10**9, self.jp.obje.gchan_smdn_itp_after_759nm_calib)
+        self.graph3_curve_759_calib_obje_b.setData(tmp_x/ 10**9, self.jp.obje.bchan_smdn_itp_after_759nm_calib)
 
-        self.graph3_curve_759_calib_obje_r.setData(tmp_x, self.jp.obje.rchan_smdn_itp_after_759nm_calib)
-        self.graph3_curve_759_calib_obje_g.setData(tmp_x, self.jp.obje.gchan_smdn_itp_after_759nm_calib)
-        self.graph3_curve_759_calib_obje_b.setData(tmp_x, self.jp.obje.bchan_smdn_itp_after_759nm_calib)
-
-        self.graph3_curve_759_calib_gray_r_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_r_popt)))
-        self.graph3_curve_759_calib_gray_g_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_g_popt)))
-        self.graph3_curve_759_calib_gray_b_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_gray_b_popt)))
-        self.graph3_curve_759_calib_obje_r_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_r_popt)))
-        self.graph3_curve_759_calib_obje_g_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_g_popt)))
-        self.graph3_curve_759_calib_obje_b_bg.setData(tmp_x, background(tmp_x, *(self.jp.bg_obje_b_popt)))
+        self.graph3_curve_759_calib_gray_r_bg.setData(tmp_x / 10**9, background(tmp_x, *(self.jp.bg_gray_r_popt)))
+        self.graph3_curve_759_calib_gray_g_bg.setData(tmp_x / 10**9, background(tmp_x, *(self.jp.bg_gray_g_popt)))
+        self.graph3_curve_759_calib_gray_b_bg.setData(tmp_x / 10**9, background(tmp_x, *(self.jp.bg_gray_b_popt)))
+        self.graph3_curve_759_calib_obje_r_bg.setData(tmp_x / 10**9, background(tmp_x, *(self.jp.bg_obje_r_popt)))
+        self.graph3_curve_759_calib_obje_g_bg.setData(tmp_x / 10**9, background(tmp_x, *(self.jp.bg_obje_g_popt)))
+        self.graph3_curve_759_calib_obje_b_bg.setData(tmp_x / 10**9, background(tmp_x, *(self.jp.bg_obje_b_popt)))
 
 
     def call_calibrate_and_calculate_calc3_5_gray2white(self) -> None:
         self.jp.calibrate_n_calculate_final_output()
-        tmp_x = self.jp.mgray2white[:, 0]
+        tmp_x = self.jp.mgray2white[:, 0].astype(np.float64)
 
-        self.graph3_5_gray2white_r.setData(tmp_x, self.jp.mgray2white[:, 3])
-        self.graph3_5_gray2white_g.setData(tmp_x, self.jp.mgray2white[:, 2])
-        self.graph3_5_gray2white_b.setData(tmp_x, self.jp.mgray2white[:, 1])
-        self.graph3_5_gray2white_k.setData(tmp_x, self.jp.mgray2white[:, 4])
+        self.graph3_5_gray2white_r.setData(tmp_x/ 10**9, self.jp.mgray2white[:, 3])
+        self.graph3_5_gray2white_g.setData(tmp_x/ 10**9, self.jp.mgray2white[:, 2])
+        self.graph3_5_gray2white_b.setData(tmp_x/ 10**9, self.jp.mgray2white[:, 1])
+        self.graph3_5_gray2white_k.setData(tmp_x/ 10**9, self.jp.mgray2white[:, 4])
 
     def call_calibrate_and_calculate_calc4_rgb_refl(self) -> None:
         self.jp.fancy_reflectance()
         tmp_x = self.jp.gray.itp_hor_nm_array
-        self.graph4_curve_relf_r.setData(tmp_x[:-100], self.jp.ref_fancy_r[:-100]) # noqa
-        self.graph4_curve_relf_g.setData(tmp_x[:-100], self.jp.ref_fancy_g[:-100]) # noqa
-        self.graph4_curve_relf_b.setData(tmp_x[:-100], self.jp.ref_fancy_b[:-100]) # noqa
+        self.graph4_curve_relf_r.setData(tmp_x[:-100] / 10**9, self.jp.ref_fancy_r[:-100])
+        self.graph4_curve_relf_g.setData(tmp_x[:-100] / 10**9, self.jp.ref_fancy_g[:-100])
+        self.graph4_curve_relf_b.setData(tmp_x[:-100] / 10**9, self.jp.ref_fancy_b[:-100])
 
 
     def call_calibrate_and_calculate_calc5_refl_n_norm(self) -> None:
@@ -1054,15 +1053,15 @@ class TheMainWindow(QMainWindow):
         tmp_x = self.jp.gray.itp_hor_nm_array
 
         if not self.ui.cb_calc5_norm.isChecked():
-            self.graph5_curve_relf.setData(tmp_x[:-100], self.jp.ref_fancy[:-100])
+            self.graph5_curve_relf.setData(tmp_x[:-100] / 10**9, self.jp.ref_fancy[:-100]) #  // 10**9
         else:
             zero_index = int((self.ui.sb_calc5_norm_zero.value() - 400) / 0.5)
             one_index = int((self.ui.sb_calc5_norm_one.value() - 400 )/ 0.5)
             self.jp.normalize_the_fancy(zero_index, one_index)
-            self.graph5_curve_relf.setData(tmp_x[:-100], self.jp.ref_fancy_normed[:-100])
+            self.graph5_curve_relf.setData(tmp_x[:-100] / 10**9, self.jp.ref_fancy_normed[:-100]) # // 10**9
             self.ui.graph_calc5_refl_final.getPlotItem().getViewBox().setYRange(-0.1, 1.1)
-            self.graph5_norm_one_line.setPos(self.ui.sb_calc5_norm_one.value())
-            self.graph5_norm_zero_line.setPos(self.ui.sb_calc5_norm_zero.value())
+            self.graph5_norm_one_line.setPos(self.ui.sb_calc5_norm_one.value() / 10**9)
+            self.graph5_norm_zero_line.setPos(self.ui.sb_calc5_norm_zero.value() / 10**9)
 
     def update_1_rawbayer_img_data_and_then_plot_below(self) -> None:
         self.ui.graph_2dimg.clear()
