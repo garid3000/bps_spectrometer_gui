@@ -1,5 +1,5 @@
 # ---------- Base libraries -------------------------------------------------------------------------------------------
-from typing import override #, Any
+# from typing import override # removed override. because it requires python-3.12+
 import os
 import tempfile
 import logging
@@ -82,7 +82,7 @@ class FileSystemModel(QFileSystemModel):
         # , "*.tiff", "*.npy", "*.mat", "*.png"]))
         # self.setNameFilterDisables(False)
         # self.setNameFilterDisables(True)
-    @override
+    #@override
     def data(self, index: QModelIndex|QPersistentModelIndex, role:int =Qt.ItemDataRole.DisplayRole):
         if role == Qt.ItemDataRole.ForegroundRole:
             text: str = index.data(Qt.ItemDataRole.DisplayRole)
