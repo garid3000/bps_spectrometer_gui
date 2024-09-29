@@ -52,7 +52,6 @@ from PySide6.QtWidgets import (
 )
 
 from pyqtgraph import GraphicsLayoutWidget, ImageView, PlotWidget
-from QRCs.main_resource import *
 
 
 class Ui_MainWindow(object):
@@ -197,7 +196,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.hs_target_distance)
 
-        self.tabWidget_2.addTab(self.tab_6, "")
+        _ = self.tabWidget_2.addTab(self.tab_6, "")
         self.tab_7 = QWidget()
         self.tab_7.setObjectName("tab_7")
         self.gridLayout_3 = QGridLayout(self.tab_7)
@@ -248,7 +247,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.l_physical_distance, 3, 0, 1, 2)
 
-        self.tabWidget_2.addTab(self.tab_7, "")
+        _ = self.tabWidget_2.addTab(self.tab_7, "")
 
         self.gridLayout.addWidget(self.tabWidget_2, 6, 0, 1, 2)
 
@@ -352,9 +351,13 @@ class Ui_MainWindow(object):
         self._l_2.setObjectName("_l_2")
         palette = QPalette()
         brush = QBrush(QColor(255, 0, 0, 255))
-        brush.setStyle(Qt.SolidPattern)
-        palette.setBrush(QPalette.Active, QPalette.WindowText, brush)
-        palette.setBrush(QPalette.Inactive, QPalette.WindowText, brush)
+        brush.setStyle(Qt.BrushStyle.SolidPattern)
+        palette.setBrush(
+            QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush
+        )
+        palette.setBrush(
+            QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush
+        )
         self._l_2.setPalette(palette)
 
         self.gridLayout_2.addWidget(self._l_2, 7, 0, 1, 1)
@@ -437,9 +440,13 @@ class Ui_MainWindow(object):
         self._l_1.setObjectName("_l_1")
         palette1 = QPalette()
         brush1 = QBrush(QColor(0, 170, 0, 255))
-        brush1.setStyle(Qt.SolidPattern)
-        palette1.setBrush(QPalette.Active, QPalette.WindowText, brush1)
-        palette1.setBrush(QPalette.Inactive, QPalette.WindowText, brush1)
+        brush1.setStyle(Qt.BrushStyle.SolidPattern)
+        palette1.setBrush(
+            QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush1
+        )
+        palette1.setBrush(
+            QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush1
+        )
         self._l_1.setPalette(palette1)
 
         self.gridLayout_2.addWidget(self._l_1, 2, 0, 1, 1)
@@ -448,9 +455,13 @@ class Ui_MainWindow(object):
         self._l_3.setObjectName("_l_3")
         palette2 = QPalette()
         brush2 = QBrush(QColor(0, 0, 255, 255))
-        brush2.setStyle(Qt.SolidPattern)
-        palette2.setBrush(QPalette.Active, QPalette.WindowText, brush2)
-        palette2.setBrush(QPalette.Inactive, QPalette.WindowText, brush2)
+        brush2.setStyle(Qt.BrushStyle.SolidPattern)
+        palette2.setBrush(
+            QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush2
+        )
+        palette2.setBrush(
+            QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush2
+        )
         self._l_3.setPalette(palette2)
 
         self.gridLayout_2.addWidget(self._l_3, 10, 0, 1, 1)
@@ -529,14 +540,16 @@ class Ui_MainWindow(object):
         )
         self.pb_calibrate_calculate.setSizePolicy(sizePolicy5)
 
-        self.formLayout.setWidget(0, QFormLayout.LabelRole, self.pb_calibrate_calculate)
+        self.formLayout.setWidget(
+            0, QFormLayout.ItemRole.LabelRole, self.pb_calibrate_calculate
+        )
 
         self.pbar_calc = QProgressBar(self.gp_spectral_panel)
         self.pbar_calc.setObjectName("pbar_calc")
         self.pbar_calc.setMaximum(100)
         self.pbar_calc.setValue(0)
 
-        self.formLayout.setWidget(0, QFormLayout.FieldRole, self.pbar_calc)
+        self.formLayout.setWidget(0, QFormLayout.ItemRole.FieldRole, self.pbar_calc)
 
         self.scrollArea = QScrollArea(self.gp_spectral_panel)
         self.scrollArea.setObjectName("scrollArea")
@@ -591,7 +604,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_5.addWidget(self.txt_calc1_desalt)
 
-        self.tabWidget.addTab(self.tab, "")
+        _ = self.tabWidget.addTab(self.tab, "")
         self.tab_2 = QWidget()
         self.tab_2.setObjectName("tab_2")
         self.verticalLayout_6 = QVBoxLayout(self.tab_2)
@@ -624,7 +637,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_6.addWidget(self.txt_calc2_bg)
 
-        self.tabWidget.addTab(self.tab_2, "")
+        _ = self.tabWidget.addTab(self.tab_2, "")
         self.tab_3 = QWidget()
         self.tab_3.setObjectName("tab_3")
         self.verticalLayout_7 = QVBoxLayout(self.tab_3)
@@ -657,7 +670,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_7.addWidget(self.txt_calc3_cal759)
 
-        self.tabWidget.addTab(self.tab_3, "")
+        _ = self.tabWidget.addTab(self.tab_3, "")
         self.tab_8 = QWidget()
         self.tab_8.setObjectName("tab_8")
         self.gridLayout_5 = QGridLayout(self.tab_8)
@@ -667,7 +680,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_5.addWidget(self.graph_gray2white, 0, 0, 1, 1)
 
-        self.tabWidget.addTab(self.tab_8, "")
+        _ = self.tabWidget.addTab(self.tab_8, "")
         self.tab_4 = QWidget()
         self.tab_4.setObjectName("tab_4")
         self.verticalLayout_9 = QVBoxLayout(self.tab_4)
@@ -683,7 +696,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_9.addWidget(self.txt_calc4_rgb)
 
-        self.tabWidget.addTab(self.tab_4, "")
+        _ = self.tabWidget.addTab(self.tab_4, "")
         self.tab_5 = QWidget()
         self.tab_5.setObjectName("tab_5")
         self.formLayout_2 = QFormLayout(self.tab_5)
@@ -691,7 +704,7 @@ class Ui_MainWindow(object):
         self._l_12 = QLabel(self.tab_5)
         self._l_12.setObjectName("_l_12")
 
-        self.formLayout_2.setWidget(1, QFormLayout.LabelRole, self._l_12)
+        self.formLayout_2.setWidget(1, QFormLayout.ItemRole.LabelRole, self._l_12)
 
         self.sb_calc5_norm_zero = QDoubleSpinBox(self.tab_5)
         self.sb_calc5_norm_zero.setObjectName("sb_calc5_norm_zero")
@@ -702,7 +715,9 @@ class Ui_MainWindow(object):
         self.sb_calc5_norm_zero.setSingleStep(0.500000000000000)
         self.sb_calc5_norm_zero.setValue(440.000000000000000)
 
-        self.formLayout_2.setWidget(1, QFormLayout.FieldRole, self.sb_calc5_norm_zero)
+        self.formLayout_2.setWidget(
+            1, QFormLayout.ItemRole.FieldRole, self.sb_calc5_norm_zero
+        )
 
         self.sb_calc5_norm_one = QDoubleSpinBox(self.tab_5)
         self.sb_calc5_norm_one.setObjectName("sb_calc5_norm_one")
@@ -713,96 +728,108 @@ class Ui_MainWindow(object):
         self.sb_calc5_norm_one.setSingleStep(0.500000000000000)
         self.sb_calc5_norm_one.setValue(760.000000000000000)
 
-        self.formLayout_2.setWidget(2, QFormLayout.FieldRole, self.sb_calc5_norm_one)
+        self.formLayout_2.setWidget(
+            2, QFormLayout.ItemRole.FieldRole, self.sb_calc5_norm_one
+        )
 
         self.graph_calc5_refl_final = PlotWidget(self.tab_5)
         self.graph_calc5_refl_final.setObjectName("graph_calc5_refl_final")
         self.graph_calc5_refl_final.setMinimumSize(QSize(300, 300))
 
         self.formLayout_2.setWidget(
-            3, QFormLayout.SpanningRole, self.graph_calc5_refl_final
+            3, QFormLayout.ItemRole.SpanningRole, self.graph_calc5_refl_final
         )
 
         self._l_13 = QLabel(self.tab_5)
         self._l_13.setObjectName("_l_13")
 
-        self.formLayout_2.setWidget(2, QFormLayout.LabelRole, self._l_13)
+        self.formLayout_2.setWidget(2, QFormLayout.ItemRole.LabelRole, self._l_13)
 
         self.cb_calc5_norm = QCheckBox(self.tab_5)
         self.cb_calc5_norm.setObjectName("cb_calc5_norm")
         self.cb_calc5_norm.setChecked(False)
 
-        self.formLayout_2.setWidget(0, QFormLayout.SpanningRole, self.cb_calc5_norm)
+        self.formLayout_2.setWidget(
+            0, QFormLayout.ItemRole.SpanningRole, self.cb_calc5_norm
+        )
 
         self.txt_calc5_refl_final = QTextBrowser(self.tab_5)
         self.txt_calc5_refl_final.setObjectName("txt_calc5_refl_final")
         self.txt_calc5_refl_final.setMaximumSize(QSize(16777215, 80))
 
         self.formLayout_2.setWidget(
-            4, QFormLayout.SpanningRole, self.txt_calc5_refl_final
+            4, QFormLayout.ItemRole.SpanningRole, self.txt_calc5_refl_final
         )
 
-        self.tabWidget.addTab(self.tab_5, "")
+        _ = self.tabWidget.addTab(self.tab_5, "")
 
         self.verticalLayout_8.addWidget(self.tabWidget)
 
         self.scrollArea.setWidget(self.scrollAreaWidgetContents)
 
-        self.formLayout.setWidget(1, QFormLayout.SpanningRole, self.scrollArea)
+        self.formLayout.setWidget(1, QFormLayout.ItemRole.SpanningRole, self.scrollArea)
 
         self.cb_export_bayer_as_npy = QCheckBox(self.gp_spectral_panel)
         self.cb_export_bayer_as_npy.setObjectName("cb_export_bayer_as_npy")
         self.cb_export_bayer_as_npy.setEnabled(True)
 
-        self.formLayout.setWidget(2, QFormLayout.LabelRole, self.cb_export_bayer_as_npy)
+        self.formLayout.setWidget(
+            2, QFormLayout.ItemRole.LabelRole, self.cb_export_bayer_as_npy
+        )
 
         self.cb_export_bayer_as_mat = QCheckBox(self.gp_spectral_panel)
         self.cb_export_bayer_as_mat.setObjectName("cb_export_bayer_as_mat")
         self.cb_export_bayer_as_mat.setEnabled(False)
 
-        self.formLayout.setWidget(2, QFormLayout.FieldRole, self.cb_export_bayer_as_mat)
+        self.formLayout.setWidget(
+            2, QFormLayout.ItemRole.FieldRole, self.cb_export_bayer_as_mat
+        )
 
         self.cb_export_ref_CSV_simple = QCheckBox(self.gp_spectral_panel)
         self.cb_export_ref_CSV_simple.setObjectName("cb_export_ref_CSV_simple")
         self.cb_export_ref_CSV_simple.setChecked(True)
 
         self.formLayout.setWidget(
-            3, QFormLayout.LabelRole, self.cb_export_ref_CSV_simple
+            3, QFormLayout.ItemRole.LabelRole, self.cb_export_ref_CSV_simple
         )
 
         self.cb_export_ref_CSV_full = QCheckBox(self.gp_spectral_panel)
         self.cb_export_ref_CSV_full.setObjectName("cb_export_ref_CSV_full")
         self.cb_export_ref_CSV_full.setEnabled(False)
 
-        self.formLayout.setWidget(3, QFormLayout.FieldRole, self.cb_export_ref_CSV_full)
+        self.formLayout.setWidget(
+            3, QFormLayout.ItemRole.FieldRole, self.cb_export_ref_CSV_full
+        )
 
         self.pb_export = QPushButton(self.gp_spectral_panel)
         self.pb_export.setObjectName("pb_export")
 
-        self.formLayout.setWidget(4, QFormLayout.LabelRole, self.pb_export)
+        self.formLayout.setWidget(4, QFormLayout.ItemRole.LabelRole, self.pb_export)
 
         self.pbar_export = QProgressBar(self.gp_spectral_panel)
         self.pbar_export.setObjectName("pbar_export")
         self.pbar_export.setValue(0)
 
-        self.formLayout.setWidget(4, QFormLayout.FieldRole, self.pbar_export)
+        self.formLayout.setWidget(4, QFormLayout.ItemRole.FieldRole, self.pbar_export)
 
         self.label_2 = QLabel(self.gp_spectral_panel)
         self.label_2.setObjectName("label_2")
 
-        self.formLayout.setWidget(6, QFormLayout.LabelRole, self.label_2)
+        self.formLayout.setWidget(6, QFormLayout.ItemRole.LabelRole, self.label_2)
 
         self.cb_parameter_history = QComboBox(self.gp_spectral_panel)
         self.cb_parameter_history.setObjectName("cb_parameter_history")
 
-        self.formLayout.setWidget(6, QFormLayout.FieldRole, self.cb_parameter_history)
+        self.formLayout.setWidget(
+            6, QFormLayout.ItemRole.FieldRole, self.cb_parameter_history
+        )
 
         self.line_2 = QFrame(self.gp_spectral_panel)
         self.line_2.setObjectName("line_2")
         self.line_2.setFrameShape(QFrame.Shape.HLine)
         self.line_2.setFrameShadow(QFrame.Shadow.Sunken)
 
-        self.formLayout.setWidget(5, QFormLayout.SpanningRole, self.line_2)
+        self.formLayout.setWidget(5, QFormLayout.ItemRole.SpanningRole, self.line_2)
 
         self.splitter.addWidget(self.gp_spectral_panel)
 
@@ -856,7 +883,7 @@ class Ui_MainWindow(object):
         self.menuGeometry_Settings.addAction(
             self.actionSave_geometry_configuration_Ctrl_Shift_L
         )
-        self.menuTutorial.addSeparator()
+        _ = self.menuTutorial.addSeparator()
         self.menuTutorial.addAction(self.action_help)
 
         self.retranslateUi(MainWindow)

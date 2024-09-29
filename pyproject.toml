@@ -1,16 +1,16 @@
-[tool.ruff]
+[tool.ruff.lint]
 # Enable flake8-bugbear (`B`) rules.
 select = ["E", "F", "B", "Q"]
 
 # Never enforce `E501` (line length violations).
 # Comment ignore = ["E501"]
-line-length = 200 # 88
+# line-length = 200 # 88
 
 # Avoid trying to fix flake8-bugbear (`B`) violations.
 unfixable = ["B"]
 exclude = ["dist"]
 
-[tool.ruff.flake8-type-checking]
+[tool.ruff.lint.flake8-type-checking]
 strict = true
 
 
@@ -19,6 +19,7 @@ reportUnknownParameterType = false
 # reportUnknownMemberType = false
 stubPath = "typings/"
 reportAny = false
+reportUninitializedInstanceVariable = false
 
 [tool.autopep8]
 max_line_length = 120

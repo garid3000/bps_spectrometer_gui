@@ -1,12 +1,9 @@
 # ---------- Base libraries -------------------------------------------------------------------------------------------
-# from typing import override # removed override. because it requires python-3.12+
 import os
-import tempfile
 import logging
 import subprocess
 import platform
 from datetime import datetime
-from pathlib import Path
 import shutil
 import pyqtgraph as pg
 import time
@@ -14,8 +11,7 @@ import time
 # ---------- Numerical Visual packages---------------------------------------------------------------------------------
 import numpy as np
 from numpy.typing import NDArray
-#import cv2 as cv # only reason I have cv is for readin JPG file.
-from PIL import Image
+from PIL import Image                # instead of  import cv2 as cv
 import pandas as pd
 import math
 
@@ -27,29 +23,17 @@ from PySide6.QtCore import QModelIndex, QDir, Qt, QPersistentModelIndex, QPointF
 # ---------- Custom libs ----------------------------------------------------------------------------------------------
 from Custom_UIs.UI_Mainwindow import Ui_MainWindow
 from Custom_Libs.Lib_DataDirTree import DataDirTree
-# from Custom_Widgets.Lib_PlotConfigDialog import PlotConfigDialog
-from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import (
-    JpegProcessor,  get_wavelength_array, background # desalt_2d_array_by_vertically_median_filter,
-)
+from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import JpegProcessor, get_wavelength_array, background
 
 # ---------- pqgraph config -------------------------------------------------------------------------------------------
 pg.setConfigOption("background", "w")
 pg.setConfigOption("foreground", "k")
 
-
-# ---------- Some logging ---------------------------------------------------------------------------------------------
-system_str = platform.system()
-LOG_FILE_PATH = Path(tempfile.gettempdir()) / datetime.now().strftime("%Y%m%d_%H%M%S.log")
-
-logging.basicConfig(
-    filename=LOG_FILE_PATH,
-    format="%(asctime)s %(levelname)-8s %(message)s",
-    level=logging.DEBUG,
-)
-print(f"--- LOG_FILE_PATH = {LOG_FILE_PATH.__str__()} ----------------------")
+logger = logging.getLogger(__name__)
 
 def open_file_externally(filepath: str) -> None:
     """Opens given file externally, without hanging current running python script."""
+    system_str = platform.system()
     try:
         if system_str == "Windows":  # Windows
             os.startfile(filepath)  # type: ignore
@@ -64,11 +48,11 @@ def open_file_externally(filepath: str) -> None:
                 close_fds=True,
             )
         else:
-            logging.warning(f"Strange os-platform string id: {system_str}")
-            logging.warning(" - Cannot open file")
+            logger.warning(f"Strange os-platform string id: {system_str}")
+            logger.warning(" - Cannot open file")
         return None
     except Exception as e:
-        logging.warning(f"error when openning {filepath}:\n{e}")
+        logger.warning(f"error when openning {filepath}:\n{e}")
         return None
 
 
@@ -564,7 +548,7 @@ class TheMainWindow(QMainWindow):
 
     def handle_roi_change(self, gray_or_obje: str, left_middle_right: str) -> None:
         self.all_sb_signal_enable_or_disable(True)
-        logging.debug(f"handle_roi_change: {self.roi_gray_main.getState()['pos']=}, {self.roi_gray_bglf.getState()['pos']=}")
+        logger.debug(f"handle_roi_change: {self.roi_gray_main.getState()['pos']=}, {self.roi_gray_bglf.getState()['pos']=}")
 
         if gray_or_obje == "gray":
             if left_middle_right == "middle":
@@ -798,7 +782,7 @@ class TheMainWindow(QMainWindow):
 
     def short_cut_goto_parent_dir(self) -> None:
         """Go to parent directory, Backspace"""
-        logging.info("going to parent file")
+        logger.info("going to parent file")
         cur_root_index = self.ui.tv_dir.rootIndex()  # get .
         parent_of_cur_root_index = self.fsmodel.parent(cur_root_index)  # get ..
         self.ui.tv_dir.setRootIndex(parent_of_cur_root_index)  # set ..
@@ -832,7 +816,7 @@ class TheMainWindow(QMainWindow):
         sel_m_index = self.ui.tv_dir.currentIndex()
         tmppath = self.fsmodel.filePath(sel_m_index)
         basename = os.path.basename(tmppath)
-        logging.info("space press "+ tmppath)
+        logger.info("space press "+ tmppath)
         if not os.path.isfile(tmppath):
             dlg = QMessageBox(self)
             dlg.setWindowTitle("Wrong File selected")
@@ -857,23 +841,23 @@ class TheMainWindow(QMainWindow):
         self.dir_path = os.path.dirname(self.jpeg_path)
         _ = self.ddtree.set_ddir(self.dir_path)
         self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
-        logging.info(f"short_cut_preview_raw_jpeg: {self.ddtree.webcamFP=}")
+        logger.info(f"short_cut_preview_raw_jpeg: {self.ddtree.webcamFP=}")
 
         if self.ddtree.webcamFP is not None:
             try:
                 webcam_img = Image.open(self.ddtree.webcamFP)
                 webcam = np.array(webcam_img)
-                logging.debug(f"short_cut_preview_raw_jpeg: {webcam.dtype=}, {webcam.shape=}")
+                logger.debug(f"short_cut_preview_raw_jpeg: {webcam.dtype=}, {webcam.shape=}")
             except ValueError:
-                logging.info(f"PIL-ValueError: while openning {self.ddtree.webcamFP}")
+                logger.info(f"PIL-ValueError: while openning {self.ddtree.webcamFP}")
                 webcam = np.zeros((10, 10, 3), dtype=np.uint8)
                 _ = QMessageBox.warning(self, "file read error", f"{self.ddtree.webcamFP} read Value-error", QMessageBox.StandardButton.Ignore, QMessageBox.StandardButton.Ignore)
             except TypeError:
-                logging.info(f"PIL-TypeError: while openning {self.ddtree.webcamFP}")
+                logger.info(f"PIL-TypeError: while openning {self.ddtree.webcamFP}")
                 webcam = np.zeros((10, 10, 3), dtype=np.uint8)
                 _ = QMessageBox.warning(self, "file read error", f"{self.ddtree.webcamFP} read Type-error", QMessageBox.StandardButton.Ignore, QMessageBox.StandardButton.Ignore)
             except Exception as e:
-                logging.info(f"PIL-{e}: while openning {self.ddtree.webcamFP}")
+                logger.info(f"PIL-{e}: while openning {self.ddtree.webcamFP}")
                 webcam = np.zeros((10, 10, 3), dtype=np.uint8)
                 _ = QMessageBox.warning(self, "file read error", f"{self.ddtree.webcamFP} read {e} error", QMessageBox.StandardButton.Ignore, QMessageBox.StandardButton.Ignore)
         else: # webcam image didn't found
@@ -900,7 +884,7 @@ class TheMainWindow(QMainWindow):
     def call_tv_onItemDoubleClicked(self, v: QModelIndex):
         tmp = self.fsmodel.filePath(v)
         if os.path.isdir(tmp):
-            logging.info(f"call_tv_onItemClicked: {tmp}")
+            logger.info(f"call_tv_onItemClicked: {tmp}")
             self.short_cut_goto_selected_child_dir()
         else:
             _ = self.short_cut_preview_raw_jpeg()
@@ -1096,7 +1080,7 @@ class TheMainWindow(QMainWindow):
             tmpcsv[:, 3] = self.jp.obje_fancy_dn_bg_substracted
             tmpcsv[:, 4] = self.jp.gray_fancy_dn_bg_substracted
             outfname = os.path.join(os.path.join(self.ddtree.ddir, "output", datetime.now().strftime("refl_output_on_%Y%m%d_%H%M%S.csv")))
-            logging.debug(f"short_cut_export_raw_jpeg: {outfname=}")
+            logger.debug(f"short_cut_export_raw_jpeg: {outfname=}")
             np.savetxt(outfname,
                        tmpcsv,
                        ("%3.1f", "%2.5f", "%2.5f", "%3.2f", "%3.2f"),
@@ -1136,7 +1120,7 @@ class TheMainWindow(QMainWindow):
         # when cb_parameter_history changes
         selected_hist_date_str = self.ui.cb_parameter_history.currentText()
 
-        logging.debug(f"set_calculation_params_from_history_selection {self.ui.cb_parameter_history.currentText()=}")
+        logger.debug(f"set_calculation_params_from_history_selection {self.ui.cb_parameter_history.currentText()=}")
         if (selected_hist_date_str == "Current") or (selected_hist_date_str == ""): # it seems when the it's cleared it's running this method
             return
 
@@ -1188,7 +1172,7 @@ class TheMainWindow(QMainWindow):
             "calc5_norm_zero"  : [self.ui.sb_calc5_norm_zero.value()],
             "calc5_norm_one"   : [self.ui.sb_calc5_norm_one.value()],
         }
-        logging.debug(f"get_current_calculation_parameters_as_pd_df: {resultDic=}")
+        logger.debug(f"get_current_calculation_parameters_as_pd_df: {resultDic=}")
         return pd.DataFrame(resultDic)
 
     def write_export_log_calculation_parameters(self) -> None:
@@ -1236,7 +1220,7 @@ class TheMainWindow(QMainWindow):
             df["calc5_norm_zero"].dtype   not in (np.dtype("float64"), np.dtype("float32")) or
             df["calc5_norm_one"].dtype    not in (np.dtype("float64"), np.dtype("float32"))):
             # print(f"df history bad csv column type: {df.dtypes=}")
-            logging.info(f"DF param-history bad csv column type: {df=}")
+            logger.info(f"DF param-history bad csv column type: {df=}")
             return False
 
         return True

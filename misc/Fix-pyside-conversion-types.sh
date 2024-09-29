@@ -1,103 +1,66 @@
 #!/bin/sh
-# sed -i 's///g' "$1"
 
-# Size Policies
-sed -i 's/QSizePolicy\.Expanding/QSizePolicy\.Policy\.Expanding/g' "$1"
-sed -i 's/QSizePolicy\.Minimum/QSizePolicy\.Policy\.Minimum/g'     "$1"
-sed -i 's/QSizePolicy\.Fixed/QSizePolicy\.Policy\.Fixed/g'         "$1"
-sed -i 's/QSizePolicy\.Preferred/QSizePolicy\.Policy\.Preferred/g' "$1"
-sed -i 's/QSizePolicy\.Ignored/QSizePolicy\.Policy\.Ignored/g'     "$1"
-
-sed -i 's/QTextEdit\.NoWrap/QTextEdit\.LineWrapMode\.NoWrap/g'     "$1"
-sed -i 's/QTextEdit\.WidgetWidth/QTextEdit\.LineWrapMode\.WidgetWidth/g'     "$1"
-sed -i 's/QTextEdit\.FixedPixelWidth/QTextEdit\.LineWrapMode\.FixedPixelWidth/g'     "$1"
-sed -i 's/QTextEdit\.FixedColumnWidth/QTextEdit\.LineWrapMode\.FixedColumnWidth/g'     "$1"
-
-# Size argument Types in funtions Wokrs on both
-#setupUi(self, MainWindow):
-#retranslatUi(self, MainWindow):
-sed -i 's/Ui(self, MainWindow):/Ui(self, MainWindow: QMainWindow) -> None:/g' "$1"
-# sed -i 's/Ui(self, GroupBox):/Ui(self, GroupBox: QWidget) -> None:/g'         "$1"
-# sed -i 's/Ui(self, Dialog):/Ui(self, Dialog: QDialog) -> None:/g'             "$1"
-# sed -i 's/Ui(self, Form):/Ui(self, Form: QWidget) -> None:/g'                 "$1"
-
-# new
-sed -i 's/Ui(self, ImagePrepperWidget):/Ui(self, ImagePrepperWidget: QWidget) -> None:/g'      "$1"
-sed -i 's/Ui(self, RPiV4L2CtrlDialog):/Ui(self, RPiV4L2CtrlDialog: QWidget) -> None:/g'      "$1"
-sed -i 's/Ui(self, IndexCalcShowerGroupBox):/Ui(self, IndexCalcShowerGroupBox: QGroupBox) -> None:/g'      "$1"
-sed -i 's/Ui(self, IndexCalcConfigDialog):/Ui(self, IndexCalcConfigDialog: QDialog) -> None:/g'      "$1"
-sed -i 's/Ui(self, WarpMatrixDialog):/Ui(self, WarpMatrixDialog: QDialog) -> None:/g'      "$1"
-sed -i 's/Ui(self, SelectRegionsDialog):/Ui(self, SelectRegionsDialog: QDialog) -> None:/g'      "$1"
-
-
-
-
-# ???
-#
-sed -i 's/QFrame\.HLine/QFrame\.Shape\.HLine/g'    "$1"
-sed -i 's/QFrame\.VLine/QFrame\.Shape\.VLine/g'    "$1"
-sed -i 's/QFrame\.Sunken/QFrame\.Shadow\.Sunken/g' "$1"
-
-
-
-# Ver/Hor Slider Related
-sed -i 's/Qt\.Vertical/Qt\.Orientation\.Vertical/g'     "$1"
-sed -i 's/Qt\.Horizontal/Qt\.Orientation\.Horizontal/g' "$1"
-
-sed -i 's/QSlider\.NoTicks/QSlider\.TickPosition\.NoTicks/g'               "$1"
-sed -i 's/QSlider\.TicksAbove/QSlider\.TickPosition\.TicksAbove/g'         "$1"
-sed -i 's/QSlider\.TicksLeft/QSlider\.TickPosition\.TicksLeft/g'           "$1"
-sed -i 's/QSlider\.TicksBelow/QSlider\.TickPosition\.TicksBelow/g'         "$1"
-sed -i 's/QSlider\.TicksRight/QSlider\.TickPosition\.TicksRight/g'         "$1"
-sed -i 's/QSlider\.TicksBothSides/QSlider\.TickPosition\.TicksBothSides/g' "$1"
-
-sed -i 's/Qt\.ArrowCursor/Qt\.CursorShape\.ArrowCursor/g'                  "$1"
-sed -i 's/Qt\.UpArrowCursor/Qt\.CursorShape\.UpArrowCursor/g'              "$1"
-sed -i 's/Qt\.CrossCursor/Qt\.CursorShape\.CrossCursor/g'                  "$1"
-sed -i 's/Qt\.WaitCursor/Qt\.CursorShape\.WaitCursor/g'                    "$1"
-sed -i 's/Qt\.IBeamCursor/Qt\.CursorShape\.IBeamCursor/g'                  "$1"
-sed -i 's/Qt\.SizeVerCursor/Qt\.CursorShape\.SizeVerCursor/g'              "$1"
-sed -i 's/Qt\.SizeHorCursor/Qt\.CursorShape\.SizeHorCursor/g'              "$1"
-sed -i 's/Qt\.SizeBDiagCursor/Qt\.CursorShape\.SizeBDiagCursor/g'          "$1"
-sed -i 's/Qt\.SizeFDiagCursor/Qt\.CursorShape\.SizeFDiagCursor/g'          "$1"
-sed -i 's/Qt\.SizeAllCursor/Qt\.CursorShape\.SizeAllCursor/g'              "$1"
-sed -i 's/Qt\.BlankCursor/Qt\.CursorShape\.BlankCursor/g'                  "$1"
-sed -i 's/Qt\.SplitVCursor/Qt\.CursorShape\.SplitVCursor/g'                "$1"
-sed -i 's/Qt\.SplitHCursor/Qt\.CursorShape\.SplitHCursor/g'                "$1"
-sed -i 's/Qt\.PointingHandCursor/Qt\.CursorShape\.PointingHandCursor/g'    "$1"
-sed -i 's/Qt\.ForbiddenCursor/Qt\.CursorShape\.ForbiddenCursor/g'          "$1"
-sed -i 's/Qt\.WhatsThisCursor/Qt\.CursorShape\.WhatsThisCursor/g'          "$1"
-sed -i 's/Qt\.BusyCursor/Qt\.CursorShape\.BusyCursor/g'                    "$1"
-sed -i 's/Qt\.OpenHandCursor/Qt\.CursorShape\.OpenHandCursor/g'            "$1"
-sed -i 's/Qt\.ClosedHandCursor/Qt\.CursorShape\.ClosedHandCursor/g'        "$1"
-sed -i 's/Qt\.DragCopyCursor/Qt\.CursorShape\.DragCopyCursor/g'            "$1"
-sed -i 's/Qt\.DragMoveCursor/Qt\.CursorShape\.DragMoveCursor/g'            "$1"
-sed -i 's/Qt\.DragLinkCursor/Qt\.CursorShape\.DragLinkCursor/g'            "$1"
-sed -i 's/Qt\.LastCursor/Qt\.CursorShape\.LastCursor/g'                    "$1"
-sed -i 's/Qt\.BitmapCursor/Qt\.CursorShape\.BitmapCursor/g'                "$1"
-sed -i 's/Qt\.CustomCursor/Qt\.CursorShape\.CustomCursor/g'                "$1"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+sed -i \
+    -e 's/QSizePolicy\.Expanding/QSizePolicy\.Policy\.Expanding/g' \
+    -e 's/QSizePolicy\.Minimum/QSizePolicy\.Policy\.Minimum/g' \
+    -e 's/QSizePolicy\.Fixed/QSizePolicy\.Policy\.Fixed/g' \
+    -e 's/QSizePolicy\.Preferred/QSizePolicy\.Policy\.Preferred/g' \
+    -e 's/QSizePolicy\.Ignored/QSizePolicy\.Policy\.Ignored/g' \
+    -e 's/QTextEdit\.NoWrap/QTextEdit\.LineWrapMode\.NoWrap/g' \
+    -e 's/QTextEdit\.WidgetWidth/QTextEdit\.LineWrapMode\.WidgetWidth/g' \
+    -e 's/QTextEdit\.FixedPixelWidth/QTextEdit\.LineWrapMode\.FixedPixelWidth/g' \
+    -e 's/QTextEdit\.FixedColumnWidth/QTextEdit\.LineWrapMode\.FixedColumnWidth/g' \
+    -e 's/Ui(self, MainWindow):/Ui(self, MainWindow: QMainWindow) -> None:/g' \
+    -e 's/Ui(self, ImagePrepperWidget):/Ui(self, ImagePrepperWidget: QWidget) -> None:/g' \
+    -e 's/Ui(self, RPiV4L2CtrlDialog):/Ui(self, RPiV4L2CtrlDialog: QWidget) -> None:/g' \
+    -e 's/Ui(self, IndexCalcShowerGroupBox):/Ui(self, IndexCalcShowerGroupBox: QGroupBox) -> None:/g' \
+    -e 's/Ui(self, IndexCalcConfigDialog):/Ui(self, IndexCalcConfigDialog: QDialog) -> None:/g' \
+    -e 's/Ui(self, WarpMatrixDialog):/Ui(self, WarpMatrixDialog: QDialog) -> None:/g' \
+    -e 's/Ui(self, SelectRegionsDialog):/Ui(self, SelectRegionsDialog: QDialog) -> None:/g' \
+    -e 's/QFrame\.HLine/QFrame\.Shape\.HLine/g' \
+    -e 's/QFrame\.VLine/QFrame\.Shape\.VLine/g' \
+    -e 's/QFrame\.Sunken/QFrame\.Shadow\.Sunken/g' \
+    -e 's/QSlider\.NoTicks/QSlider\.TickPosition\.NoTicks/g' \
+    -e 's/QSlider\.TicksAbove/QSlider\.TickPosition\.TicksAbove/g' \
+    -e 's/QSlider\.TicksLeft/QSlider\.TickPosition\.TicksLeft/g' \
+    -e 's/QSlider\.TicksBelow/QSlider\.TickPosition\.TicksBelow/g' \
+    -e 's/QSlider\.TicksRight/QSlider\.TickPosition\.TicksRight/g' \
+    -e 's/QSlider\.TicksBothSides/QSlider\.TickPosition\.TicksBothSides/g' \
+    -e 's/Qt\.Vertical/Qt\.Orientation\.Vertical/g' \
+    -e 's/Qt\.Horizontal/Qt\.Orientation\.Horizontal/g' \
+    -e 's/Qt\.ArrowCursor/Qt\.CursorShape\.ArrowCursor/g' \
+    -e 's/Qt\.UpArrowCursor/Qt\.CursorShape\.UpArrowCursor/g' \
+    -e 's/Qt\.CrossCursor/Qt\.CursorShape\.CrossCursor/g' \
+    -e 's/Qt\.WaitCursor/Qt\.CursorShape\.WaitCursor/g' \
+    -e 's/Qt\.IBeamCursor/Qt\.CursorShape\.IBeamCursor/g' \
+    -e 's/Qt\.SizeVerCursor/Qt\.CursorShape\.SizeVerCursor/g' \
+    -e 's/Qt\.SizeHorCursor/Qt\.CursorShape\.SizeHorCursor/g' \
+    -e 's/Qt\.SizeBDiagCursor/Qt\.CursorShape\.SizeBDiagCursor/g' \
+    -e 's/Qt\.SizeFDiagCursor/Qt\.CursorShape\.SizeFDiagCursor/g' \
+    -e 's/Qt\.SizeAllCursor/Qt\.CursorShape\.SizeAllCursor/g' \
+    -e 's/Qt\.BlankCursor/Qt\.CursorShape\.BlankCursor/g' \
+    -e 's/Qt\.SplitVCursor/Qt\.CursorShape\.SplitVCursor/g' \
+    -e 's/Qt\.SplitHCursor/Qt\.CursorShape\.SplitHCursor/g' \
+    -e 's/Qt\.PointingHandCursor/Qt\.CursorShape\.PointingHandCursor/g' \
+    -e 's/Qt\.ForbiddenCursor/Qt\.CursorShape\.ForbiddenCursor/g' \
+    -e 's/Qt\.WhatsThisCursor/Qt\.CursorShape\.WhatsThisCursor/g' \
+    -e 's/Qt\.BusyCursor/Qt\.CursorShape\.BusyCursor/g' \
+    -e 's/Qt\.OpenHandCursor/Qt\.CursorShape\.OpenHandCursor/g' \
+    -e 's/Qt\.ClosedHandCursor/Qt\.CursorShape\.ClosedHandCursor/g' \
+    -e 's/Qt\.DragCopyCursor/Qt\.CursorShape\.DragCopyCursor/g' \
+    -e 's/Qt\.DragMoveCursor/Qt\.CursorShape\.DragMoveCursor/g' \
+    -e 's/Qt\.DragLinkCursor/Qt\.CursorShape\.DragLinkCursor/g' \
+    -e 's/Qt\.LastCursor/Qt\.CursorShape\.LastCursor/g' \
+    -e 's/Qt\.BitmapCursor/Qt\.CursorShape\.BitmapCursor/g' \
+    -e 's/Qt\.CustomCursor/Qt\.CursorShape\.CustomCursor/g' \
+    -e 's/Qt\.SolidPattern/Qt\.BrushStyle\.SolidPattern/g' \
+    -e 's/QPalette\.Active/QPalette\.ColorGroup\.Active/g' \
+    -e 's/QPalette\.Inactive/QPalette\.ColorGroup\.Inactive/g' \
+    -e 's/QPalette\.WindowText/QPalette\.ColorRole\.WindowText/g' \
+    -e 's/self.*addTab/_ = &/' \
+    -e 's/self.*addSeparator/_ = &/' \
+    -e 's/QFormLayout\.LabelRole/QFormLayout\.ItemRole\.LabelRole/g' \
+    -e 's/QFormLayout\.FieldRole/QFormLayout\.ItemRole\.FieldRole/g' \
+    -e 's/QFormLayout\.SpanningRole/QFormLayout\.ItemRole\.SpanningRole/g' \
+    "$1"
+#-e 's/class Ui_MainWindow.*$/from QRCs import main_resource &/g'                               \
