@@ -1,3 +1,7 @@
+[tool.ruff]
+line-length = 200
+
+
 [tool.ruff.lint]
 # Enable flake8-bugbear (`B`) rules.
 select = ["E", "F", "B", "Q"]
