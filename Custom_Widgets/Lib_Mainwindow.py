@@ -427,7 +427,6 @@ class TheMainWindow(QMainWindow):
         _ = self.roi_obje_bglf.setZValue(10)
         _ = self.roi_obje_bgri.setZValue(10)
 
-
         _ = self.ui.graph_2dimg.getView().addItem(self.roi_obje_main)
         _ = self.ui.graph_2dimg.getView().addItem(self.roi_obje_bgri)
         _ = self.ui.graph_2dimg.getView().addItem(self.roi_obje_bglf)
@@ -439,16 +438,12 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_calc1_desalted_roi.getView().addItem(self.graph_desalted_graphs_sep_line_x0)
         self.ui.graph_calc1_desalted_roi.getView().addItem(self.graph_desalted_graphs_sep_line_x1)
 
-
-
         self.ui.graph_calc1_desalted_roi.getView().addItem(self.text_for_desalted_img_label0)
         self.ui.graph_calc1_desalted_roi.getView().addItem(self.text_for_desalted_img_label1)
         self.ui.graph_calc1_desalted_roi.getView().addItem(self.text_for_desalted_img_label2)
         self.ui.graph_calc1_desalted_roi.getView().addItem(self.text_for_desalted_img_label3)
         self.ui.graph_calc1_desalted_roi.getView().addItem(self.text_for_desalted_img_label4)
         self.ui.graph_calc1_desalted_roi.getView().addItem(self.text_for_desalted_img_label5)
-
-
 
     def init_sb_signals_for_ROI_controls(self) -> None:
         _ = self.ui.sb_gray_y_init.valueChanged.connect(self.update_raw_from_sb)
