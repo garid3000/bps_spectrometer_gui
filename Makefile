@@ -35,7 +35,7 @@ convert_all:
 	echo "please manualy add 'import QRCs.main_resource' in Custom_UIs/UI_Mainwindow.py"
 
 run:
-	python3 main.py
+	export QT_QPA_PLATFORM="xcb" && python3 main.py #python3 main.py
 
 run_from_nix:
 	nixGL python3 main.py
