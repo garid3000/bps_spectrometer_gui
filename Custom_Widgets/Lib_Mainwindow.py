@@ -379,9 +379,7 @@ class TheMainWindow(QMainWindow):
 
         _ = self.ui.tw_midcol.currentChanged.connect(self.handle_when_tw_midcol_changed)
 
-        _ = self.ui.graph_2dimg.getView().addItem(self.roi_obje_main)
-        _ = self.ui.graph_2dimg.getView().addItem(self.roi_gray_main)
-        _ = self.ui.graph_2dimg.getView().addItem(self.roi_wave759nm)
+        self.handle_when_tw_midcol_changed() # just so it starts correctly
 
     def handle_when_tw_midcol_changed(self) -> None:
         # remove all items 
