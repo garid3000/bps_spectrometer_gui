@@ -672,7 +672,7 @@
                 </widget>
                </item>
                <item row="8" column="1">
-                <widget class="QSpinBox" name="sb_obje_y_init">
+                <widget class="QSpinBox" name="sb_obje_posy">
                  <property name="toolTip">
                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_vert_obje_top.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
@@ -691,7 +691,7 @@
                 </widget>
                </item>
                <item row="5" column="1">
-                <widget class="QSpinBox" name="sb_gray_y_init">
+                <widget class="QSpinBox" name="sb_gray_posy">
                  <property name="toolTip">
                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_vert_gray_top.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
@@ -710,7 +710,7 @@
                 </widget>
                </item>
                <item row="8" column="2">
-                <widget class="QSpinBox" name="sb_obje_y_size">
+                <widget class="QSpinBox" name="sb_obje_sizy">
                  <property name="toolTip">
                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_vert_obje_height.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
@@ -729,7 +729,7 @@
                 </widget>
                </item>
                <item row="5" column="2">
-                <widget class="QSpinBox" name="sb_gray_y_size">
+                <widget class="QSpinBox" name="sb_gray_sizy">
                  <property name="toolTip">
                   <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/raw_bayer_base_vert_gray_height.png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
                  </property>
