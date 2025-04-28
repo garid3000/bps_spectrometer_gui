@@ -6,6 +6,7 @@ import subprocess
 import platform
 from datetime import datetime
 import shutil
+from PySide6 import QtWidgets
 import pyqtgraph as pg
 import time
 
@@ -302,10 +303,7 @@ class TheMainWindow(QMainWindow):
               [-14.7, 0.0 - 2.5],  # 7
             ]
         )
-        self.graph_physical_spectrometer_shape_edges = np.array(
-            [ [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0]]
-        )
-
+        self.graph_physical_spectrometer_shape_edges = np.array([ [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0]])
         self.graph_physical_spectrometer_shape_edges_colors = np.array(
             [
                 (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1), (255, 0, 0, 255, 1),
@@ -369,7 +367,6 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.graph_2dimg.getView().addItem(self.roi_wave759nm)
 
     def handle_when_tw_midcol_changed(self) -> None:
-        #print(self.ui.graph_2dimg.getView().allChildren())
         _ = self.ui.graph_2dimg.getView().removeItem(self.roi_obje_main)
         _ = self.ui.graph_2dimg.getView().removeItem(self.roi_gray_main)
         _ = self.ui.graph_2dimg.getView().removeItem(self.roi_wave759nm)
@@ -388,23 +385,18 @@ class TheMainWindow(QMainWindow):
     def dir_searching_based_regex(self) -> None:
         current_search_prompt = self.ui.le_tv_name_narrower.text()
         if current_search_prompt == "":
-            #self.fsmodel.setFilter(QDir.Filter.Files |  QDir.Filter.AllDirs)
             self.fsmodel.setFilter(QDir.Filter.Files |  QDir.Filter.AllDirs|  QDir.Filter.NoDotAndDotDot)
             self.fsmodel.setNameFilters((["*.jpeg"]))
             self.fsmodel.setNameFilterDisables(True)
         else:
             self.fsmodel.setFilter(QDir.Filter.Files |  QDir.Filter.Dirs|  QDir.Filter.NoDotAndDotDot)
             self.fsmodel.setNameFilters((["*" + current_search_prompt.replace(" ", "*") + "*"]))
-            # need * regex on both side
             self.fsmodel.setNameFilterDisables(False)
 
     def init_2d_graph_hide_the_original_roi_buttons(self) -> None:
         """Hides the ROI/Menu buttons from the 3 images"""
         self.ui.graph_2dimg.ui.roiBtn.hide()
         self.ui.graph_2dimg.ui.menuBtn.hide()
-
-        #self.ui.graph_2dimg.addItem(self.roi_label_obje)
-        #self.ui.graph_2dimg.addItem(self.roi_label_gray)
 
     def init_all_6_roi(self) -> None:
         _ = self.roi_obje_main.addScaleHandle([0.5, 1], [0.5, 0])
@@ -434,6 +426,10 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.sb_obje_sizy.valueChanged.connect(self.update_raw_from_sb)
         _ = self.ui.sb_midx_init.valueChanged.connect(self.update_raw_from_sb)
         _ = self.ui.sb_midx_size.valueChanged.connect(self.update_raw_from_sb)
+        _ = self.ui.sb_roi759_posx.valueChanged.connect(self.update_raw_from_sb)
+        _ = self.ui.sb_roi759_posy.valueChanged.connect(self.update_raw_from_sb)
+        _ = self.ui.sb_roi759_sizx.valueChanged.connect(self.update_raw_from_sb)
+        _ = self.ui.sb_roi759_sizy.valueChanged.connect(self.update_raw_from_sb)
 
         _ = self.ui.sb_waveperpixel.valueChanged.connect(self.update_raw_roi_plot_when_sb_or_roi_moved)
 
@@ -501,57 +497,34 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_calc5_refl_final.getPlotItem().addItem(self.graph5_norm_zero_line)
         _ = self.ui.graph_calc5_refl_final.getPlotItem().addLegend()
 
-
-    def all_sb_signal_enable_or_disable(self, b: bool) -> None:
-        """Temporaray block or not block the signals in order to 2 way control"""
-        # _ = self.ui.sb_lefx_size.blockSignals(b)
-        # _ = self.ui.sb_lefx_init_rel.blockSignals(b)
-        # _ = self.ui.sb_rigx_size.blockSignals(b)
-        # _ = self.ui.sb_rigx_init_rel.blockSignals(b)
-        _ = self.ui.sb_midx_init.blockSignals(b)
-        _ = self.ui.sb_midx_size.blockSignals(b)
-        _ = self.ui.sb_gray_posy.blockSignals(b)
-        _ = self.ui.sb_gray_sizy.blockSignals(b)
-        _ = self.ui.sb_obje_posy.blockSignals(b)
-        _ = self.ui.sb_obje_sizy.blockSignals(b)
+    def spinbox_setvalue_without_emitting_signal(self, sb: QtWidgets.QSpinBox, value: int) -> None:
+        """Sets QSpinBox widgets value without signal emitting"""
+        _ = sb.blockSignals(True)
+        sb.setValue(value)
+        _ = sb.blockSignals(False)
 
     def handle_roi_change(self, roi_label: str) -> None:
-        self.all_sb_signal_enable_or_disable(True)
-
         if roi_label == "gray":
-            gray_posx, gray_posy, gray_sizex, gray_sizey = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_main.getState())
-
-            self.ui.sb_midx_init.setValue(gray_posx)
-            self.ui.sb_midx_size.setValue(gray_sizex)
-            self.ui.sb_gray_posy.setValue(gray_posy)
-            self.ui.sb_gray_sizy.setValue(gray_sizey)
+            gray_posx, gray_posy, gray_sizx, gray_sizy = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_main.getState())
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_midx_init, gray_posx)
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_midx_size, gray_sizx)
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_gray_posy, gray_posy)
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_gray_sizy, gray_sizy)
 
         elif roi_label == "obje":
-            obje_posx, obje_posy, obje_sizex, obje_sizey = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_obje_main.getState())
-
-            self.ui.sb_midx_init.setValue(obje_posx)
-            self.ui.sb_midx_size.setValue(obje_sizex)
-            self.ui.sb_obje_posy.setValue(obje_posy)
-            self.ui.sb_obje_sizy.setValue(obje_sizey)
+            obje_posx, obje_posy, obje_sizx, obje_sizy = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_obje_main.getState())
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_midx_init, obje_posx)
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_midx_size, obje_sizx)
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_obje_posy, obje_posy)
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_obje_sizy, obje_sizy)
 
         elif roi_label == "wave-759":
             w759_posx, w759_posy, w759_sizx, w759_sizy = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_wave759nm.getState())
-            self.ui.sb_roi759_posx.blockSignals(True)
-            self.ui.sb_roi759_posy.blockSignals(True)
-            self.ui.sb_roi759_sizx.blockSignals(True)
-            self.ui.sb_roi759_sizy.blockSignals(True)
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_roi759_posx, w759_posx)
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_roi759_posy, w759_posy)
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_roi759_sizx, w759_sizx)
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_roi759_sizy, w759_sizy)
 
-            self.ui.sb_roi759_posx.setValue(w759_posx)
-            self.ui.sb_roi759_posy.setValue(w759_posy)
-            self.ui.sb_roi759_sizx.setValue(w759_sizx)
-            self.ui.sb_roi759_sizy.setValue(w759_sizy)
-
-            self.ui.sb_roi759_posx.blockSignals(False)
-            self.ui.sb_roi759_posy.blockSignals(False)
-            self.ui.sb_roi759_sizx.blockSignals(False)
-            self.ui.sb_roi759_sizy.blockSignals(False)
-
-        self.all_sb_signal_enable_or_disable(False)
         self.update_raw_from_sb()
 
     def get_posx_posy_sizex_sizy_cleaner_carefuler_way(self, tmp_roi_state: dict[str, pg.Point|float]) -> tuple[int, int, int, int]:
@@ -567,17 +540,20 @@ class TheMainWindow(QMainWindow):
     def update_raw_from_sb(self) -> None:
         _ = self.roi_gray_main.blockSignals(True)
         _ = self.roi_obje_main.blockSignals(True)
+        _ = self.roi_wave759nm.blockSignals(True)
 
         self.roi_gray_main.setPos(self.ui.sb_midx_init.value(), self.ui.sb_gray_posy.value())
-        self.roi_obje_main.setPos(self.ui.sb_midx_init.value(), self.ui.sb_obje_posy.value())
-
         self.roi_gray_main.setSize((self.ui.sb_midx_size.value(), self.ui.sb_gray_sizy.value()))
+
+        self.roi_obje_main.setPos(self.ui.sb_midx_init.value(), self.ui.sb_obje_posy.value())
         self.roi_obje_main.setSize((self.ui.sb_midx_size.value(), self.ui.sb_obje_sizy.value()))
 
-        # self.graph_759nm_line_for_2dimg.setPos(pos=self.ui.sb_midx_init.value() + 192*2)
+        self.roi_wave759nm.setPos(self.ui.sb_roi759_posx.value(), self.ui.sb_roi759_posy.value())
+        self.roi_wave759nm.setSize((self.ui.sb_roi759_sizx.value(), self.ui.sb_roi759_sizy.value()))
 
         _ = self.roi_gray_main.blockSignals(False)
         _ = self.roi_obje_main.blockSignals(False)
+        _ = self.roi_wave759nm.blockSignals(False)
 
         # change the label position
         self.roi_label_gray.setPos(self.ui.sb_midx_init.value(), self.ui.sb_gray_posy.value())
@@ -585,7 +561,6 @@ class TheMainWindow(QMainWindow):
 
         self.update_raw_roi_plot_when_sb_or_roi_moved()
 
-        # when
         if not self.paramsChangingFromHistory:
             self.ui.cb_parameter_history.setCurrentIndex(0) # when change happens make it current
 
