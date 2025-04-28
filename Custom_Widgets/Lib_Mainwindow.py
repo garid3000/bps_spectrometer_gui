@@ -1,4 +1,5 @@
 # ---------- Base libraries -------------------------------------------------------------------------------------------
+from typing import cast
 import os
 import logging
 import subprocess
@@ -838,10 +839,15 @@ class TheMainWindow(QMainWindow):
         self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
         logger.info(f"short_cut_preview_raw_jpeg: {self.ddtree.webcamFP=}")
 
+        webcam:np.ndarray[tuple[int, int, int], np.dtype[np.uint8]] = np.zeros((10, 10, 3), dtype=np.uint8)
         if self.ddtree.webcamFP is not None:
             try:
-                webcam_img = Image.open(self.ddtree.webcamFP)
-                webcam = np.array(webcam_img)
+                tmp = np.asarray(
+                    Image.open(self.ddtree.webcamFP),
+                    dtype=np.uint8
+                )
+                assert tmp.ndim == 3
+                webcam = cast(np.ndarray[tuple[int, int, int], np.dtype[np.uint8]], tmp)
                 logger.debug(f"short_cut_preview_raw_jpeg: {webcam.dtype=}, {webcam.shape=}")
             except ValueError:
                 logger.info(f"PIL-ValueError: while openning {self.ddtree.webcamFP}")
