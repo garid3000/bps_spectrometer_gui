@@ -322,53 +322,61 @@ class Ui_MainWindow(object):
         self._l = QLabel(self.midcol_tab1_wave)
         self._l.setObjectName("_l")
         self._l.setGeometry(QRect(20, 170, 160, 23))
-        self.widget = QWidget(self.midcol_tab1_wave)
-        self.widget.setObjectName("widget")
-        self.widget.setGeometry(QRect(40, 30, 341, 81))
-        self.gridLayout_7 = QGridLayout(self.widget)
+        self.layoutWidget1 = QWidget(self.midcol_tab1_wave)
+        self.layoutWidget1.setObjectName("layoutWidget1")
+        self.layoutWidget1.setGeometry(QRect(40, 30, 341, 81))
+        self.gridLayout_7 = QGridLayout(self.layoutWidget1)
         self.gridLayout_7.setObjectName("gridLayout_7")
         self.gridLayout_7.setContentsMargins(0, 0, 0, 0)
-        self.label_6 = QLabel(self.widget)
+        self.label_6 = QLabel(self.layoutWidget1)
         self.label_6.setObjectName("label_6")
 
         self.gridLayout_7.addWidget(self.label_6, 0, 1, 1, 1)
 
-        self.label_7 = QLabel(self.widget)
+        self.label_7 = QLabel(self.layoutWidget1)
         self.label_7.setObjectName("label_7")
 
         self.gridLayout_7.addWidget(self.label_7, 0, 2, 1, 1)
 
-        self.label_4 = QLabel(self.widget)
+        self.label_4 = QLabel(self.layoutWidget1)
         self.label_4.setObjectName("label_4")
 
         self.gridLayout_7.addWidget(self.label_4, 1, 0, 1, 1)
 
-        self.sb_roi759_posx = QSpinBox(self.widget)
+        self.sb_roi759_posx = QSpinBox(self.layoutWidget1)
         self.sb_roi759_posx.setObjectName("sb_roi759_posx")
         self.sb_roi759_posx.setMaximum(4000)
+        self.sb_roi759_posx.setSingleStep(2)
+        self.sb_roi759_posx.setValue(1812)
 
         self.gridLayout_7.addWidget(self.sb_roi759_posx, 1, 1, 1, 1)
 
-        self.sb_roi759_posy = QSpinBox(self.widget)
+        self.sb_roi759_posy = QSpinBox(self.layoutWidget1)
         self.sb_roi759_posy.setObjectName("sb_roi759_posy")
         self.sb_roi759_posy.setMaximum(4000)
+        self.sb_roi759_posy.setSingleStep(2)
+        self.sb_roi759_posy.setValue(1200)
 
         self.gridLayout_7.addWidget(self.sb_roi759_posy, 1, 2, 1, 1)
 
-        self.label_5 = QLabel(self.widget)
+        self.label_5 = QLabel(self.layoutWidget1)
         self.label_5.setObjectName("label_5")
 
         self.gridLayout_7.addWidget(self.label_5, 2, 0, 1, 1)
 
-        self.sb_roi759_sizx = QSpinBox(self.widget)
+        self.sb_roi759_sizx = QSpinBox(self.layoutWidget1)
         self.sb_roi759_sizx.setObjectName("sb_roi759_sizx")
-        self.sb_roi759_sizx.setMaximum(4000)
+        self.sb_roi759_sizx.setMaximum(100)
+        self.sb_roi759_sizx.setSingleStep(2)
+        self.sb_roi759_sizx.setValue(20)
 
         self.gridLayout_7.addWidget(self.sb_roi759_sizx, 2, 1, 1, 1)
 
-        self.sb_roi759_sizy = QSpinBox(self.widget)
+        self.sb_roi759_sizy = QSpinBox(self.layoutWidget1)
         self.sb_roi759_sizy.setObjectName("sb_roi759_sizy")
         self.sb_roi759_sizy.setMaximum(4000)
+        self.sb_roi759_sizy.setSingleStep(2)
+        self.sb_roi759_sizy.setValue(450)
 
         self.gridLayout_7.addWidget(self.sb_roi759_sizy, 2, 2, 1, 1)
 
