@@ -288,7 +288,9 @@ class TheMainWindow(QMainWindow):
 
         self.ui.graph_webcam.ui.roiBtn.hide()
         self.ui.graph_webcam.ui.menuBtn.hide()
-
+        self.ui.graph_759_roi.ui.roiBtn.hide()
+        self.ui.graph_759_roi.ui.menuBtn.hide()
+        self.ui.graph_759_roi.ui.histogram.hide()
 
         # -------------------------------------------------------------------------------------------------------------
         self.graph5_curve_relf = self.ui.graph_calc5_refl_final.getPlotItem().plot(
@@ -450,6 +452,7 @@ class TheMainWindow(QMainWindow):
         _ = self.roi_gray_main.sigRegionChanged.connect(lambda: self.handle_roi_change("gray"))
         _ = self.roi_obje_main.sigRegionChanged.connect(lambda: self.handle_roi_change("obje"))
         _ = self.roi_wave759nm.sigRegionChanged.connect(lambda: self.handle_roi_change("wave-759"))
+        _ = self.ui.cb_759_channel.currentIndexChanged.connect(lambda: self.handle_roi_change("wave-759"))
 
     def init_all_pyqtgraph(self) -> None:
         # -------------------------------------------------------------------------------------------------------------
@@ -533,6 +536,32 @@ class TheMainWindow(QMainWindow):
             self.spinbox_setvalue_without_emitting_signal(self.ui.sb_roi759_posy, w759_posy)
             self.spinbox_setvalue_without_emitting_signal(self.ui.sb_roi759_sizx, w759_sizx)
             self.spinbox_setvalue_without_emitting_signal(self.ui.sb_roi759_sizy, w759_sizy)
+
+            init_ax0, init_ax1 = 1, 1
+            if self.ui.cb_759_channel.currentText() == "red":
+                init_ax0, init_ax1 = 1, 1
+                self.ui.graph_759_roi.setColorMap(pg.colormap.get("CET-L13"))
+            elif self.ui.cb_759_channel.currentText() == "green":
+                init_ax0, init_ax1 = 0, 1
+                self.ui.graph_759_roi.setColorMap(pg.colormap.get("CET-L14"))
+            elif self.ui.cb_759_channel.currentText() == "green2":
+                init_ax0, init_ax1 = 1, 0
+                self.ui.graph_759_roi.setColorMap(pg.colormap.get("CET-L14"))
+            elif self.ui.cb_759_channel.currentText() == "blue":
+                init_ax0, init_ax1 = 0, 0
+                self.ui.graph_759_roi.setColorMap(pg.colormap.get("CET-L15"))
+
+            self.arr_759_roi: NDArray[np.uint16] = self.jp.data[
+                w759_posy + init_ax0 : w759_posy + w759_sizy+ init_ax0 : 2,
+                w759_posx + init_ax1 : w759_posx + w759_sizx+ init_ax1 : 2,
+            ].astype(np.uint16)
+            self.arr_759_roi = cast(np.ndarray[tuple[int, int], np.dtype[np.uint16]], self.arr_759_roi)
+
+            self.ui.graph_759_roi.setImage(
+                self.arr_759_roi,
+                axes={"x":1, "y":0},
+                levelMode = "mono"
+            )
 
         self.update_raw_from_sb()
 
@@ -1017,7 +1046,6 @@ class TheMainWindow(QMainWindow):
         return ( -0.212 + 0.316 / (distance_in_cm + 0.258)) * pxl_spec + 2351.944 / (distance_in_cm + 8.423) + 519.806
 
     def init_physical_repr_graph(self) -> None:
-        #v = self.ui.graph_physical_orientation.addViewBox() # noqa # type: ignore
         v = self.ui.graph_physical_orientation.ci.addViewBox()
         v.setAspectLocked()
         v.addItem(self.graph_physical_spectrometer_shape)
