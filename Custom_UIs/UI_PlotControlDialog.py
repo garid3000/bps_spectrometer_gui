@@ -3,27 +3,13 @@
 ################################################################################
 ## Form generated from reading UI file 'UI_PlotControlDialog.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.2
+## Created by: Qt User Interface Compiler version 6.9.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import (
-    QCoreApplication,
-    QMetaObject,
-    Qt,
-)
-from PySide6.QtWidgets import (
-    QCheckBox,
-    QDialogButtonBox,
-    QDoubleSpinBox,
-    QFormLayout,
-    QFrame,
-    QLabel,
-    QLineEdit,
-    QSizePolicy,
-    QSpacerItem,
-)
+from PySide6.QtCore import QCoreApplication, QMetaObject, Qt
+from PySide6.QtWidgets import QCheckBox, QDialogButtonBox, QDoubleSpinBox, QFormLayout, QFrame, QLabel, QLineEdit, QSizePolicy, QSpacerItem
 
 
 class Ui_Dialog(object):
@@ -75,9 +61,7 @@ class Ui_Dialog(object):
         self.sb_y_range_max.setMinimum(-1000.000000000000000)
         self.sb_y_range_max.setMaximum(1500.000000000000000)
 
-        self.formLayout.setWidget(
-            7, QFormLayout.ItemRole.FieldRole, self.sb_y_range_max
-        )
+        self.formLayout.setWidget(7, QFormLayout.ItemRole.FieldRole, self.sb_y_range_max)
 
         self._label_4 = QLabel(Dialog)
         self._label_4.setObjectName("_label_4")
@@ -89,9 +73,7 @@ class Ui_Dialog(object):
         self.sb_y_range_min.setMinimum(-1000.000000000000000)
         self.sb_y_range_min.setMaximum(1500.000000000000000)
 
-        self.formLayout.setWidget(
-            8, QFormLayout.ItemRole.FieldRole, self.sb_y_range_min
-        )
+        self.formLayout.setWidget(8, QFormLayout.ItemRole.FieldRole, self.sb_y_range_min)
 
         self._l_2 = QFrame(Dialog)
         self._l_2.setObjectName("_l_2")
@@ -125,9 +107,7 @@ class Ui_Dialog(object):
         self.sb_x_range_max.setMinimum(-1000.000000000000000)
         self.sb_x_range_max.setMaximum(1000.000000000000000)
 
-        self.formLayout.setWidget(
-            12, QFormLayout.ItemRole.FieldRole, self.sb_x_range_max
-        )
+        self.formLayout.setWidget(12, QFormLayout.ItemRole.FieldRole, self.sb_x_range_max)
 
         self._label_6 = QLabel(Dialog)
         self._label_6.setObjectName("_label_6")
@@ -139,9 +119,7 @@ class Ui_Dialog(object):
         self.sb_x_range_min.setMinimum(-1000.000000000000000)
         self.sb_x_range_min.setMaximum(1000.000000000000000)
 
-        self.formLayout.setWidget(
-            13, QFormLayout.ItemRole.FieldRole, self.sb_x_range_min
-        )
+        self.formLayout.setWidget(13, QFormLayout.ItemRole.FieldRole, self.sb_x_range_min)
 
         self._l_3 = QFrame(Dialog)
         self._l_3.setObjectName("_l_3")
@@ -169,9 +147,7 @@ class Ui_Dialog(object):
         self.btn_box = QDialogButtonBox(Dialog)
         self.btn_box.setObjectName("btn_box")
         self.btn_box.setOrientation(Qt.Orientation.Horizontal)
-        self.btn_box.setStandardButtons(
-            QDialogButtonBox.Cancel | QDialogButtonBox.Ok | QDialogButtonBox.Reset
-        )
+        self.btn_box.setStandardButtons(QDialogButtonBox.Cancel | QDialogButtonBox.Ok | QDialogButtonBox.Reset)
 
         self.formLayout.setWidget(20, QFormLayout.ItemRole.SpanningRole, self.btn_box)
 
@@ -189,17 +165,13 @@ class Ui_Dialog(object):
         self.sb_fig_size_x.setObjectName("sb_fig_size_x")
         self.sb_fig_size_x.setValue(6.400000000000000)
 
-        self.formLayout.setWidget(
-            16, QFormLayout.ItemRole.FieldRole, self.sb_fig_size_x
-        )
+        self.formLayout.setWidget(16, QFormLayout.ItemRole.FieldRole, self.sb_fig_size_x)
 
         self.sb_fig_size_y = QDoubleSpinBox(Dialog)
         self.sb_fig_size_y.setObjectName("sb_fig_size_y")
         self.sb_fig_size_y.setValue(4.800000000000000)
 
-        self.formLayout.setWidget(
-            17, QFormLayout.ItemRole.FieldRole, self.sb_fig_size_y
-        )
+        self.formLayout.setWidget(17, QFormLayout.ItemRole.FieldRole, self.sb_fig_size_y)
 
         self._label = QLabel(Dialog)
         self._label.setObjectName("_label")
@@ -218,9 +190,7 @@ class Ui_Dialog(object):
 
         self.formLayout.setWidget(18, QFormLayout.ItemRole.FieldRole, self.sb_fig_dpi)
 
-        self.verticalSpacer = QSpacerItem(
-            20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
-        )
+        self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.formLayout.setItem(19, QFormLayout.ItemRole.LabelRole, self.verticalSpacer)
 
@@ -239,35 +209,19 @@ class Ui_Dialog(object):
         self._label_7.setText(QCoreApplication.translate("Dialog", "Y axis:", None))
         self._label_2.setText(QCoreApplication.translate("Dialog", "Y Label", None))
         self.le_y_label.setText("")
-        self._label_3.setText(
-            QCoreApplication.translate("Dialog", "Y Range Max (Top)", None)
-        )
-        self._label_4.setText(
-            QCoreApplication.translate("Dialog", "Y Range Min (Bottom)", None)
-        )
+        self._label_3.setText(QCoreApplication.translate("Dialog", "Y Range Max (Top)", None))
+        self._label_4.setText(QCoreApplication.translate("Dialog", "Y Range Min (Bottom)", None))
         self._label_8.setText(QCoreApplication.translate("Dialog", "X axis:", None))
         self._label_9.setText(QCoreApplication.translate("Dialog", "X axis name", None))
         self.le_x_label.setText("")
-        self._label_10.setText(
-            QCoreApplication.translate("Dialog", "X Range Max (Right)", None)
-        )
-        self._label_6.setText(
-            QCoreApplication.translate("Dialog", "X Range Min (Left)", None)
-        )
+        self._label_10.setText(QCoreApplication.translate("Dialog", "X Range Max (Right)", None))
+        self._label_6.setText(QCoreApplication.translate("Dialog", "X Range Min (Left)", None))
         self.cb_grid.setText(QCoreApplication.translate("Dialog", "Grid Lines", None))
         self.cb_legend.setText(QCoreApplication.translate("Dialog", "Legend", None))
         self._label_1.setText(QCoreApplication.translate("Dialog", "General:", None))
-        self._label_11.setText(
-            QCoreApplication.translate("Dialog", "Output Figure x size", None)
-        )
-        self._label_12.setText(
-            QCoreApplication.translate("Dialog", "Output Figure y size", None)
-        )
-        self._label.setText(
-            QCoreApplication.translate("Dialog", "Plot / figure size", None)
-        )
-        self._label_13.setText(
-            QCoreApplication.translate("Dialog", "Output Figure DPI", None)
-        )
+        self._label_11.setText(QCoreApplication.translate("Dialog", "Output Figure x size", None))
+        self._label_12.setText(QCoreApplication.translate("Dialog", "Output Figure y size", None))
+        self._label.setText(QCoreApplication.translate("Dialog", "Plot / figure size", None))
+        self._label_13.setText(QCoreApplication.translate("Dialog", "Output Figure DPI", None))
 
     # retranslateUi

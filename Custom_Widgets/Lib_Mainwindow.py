@@ -24,7 +24,7 @@ from PySide6.QtCore import QModelIndex, QDir, Qt, QPersistentModelIndex, QPointF
 # ---------- Custom libs ----------------------------------------------------------------------------------------------
 from Custom_UIs.UI_Mainwindow import Ui_MainWindow
 from Custom_Libs.Lib_DataDirTree import DataDirTree
-from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import JpegProcessor, get_wavelength_array, background
+from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import JpegProcessor, get_wavelength_array #, background
 
 # ---------- pqgraph config -------------------------------------------------------------------------------------------
 pg.setConfigOption("background", "w")
@@ -97,7 +97,6 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.pb_calibrate_calculate.clicked.connect(self.call_calibrate_and_calculate)
         _ = self.ui.pb_export.clicked.connect(self.short_cut_export_raw_jpeg)
         _ = self.ui.pb_dir_goto_parent.clicked.connect(self.short_cut_goto_parent_dir)
-        #_ = self.ui.cb_rawbayer_visual_demosiac.valueChanged(self.)
         _ = self.ui.cb_rawbayer_visual_demosiac.stateChanged.connect(self.update_1_rawbayer_img_data_and_then_plot_below)
 
 
@@ -109,12 +108,10 @@ class TheMainWindow(QMainWindow):
         self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath(QDir.homePath()))
         self.short_cut_goto_parent_dir()
         _ = self.ui.tv_dir.doubleClicked.connect(self.call_tv_onItemDoubleClicked)
-        # self.ui.cb_ft_filter.stateChanged.connect(self.fsmodel.setNameFilterDisables)
         _ = self.ui.cb_ft_filter.stateChanged.connect(self.toggle_filetype_visiblity)
         _ = self.ui.cb_calc5_norm.stateChanged.connect(self.handle_cb_calc5_norming)
         _ = self.ui.sb_calc5_norm_zero.valueChanged.connect(self.handle_cb_calc5_norming)
         _ = self.ui.sb_calc5_norm_one.valueChanged.connect(self.handle_cb_calc5_norming)
-        #self.ui.cb_bayer_show_geometry.stateChanged.connect(self.update_visual_1_rawbayer_img_section)
         _ = self.ui.pb_waveperpixel_reset.clicked.connect(lambda: self.ui.sb_waveperpixel.setValue(1.8385))
         _ = self.ui.pb_system_file_explorer.clicked.connect(self.open_directory_at_point)
         _ = self.ui.le_tv_name_narrower.textChanged.connect(self.dir_searching_based_regex)
@@ -153,17 +150,17 @@ class TheMainWindow(QMainWindow):
             movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
         )
 
-        self.roi_gray_bglf = pg.ROI(
-            pos=[self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_gray_y_init.value()],
-            size=pg.Point(self.ui.sb_lefx_size.value(), self.ui.sb_gray_y_size.value()),
-            movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
-        )
+        #self.roi_gray_bglf = pg.ROI(
+        #    pos=[self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_gray_y_init.value()],
+        #    size=pg.Point(self.ui.sb_lefx_size.value(), self.ui.sb_gray_y_size.value()),
+        #    movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
+        #)
 
-        self.roi_gray_bgri = pg.ROI(
-            pos=[self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_gray_y_init.value()],
-            size=pg.Point(self.ui.sb_rigx_size.value(), self.ui.sb_gray_y_size.value()),
-            movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
-        )
+        #self.roi_gray_bgri = pg.ROI(
+        #    pos=[self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_gray_y_init.value()],
+        #    size=pg.Point(self.ui.sb_rigx_size.value(), self.ui.sb_gray_y_size.value()),
+        #    movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
+        #)
 
         self.roi_obje_main = pg.ROI(
             pos=[self.ui.sb_midx_init.value(), self.ui.sb_obje_y_init.value()],
@@ -171,17 +168,17 @@ class TheMainWindow(QMainWindow):
             movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
         )
 
-        self.roi_obje_bglf = pg.ROI(
-            pos=[self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_obje_y_init.value()],
-            size=pg.Point(self.ui.sb_lefx_size.value(), self.ui.sb_obje_y_size.value()),
-            movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
-        )
+        #self.roi_obje_bglf = pg.ROI(
+        #    pos=[self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_obje_y_init.value()],
+        #    size=pg.Point(self.ui.sb_lefx_size.value(), self.ui.sb_obje_y_size.value()),
+        #    movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
+        #)
 
-        self.roi_obje_bgri = pg.ROI(
-            pos=[self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_obje_y_init.value()],
-            size=pg.Point(self.ui.sb_rigx_size.value(), self.ui.sb_obje_y_size.value()),
-            movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
-        )
+        #self.roi_obje_bgri = pg.ROI(
+        #    pos=[self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_obje_y_init.value()],
+        #    size=pg.Point(self.ui.sb_rigx_size.value(), self.ui.sb_obje_y_size.value()),
+        #    movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
+        #)
         # end init_all_6_roi ------------------------------------------------------------------------------------------
 
         self.graph2_curve_bg_gray_le_r = self.ui.graph_calc2_bg_gray.getPlotItem().plot(symbol="o", symbolSize=9, symbolBrush=(255, 000, 000), pen=None, name="R-gray-left")
@@ -414,26 +411,26 @@ class TheMainWindow(QMainWindow):
         self.roi_obje_main.setZValue(10)
         self.roi_gray_main.setZValue(10)
 
-        _ = self.roi_gray_bglf.addScaleHandle([0, 0.5], [1, 0.5])
-        _ = self.roi_gray_bglf.addScaleHandle([1, 0.5], [0, 0.5])
-        _ = self.roi_gray_bgri.addScaleHandle([1, 0.5], [0, 0.5])
-        _ = self.roi_gray_bgri.addScaleHandle([0, 0.5], [1, 0.5])
-        _ = self.roi_gray_bglf.setZValue(10)
-        _ = self.roi_gray_bgri.setZValue(10)
+        # _ = self.roi_gray_bglf.addScaleHandle([0, 0.5], [1, 0.5])
+        # _ = self.roi_gray_bglf.addScaleHandle([1, 0.5], [0, 0.5])
+        # _ = self.roi_gray_bgri.addScaleHandle([1, 0.5], [0, 0.5])
+        # _ = self.roi_gray_bgri.addScaleHandle([0, 0.5], [1, 0.5])
+        # _ = self.roi_gray_bglf.setZValue(10)
+        # _ = self.roi_gray_bgri.setZValue(10)
 
-        _ = self.roi_obje_bglf.addScaleHandle([0, 0.5], [1, 0.5])
-        _ = self.roi_obje_bglf.addScaleHandle([1, 0.5], [0, 0.5])
-        _ = self.roi_obje_bgri.addScaleHandle([1, 0.5], [0, 0.5])
-        _ = self.roi_obje_bgri.addScaleHandle([0, 0.5], [1, 0.5])
-        _ = self.roi_obje_bglf.setZValue(10)
-        _ = self.roi_obje_bgri.setZValue(10)
+        # _ = self.roi_obje_bglf.addScaleHandle([0, 0.5], [1, 0.5])
+        # _ = self.roi_obje_bglf.addScaleHandle([1, 0.5], [0, 0.5])
+        # _ = self.roi_obje_bgri.addScaleHandle([1, 0.5], [0, 0.5])
+        # _ = self.roi_obje_bgri.addScaleHandle([0, 0.5], [1, 0.5])
+        # _ = self.roi_obje_bglf.setZValue(10)
+        # _ = self.roi_obje_bgri.setZValue(10)
 
         _ = self.ui.graph_2dimg.getView().addItem(self.roi_obje_main)
-        _ = self.ui.graph_2dimg.getView().addItem(self.roi_obje_bgri)
-        _ = self.ui.graph_2dimg.getView().addItem(self.roi_obje_bglf)
+        #_ = self.ui.graph_2dimg.getView().addItem(self.roi_obje_bgri)
+        #_ = self.ui.graph_2dimg.getView().addItem(self.roi_obje_bglf)
         _ = self.ui.graph_2dimg.getView().addItem(self.roi_gray_main)
-        _ = self.ui.graph_2dimg.getView().addItem(self.roi_gray_bglf)
-        _ = self.ui.graph_2dimg.getView().addItem(self.roi_gray_bgri)
+        #_ = self.ui.graph_2dimg.getView().addItem(self.roi_gray_bglf)
+        #_ = self.ui.graph_2dimg.getView().addItem(self.roi_gray_bgri)
 
         self.ui.graph_calc1_desalted_roi.getView().addItem(self.graph_desalted_graphs_sep_line_y0)
         self.ui.graph_calc1_desalted_roi.getView().addItem(self.graph_desalted_graphs_sep_line_x0)
@@ -453,20 +450,20 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.sb_obje_y_size.valueChanged.connect(self.update_raw_from_sb)
         _ = self.ui.sb_midx_init.valueChanged.connect(self.update_raw_from_sb)
         _ = self.ui.sb_midx_size.valueChanged.connect(self.update_raw_from_sb)
-        _ = self.ui.sb_lefx_init_rel.valueChanged.connect(self.update_raw_from_sb)
-        _ = self.ui.sb_lefx_size.valueChanged.connect(self.update_raw_from_sb)
-        _ = self.ui.sb_rigx_init_rel.valueChanged.connect(self.update_raw_from_sb)
-        _ = self.ui.sb_rigx_size.valueChanged.connect(self.update_raw_from_sb)
+        # _ = self.ui.sb_lefx_init_rel.valueChanged.connect(self.update_raw_from_sb)
+        # _ = self.ui.sb_lefx_size.valueChanged.connect(self.update_raw_from_sb)
+        # _ = self.ui.sb_rigx_init_rel.valueChanged.connect(self.update_raw_from_sb)
+        # _ = self.ui.sb_rigx_size.valueChanged.connect(self.update_raw_from_sb)
 
         _ = self.ui.sb_waveperpixel.valueChanged.connect(self.update_raw_roi_plot_when_sb_or_roi_moved)
 
         _ = self.roi_gray_main.sigRegionChanged.connect(lambda: self.handle_roi_change("gray", "middle"))
-        _ = self.roi_gray_bglf.sigRegionChanged.connect(lambda: self.handle_roi_change("gray", "left"))
-        _ = self.roi_gray_bgri.sigRegionChanged.connect(lambda: self.handle_roi_change("gray", "right"))
+        #_ = self.roi_gray_bglf.sigRegionChanged.connect(lambda: self.handle_roi_change("gray", "left"))
+        #_ = self.roi_gray_bgri.sigRegionChanged.connect(lambda: self.handle_roi_change("gray", "right"))
 
         _ = self.roi_obje_main.sigRegionChanged.connect(lambda: self.handle_roi_change("obje", "middle"))
-        _ = self.roi_obje_bglf.sigRegionChanged.connect(lambda: self.handle_roi_change("obje", "left"))
-        _ = self.roi_obje_bgri.sigRegionChanged.connect(lambda: self.handle_roi_change("obje", "right"))
+        #_ = self.roi_obje_bglf.sigRegionChanged.connect(lambda: self.handle_roi_change("obje", "left"))
+        #_ = self.roi_obje_bgri.sigRegionChanged.connect(lambda: self.handle_roi_change("obje", "right"))
 
     def init_all_pyqtgraph(self) -> None:
         # -------------------------------------------------------------------------------------------------------------
@@ -531,10 +528,10 @@ class TheMainWindow(QMainWindow):
 
     def all_sb_signal_enable_or_disable(self, b: bool) -> None:
         """Temporaray block or not block the signals in order to 2 way control"""
-        _ = self.ui.sb_lefx_size.blockSignals(b)
-        _ = self.ui.sb_lefx_init_rel.blockSignals(b)
-        _ = self.ui.sb_rigx_size.blockSignals(b)
-        _ = self.ui.sb_rigx_init_rel.blockSignals(b)
+        # _ = self.ui.sb_lefx_size.blockSignals(b)
+        # _ = self.ui.sb_lefx_init_rel.blockSignals(b)
+        # _ = self.ui.sb_rigx_size.blockSignals(b)
+        # _ = self.ui.sb_rigx_init_rel.blockSignals(b)
         _ = self.ui.sb_midx_init.blockSignals(b)
         _ = self.ui.sb_midx_size.blockSignals(b)
         _ = self.ui.sb_gray_y_init.blockSignals(b)
@@ -544,7 +541,7 @@ class TheMainWindow(QMainWindow):
 
     def handle_roi_change(self, gray_or_obje: str, left_middle_right: str) -> None:
         self.all_sb_signal_enable_or_disable(True)
-        logger.debug(f"handle_roi_change: {self.roi_gray_main.getState()['pos']=}, {self.roi_gray_bglf.getState()['pos']=}")
+        #logger.debug(f"handle_roi_change: {self.roi_gray_main.getState()['pos']=}, {self.roi_gray_bglf.getState()['pos']=}")
 
         if gray_or_obje == "gray":
             if left_middle_right == "middle":
@@ -555,17 +552,17 @@ class TheMainWindow(QMainWindow):
                 self.ui.sb_gray_y_init.setValue(gray_posy)
                 self.ui.sb_gray_y_size.setValue(gray_sizey)
 
-            elif left_middle_right == "left":
-                gray_posx, _,          _, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_main.getState())
-                bglf_posx, _, bglf_sizex, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_bglf.getState())
-                self.ui.sb_lefx_init_rel.setValue(- gray_posx + bglf_posx)
-                self.ui.sb_lefx_size.setValue(bglf_sizex)
+            # elif left_middle_right == "left":
+            #     gray_posx, _,          _, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_main.getState())
+            #     bglf_posx, _, bglf_sizex, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_bglf.getState())
+            #     self.ui.sb_lefx_init_rel.setValue(- gray_posx + bglf_posx)
+            #     self.ui.sb_lefx_size.setValue(bglf_sizex)
 
-            elif left_middle_right == "right":
-                gray_posx, _,          _, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_main.getState())
-                bgri_posx, _, bgri_sizex, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_bgri.getState())
-                self.ui.sb_rigx_init_rel.setValue(- gray_posx + bgri_posx)
-                self.ui.sb_rigx_size.setValue(bgri_sizex)
+            # elif left_middle_right == "right":
+            #     gray_posx, _,          _, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_main.getState())
+            #     bgri_posx, _, bgri_sizex, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_bgri.getState())
+            #     self.ui.sb_rigx_init_rel.setValue(- gray_posx + bgri_posx)
+            #     self.ui.sb_rigx_size.setValue(bgri_sizex)
 
         elif gray_or_obje == "obje":
             if left_middle_right == "middle":
@@ -576,19 +573,19 @@ class TheMainWindow(QMainWindow):
                 self.ui.sb_obje_y_init.setValue(obje_posy)
                 self.ui.sb_obje_y_size.setValue(obje_sizey)
 
-            elif left_middle_right == "left":
-                gray_posx, _,          _, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_main.getState())
-                bglf_posx, _, bglf_sizex, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_obje_bglf.getState())
+            # elif left_middle_right == "left":
+            #     gray_posx, _,          _, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_main.getState())
+            #     bglf_posx, _, bglf_sizex, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_obje_bglf.getState())
 
-                self.ui.sb_lefx_init_rel.setValue(- gray_posx + bglf_posx)
-                self.ui.sb_lefx_size.setValue(bglf_sizex)
+            #     self.ui.sb_lefx_init_rel.setValue(- gray_posx + bglf_posx)
+            #     self.ui.sb_lefx_size.setValue(bglf_sizex)
 
-            elif left_middle_right == "right":
-                gray_posx, _,          _, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_main.getState())
-                bgri_posx, _, bgri_sizex, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_obje_bgri.getState())
-
-                self.ui.sb_rigx_init_rel.setValue(- gray_posx + bgri_posx)
-                self.ui.sb_rigx_size.setValue(bgri_sizex)
+            # elif left_middle_right == "right":
+            #     gray_posx, _,          _, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_main.getState())
+            #     bgri_posx, _, bgri_sizex, _ = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_obje_bgri.getState())
+            # 
+            #     self.ui.sb_rigx_init_rel.setValue(- gray_posx + bgri_posx)
+            #     self.ui.sb_rigx_size.setValue(bgri_sizex)
 
         self.all_sb_signal_enable_or_disable(False)
         self.update_raw_from_sb()
@@ -605,33 +602,33 @@ class TheMainWindow(QMainWindow):
 
     def update_raw_from_sb(self) -> None:
         _ = self.roi_gray_main.blockSignals(True)
-        _ = self.roi_gray_bglf.blockSignals(True)
-        _ = self.roi_gray_bgri.blockSignals(True)
+        # _ = self.roi_gray_bglf.blockSignals(True)
+        # _ = self.roi_gray_bgri.blockSignals(True)
         _ = self.roi_obje_main.blockSignals(True)
-        _ = self.roi_obje_bglf.blockSignals(True)
-        _ = self.roi_obje_bgri.blockSignals(True)
+        # _ = self.roi_obje_bglf.blockSignals(True)
+        # _ = self.roi_obje_bgri.blockSignals(True)
 
         self.roi_gray_main.setPos(self.ui.sb_midx_init.value(), self.ui.sb_gray_y_init.value())
-        self.roi_gray_bglf.setPos(self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_gray_y_init.value())
-        self.roi_gray_bgri.setPos(self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_gray_y_init.value())
+        # self.roi_gray_bglf.setPos(self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_gray_y_init.value())
+        # self.roi_gray_bgri.setPos(self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_gray_y_init.value())
         self.roi_obje_main.setPos(self.ui.sb_midx_init.value(), self.ui.sb_obje_y_init.value())
-        self.roi_obje_bglf.setPos(self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_obje_y_init.value())
-        self.roi_obje_bgri.setPos(self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_obje_y_init.value())
+        # self.roi_obje_bglf.setPos(self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_obje_y_init.value())
+        # self.roi_obje_bgri.setPos(self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_obje_y_init.value())
 
         self.roi_gray_main.setSize((self.ui.sb_midx_size.value(), self.ui.sb_gray_y_size.value()))
-        self.roi_gray_bglf.setSize((self.ui.sb_lefx_size.value(), self.ui.sb_gray_y_size.value()))
-        self.roi_gray_bgri.setSize((self.ui.sb_rigx_size.value(), self.ui.sb_gray_y_size.value()))
+        # self.roi_gray_bglf.setSize((self.ui.sb_lefx_size.value(), self.ui.sb_gray_y_size.value()))
+        # self.roi_gray_bgri.setSize((self.ui.sb_rigx_size.value(), self.ui.sb_gray_y_size.value()))
         self.roi_obje_main.setSize((self.ui.sb_midx_size.value(), self.ui.sb_obje_y_size.value()))
-        self.roi_obje_bglf.setSize((self.ui.sb_lefx_size.value(), self.ui.sb_obje_y_size.value()))
-        self.roi_obje_bgri.setSize((self.ui.sb_rigx_size.value(), self.ui.sb_obje_y_size.value()))
+        # self.roi_obje_bglf.setSize((self.ui.sb_lefx_size.value(), self.ui.sb_obje_y_size.value()))
+        # self.roi_obje_bgri.setSize((self.ui.sb_rigx_size.value(), self.ui.sb_obje_y_size.value()))
         self.graph_759nm_line_for_2dimg.setPos(pos=self.ui.sb_midx_init.value() + 192*2)
 
         _ = self.roi_gray_main.blockSignals(False)
-        _ = self.roi_gray_bglf.blockSignals(False)
-        _ = self.roi_gray_bgri.blockSignals(False)
+        # _ = self.roi_gray_bglf.blockSignals(False)
+        # _ = self.roi_gray_bgri.blockSignals(False)
         _ = self.roi_obje_main.blockSignals(False)
-        _ = self.roi_obje_bglf.blockSignals(False)
-        _ = self.roi_obje_bgri.blockSignals(False)
+        # _ = self.roi_obje_bglf.blockSignals(False)
+        # _ = self.roi_obje_bgri.blockSignals(False)
 
         # change the label position
         self.roi_label_gray.setPos(self.ui.sb_midx_init.value(), self.ui.sb_gray_y_init.value())
@@ -703,35 +700,35 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[0::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine),  name="B-object")
 
 
-        tmp_lef_x = get_wavelength_array(
-            init_pxl=self.ui.sb_lefx_init_rel.value()//2,
-            pxl_size=self.ui.sb_lefx_size.value()//2,
-            waveperpixel=self.ui.sb_waveperpixel.value(),
-        )
-        tmp_rig_x = get_wavelength_array(
-            init_pxl=self.ui.sb_rigx_init_rel.value()//2,
-            pxl_size=self.ui.sb_rigx_size.value()//2,
-            waveperpixel=self.ui.sb_waveperpixel.value(),
-        )
+        # tmp_lef_x = get_wavelength_array(
+        #     init_pxl=self.ui.sb_lefx_init_rel.value()//2,
+        #     pxl_size=self.ui.sb_lefx_size.value()//2,
+        #     waveperpixel=self.ui.sb_waveperpixel.value(),
+        # )
+        # tmp_rig_x = get_wavelength_array(
+        #     init_pxl=self.ui.sb_rigx_init_rel.value()//2,
+        #     pxl_size=self.ui.sb_rigx_size.value()//2,
+        #     waveperpixel=self.ui.sb_waveperpixel.value(),
+        # )
 
-        gray_roi_lef = self.jp.data[
-            self.ui.sb_gray_y_init.value() : self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value(),
-            self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value() : self.ui.sb_midx_init.value()  + self.ui.sb_lefx_init_rel.value() + self.ui.sb_lefx_size.value()
-        ]
+        # gray_roi_lef = self.jp.data[
+        #     self.ui.sb_gray_y_init.value() : self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value(),
+        #     self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value() : self.ui.sb_midx_init.value()  + self.ui.sb_lefx_init_rel.value() + self.ui.sb_lefx_size.value()
+        # ]
 
-        gray_roi_rig = self.jp.data[
-            self.ui.sb_gray_y_init.value() : self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value(),
-            self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value() : self.ui.sb_midx_init.value()  + self.ui.sb_rigx_init_rel.value() + self.ui.sb_rigx_size.value()
-        ]
+        # gray_roi_rig = self.jp.data[
+        #     self.ui.sb_gray_y_init.value() : self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value(),
+        #     self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value() : self.ui.sb_midx_init.value()  + self.ui.sb_rigx_init_rel.value() + self.ui.sb_rigx_size.value()
+        # ]
 
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_lef_x, gray_roi_lef[1::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="bgR-gray")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_lef_x, gray_roi_lef[1::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="bgG-gray")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_lef_x, gray_roi_lef[0::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="bgG-gray")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_lef_x, gray_roi_lef[0::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="bgB-gray")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[1::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine),  name="bgR-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[1::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine),  name="bgG-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[0::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine),  name="bgG-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[0::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine),  name="bgB-object")
+        # _ = self.ui.graph_raw.getPlotItem().plot(tmp_lef_x, gray_roi_lef[1::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="bgR-gray")
+        # _ = self.ui.graph_raw.getPlotItem().plot(tmp_lef_x, gray_roi_lef[1::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="bgG-gray")
+        # _ = self.ui.graph_raw.getPlotItem().plot(tmp_lef_x, gray_roi_lef[0::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="bgG-gray")
+        # _ = self.ui.graph_raw.getPlotItem().plot(tmp_lef_x, gray_roi_lef[0::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="bgB-gray")
+        # _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[1::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine),  name="bgR-object")
+        # _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[1::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine),  name="bgG-object")
+        # _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[0::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine),  name="bgG-object")
+        # _ = self.ui.graph_raw.getPlotItem().plot(tmp_rig_x, gray_roi_rig[0::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine),  name="bgB-object")
 
 
     def handle_cb_calc5_norming(self) -> None:
@@ -739,7 +736,9 @@ class TheMainWindow(QMainWindow):
         self.ui.sb_calc5_norm_zero.setEnabled(self.ui.cb_calc5_norm.isChecked())
         self.ui.sb_calc5_norm_one.setEnabled(self.ui.cb_calc5_norm.isChecked())
         try:
-            self.call_calibrate_and_calculate_calc5_refl_n_norm()
+            pass
+            # self.call_calibrate_and_calculate_calc5_refl_n_norm()
+            # TODO where I should put Normalization
         except Exception as e:
             print(e)
 
@@ -891,162 +890,162 @@ class TheMainWindow(QMainWindow):
             _ = self.short_cut_preview_raw_jpeg()
 
     def call_calibrate_and_calculate(self) -> None:
-        self.call_calibrate_and_calculate_calc1_desalt()           # done
+        # self.call_calibrate_and_calculate_calc1_desalt()           # TODO
         self.ui.pbar_calc.setValue(0)
         self.ui.tabWidget.setCurrentIndex(0)
         time.sleep(.1)
-        self.call_calibrate_and_calculate_calc2_background()       # done
+        # self.call_calibrate_and_calculate_calc2_background()       # TODO
         self.ui.pbar_calc.setValue(25)
         self.ui.tabWidget.setCurrentIndex(1)
         time.sleep(.1)
-        self.call_calibrate_and_calculate_calc3_759_calib()
+        # self.call_calibrate_and_calculate_calc3_759_calib()       TODO
         self.ui.pbar_calc.setValue(50)
         self.ui.tabWidget.setCurrentIndex(2)
         time.sleep(.1)
 
         # gray 2 white
         #self.call_calibrate_and_calculate_calc3_759_calib()
-        self.call_calibrate_and_calculate_calc3_5_gray2white()
+        # self.call_calibrate_and_calculate_calc3_5_gray2white() TODO
         self.ui.pbar_calc.setValue(60)
         self.ui.tabWidget.setCurrentIndex(3)
         time.sleep(.1)
 
-        self.call_calibrate_and_calculate_calc4_rgb_refl()
+        # self.call_calibrate_and_calculate_calc4_rgb_refl() TODO
         self.ui.pbar_calc.setValue(75)
         self.ui.tabWidget.setCurrentIndex(4)
         time.sleep(.1)
 
-        self.call_calibrate_and_calculate_calc5_refl_n_norm()
+        # self.call_calibrate_and_calculate_calc5_refl_n_norm() TODO
         self.ui.pbar_calc.setValue(100)
         self.ui.tabWidget.setCurrentIndex(5)
         time.sleep(.1)
 
 
-    def call_calibrate_and_calculate_calc1_desalt(self) -> None:
-        self.jp.set_roi_geometry(
-            xWaveRng=(self.ui.sb_midx_init.value(), self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()),
-            xLfBgRng=(self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value() + self.ui.sb_lefx_size.value()),
-            xRiBgRng=(self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value() + self.ui.sb_rigx_size.value()),
-            yGrayRng=(self.ui.sb_gray_y_init.value(), self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value()),
-            yObjeRng=(self.ui.sb_obje_y_init.value(), self.ui.sb_obje_y_init.value() + self.ui.sb_obje_y_size.value()),
-        )
+    # def call_calibrate_and_calculate_calc1_desalt(self) -> None:
+    #     self.jp.set_roi_geometry(
+    #         xWaveRng=(self.ui.sb_midx_init.value(), self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()),
+    #         xLfBgRng=(self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value() + self.ui.sb_lefx_size.value()),
+    #         xRiBgRng=(self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value() + self.ui.sb_rigx_size.value()),
+    #         yGrayRng=(self.ui.sb_gray_y_init.value(), self.ui.sb_gray_y_init.value() + self.ui.sb_gray_y_size.value()),
+    #         yObjeRng=(self.ui.sb_obje_y_init.value(), self.ui.sb_obje_y_init.value() + self.ui.sb_obje_y_size.value()),
+    #     )
 
-        desaltedimg = np.concatenate(
-            (np.concatenate((self.jp.gray_bgle.roi_desalted, self.jp.gray.roi_desalted, self.jp.gray_bgri.roi_desalted), axis=1),
-             np.concatenate((self.jp.obje_bgle.roi_desalted, self.jp.obje.roi_desalted, self.jp.obje_bgri.roi_desalted), axis=1)),
-            axis=0, dtype=np.int64
-        )
-        desalted_concatted_bayer_rgb_all_6roi = np.zeros(shape=(desaltedimg.shape[0], desaltedimg.shape[1], 3), dtype=np.int64)
-        desalted_concatted_bayer_rgb_all_6roi[0::2, 0::2, 2] = desaltedimg[0::2, 0::2]
-        desalted_concatted_bayer_rgb_all_6roi[0::2, 1::2, 1] = desaltedimg[0::2, 1::2]
-        desalted_concatted_bayer_rgb_all_6roi[1::2, 0::2, 1] = desaltedimg[1::2, 0::2]
-        desalted_concatted_bayer_rgb_all_6roi[1::2, 1::2, 0] = desaltedimg[1::2, 1::2]
+    #     desaltedimg = np.concatenate(
+    #         (np.concatenate((self.jp.gray_bgle.roi_desalted, self.jp.gray.roi_desalted, self.jp.gray_bgri.roi_desalted), axis=1),
+    #          np.concatenate((self.jp.obje_bgle.roi_desalted, self.jp.obje.roi_desalted, self.jp.obje_bgri.roi_desalted), axis=1)),
+    #         axis=0, dtype=np.int64
+    #     )
+    #     desalted_concatted_bayer_rgb_all_6roi = np.zeros(shape=(desaltedimg.shape[0], desaltedimg.shape[1], 3), dtype=np.int64)
+    #     desalted_concatted_bayer_rgb_all_6roi[0::2, 0::2, 2] = desaltedimg[0::2, 0::2]
+    #     desalted_concatted_bayer_rgb_all_6roi[0::2, 1::2, 1] = desaltedimg[0::2, 1::2]
+    #     desalted_concatted_bayer_rgb_all_6roi[1::2, 0::2, 1] = desaltedimg[1::2, 0::2]
+    #     desalted_concatted_bayer_rgb_all_6roi[1::2, 1::2, 0] = desaltedimg[1::2, 1::2]
 
-        self.ui.graph_calc1_desalted_roi.setImage(
-            img=desalted_concatted_bayer_rgb_all_6roi,
-            levels=(desalted_concatted_bayer_rgb_all_6roi.min(), desalted_concatted_bayer_rgb_all_6roi.max()),
-            axes={"x":1, "y":0, "c":2}
-        )
+    #     self.ui.graph_calc1_desalted_roi.setImage(
+    #         img=desalted_concatted_bayer_rgb_all_6roi,
+    #         levels=(desalted_concatted_bayer_rgb_all_6roi.min(), desalted_concatted_bayer_rgb_all_6roi.max()),
+    #         axes={"x":1, "y":0, "c":2}
+    #     )
 
-        self.graph_desalted_graphs_sep_line_y0.setPos(self.ui.sb_gray_y_size.value())
-        self.graph_desalted_graphs_sep_line_x0.setPos(self.ui.sb_lefx_size.value())
-        self.graph_desalted_graphs_sep_line_x1.setPos(self.ui.sb_lefx_size.value() + self.ui.sb_midx_size.value())
+    #     self.graph_desalted_graphs_sep_line_y0.setPos(self.ui.sb_gray_y_size.value())
+    #     self.graph_desalted_graphs_sep_line_x0.setPos(self.ui.sb_lefx_size.value())
+    #     self.graph_desalted_graphs_sep_line_x1.setPos(self.ui.sb_lefx_size.value() + self.ui.sb_midx_size.value())
 
-        self.text_for_desalted_img_label0.setPos(0                                                             , 0)
-        self.text_for_desalted_img_label1.setPos(self.ui.sb_lefx_size.value() + self.ui.sb_midx_size.value()/2 , 0)
-        self.text_for_desalted_img_label2.setPos(self.ui.sb_lefx_size.value() + self.ui.sb_midx_size.value()   , 0)
-        self.text_for_desalted_img_label3.setPos(0                                                             , self.ui.sb_gray_y_size.value())
-        self.text_for_desalted_img_label4.setPos(self.ui.sb_lefx_size.value() + self.ui.sb_midx_size.value()/2 , self.ui.sb_gray_y_size.value())
-        self.text_for_desalted_img_label5.setPos(self.ui.sb_lefx_size.value() + self.ui.sb_midx_size.value()   , self.ui.sb_gray_y_size.value())
+    #     self.text_for_desalted_img_label0.setPos(0                                                             , 0)
+    #     self.text_for_desalted_img_label1.setPos(self.ui.sb_lefx_size.value() + self.ui.sb_midx_size.value()/2 , 0)
+    #     self.text_for_desalted_img_label2.setPos(self.ui.sb_lefx_size.value() + self.ui.sb_midx_size.value()   , 0)
+    #     self.text_for_desalted_img_label3.setPos(0                                                             , self.ui.sb_gray_y_size.value())
+    #     self.text_for_desalted_img_label4.setPos(self.ui.sb_lefx_size.value() + self.ui.sb_midx_size.value()/2 , self.ui.sb_gray_y_size.value())
+    #     self.text_for_desalted_img_label5.setPos(self.ui.sb_lefx_size.value() + self.ui.sb_midx_size.value()   , self.ui.sb_gray_y_size.value())
 
-    def call_calibrate_and_calculate_calc2_background(self) -> None:
-        self.jp.background_calculation_on_all_channels_seperately()
+    # def call_calibrate_and_calculate_calc2_background(self) -> None:
+    #     self.jp.background_calculation_on_all_channels_seperately()
 
-        tmp_lef_x = get_wavelength_array(
-            init_pxl=self.ui.sb_lefx_init_rel.value()//2,
-            pxl_size=self.ui.sb_lefx_size.value()//2,
-            waveperpixel=self.ui.sb_waveperpixel.value(),
-        )
-        tmp_rig_x = get_wavelength_array(
-            init_pxl=self.ui.sb_rigx_init_rel.value()//2,
-            pxl_size=self.ui.sb_rigx_size.value()//2,
-            waveperpixel=self.ui.sb_waveperpixel.value(),
-        )
+    #     tmp_lef_x = get_wavelength_array(
+    #         init_pxl=self.ui.sb_lefx_init_rel.value()//2,
+    #         pxl_size=self.ui.sb_lefx_size.value()//2,
+    #         waveperpixel=self.ui.sb_waveperpixel.value(),
+    #     )
+    #     tmp_rig_x = get_wavelength_array(
+    #         init_pxl=self.ui.sb_rigx_init_rel.value()//2,
+    #         pxl_size=self.ui.sb_rigx_size.value()//2,
+    #         waveperpixel=self.ui.sb_waveperpixel.value(),
+    #     )
 
-        self.graph2_curve_bg_gray_le_r.setData(self.jp.gray_bgle.rchan_wl / 10**9, self.jp.gray_bgle.rchan_dn)
-        self.graph2_curve_bg_gray_le_g.setData(self.jp.gray_bgle.gchan_wl / 10**9, self.jp.gray_bgle.gchan_dn)
-        self.graph2_curve_bg_gray_le_b.setData(self.jp.gray_bgle.bchan_wl / 10**9, self.jp.gray_bgle.bchan_dn)
-        self.graph2_curve_bg_gray_re_r.setData(self.jp.gray_bgri.rchan_wl / 10**9, self.jp.gray_bgri.rchan_dn)
-        self.graph2_curve_bg_gray_re_g.setData(self.jp.gray_bgri.gchan_wl / 10**9, self.jp.gray_bgri.gchan_dn)
-        self.graph2_curve_bg_gray_re_b.setData(self.jp.gray_bgri.bchan_wl / 10**9, self.jp.gray_bgri.bchan_dn)
+    #     self.graph2_curve_bg_gray_le_r.setData(self.jp.gray_bgle.rchan_wl / 10**9, self.jp.gray_bgle.rchan_dn)
+    #     self.graph2_curve_bg_gray_le_g.setData(self.jp.gray_bgle.gchan_wl / 10**9, self.jp.gray_bgle.gchan_dn)
+    #     self.graph2_curve_bg_gray_le_b.setData(self.jp.gray_bgle.bchan_wl / 10**9, self.jp.gray_bgle.bchan_dn)
+    #     self.graph2_curve_bg_gray_re_r.setData(self.jp.gray_bgri.rchan_wl / 10**9, self.jp.gray_bgri.rchan_dn)
+    #     self.graph2_curve_bg_gray_re_g.setData(self.jp.gray_bgri.gchan_wl / 10**9, self.jp.gray_bgri.gchan_dn)
+    #     self.graph2_curve_bg_gray_re_b.setData(self.jp.gray_bgri.bchan_wl / 10**9, self.jp.gray_bgri.bchan_dn)
 
-        self.graph2_curve_bg_obje_le_r.setData(self.jp.obje_bgle.rchan_wl / 10**9, self.jp.obje_bgle.rchan_dn)
-        self.graph2_curve_bg_obje_le_g.setData(self.jp.obje_bgle.gchan_wl / 10**9, self.jp.obje_bgle.gchan_dn)
-        self.graph2_curve_bg_obje_le_b.setData(self.jp.obje_bgle.bchan_wl / 10**9, self.jp.obje_bgle.bchan_dn)
-        self.graph2_curve_bg_obje_ri_r.setData(self.jp.obje_bgri.rchan_wl / 10**9, self.jp.obje_bgri.rchan_dn)
-        self.graph2_curve_bg_obje_ri_g.setData(self.jp.obje_bgri.gchan_wl / 10**9, self.jp.obje_bgri.gchan_dn)
-        self.graph2_curve_bg_obje_ri_b.setData(self.jp.obje_bgri.bchan_wl / 10**9, self.jp.obje_bgri.bchan_dn)
+    #     self.graph2_curve_bg_obje_le_r.setData(self.jp.obje_bgle.rchan_wl / 10**9, self.jp.obje_bgle.rchan_dn)
+    #     self.graph2_curve_bg_obje_le_g.setData(self.jp.obje_bgle.gchan_wl / 10**9, self.jp.obje_bgle.gchan_dn)
+    #     self.graph2_curve_bg_obje_le_b.setData(self.jp.obje_bgle.bchan_wl / 10**9, self.jp.obje_bgle.bchan_dn)
+    #     self.graph2_curve_bg_obje_ri_r.setData(self.jp.obje_bgri.rchan_wl / 10**9, self.jp.obje_bgri.rchan_dn)
+    #     self.graph2_curve_bg_obje_ri_g.setData(self.jp.obje_bgri.gchan_wl / 10**9, self.jp.obje_bgri.gchan_dn)
+    #     self.graph2_curve_bg_obje_ri_b.setData(self.jp.obje_bgri.bchan_wl / 10**9, self.jp.obje_bgri.bchan_dn)
 
-        tmp_bgx: NDArray[np.float64] = np.arange(tmp_lef_x.min(), tmp_rig_x.max(), 1, dtype=np.float64)
+    #     tmp_bgx: NDArray[np.float64] = np.arange(tmp_lef_x.min(), tmp_rig_x.max(), 1, dtype=np.float64)
 
-        self.graph2_curve_bg_gray_mi_r.setData(tmp_bgx / 10**9, background(tmp_bgx, *(self.jp.bg_gray_r_popt)))
-        self.graph2_curve_bg_gray_mi_g.setData(tmp_bgx / 10**9, background(tmp_bgx, *(self.jp.bg_gray_g_popt)))
-        self.graph2_curve_bg_gray_mi_b.setData(tmp_bgx / 10**9, background(tmp_bgx, *(self.jp.bg_gray_b_popt)))
-        self.graph2_curve_bg_obje_mi_r.setData(tmp_bgx / 10**9, background(tmp_bgx, *(self.jp.bg_obje_r_popt)))
-        self.graph2_curve_bg_obje_mi_g.setData(tmp_bgx / 10**9, background(tmp_bgx, *(self.jp.bg_obje_g_popt)))
-        self.graph2_curve_bg_obje_mi_b.setData(tmp_bgx / 10**9, background(tmp_bgx, *(self.jp.bg_obje_b_popt)))
-
-
-    def call_calibrate_and_calculate_calc3_759_calib(self) -> None:
-        self.jp.calibrate_n_calculate_final_output()
-        tmp_x = self.jp.gray.itp_hor_nm_array
-
-        self.graph3_curve_759_calib_gray_r.setData(tmp_x/ 10**9, self.jp.gray.rchan_smdn_itp_after_759nm_calib)
-        self.graph3_curve_759_calib_gray_g.setData(tmp_x/ 10**9, self.jp.gray.gchan_smdn_itp_after_759nm_calib)
-        self.graph3_curve_759_calib_gray_b.setData(tmp_x/ 10**9, self.jp.gray.bchan_smdn_itp_after_759nm_calib)
-        self.graph3_curve_759_calib_obje_r.setData(tmp_x/ 10**9, self.jp.obje.rchan_smdn_itp_after_759nm_calib)
-        self.graph3_curve_759_calib_obje_g.setData(tmp_x/ 10**9, self.jp.obje.gchan_smdn_itp_after_759nm_calib)
-        self.graph3_curve_759_calib_obje_b.setData(tmp_x/ 10**9, self.jp.obje.bchan_smdn_itp_after_759nm_calib)
-
-        self.graph3_curve_759_calib_gray_r_bg.setData(tmp_x / 10**9, background(tmp_x, *(self.jp.bg_gray_r_popt)))
-        self.graph3_curve_759_calib_gray_g_bg.setData(tmp_x / 10**9, background(tmp_x, *(self.jp.bg_gray_g_popt)))
-        self.graph3_curve_759_calib_gray_b_bg.setData(tmp_x / 10**9, background(tmp_x, *(self.jp.bg_gray_b_popt)))
-        self.graph3_curve_759_calib_obje_r_bg.setData(tmp_x / 10**9, background(tmp_x, *(self.jp.bg_obje_r_popt)))
-        self.graph3_curve_759_calib_obje_g_bg.setData(tmp_x / 10**9, background(tmp_x, *(self.jp.bg_obje_g_popt)))
-        self.graph3_curve_759_calib_obje_b_bg.setData(tmp_x / 10**9, background(tmp_x, *(self.jp.bg_obje_b_popt)))
+    #     self.graph2_curve_bg_gray_mi_r.setData(tmp_bgx / 10**9, background(tmp_bgx, *(self.jp.bg_gray_r_popt)))
+    #     self.graph2_curve_bg_gray_mi_g.setData(tmp_bgx / 10**9, background(tmp_bgx, *(self.jp.bg_gray_g_popt)))
+    #     self.graph2_curve_bg_gray_mi_b.setData(tmp_bgx / 10**9, background(tmp_bgx, *(self.jp.bg_gray_b_popt)))
+    #     self.graph2_curve_bg_obje_mi_r.setData(tmp_bgx / 10**9, background(tmp_bgx, *(self.jp.bg_obje_r_popt)))
+    #     self.graph2_curve_bg_obje_mi_g.setData(tmp_bgx / 10**9, background(tmp_bgx, *(self.jp.bg_obje_g_popt)))
+    #     self.graph2_curve_bg_obje_mi_b.setData(tmp_bgx / 10**9, background(tmp_bgx, *(self.jp.bg_obje_b_popt)))
 
 
-    def call_calibrate_and_calculate_calc3_5_gray2white(self) -> None:
-        self.jp.calibrate_n_calculate_final_output()
-        tmp_x = self.jp.mgray2white[:, 0].astype(np.float64)
+    # def call_calibrate_and_calculate_calc3_759_calib(self) -> None:
+    #     self.jp.calibrate_n_calculate_final_output()
+    #     tmp_x = self.jp.gray.itp_hor_nm_array
 
-        self.graph3_5_gray2white_r.setData(tmp_x/ 10**9, self.jp.mgray2white[:, 3])
-        self.graph3_5_gray2white_g.setData(tmp_x/ 10**9, self.jp.mgray2white[:, 2])
-        self.graph3_5_gray2white_b.setData(tmp_x/ 10**9, self.jp.mgray2white[:, 1])
-        self.graph3_5_gray2white_k.setData(tmp_x/ 10**9, self.jp.mgray2white[:, 4])
+    #     self.graph3_curve_759_calib_gray_r.setData(tmp_x/ 10**9, self.jp.gray.rchan_smdn_itp_after_759nm_calib)
+    #     self.graph3_curve_759_calib_gray_g.setData(tmp_x/ 10**9, self.jp.gray.gchan_smdn_itp_after_759nm_calib)
+    #     self.graph3_curve_759_calib_gray_b.setData(tmp_x/ 10**9, self.jp.gray.bchan_smdn_itp_after_759nm_calib)
+    #     self.graph3_curve_759_calib_obje_r.setData(tmp_x/ 10**9, self.jp.obje.rchan_smdn_itp_after_759nm_calib)
+    #     self.graph3_curve_759_calib_obje_g.setData(tmp_x/ 10**9, self.jp.obje.gchan_smdn_itp_after_759nm_calib)
+    #     self.graph3_curve_759_calib_obje_b.setData(tmp_x/ 10**9, self.jp.obje.bchan_smdn_itp_after_759nm_calib)
 
-    def call_calibrate_and_calculate_calc4_rgb_refl(self) -> None:
-        self.jp.fancy_reflectance()
-        tmp_x = self.jp.gray.itp_hor_nm_array
-        self.graph4_curve_relf_r.setData(tmp_x[:-100] / 10**9, self.jp.ref_fancy_r[:-100])
-        self.graph4_curve_relf_g.setData(tmp_x[:-100] / 10**9, self.jp.ref_fancy_g[:-100])
-        self.graph4_curve_relf_b.setData(tmp_x[:-100] / 10**9, self.jp.ref_fancy_b[:-100])
+    #     self.graph3_curve_759_calib_gray_r_bg.setData(tmp_x / 10**9, background(tmp_x, *(self.jp.bg_gray_r_popt)))
+    #     self.graph3_curve_759_calib_gray_g_bg.setData(tmp_x / 10**9, background(tmp_x, *(self.jp.bg_gray_g_popt)))
+    #     self.graph3_curve_759_calib_gray_b_bg.setData(tmp_x / 10**9, background(tmp_x, *(self.jp.bg_gray_b_popt)))
+    #     self.graph3_curve_759_calib_obje_r_bg.setData(tmp_x / 10**9, background(tmp_x, *(self.jp.bg_obje_r_popt)))
+    #     self.graph3_curve_759_calib_obje_g_bg.setData(tmp_x / 10**9, background(tmp_x, *(self.jp.bg_obje_g_popt)))
+    #     self.graph3_curve_759_calib_obje_b_bg.setData(tmp_x / 10**9, background(tmp_x, *(self.jp.bg_obje_b_popt)))
 
 
-    def call_calibrate_and_calculate_calc5_refl_n_norm(self) -> None:
-        self.jp.fancy_reflectance()
-        tmp_x = self.jp.gray.itp_hor_nm_array
+    # def call_calibrate_and_calculate_calc3_5_gray2white(self) -> None:
+    #     self.jp.calibrate_n_calculate_final_output()
+    #     tmp_x = self.jp.mgray2white[:, 0].astype(np.float64)
 
-        if not self.ui.cb_calc5_norm.isChecked():
-            self.graph5_curve_relf.setData(tmp_x[:-100] / 10**9, self.jp.ref_fancy[:-100]) #  // 10**9
-        else:
-            zero_index = int((self.ui.sb_calc5_norm_zero.value() - 400) / 0.5)
-            one_index = int((self.ui.sb_calc5_norm_one.value() - 400 )/ 0.5)
-            self.jp.normalize_the_fancy(zero_index, one_index)
-            self.graph5_curve_relf.setData(tmp_x[:-100] / 10**9, self.jp.ref_fancy_normed[:-100]) # // 10**9
-            self.ui.graph_calc5_refl_final.getPlotItem().getViewBox().setYRange(-0.1, 1.1)
-            self.graph5_norm_one_line.setPos(self.ui.sb_calc5_norm_one.value() / 10**9)
-            self.graph5_norm_zero_line.setPos(self.ui.sb_calc5_norm_zero.value() / 10**9)
+    #     self.graph3_5_gray2white_r.setData(tmp_x/ 10**9, self.jp.mgray2white[:, 3])
+    #     self.graph3_5_gray2white_g.setData(tmp_x/ 10**9, self.jp.mgray2white[:, 2])
+    #     self.graph3_5_gray2white_b.setData(tmp_x/ 10**9, self.jp.mgray2white[:, 1])
+    #     self.graph3_5_gray2white_k.setData(tmp_x/ 10**9, self.jp.mgray2white[:, 4])
+
+    # def call_calibrate_and_calculate_calc4_rgb_refl(self) -> None:
+    #     self.jp.fancy_reflectance()
+    #     tmp_x = self.jp.gray.itp_hor_nm_array
+    #     self.graph4_curve_relf_r.setData(tmp_x[:-100] / 10**9, self.jp.ref_fancy_r[:-100])
+    #     self.graph4_curve_relf_g.setData(tmp_x[:-100] / 10**9, self.jp.ref_fancy_g[:-100])
+    #     self.graph4_curve_relf_b.setData(tmp_x[:-100] / 10**9, self.jp.ref_fancy_b[:-100])
+
+
+    # def call_calibrate_and_calculate_calc5_refl_n_norm(self) -> None:
+    #     self.jp.fancy_reflectance()
+    #     tmp_x = self.jp.gray.itp_hor_nm_array
+
+    #     if not self.ui.cb_calc5_norm.isChecked():
+    #         self.graph5_curve_relf.setData(tmp_x[:-100] / 10**9, self.jp.ref_fancy[:-100]) #  // 10**9
+    #     else:
+    #         zero_index = int((self.ui.sb_calc5_norm_zero.value() - 400) / 0.5)
+    #         one_index = int((self.ui.sb_calc5_norm_one.value() - 400 )/ 0.5)
+    #         self.jp.normalize_the_fancy(zero_index, one_index)
+    #         self.graph5_curve_relf.setData(tmp_x[:-100] / 10**9, self.jp.ref_fancy_normed[:-100]) # // 10**9
+    #         self.ui.graph_calc5_refl_final.getPlotItem().getViewBox().setYRange(-0.1, 1.1)
+    #         self.graph5_norm_one_line.setPos(self.ui.sb_calc5_norm_one.value() / 10**9)
+    #         self.graph5_norm_zero_line.setPos(self.ui.sb_calc5_norm_zero.value() / 10**9)
 
     def update_1_rawbayer_img_data_and_then_plot_below(self) -> None:
         self.ui.graph_2dimg.clear()
@@ -1133,10 +1132,10 @@ class TheMainWindow(QMainWindow):
 
         self.ui.sb_midx_init.setValue(      self.dfParamHistory["midx_init"].astype(int).iloc[selected_row_num])
         self.ui.sb_midx_size.setValue(      self.dfParamHistory["midx_size"].astype(int).iloc[selected_row_num])
-        self.ui.sb_lefx_init_rel.setValue(  self.dfParamHistory["lefx_init_rel"].astype(int).iloc[selected_row_num])
-        self.ui.sb_lefx_size.setValue(      self.dfParamHistory["lefx_size"].astype(int).iloc[selected_row_num])
-        self.ui.sb_rigx_init_rel.setValue(  self.dfParamHistory["rigx_init_rel"].astype(int).iloc[selected_row_num])
-        self.ui.sb_rigx_size.setValue(      self.dfParamHistory["rigx_size"].astype(int).iloc[selected_row_num])
+        # self.ui.sb_lefx_init_rel.setValue(  self.dfParamHistory["lefx_init_rel"].astype(int).iloc[selected_row_num])
+        # self.ui.sb_lefx_size.setValue(      self.dfParamHistory["lefx_size"].astype(int).iloc[selected_row_num])
+        # self.ui.sb_rigx_init_rel.setValue(  self.dfParamHistory["rigx_init_rel"].astype(int).iloc[selected_row_num])
+        # self.ui.sb_rigx_size.setValue(      self.dfParamHistory["rigx_size"].astype(int).iloc[selected_row_num])
         self.ui.sb_gray_y_init.setValue(    self.dfParamHistory["gray_y_init"].astype(int).iloc[selected_row_num])
         self.ui.sb_gray_y_size.setValue(    self.dfParamHistory["gray_y_size"].astype(int).iloc[selected_row_num])
         self.ui.sb_obje_y_init.setValue(    self.dfParamHistory["obje_y_init"].astype(int).iloc[selected_row_num])
@@ -1157,10 +1156,10 @@ class TheMainWindow(QMainWindow):
             "date"             : [datetime.now().strftime("%Y/%m/%d-%H:%M:%S")],
             "midx_init"        : [self.ui.sb_midx_init.value()],
             "midx_size"        : [700],
-            "lefx_init_rel"    : [self.ui.sb_lefx_init_rel.value()],
-            "lefx_size"        : [self.ui.sb_lefx_size.value()],
-            "rigx_init_rel"    : [self.ui.sb_rigx_init_rel.value()],
-            "rigx_size"        : [self.ui.sb_rigx_size.value()],
+            # "lefx_init_rel"    : [self.ui.sb_lefx_init_rel.value()],
+            # "lefx_size"        : [self.ui.sb_lefx_size.value()],
+            # "rigx_init_rel"    : [self.ui.sb_rigx_init_rel.value()],
+            # "rigx_size"        : [self.ui.sb_rigx_size.value()],
             "gray_y_init"      : [self.ui.sb_gray_y_init.value()],
             "gray_y_size"      : [self.ui.sb_gray_y_size.value()],
             "obje_y_init"      : [self.ui.sb_obje_y_init.value()],

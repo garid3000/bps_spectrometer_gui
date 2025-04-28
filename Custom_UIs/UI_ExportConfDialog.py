@@ -3,25 +3,13 @@
 ################################################################################
 ## Form generated from reading UI file 'UI_ExportConfDialog.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.7.2
+## Created by: Qt User Interface Compiler version 6.9.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
 
-from PySide6.QtCore import (
-    QCoreApplication,
-    QMetaObject,
-    Qt,
-)
-from PySide6.QtWidgets import (
-    QCheckBox,
-    QDialogButtonBox,
-    QGridLayout,
-    QGroupBox,
-    QSizePolicy,
-    QSpacerItem,
-    QVBoxLayout,
-)
+from PySide6.QtCore import QCoreApplication, QMetaObject, Qt
+from PySide6.QtWidgets import QCheckBox, QDialogButtonBox, QGridLayout, QGroupBox, QSizePolicy, QSpacerItem, QVBoxLayout
 
 
 class Ui_Dialog(object):
@@ -52,9 +40,7 @@ class Ui_Dialog(object):
 
         self.verticalLayout_2.addWidget(self.cb_plo_refl)
 
-        self._vs_3 = QSpacerItem(
-            20, 166, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
-        )
+        self._vs_3 = QSpacerItem(20, 166, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_2.addItem(self._vs_3)
 
@@ -65,9 +51,7 @@ class Ui_Dialog(object):
 
         self.verticalLayout_2.addWidget(self.cb_numerical)
 
-        self._vs_4 = QSpacerItem(
-            20, 166, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
-        )
+        self._vs_4 = QSpacerItem(20, 166, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout_2.addItem(self._vs_4)
 
@@ -92,9 +76,7 @@ class Ui_Dialog(object):
 
         self.verticalLayout.addWidget(self.cb_mat_1layer)
 
-        self._vs_2 = QSpacerItem(
-            20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
-        )
+        self._vs_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout.addItem(self._vs_2)
 
@@ -113,9 +95,7 @@ class Ui_Dialog(object):
 
         self.verticalLayout.addWidget(self.cb_mat_3layer)
 
-        self._vs = QSpacerItem(
-            20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding
-        )
+        self._vs = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.verticalLayout.addItem(self._vs)
 
@@ -131,41 +111,19 @@ class Ui_Dialog(object):
 
     def retranslateUi(self, Dialog):
         Dialog.setWindowTitle(QCoreApplication.translate("Dialog", "Dialog", None))
-        self.groupBox_2.setTitle(
-            QCoreApplication.translate("Dialog", "Spectrum Export", None)
-        )
-        self.cb_plot_raw.setText(
-            QCoreApplication.translate("Dialog", "Plot Figure Raw (PNG)", None)
-        )
-        self.cb_plo_refl.setText(
-            QCoreApplication.translate("Dialog", "Plot Figure Reflectance (PNG)", None)
-        )
+        self.groupBox_2.setTitle(QCoreApplication.translate("Dialog", "Spectrum Export", None))
+        self.cb_plot_raw.setText(QCoreApplication.translate("Dialog", "Plot Figure Raw (PNG)", None))
+        self.cb_plo_refl.setText(QCoreApplication.translate("Dialog", "Plot Figure Reflectance (PNG)", None))
         # if QT_CONFIG(whatsthis)
         self.cb_numerical.setWhatsThis("")
         # endif // QT_CONFIG(whatsthis)
-        self.cb_numerical.setText(
-            QCoreApplication.translate("Dialog", "Numerical Spectrum Data (CSV)", None)
-        )
-        self.groupBox.setTitle(
-            QCoreApplication.translate("Dialog", "Raw Bayer Export", None)
-        )
-        self.cb_tif_1layer.setText(
-            QCoreApplication.translate("Dialog", "TIFF 10bit (2464x3280)", None)
-        )
-        self.cb_npy_1layer.setText(
-            QCoreApplication.translate("Dialog", "NPY 10bit (2464x3280)", None)
-        )
-        self.cb_mat_1layer.setText(
-            QCoreApplication.translate("Dialog", "MAT 10bit (2464x3280)", None)
-        )
-        self.cb_tif_3layer.setText(
-            QCoreApplication.translate("Dialog", "TIFF 10bit (2464x3280x3)", None)
-        )
-        self.cb_npy_3layer.setText(
-            QCoreApplication.translate("Dialog", "NPY 10bit (2464x3280x3)", None)
-        )
-        self.cb_mat_3layer.setText(
-            QCoreApplication.translate("Dialog", "MAT 10bit (2464x3280x3)", None)
-        )
+        self.cb_numerical.setText(QCoreApplication.translate("Dialog", "Numerical Spectrum Data (CSV)", None))
+        self.groupBox.setTitle(QCoreApplication.translate("Dialog", "Raw Bayer Export", None))
+        self.cb_tif_1layer.setText(QCoreApplication.translate("Dialog", "TIFF 10bit (2464x3280)", None))
+        self.cb_npy_1layer.setText(QCoreApplication.translate("Dialog", "NPY 10bit (2464x3280)", None))
+        self.cb_mat_1layer.setText(QCoreApplication.translate("Dialog", "MAT 10bit (2464x3280)", None))
+        self.cb_tif_3layer.setText(QCoreApplication.translate("Dialog", "TIFF 10bit (2464x3280x3)", None))
+        self.cb_npy_3layer.setText(QCoreApplication.translate("Dialog", "NPY 10bit (2464x3280x3)", None))
+        self.cb_mat_3layer.setText(QCoreApplication.translate("Dialog", "MAT 10bit (2464x3280x3)", None))
 
     # retranslateUi
