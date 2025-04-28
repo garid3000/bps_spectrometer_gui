@@ -384,11 +384,10 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.graph_2dimg.getView().addItem(self.roi_wave759nm)
 
     def handle_when_tw_midcol_changed(self) -> None:
-        _ = self.ui.graph_2dimg.getView().removeItem(self.roi_obje_main)
-        _ = self.ui.graph_2dimg.getView().removeItem(self.roi_gray_main)
-        _ = self.ui.graph_2dimg.getView().removeItem(self.roi_wave759nm)
-        _ = self.ui.graph_2dimg.getView().removeItem(self.roi_label_obje)
-        _ = self.ui.graph_2dimg.getView().removeItem(self.roi_label_gray)
+        # remove all items 
+        for x in [self.roi_obje_main, self.roi_gray_main, self.roi_wave759nm, self.roi_label_obje, self.roi_label_gray]:
+            if x in self.ui.graph_2dimg.getView().addedItems:
+                _ = self.ui.graph_2dimg.getView().removeItem(x)
 
         if self.ui.tw_midcol.currentIndex() == 0:
             _ = self.ui.graph_2dimg.getView().addItem(self.roi_wave759nm)
