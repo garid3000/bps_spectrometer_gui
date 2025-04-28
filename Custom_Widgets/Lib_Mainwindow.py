@@ -150,35 +150,12 @@ class TheMainWindow(QMainWindow):
             movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
         )
 
-        #self.roi_gray_bglf = pg.ROI(
-        #    pos=[self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_gray_posy.value()],
-        #    size=pg.Point(self.ui.sb_lefx_size.value(), self.ui.sb_gray_sizy.value()),
-        #    movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
-        #)
-
-        #self.roi_gray_bgri = pg.ROI(
-        #    pos=[self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_gray_posy.value()],
-        #    size=pg.Point(self.ui.sb_rigx_size.value(), self.ui.sb_gray_sizy.value()),
-        #    movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
-        #)
-
         self.roi_obje_main = pg.ROI(
             pos=[self.ui.sb_midx_init.value(), self.ui.sb_obje_posy.value()],
             size=pg.Point(700, self.ui.sb_obje_sizy.value()),
             movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
         )
 
-        #self.roi_obje_bglf = pg.ROI(
-        #    pos=[self.ui.sb_midx_init.value() + self.ui.sb_lefx_init_rel.value(), self.ui.sb_obje_posy.value()],
-        #    size=pg.Point(self.ui.sb_lefx_size.value(), self.ui.sb_obje_sizy.value()),
-        #    movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
-        #)
-
-        #self.roi_obje_bgri = pg.ROI(
-        #    pos=[self.ui.sb_midx_init.value() + self.ui.sb_rigx_init_rel.value(), self.ui.sb_obje_posy.value()],
-        #    size=pg.Point(self.ui.sb_rigx_size.value(), self.ui.sb_obje_sizy.value()),
-        #    movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
-        #)
         self.roi_wave759nm = pg.ROI(
             pos=[self.ui.sb_roi759_posx.value(), self.ui.sb_roi759_posy.value()],
             size=pg.Point(self.ui.sb_roi759_sizx.value(), self.ui.sb_roi759_sizy.value()),
@@ -385,6 +362,27 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.hs_physical_elv.valueChanged.connect(self.update_physical_graph)
         _ = self.ui.hs_physical_height.valueChanged.connect(self.update_physical_graph)
 
+        _ = self.ui.tw_midcol.currentChanged.connect(self.handle_when_tw_midcol_changed)
+
+        _ = self.ui.graph_2dimg.getView().addItem(self.roi_obje_main)
+        _ = self.ui.graph_2dimg.getView().addItem(self.roi_gray_main)
+        _ = self.ui.graph_2dimg.getView().addItem(self.roi_wave759nm)
+
+    def handle_when_tw_midcol_changed(self) -> None:
+        #print(self.ui.graph_2dimg.getView().allChildren())
+        _ = self.ui.graph_2dimg.getView().removeItem(self.roi_obje_main)
+        _ = self.ui.graph_2dimg.getView().removeItem(self.roi_gray_main)
+        _ = self.ui.graph_2dimg.getView().removeItem(self.roi_wave759nm)
+        _ = self.ui.graph_2dimg.getView().removeItem(self.roi_label_obje)
+        _ = self.ui.graph_2dimg.getView().removeItem(self.roi_label_gray)
+
+        if self.ui.tw_midcol.currentIndex() == 0:
+            _ = self.ui.graph_2dimg.getView().addItem(self.roi_wave759nm)
+        elif self.ui.tw_midcol.currentIndex() == 2:
+            _ = self.ui.graph_2dimg.getView().addItem(self.roi_obje_main)
+            _ = self.ui.graph_2dimg.getView().addItem(self.roi_gray_main)
+            _ = self.ui.graph_2dimg.getView().addItem(self.roi_label_obje)
+            _ = self.ui.graph_2dimg.getView().addItem(self.roi_label_gray)
 
 
     def dir_searching_based_regex(self) -> None:
@@ -407,8 +405,6 @@ class TheMainWindow(QMainWindow):
 
         #self.ui.graph_2dimg.addItem(self.roi_label_obje)
         #self.ui.graph_2dimg.addItem(self.roi_label_gray)
-        self.ui.graph_2dimg.getView().addItem(self.roi_label_obje)
-        self.ui.graph_2dimg.getView().addItem(self.roi_label_gray)
 
     def init_all_6_roi(self) -> None:
         _ = self.roi_obje_main.addScaleHandle([0.5, 1], [0.5, 0])
@@ -419,10 +415,6 @@ class TheMainWindow(QMainWindow):
         self.roi_obje_main.setZValue(10)
         self.roi_gray_main.setZValue(10)
         self.roi_wave759nm.setZValue(10)
-
-        _ = self.ui.graph_2dimg.getView().addItem(self.roi_obje_main)
-        _ = self.ui.graph_2dimg.getView().addItem(self.roi_gray_main)
-        _ = self.ui.graph_2dimg.getView().addItem(self.roi_wave759nm)
 
         #self.ui.graph_calc1_desalted_roi.getView().addItem(self.graph_desalted_graphs_sep_line_y0)
         #self.ui.graph_calc1_desalted_roi.getView().addItem(self.graph_desalted_graphs_sep_line_x0)

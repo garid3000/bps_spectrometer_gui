@@ -301,8 +301,8 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.scrollArea_2)
 
-        self.tabWidget_3 = QTabWidget(self.gp_webcam_meta)
-        self.tabWidget_3.setObjectName("tabWidget_3")
+        self.tw_midcol = QTabWidget(self.gp_webcam_meta)
+        self.tw_midcol.setObjectName("tw_midcol")
         self.midcol_tab1_wave = QWidget()
         self.midcol_tab1_wave.setObjectName("midcol_tab1_wave")
         self.label_3 = QLabel(self.midcol_tab1_wave)
@@ -380,10 +380,10 @@ class Ui_MainWindow(object):
 
         self.gridLayout_7.addWidget(self.sb_roi759_sizy, 2, 2, 1, 1)
 
-        _ = self.tabWidget_3.addTab(self.midcol_tab1_wave, "")
+        _ = self.tw_midcol.addTab(self.midcol_tab1_wave, "")
         self.midcol_tab2_bgnd = QWidget()
         self.midcol_tab2_bgnd.setObjectName("midcol_tab2_bgnd")
-        _ = self.tabWidget_3.addTab(self.midcol_tab2_bgnd, "")
+        _ = self.tw_midcol.addTab(self.midcol_tab2_bgnd, "")
         self.midcol_tab3_rois = QWidget()
         self.midcol_tab3_rois.setObjectName("midcol_tab3_rois")
         self.gridLayout_6 = QGridLayout(self.midcol_tab3_rois)
@@ -524,9 +524,9 @@ class Ui_MainWindow(object):
 
         self.gridLayout_6.addWidget(self.gb_control_panel, 0, 0, 1, 1)
 
-        _ = self.tabWidget_3.addTab(self.midcol_tab3_rois, "")
+        _ = self.tw_midcol.addTab(self.midcol_tab3_rois, "")
 
-        self.verticalLayout.addWidget(self.tabWidget_3)
+        self.verticalLayout.addWidget(self.tw_midcol)
 
         self.splitter.addWidget(self.gp_webcam_meta)
         self.gp_spectral_panel = QGroupBox(self.splitter)
@@ -848,7 +848,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.tabWidget_2.setCurrentIndex(1)
-        self.tabWidget_3.setCurrentIndex(0)
+        self.tw_midcol.setCurrentIndex(0)
         self.tabWidget.setCurrentIndex(3)
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -923,8 +923,8 @@ class Ui_MainWindow(object):
         self.label_7.setText(QCoreApplication.translate("MainWindow", "y", None))
         self.label_4.setText(QCoreApplication.translate("MainWindow", "pos", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", "size", None))
-        self.tabWidget_3.setTabText(self.tabWidget_3.indexOf(self.midcol_tab1_wave), QCoreApplication.translate("MainWindow", "Wavelength Calibration", None))
-        self.tabWidget_3.setTabText(self.tabWidget_3.indexOf(self.midcol_tab2_bgnd), QCoreApplication.translate("MainWindow", "Background Est", None))
+        self.tw_midcol.setTabText(self.tw_midcol.indexOf(self.midcol_tab1_wave), QCoreApplication.translate("MainWindow", "Wavelength Calibration", None))
+        self.tw_midcol.setTabText(self.tw_midcol.indexOf(self.midcol_tab2_bgnd), QCoreApplication.translate("MainWindow", "Background Est", None))
         self.gb_control_panel.setTitle("")
         self._l_8.setText(QCoreApplication.translate("MainWindow", "Start (pixel)", None))
         self._l_4.setText(QCoreApplication.translate("MainWindow", "Height (in pixel)", None))
@@ -948,7 +948,7 @@ class Ui_MainWindow(object):
         # if QT_CONFIG(tooltip)
         self.sb_midx_init.setToolTip(QCoreApplication.translate("MainWindow", '<html><head/><body><p><img src=":/newPrefix/raw_bayer_horizontal_center_start.png"/></p></body></html>', None))
         # endif // QT_CONFIG(tooltip)
-        self.tabWidget_3.setTabText(self.tabWidget_3.indexOf(self.midcol_tab3_rois), QCoreApplication.translate("MainWindow", "ROI geometry", None))
+        self.tw_midcol.setTabText(self.tw_midcol.indexOf(self.midcol_tab3_rois), QCoreApplication.translate("MainWindow", "ROI geometry", None))
         self.gp_spectral_panel.setTitle(QCoreApplication.translate("MainWindow", "Spectral Reflection Calculation", None))
         self.pb_calibrate_calculate.setText(QCoreApplication.translate("MainWindow", "Calculate (Ctrl+R)", None))
         self.cb_calc1_desalt.setText(QCoreApplication.translate("MainWindow", "Median filtering (3px vertically) for SALT noise", None))

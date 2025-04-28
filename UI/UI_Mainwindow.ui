@@ -310,7 +310,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QTabWidget" name="tabWidget_3">
+         <widget class="QTabWidget" name="tw_midcol">
           <property name="currentIndex">
            <number>0</number>
           </property>
