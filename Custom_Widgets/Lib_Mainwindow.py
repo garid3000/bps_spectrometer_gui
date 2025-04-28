@@ -165,6 +165,23 @@ class TheMainWindow(QMainWindow):
 
         # end init_all_6_roi ------------------------------------------------------------------------------------------
 
+        # --- graph_raw plot items
+        _ = self.ui.graph_raw.getPlotItem().addLegend()
+        self.graph_raw_lines = {
+            "gray_r" : self.ui.graph_raw.getPlotItem().plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="R-gray"),
+            "gray_g" : self.ui.graph_raw.getPlotItem().plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray"),
+            "gray_G" : self.ui.graph_raw.getPlotItem().plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray"),
+            "gray_b" : self.ui.graph_raw.getPlotItem().plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="B-gray"),
+            "obje_r" : self.ui.graph_raw.getPlotItem().plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine),  name="R-object"),
+            "obje_g" : self.ui.graph_raw.getPlotItem().plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine),  name="G-object"),
+            "obje_G" : self.ui.graph_raw.getPlotItem().plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine),  name="G-object"),
+            "obje_b" : self.ui.graph_raw.getPlotItem().plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine),  name="B-object"),
+            "759.4nm": self.ui.graph_raw.addItem(pg.InfiniteLine(pos=759.37, movable=False, angle=90, label="x={value:0.2f}nm", labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True})),
+        }
+        # ----------------------------------------------------
+
+
+
         # self.graph2_curve_bg_gray_le_r = self.ui.graph_calc2_bg_gray.getPlotItem().plot(symbol="o", symbolSize=9, symbolBrush=(255, 000, 000), pen=None, name="R-gray-left")
         # self.graph2_curve_bg_gray_le_g = self.ui.graph_calc2_bg_gray.getPlotItem().plot(symbol="o", symbolSize=9, symbolBrush=(000, 255, 000), pen=None, name="G-gray-left")
         # self.graph2_curve_bg_gray_le_b = self.ui.graph_calc2_bg_gray.getPlotItem().plot(symbol="o", symbolSize=9, symbolBrush=(000, 000, 255), pen=None, name="B-gray-left")
@@ -452,7 +469,6 @@ class TheMainWindow(QMainWindow):
 
 
         # --------graph 3:  759 calibration curves ---------------------------------------------------------------------
-        # self.ui.graph_calc3_759_calib.getPlotItem().clear()
         _ = self.ui.graph_calc3_759_calib.getPlotItem().addLegend()
         self.ui.graph_calc3_759_calib.getPlotItem().addItem(
             pg.InfiniteLine(
@@ -466,7 +482,6 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_calc3_759_calib.getPlotItem().setTitle("After 759nm calibration")
 
         # --------graph 4:  rgb refl  ---------------------------------------------------------------------
-        # self.ui.graph_calc4_refl_rgb.getPlotItem().clear()
         _ = self.ui.graph_calc4_refl_rgb.getPlotItem().addLegend()
         self.ui.graph_calc4_refl_rgb.getPlotItem().addItem(
             pg.InfiniteLine(
@@ -486,9 +501,6 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.graph_gray2white.getPlotItem().addLegend()
 
         # --------graph 5:  rgb     ---------------------------------------------------------------------
-        # self.ui.graph_calc5_refl_final.getPlotItem().clear()
-
-
         self.ui.graph_calc5_refl_final.getPlotItem().setLabel("left", "Reflection")
         self.ui.graph_calc5_refl_final.getPlotItem().setLabel("bottom", "Wavelength", units="m")
         self.ui.graph_calc5_refl_final.getPlotItem().setTitle("Reflection")
@@ -528,7 +540,6 @@ class TheMainWindow(QMainWindow):
         self.update_raw_from_sb()
 
     def get_posx_posy_sizex_sizy_cleaner_carefuler_way(self, tmp_roi_state: dict[str, pg.Point|float]) -> tuple[int, int, int, int]:
-        #tmp_roi_state = tmp_roi.getState()
         assert ("pos" in tmp_roi_state) and ("size" in tmp_roi_state), "Err while returning roi"
         tmp_roi_pos = tmp_roi_state["pos"]
         tmp_roi_size = tmp_roi_state["size"]
@@ -581,19 +592,6 @@ class TheMainWindow(QMainWindow):
     def update_raw_roi_plot_when_sb_or_roi_moved(self) -> None:
         """update raw dn plot, when either spinbox or ROI dragged"""
         self.ui.cb_parameter_history.setCurrentIndex(0)
-
-        self.ui.graph_raw.getPlotItem().clear()
-        _ = self.ui.graph_raw.getPlotItem().addLegend()
-
-        self.ui.graph_raw.addItem(
-            pg.InfiniteLine(
-                pos=759.37,
-                movable=False, angle=90,
-                label="x={value:0.2f}nm",
-                labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}
-            )
-        )
-
         tmp_x = get_wavelength_array(
             init_pxl=0,
             pxl_size=350,
@@ -602,25 +600,24 @@ class TheMainWindow(QMainWindow):
 
         gray_roi_mid: NDArray[np.uint16] = self.jp.data[
             self.ui.sb_gray_posy.value() : self.ui.sb_gray_posy.value() + self.ui.sb_gray_sizy.value(),
-            self.ui.sb_midx_init.value()   : self.ui.sb_midx_init.value()   + self.ui.sb_midx_size.value()
+            self.ui.sb_midx_init.value() : self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()
         ].astype(np.uint16)
         obje_roi_mid: NDArray[np.uint16] = self.jp.data[
             self.ui.sb_obje_posy.value() : self.ui.sb_obje_posy.value() + self.ui.sb_obje_sizy.value(),
-            self.ui.sb_midx_init.value()   : self.ui.sb_midx_init.value()   + self.ui.sb_midx_size.value()
+            self.ui.sb_midx_init.value() : self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()
         ].astype(np.uint16)
         assert isinstance(gray_roi_mid, np.ndarray) and (gray_roi_mid.dtype == np.uint16)
         assert isinstance(obje_roi_mid, np.ndarray) and (obje_roi_mid.dtype == np.uint16)
-        #print(obje_roi_mid.dtype)
 
-        #tmp = self.jp.data[:].astype(np.uint16)
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[1::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="R-gray")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[1::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[0::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, gray_roi_mid[0::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="B-gray")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[1::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine),  name="R-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[1::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine),  name="G-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[0::2, 1::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine),  name="G-object")
-        _ = self.ui.graph_raw.getPlotItem().plot(tmp_x, obje_roi_mid[0::2, 0::2].mean(axis=0, dtype=np.float64), pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine),  name="B-object")
+        self.graph_raw_lines["gray_r"].setData(tmp_x, gray_roi_mid[1::2, 1::2].mean(axis=0, dtype=np.float64)) 
+        self.graph_raw_lines["gray_g"].setData(tmp_x, gray_roi_mid[1::2, 0::2].mean(axis=0, dtype=np.float64)) 
+        self.graph_raw_lines["gray_G"].setData(tmp_x, gray_roi_mid[0::2, 1::2].mean(axis=0, dtype=np.float64)) 
+        self.graph_raw_lines["gray_b"].setData(tmp_x, gray_roi_mid[0::2, 0::2].mean(axis=0, dtype=np.float64)) 
+        self.graph_raw_lines["obje_r"].setData(tmp_x, obje_roi_mid[1::2, 1::2].mean(axis=0, dtype=np.float64)) 
+        self.graph_raw_lines["obje_g"].setData(tmp_x, obje_roi_mid[1::2, 0::2].mean(axis=0, dtype=np.float64)) 
+        self.graph_raw_lines["obje_G"].setData(tmp_x, obje_roi_mid[0::2, 1::2].mean(axis=0, dtype=np.float64)) 
+        self.graph_raw_lines["obje_b"].setData(tmp_x, obje_roi_mid[0::2, 0::2].mean(axis=0, dtype=np.float64)) 
+
 
     def handle_cb_calc5_norming(self) -> None:
         # print("i was clicked")
