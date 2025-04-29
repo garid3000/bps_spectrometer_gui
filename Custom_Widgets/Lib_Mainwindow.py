@@ -104,13 +104,13 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.pb_dir_goto_parent.clicked.connect(self.short_cut_goto_parent_dir)
         _ = self.ui.cb_rawbayer_visual_demosiac.stateChanged.connect(self.update_1_rawbayer_img_data_and_then_plot_below)
 
-
         # --------------- initialize the file system ----------------------------------
         self.fsmodel = FileSystemModel()                     # prev. QFileSystemModel()
         _ = self.fsmodel.setRootPath(QDir.homePath())
 
         self.ui.tv_dir.setModel(self.fsmodel)
-        self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath(QDir.homePath()))
+        #self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath(QDir.homePath()))
+        self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath("/home/garid/test_alfa-20230529_091201/20230529_091201_0207367_0000.jpeg")) # TODO change before 
         self.short_cut_goto_parent_dir()
         _ = self.ui.tv_dir.doubleClicked.connect(self.call_tv_onItemDoubleClicked)
         _ = self.ui.cb_ft_filter.stateChanged.connect(self.toggle_filetype_visiblity)
@@ -183,7 +183,7 @@ class TheMainWindow(QMainWindow):
             "759.4nm": self.ui.graph_raw.addItem(pg.InfiniteLine(pos=759.37, movable=False, angle=90, label="x={value:0.2f}nm", labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True})),
         }
         # ----------------------------------------------------
-        self.graph_2dimg_wave_curves = {
+        self.graph_2dimg_wave_curves: dict[str, tuple[NDArray[np.float64], pg.PlotCurveItem]] = { #np.ndarray[tuple[int, int, int], np.dtype[np.float64]]
             "400":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine))),
             "500":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine))),
             #"550":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem()),
@@ -393,7 +393,7 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.hs_physical_height.valueChanged.connect(self.update_physical_graph)
 
         _ = self.ui.tw_midcol.currentChanged.connect(self.handle_when_tw_midcol_changed)
-        _ = self.ui.cb_shows_calibrated_wl.checkStateChanged.connect(self.handle_when_asdf)
+        _ = self.ui.cb_shows_calibrated_wl.checkStateChanged.connect(self.handle_when_to_show_calibrated_wavelenghts)
 
         self.handle_when_tw_midcol_changed() # just so it starts correctly
 
@@ -403,6 +403,7 @@ class TheMainWindow(QMainWindow):
             if x in self.ui.graph_2dimg.getView().addedItems:
                 _ = self.ui.graph_2dimg.getView().removeItem(x)
 
+        # add items based on which is on 
         if self.ui.tw_midcol.currentIndex() == 0:
             _ = self.ui.graph_2dimg.getView().addItem(self.roi_wave759nm)
         if self.ui.tw_midcol.currentIndex() == 2:
@@ -411,8 +412,7 @@ class TheMainWindow(QMainWindow):
             _ = self.ui.graph_2dimg.getView().addItem(self.roi_label_obje)
             _ = self.ui.graph_2dimg.getView().addItem(self.roi_label_gray)
 
-    def handle_when_asdf(self) -> None:
-        print("self.graph_2dimg_wave_curves.values()")
+    def handle_when_to_show_calibrated_wavelenghts(self) -> None:
         for prms, x in self.graph_2dimg_wave_curves.values():
             if self.ui.cb_shows_calibrated_wl.isChecked():
                 if x not in self.ui.graph_2dimg.getView().addedItems:
@@ -702,7 +702,12 @@ class TheMainWindow(QMainWindow):
             z759 = np.polyfit(tmpx, self.arr_759_roi[i, :], 8)
             p759 = np.poly1d(z759)
 
-            tmp_x_759_near_on_index = np.linspace(self.ui.sb_roi759_posx.value(), self.ui.sb_roi759_posx.value() + self.ui.sb_roi759_sizx.value(), 1000)
+            tmp_x_759_near_on_index = np.linspace(
+                self.ui.sb_roi759_posx.value(),
+                self.ui.sb_roi759_posx.value() + self.ui.sb_roi759_sizx.value(),
+                1000,
+                dtype=np.float64
+            )
             tmp_fitted_curve_aroudnd_759 = p759(tmp_x_759_near_on_index)
 
             _ = self.ui.graph_759_plot.getPlotItem().plot(
