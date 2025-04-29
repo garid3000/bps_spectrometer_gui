@@ -1,4 +1,5 @@
 # ---------- Base libraries -------------------------------------------------------------------------------------------
+import enum
 from typing import cast
 import os
 import logging
@@ -7,6 +8,7 @@ import platform
 from datetime import datetime
 import shutil
 from PySide6 import QtWidgets
+from PySide6 import QtCore
 import pyqtgraph as pg
 import time
 
@@ -16,6 +18,8 @@ from numpy.typing import NDArray
 from PIL import Image                # instead of  import cv2 as cv
 import pandas as pd
 import math
+from scipy import signal as sig
+from scipy.optimize import curve_fit 
 
 # ---------- GUI libraries --------------------------------------------------------------------------------------------
 from PySide6.QtWidgets import QMainWindow, QWidget, QFileSystemModel, QMessageBox
@@ -32,6 +36,9 @@ pg.setConfigOption("background", "w")
 pg.setConfigOption("foreground", "k")
 
 logger = logging.getLogger(__name__)
+
+def quadratic_func(x, p0, p1, p2):
+    return p0 + p1 * x + p2 * x **2
 
 def open_file_externally(filepath: str) -> None:
     """Opens given file externally, without hanging current running python script."""
@@ -453,6 +460,7 @@ class TheMainWindow(QMainWindow):
         _ = self.roi_obje_main.sigRegionChanged.connect(lambda: self.handle_roi_change("obje"))
         _ = self.roi_wave759nm.sigRegionChanged.connect(lambda: self.handle_roi_change("wave-759"))
         _ = self.ui.cb_759_channel.currentIndexChanged.connect(lambda: self.handle_roi_change("wave-759"))
+        _ = self.ui.pb_wave_calib.clicked.connect(self.wavelength_calibration)
 
     def init_all_pyqtgraph(self) -> None:
         # -------------------------------------------------------------------------------------------------------------
@@ -532,11 +540,13 @@ class TheMainWindow(QMainWindow):
 
         elif roi_label == "wave-759":
             w759_posx, w759_posy, w759_sizx, w759_sizy = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_wave759nm.getState())
+            # changing the spinbox
             self.spinbox_setvalue_without_emitting_signal(self.ui.sb_roi759_posx, w759_posx)
             self.spinbox_setvalue_without_emitting_signal(self.ui.sb_roi759_posy, w759_posy)
             self.spinbox_setvalue_without_emitting_signal(self.ui.sb_roi759_sizx, w759_sizx)
             self.spinbox_setvalue_without_emitting_signal(self.ui.sb_roi759_sizy, w759_sizy)
 
+            # changing the image
             init_ax0, init_ax1 = 1, 1
             if self.ui.cb_759_channel.currentText() == "red":
                 init_ax0, init_ax1 = 1, 1
@@ -556,12 +566,10 @@ class TheMainWindow(QMainWindow):
                 w759_posx + init_ax1 : w759_posx + w759_sizx+ init_ax1 : 2,
             ].astype(np.uint16)
             self.arr_759_roi = cast(np.ndarray[tuple[int, int], np.dtype[np.uint16]], self.arr_759_roi)
-
-            self.ui.graph_759_roi.setImage(
-                self.arr_759_roi,
-                axes={"x":1, "y":0},
-                levelMode = "mono"
-            )
+            self.arr_759_roi = sig.medfilt(self.arr_759_roi, kernel_size=(1, 3))
+            self.ui.graph_759_roi.setImage(self.arr_759_roi, axes={"x":1, "y":0}, levelMode = "mono")
+            self.ui.graph_759_plot.clear()
+            self.ui.graph_759_plot_fit.clear()
 
         self.update_raw_from_sb()
 
@@ -643,6 +651,80 @@ class TheMainWindow(QMainWindow):
         self.graph_raw_lines["obje_g"].setData(tmp_x, obje_roi_mid[1::2, 0::2].mean(axis=0, dtype=np.float64)) 
         self.graph_raw_lines["obje_G"].setData(tmp_x, obje_roi_mid[0::2, 1::2].mean(axis=0, dtype=np.float64)) 
         self.graph_raw_lines["obje_b"].setData(tmp_x, obje_roi_mid[0::2, 0::2].mean(axis=0, dtype=np.float64)) 
+
+    def wavelength_calibration(self) -> None:
+        # assume the self.arr_759_roi has already prepped (and median filtered)
+        cm = pg.colormap.get("turbo")
+        clrs = cm.map(np.linspace(0, 1, self.arr_759_roi.shape[0]))
+        print(clrs, type(clrs))
+
+        tmp_near_pix = np.argmin(self.arr_759_roi, axis=1)
+        tmp_near_pix_subpix = np.zeros_like(tmp_near_pix, dtype=np.float64)
+
+        #np.save(f"/tmp/near.npy", self.arr_759_roi)
+        self.ui.graph_759_plot.getPlotItem().clear()
+        self.ui.pbar_759_rows.setMaximum(self.arr_759_roi.shape[0])
+
+        tmpx = np.arange(self.ui.sb_roi759_posx.value(), self.ui.sb_roi759_posx.value() + self.ui.sb_roi759_sizx.value(), 2) # TODO depend on the channel
+        tmpy = np.arange(self.ui.sb_roi759_posy.value(), self.ui.sb_roi759_posy.value() + self.ui.sb_roi759_sizy.value(), 2) # TODO depend on the channel
+ 
+        for i in range(self.arr_759_roi.shape[0]):
+            self.ui.pbar_759_rows.setValue(i)
+            #self.ui.pbar_759_rows.setPalette(QColor(clrs[i,0], clrs[i,1], clrs[i,2], clrs[i,3]))
+
+            z759 = np.polyfit(tmpx, self.arr_759_roi[i, :], 8)
+            p759 = np.poly1d(z759)
+
+            tmp_x_759_near_on_index = np.linspace(self.ui.sb_roi759_posx.value(), self.ui.sb_roi759_posx.value() + self.ui.sb_roi759_sizx.value(), 1000)
+            tmp_fitted_curve_aroudnd_759 = p759(tmp_x_759_near_on_index)
+
+            _ = self.ui.graph_759_plot.getPlotItem().plot(
+                tmp_x_759_near_on_index,
+                tmp_fitted_curve_aroudnd_759,
+                pen=pg.mkPen(clrs[i], width=1, style=Qt.PenStyle.SolidLine)
+            )
+
+            tmp_local_min = tmp_x_759_near_on_index[sig.argrelextrema(tmp_fitted_curve_aroudnd_759, np.less_equal)]
+            print(i, tmp_local_min)
+            #nearest_for = np.argmin(np.abs(tmp_local_min - tmp_near_pix[i]))
+            nearest_for = np.argmin(np.abs(tmp_local_min - (tmp_near_pix[i]*2 + self.ui.sb_roi759_posx.value())))
+            print(i, tmp_local_min, nearest_for)
+            tmp_local_min = tmp_local_min[nearest_for]
+            tmp_near_pix_subpix[i] = tmp_local_min
+
+            _ = self.ui.graph_759_plot.getPlotItem().addItem(
+                pg.InfiniteLine(
+                    pos=tmp_near_pix_subpix[i],
+                    movable=False, angle=90,
+                    pen=pg.mkPen(clrs[i], width=1, style=Qt.PenStyle.SolidLine))
+            )
+
+
+        self.ui.graph_759_plot_fit.getPlotItem().clear()
+
+        _ = self.ui.graph_759_plot_fit.getPlotItem().plot(
+            tmp_near_pix_subpix,
+            tmpy,
+            symbol="o",
+            symbolSize=9,
+            symbolBrush=clrs,
+            pen=None,
+            name="R-obje-left"
+        )
+        tmppopt, _ = curve_fit(
+            quadratic_func,
+            xdata=tmpy.astype(np.float64), 
+            ydata=tmp_near_pix_subpix,
+        )
+
+        _ = self.ui.graph_759_plot_fit.getPlotItem().plot(
+            quadratic_func(np.arange(0, 2400, .5), *tmppopt),
+            np.arange(0, 2400, .5),
+            #pen=pg.mkPen(clrs[i], width=1, style=Qt.PenStyle.SolidLine)
+        )
+
+        pci = pg.PlotCurveItem(x=quadratic_func(np.arange(0, 2400, .5), *tmppopt), y=np.arange(0, 2400, .5))
+        self.ui.graph_2dimg.getView().addItem(pci)
 
 
     def handle_cb_calc5_norming(self) -> None:
