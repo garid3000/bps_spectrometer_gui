@@ -95,8 +95,13 @@ class Ui_MainWindow(object):
         self.action_tabs_show_tab3.setObjectName("action_tabs_show_tab3")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.gridLayout_4 = QGridLayout(self.centralwidget)
-        self.gridLayout_4.setObjectName("gridLayout_4")
+        self.gridLayout_10 = QGridLayout(self.centralwidget)
+        self.gridLayout_10.setObjectName("gridLayout_10")
+        self.label = QLabel(self.centralwidget)
+        self.label.setObjectName("label")
+
+        self.gridLayout_10.addWidget(self.label, 0, 0, 1, 1)
+
         self.splitter = QSplitter(self.centralwidget)
         self.splitter.setObjectName("splitter")
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
@@ -256,7 +261,7 @@ class Ui_MainWindow(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 432, 246))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 434, 246))
         self.verticalLayout_4 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.horizontalLayout_2 = QHBoxLayout()
@@ -294,17 +299,128 @@ class Ui_MainWindow(object):
         self.tw_midcol.setObjectName("tw_midcol")
         self.midcol_tab1_wave = QWidget()
         self.midcol_tab1_wave.setObjectName("midcol_tab1_wave")
-        self.gridLayout_10 = QGridLayout(self.midcol_tab1_wave)
-        self.gridLayout_10.setObjectName("gridLayout_10")
+        self.gridLayout_11 = QGridLayout(self.midcol_tab1_wave)
+        self.gridLayout_11.setObjectName("gridLayout_11")
+        self.gridLayout_4 = QGridLayout()
+        self.gridLayout_4.setObjectName("gridLayout_4")
+        self.cb_shows_calibrated_wl = QCheckBox(self.midcol_tab1_wave)
+        self.cb_shows_calibrated_wl.setObjectName("cb_shows_calibrated_wl")
+
+        self.gridLayout_4.addWidget(self.cb_shows_calibrated_wl, 0, 0, 1, 1)
+
+        self.pushButton = QPushButton(self.midcol_tab1_wave)
+        self.pushButton.setObjectName("pushButton")
+
+        self.gridLayout_4.addWidget(self.pushButton, 0, 1, 1, 1)
+
+        self.gridLayout_11.addLayout(self.gridLayout_4, 4, 1, 1, 1)
+
+        self.verticalLayout_3 = QVBoxLayout()
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.cb_759_channel = QComboBox(self.midcol_tab1_wave)
+        self.cb_759_channel.addItem("")
+        self.cb_759_channel.addItem("")
+        self.cb_759_channel.addItem("")
+        self.cb_759_channel.addItem("")
+        self.cb_759_channel.setObjectName("cb_759_channel")
+
+        self.verticalLayout_3.addWidget(self.cb_759_channel)
+
+        self.label_8 = QLabel(self.midcol_tab1_wave)
+        self.label_8.setObjectName("label_8")
+
+        self.verticalLayout_3.addWidget(self.label_8)
+
+        self.graph_759_roi = ImageView(self.midcol_tab1_wave)
+        self.graph_759_roi.setObjectName("graph_759_roi")
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Preferred)
+        sizePolicy4.setHorizontalStretch(1)
+        sizePolicy4.setVerticalStretch(1)
+        sizePolicy4.setHeightForWidth(self.graph_759_roi.sizePolicy().hasHeightForWidth())
+        self.graph_759_roi.setSizePolicy(sizePolicy4)
+        self.graph_759_roi.setMinimumSize(QSize(1, 1))
+
+        self.verticalLayout_3.addWidget(self.graph_759_roi)
+
+        self.gridLayout_11.addLayout(self.verticalLayout_3, 0, 0, 5, 1)
+
+        self.label_3 = QLabel(self.midcol_tab1_wave)
+        self.label_3.setObjectName("label_3")
+
+        self.gridLayout_11.addWidget(self.label_3, 5, 1, 1, 1)
+
+        self.gridLayout_9 = QGridLayout()
+        self.gridLayout_9.setObjectName("gridLayout_9")
+        self.graph_759_plot_fit = PlotWidget(self.midcol_tab1_wave)
+        self.graph_759_plot_fit.setObjectName("graph_759_plot_fit")
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy5.setHorizontalStretch(1)
+        sizePolicy5.setVerticalStretch(1)
+        sizePolicy5.setHeightForWidth(self.graph_759_plot_fit.sizePolicy().hasHeightForWidth())
+        self.graph_759_plot_fit.setSizePolicy(sizePolicy5)
+        self.graph_759_plot_fit.setMinimumSize(QSize(1, 1))
+
+        self.gridLayout_9.addWidget(self.graph_759_plot_fit, 1, 3, 1, 1)
+
+        self.graph_759_plot = PlotWidget(self.midcol_tab1_wave)
+        self.graph_759_plot.setObjectName("graph_759_plot")
+        sizePolicy5.setHeightForWidth(self.graph_759_plot.sizePolicy().hasHeightForWidth())
+        self.graph_759_plot.setSizePolicy(sizePolicy5)
+        self.graph_759_plot.setMinimumSize(QSize(1, 1))
+
+        self.gridLayout_9.addWidget(self.graph_759_plot, 1, 2, 1, 1)
+
+        self.pbar_759_rows = QProgressBar(self.midcol_tab1_wave)
+        self.pbar_759_rows.setObjectName("pbar_759_rows")
+        self.pbar_759_rows.setValue(24)
+        self.pbar_759_rows.setOrientation(Qt.Orientation.Vertical)
+
+        self.gridLayout_9.addWidget(self.pbar_759_rows, 1, 1, 1, 1)
+
+        self.gridLayout_11.addLayout(self.gridLayout_9, 3, 1, 1, 1)
+
+        self.pb_wave_calib = QPushButton(self.midcol_tab1_wave)
+        self.pb_wave_calib.setObjectName("pb_wave_calib")
+
+        self.gridLayout_11.addWidget(self.pb_wave_calib, 2, 1, 1, 1)
+
+        self.gridLayout_8 = QGridLayout()
+        self.gridLayout_8.setObjectName("gridLayout_8")
+        self._l = QLabel(self.midcol_tab1_wave)
+        self._l.setObjectName("_l")
+
+        self.gridLayout_8.addWidget(self._l, 0, 0, 1, 1)
+
+        self.sb_waveperpixel = QDoubleSpinBox(self.midcol_tab1_wave)
+        self.sb_waveperpixel.setObjectName("sb_waveperpixel")
+        self.sb_waveperpixel.setDecimals(4)
+        self.sb_waveperpixel.setMinimum(1.500000000000000)
+        self.sb_waveperpixel.setMaximum(2.500000000000000)
+        self.sb_waveperpixel.setSingleStep(2.000000000000000)
+        self.sb_waveperpixel.setValue(1.858300000000000)
+
+        self.gridLayout_8.addWidget(self.sb_waveperpixel, 0, 1, 1, 1)
+
+        self.pb_waveperpixel_reset = QPushButton(self.midcol_tab1_wave)
+        self.pb_waveperpixel_reset.setObjectName("pb_waveperpixel_reset")
+
+        self.gridLayout_8.addWidget(self.pb_waveperpixel_reset, 0, 2, 1, 1)
+
+        self.gridLayout_11.addLayout(self.gridLayout_8, 1, 1, 1, 1)
+
         self.gridLayout_7 = QGridLayout()
         self.gridLayout_7.setObjectName("gridLayout_7")
         self.label_6 = QLabel(self.midcol_tab1_wave)
         self.label_6.setObjectName("label_6")
+        sizePolicy2.setHeightForWidth(self.label_6.sizePolicy().hasHeightForWidth())
+        self.label_6.setSizePolicy(sizePolicy2)
 
         self.gridLayout_7.addWidget(self.label_6, 0, 1, 1, 1)
 
         self.label_7 = QLabel(self.midcol_tab1_wave)
         self.label_7.setObjectName("label_7")
+        sizePolicy2.setHeightForWidth(self.label_7.sizePolicy().hasHeightForWidth())
+        self.label_7.setSizePolicy(sizePolicy2)
 
         self.gridLayout_7.addWidget(self.label_7, 0, 2, 1, 1)
 
@@ -350,92 +466,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_7.addWidget(self.sb_roi759_sizy, 2, 2, 1, 1)
 
-        self.gridLayout_10.addLayout(self.gridLayout_7, 0, 0, 1, 1)
-
-        self.label_3 = QLabel(self.midcol_tab1_wave)
-        self.label_3.setObjectName("label_3")
-
-        self.gridLayout_10.addWidget(self.label_3, 1, 0, 1, 1)
-
-        self.gridLayout_8 = QGridLayout()
-        self.gridLayout_8.setObjectName("gridLayout_8")
-        self._l = QLabel(self.midcol_tab1_wave)
-        self._l.setObjectName("_l")
-
-        self.gridLayout_8.addWidget(self._l, 0, 0, 1, 1)
-
-        self.sb_waveperpixel = QDoubleSpinBox(self.midcol_tab1_wave)
-        self.sb_waveperpixel.setObjectName("sb_waveperpixel")
-        self.sb_waveperpixel.setDecimals(4)
-        self.sb_waveperpixel.setMinimum(1.500000000000000)
-        self.sb_waveperpixel.setMaximum(2.500000000000000)
-        self.sb_waveperpixel.setSingleStep(2.000000000000000)
-        self.sb_waveperpixel.setValue(1.858300000000000)
-
-        self.gridLayout_8.addWidget(self.sb_waveperpixel, 0, 1, 1, 1)
-
-        self.pb_waveperpixel_reset = QPushButton(self.midcol_tab1_wave)
-        self.pb_waveperpixel_reset.setObjectName("pb_waveperpixel_reset")
-
-        self.gridLayout_8.addWidget(self.pb_waveperpixel_reset, 0, 2, 1, 1)
-
-        self.gridLayout_10.addLayout(self.gridLayout_8, 3, 0, 1, 1)
-
-        self.gridLayout_9 = QGridLayout()
-        self.gridLayout_9.setObjectName("gridLayout_9")
-        self.horizontalLayout_3 = QHBoxLayout()
-        self.horizontalLayout_3.setObjectName("horizontalLayout_3")
-        self.cb_759_channel = QComboBox(self.midcol_tab1_wave)
-        self.cb_759_channel.addItem("")
-        self.cb_759_channel.addItem("")
-        self.cb_759_channel.addItem("")
-        self.cb_759_channel.addItem("")
-        self.cb_759_channel.setObjectName("cb_759_channel")
-
-        self.horizontalLayout_3.addWidget(self.cb_759_channel)
-
-        self.pb_wave_calib = QPushButton(self.midcol_tab1_wave)
-        self.pb_wave_calib.setObjectName("pb_wave_calib")
-
-        self.horizontalLayout_3.addWidget(self.pb_wave_calib)
-
-        self.gridLayout_9.addLayout(self.horizontalLayout_3, 0, 0, 1, 4)
-
-        self.graph_759_plot = PlotWidget(self.midcol_tab1_wave)
-        self.graph_759_plot.setObjectName("graph_759_plot")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
-        sizePolicy4.setHorizontalStretch(1)
-        sizePolicy4.setVerticalStretch(1)
-        sizePolicy4.setHeightForWidth(self.graph_759_plot.sizePolicy().hasHeightForWidth())
-        self.graph_759_plot.setSizePolicy(sizePolicy4)
-        self.graph_759_plot.setMinimumSize(QSize(1, 1))
-
-        self.gridLayout_9.addWidget(self.graph_759_plot, 1, 2, 1, 1)
-
-        self.graph_759_plot_fit = PlotWidget(self.midcol_tab1_wave)
-        self.graph_759_plot_fit.setObjectName("graph_759_plot_fit")
-        sizePolicy4.setHeightForWidth(self.graph_759_plot_fit.sizePolicy().hasHeightForWidth())
-        self.graph_759_plot_fit.setSizePolicy(sizePolicy4)
-        self.graph_759_plot_fit.setMinimumSize(QSize(1, 1))
-
-        self.gridLayout_9.addWidget(self.graph_759_plot_fit, 1, 3, 1, 1)
-
-        self.graph_759_roi = ImageView(self.midcol_tab1_wave)
-        self.graph_759_roi.setObjectName("graph_759_roi")
-        sizePolicy4.setHeightForWidth(self.graph_759_roi.sizePolicy().hasHeightForWidth())
-        self.graph_759_roi.setSizePolicy(sizePolicy4)
-        self.graph_759_roi.setMinimumSize(QSize(1, 1))
-
-        self.gridLayout_9.addWidget(self.graph_759_roi, 1, 0, 1, 1)
-
-        self.pbar_759_rows = QProgressBar(self.midcol_tab1_wave)
-        self.pbar_759_rows.setObjectName("pbar_759_rows")
-        self.pbar_759_rows.setValue(24)
-        self.pbar_759_rows.setOrientation(Qt.Orientation.Vertical)
-
-        self.gridLayout_9.addWidget(self.pbar_759_rows, 1, 1, 1, 1)
-
-        self.gridLayout_10.addLayout(self.gridLayout_9, 4, 0, 1, 1)
+        self.gridLayout_11.addLayout(self.gridLayout_7, 0, 1, 1, 1)
 
         _ = self.tw_midcol.addTab(self.midcol_tab1_wave, "")
         self.midcol_tab2_bgnd = QWidget()
@@ -583,11 +614,11 @@ class Ui_MainWindow(object):
 
         self.graph_raw = PlotWidget(self.midcol_tab3_rois)
         self.graph_raw.setObjectName("graph_raw")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
-        sizePolicy5.setHorizontalStretch(0)
-        sizePolicy5.setVerticalStretch(200)
-        sizePolicy5.setHeightForWidth(self.graph_raw.sizePolicy().hasHeightForWidth())
-        self.graph_raw.setSizePolicy(sizePolicy5)
+        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
+        sizePolicy6.setHorizontalStretch(0)
+        sizePolicy6.setVerticalStretch(200)
+        sizePolicy6.setHeightForWidth(self.graph_raw.sizePolicy().hasHeightForWidth())
+        self.graph_raw.setSizePolicy(sizePolicy6)
         self.graph_raw.setMinimumSize(QSize(400, 200))
 
         self.gridLayout_6.addWidget(self.graph_raw, 0, 0, 1, 1)
@@ -603,11 +634,11 @@ class Ui_MainWindow(object):
         self.formLayout.setObjectName("formLayout")
         self.pb_calibrate_calculate = QPushButton(self.gp_spectral_panel)
         self.pb_calibrate_calculate.setObjectName("pb_calibrate_calculate")
-        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
-        sizePolicy6.setHorizontalStretch(0)
-        sizePolicy6.setVerticalStretch(0)
-        sizePolicy6.setHeightForWidth(self.pb_calibrate_calculate.sizePolicy().hasHeightForWidth())
-        self.pb_calibrate_calculate.setSizePolicy(sizePolicy6)
+        sizePolicy7 = QSizePolicy(QSizePolicy.Policy.MinimumExpanding, QSizePolicy.Policy.Fixed)
+        sizePolicy7.setHorizontalStretch(0)
+        sizePolicy7.setVerticalStretch(0)
+        sizePolicy7.setHeightForWidth(self.pb_calibrate_calculate.sizePolicy().hasHeightForWidth())
+        self.pb_calibrate_calculate.setSizePolicy(sizePolicy7)
 
         self.formLayout.setWidget(0, QFormLayout.ItemRole.LabelRole, self.pb_calibrate_calculate)
 
@@ -623,7 +654,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 350, 525))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 349, 525))
         self.verticalLayout_8 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_8.setObjectName("verticalLayout_8")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -642,22 +673,22 @@ class Ui_MainWindow(object):
 
         self.graph_calc1_desalted_roi = ImageView(self.tab)
         self.graph_calc1_desalted_roi.setObjectName("graph_calc1_desalted_roi")
-        sizePolicy7 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
-        sizePolicy7.setHorizontalStretch(0)
-        sizePolicy7.setVerticalStretch(0)
-        sizePolicy7.setHeightForWidth(self.graph_calc1_desalted_roi.sizePolicy().hasHeightForWidth())
-        self.graph_calc1_desalted_roi.setSizePolicy(sizePolicy7)
+        sizePolicy8 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
+        sizePolicy8.setHorizontalStretch(0)
+        sizePolicy8.setVerticalStretch(0)
+        sizePolicy8.setHeightForWidth(self.graph_calc1_desalted_roi.sizePolicy().hasHeightForWidth())
+        self.graph_calc1_desalted_roi.setSizePolicy(sizePolicy8)
         self.graph_calc1_desalted_roi.setMinimumSize(QSize(150, 0))
 
         self.verticalLayout_5.addWidget(self.graph_calc1_desalted_roi)
 
         self.txt_calc1_desalt = QTextBrowser(self.tab)
         self.txt_calc1_desalt.setObjectName("txt_calc1_desalt")
-        sizePolicy8 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-        sizePolicy8.setHorizontalStretch(0)
-        sizePolicy8.setVerticalStretch(0)
-        sizePolicy8.setHeightForWidth(self.txt_calc1_desalt.sizePolicy().hasHeightForWidth())
-        self.txt_calc1_desalt.setSizePolicy(sizePolicy8)
+        sizePolicy9 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        sizePolicy9.setHorizontalStretch(0)
+        sizePolicy9.setVerticalStretch(0)
+        sizePolicy9.setHeightForWidth(self.txt_calc1_desalt.sizePolicy().hasHeightForWidth())
+        self.txt_calc1_desalt.setSizePolicy(sizePolicy9)
         self.txt_calc1_desalt.setMinimumSize(QSize(0, 0))
         self.txt_calc1_desalt.setMaximumSize(QSize(16777215, 80))
 
@@ -688,8 +719,8 @@ class Ui_MainWindow(object):
 
         self.txt_calc2_bg = QTextBrowser(self.tab_2)
         self.txt_calc2_bg.setObjectName("txt_calc2_bg")
-        sizePolicy8.setHeightForWidth(self.txt_calc2_bg.sizePolicy().hasHeightForWidth())
-        self.txt_calc2_bg.setSizePolicy(sizePolicy8)
+        sizePolicy9.setHeightForWidth(self.txt_calc2_bg.sizePolicy().hasHeightForWidth())
+        self.txt_calc2_bg.setSizePolicy(sizePolicy9)
         self.txt_calc2_bg.setMaximumSize(QSize(16777215, 80))
 
         self.verticalLayout_6.addWidget(self.txt_calc2_bg)
@@ -708,11 +739,11 @@ class Ui_MainWindow(object):
 
         self.graph_calc3_759_calib = PlotWidget(self.tab_3)
         self.graph_calc3_759_calib.setObjectName("graph_calc3_759_calib")
-        sizePolicy9 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy9.setHorizontalStretch(0)
-        sizePolicy9.setVerticalStretch(200)
-        sizePolicy9.setHeightForWidth(self.graph_calc3_759_calib.sizePolicy().hasHeightForWidth())
-        self.graph_calc3_759_calib.setSizePolicy(sizePolicy9)
+        sizePolicy10 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy10.setHorizontalStretch(0)
+        sizePolicy10.setVerticalStretch(200)
+        sizePolicy10.setHeightForWidth(self.graph_calc3_759_calib.sizePolicy().hasHeightForWidth())
+        self.graph_calc3_759_calib.setSizePolicy(sizePolicy10)
         self.graph_calc3_759_calib.setMinimumSize(QSize(300, 200))
 
         self.verticalLayout_7.addWidget(self.graph_calc3_759_calib)
@@ -866,12 +897,7 @@ class Ui_MainWindow(object):
 
         self.splitter.addWidget(self.gp_spectral_panel)
 
-        self.gridLayout_4.addWidget(self.splitter, 1, 0, 1, 1)
-
-        self.label = QLabel(self.centralwidget)
-        self.label.setObjectName("label")
-
-        self.gridLayout_4.addWidget(self.label, 0, 0, 1, 1)
+        self.gridLayout_10.addWidget(self.splitter, 1, 0, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
@@ -915,9 +941,9 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget_2.setCurrentIndex(1)
-        self.tw_midcol.setCurrentIndex(2)
-        self.tabWidget.setCurrentIndex(2)
+        self.tabWidget_2.setCurrentIndex(0)
+        self.tw_midcol.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(0)
 
         QMetaObject.connectSlotsByName(MainWindow)
 
@@ -945,6 +971,10 @@ class Ui_MainWindow(object):
         self.action_tabs_show_tab1.setText(QCoreApplication.translate("MainWindow", "Raw Bayer Tab (Ctrl+1) or (Alt+1)", None))
         self.action_tabs_show_tab2.setText(QCoreApplication.translate("MainWindow", "Spectrum-Raw Tab (Ctrl+2) or (Alt+2)", None))
         self.action_tabs_show_tab3.setText(QCoreApplication.translate("MainWindow", "Spectrum-Reflectance Tab (Ctrl+3) or (Alt+3)", None))
+        # if QT_CONFIG(tooltip)
+        self.label.setToolTip(QCoreApplication.translate("MainWindow", '<html><head/><body><p><img src=":/newPrefix/MAIN_howto.png"/></p></body></html>', None))
+        # endif // QT_CONFIG(tooltip)
+        self.label.setText(QCoreApplication.translate("MainWindow", "Help: (Move the mouse-cursor here to see operation order)", None))
         self.gb_dir_panel.setTitle(QCoreApplication.translate("MainWindow", "Directory Control Panel", None))
         # if QT_CONFIG(tooltip)
         self.cb_ft_filter.setToolTip(
@@ -984,19 +1014,22 @@ class Ui_MainWindow(object):
         self.gp_webcam_meta.setTitle(QCoreApplication.translate("MainWindow", "Raw-Bayer Image: ROI (Region of Interest) selection", None))
         self.cb_rawbayer_visual_demosiac.setText(QCoreApplication.translate("MainWindow", "Demosiac Bayer (just for visual)", None))
         self.cb_invert_y_axis_of_rawbayer.setText(QCoreApplication.translate("MainWindow", "Invert Y axis", None))
-        self.label_6.setText(QCoreApplication.translate("MainWindow", "x", None))
-        self.label_7.setText(QCoreApplication.translate("MainWindow", "y", None))
-        self.label_4.setText(QCoreApplication.translate("MainWindow", "pos", None))
-        self.label_5.setText(QCoreApplication.translate("MainWindow", "size", None))
-        self.label_3.setText("")
-        self._l.setText(QCoreApplication.translate("MainWindow", "Wavelength per pixel (nm/px)", None))
-        self.pb_waveperpixel_reset.setText(QCoreApplication.translate("MainWindow", "<== Reset Value", None))
+        self.cb_shows_calibrated_wl.setText(QCoreApplication.translate("MainWindow", "Show", None))
+        self.pushButton.setText(QCoreApplication.translate("MainWindow", "_", None))
         self.cb_759_channel.setItemText(0, QCoreApplication.translate("MainWindow", "red", None))
         self.cb_759_channel.setItemText(1, QCoreApplication.translate("MainWindow", "green", None))
         self.cb_759_channel.setItemText(2, QCoreApplication.translate("MainWindow", "green2", None))
         self.cb_759_channel.setItemText(3, QCoreApplication.translate("MainWindow", "blue", None))
 
+        self.label_8.setText("")
+        self.label_3.setText("")
         self.pb_wave_calib.setText(QCoreApplication.translate("MainWindow", "Calc", None))
+        self._l.setText(QCoreApplication.translate("MainWindow", "Wavelength per pixel (nm/px)", None))
+        self.pb_waveperpixel_reset.setText(QCoreApplication.translate("MainWindow", "<== Reset Value", None))
+        self.label_6.setText(QCoreApplication.translate("MainWindow", "x", None))
+        self.label_7.setText(QCoreApplication.translate("MainWindow", "y", None))
+        self.label_4.setText(QCoreApplication.translate("MainWindow", "pos", None))
+        self.label_5.setText(QCoreApplication.translate("MainWindow", "size", None))
         self.tw_midcol.setTabText(self.tw_midcol.indexOf(self.midcol_tab1_wave), QCoreApplication.translate("MainWindow", "Wavelength Calibration", None))
         self.tw_midcol.setTabText(self.tw_midcol.indexOf(self.midcol_tab2_bgnd), QCoreApplication.translate("MainWindow", "Background Est", None))
         self.gb_control_panel.setTitle("")
@@ -1055,10 +1088,6 @@ class Ui_MainWindow(object):
         )
         # endif // QT_CONFIG(tooltip)
         self.label_2.setText(QCoreApplication.translate("MainWindow", "Export Parameter History:", None))
-        # if QT_CONFIG(tooltip)
-        self.label.setToolTip(QCoreApplication.translate("MainWindow", '<html><head/><body><p><img src=":/newPrefix/MAIN_howto.png"/></p></body></html>', None))
-        # endif // QT_CONFIG(tooltip)
-        self.label.setText(QCoreApplication.translate("MainWindow", "Help: (Move the mouse-cursor here to see operation order)", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", "Operation", None))
         self.menuDirectory_operations.setTitle(QCoreApplication.translate("MainWindow", "Directory Movements", None))
         self.menuType_Here.setTitle(QCoreApplication.translate("MainWindow", "Type Here", None))

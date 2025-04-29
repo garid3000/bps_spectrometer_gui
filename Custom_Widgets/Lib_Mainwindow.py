@@ -1,5 +1,4 @@
 # ---------- Base libraries -------------------------------------------------------------------------------------------
-import enum
 from typing import cast
 import os
 import logging
@@ -7,8 +6,6 @@ import subprocess
 import platform
 from datetime import datetime
 import shutil
-from PySide6 import QtWidgets
-from PySide6 import QtCore
 import pyqtgraph as pg
 import time
 
@@ -22,7 +19,7 @@ from scipy import signal as sig
 from scipy.optimize import curve_fit 
 
 # ---------- GUI libraries --------------------------------------------------------------------------------------------
-from PySide6.QtWidgets import QMainWindow, QWidget, QFileSystemModel, QMessageBox
+from PySide6.QtWidgets import QMainWindow, QWidget, QFileSystemModel, QMessageBox, QSpinBox
 from PySide6.QtGui import QKeySequence, QShortcut, QColor
 from PySide6.QtCore import QModelIndex, QDir, Qt, QPersistentModelIndex, QPointF, QObject
 
@@ -186,8 +183,17 @@ class TheMainWindow(QMainWindow):
             "759.4nm": self.ui.graph_raw.addItem(pg.InfiniteLine(pos=759.37, movable=False, angle=90, label="x={value:0.2f}nm", labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True})),
         }
         # ----------------------------------------------------
-
-
+        self.graph_2dimg_wave_curves = {
+            "400":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine))),
+            "500":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine))),
+            #"550":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem()),
+            "600":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine))),
+            #"650":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem()),
+            "700":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine))),
+            "759.37": (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine))),
+            "800":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine))),
+            #"850":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem()),
+        }
 
         # self.graph2_curve_bg_gray_le_r = self.ui.graph_calc2_bg_gray.getPlotItem().plot(symbol="o", symbolSize=9, symbolBrush=(255, 000, 000), pen=None, name="R-gray-left")
         # self.graph2_curve_bg_gray_le_g = self.ui.graph_calc2_bg_gray.getPlotItem().plot(symbol="o", symbolSize=9, symbolBrush=(000, 255, 000), pen=None, name="G-gray-left")
@@ -387,6 +393,7 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.hs_physical_height.valueChanged.connect(self.update_physical_graph)
 
         _ = self.ui.tw_midcol.currentChanged.connect(self.handle_when_tw_midcol_changed)
+        _ = self.ui.cb_shows_calibrated_wl.checkStateChanged.connect(self.handle_when_asdf)
 
         self.handle_when_tw_midcol_changed() # just so it starts correctly
 
@@ -398,12 +405,26 @@ class TheMainWindow(QMainWindow):
 
         if self.ui.tw_midcol.currentIndex() == 0:
             _ = self.ui.graph_2dimg.getView().addItem(self.roi_wave759nm)
-        elif self.ui.tw_midcol.currentIndex() == 2:
+        if self.ui.tw_midcol.currentIndex() == 2:
             _ = self.ui.graph_2dimg.getView().addItem(self.roi_obje_main)
             _ = self.ui.graph_2dimg.getView().addItem(self.roi_gray_main)
             _ = self.ui.graph_2dimg.getView().addItem(self.roi_label_obje)
             _ = self.ui.graph_2dimg.getView().addItem(self.roi_label_gray)
 
+    def handle_when_asdf(self) -> None:
+        print("self.graph_2dimg_wave_curves.values()")
+        for prms, x in self.graph_2dimg_wave_curves.values():
+            if self.ui.cb_shows_calibrated_wl.isChecked():
+                if x not in self.ui.graph_2dimg.getView().addedItems:
+                    _ = self.ui.graph_2dimg.getView().addItem(x)
+                x.setData(
+                    quadratic_func(np.arange(0, 2400, 1), *prms),
+                    np.arange(0, 2400, 1),
+                )
+                print(prms)
+            else:
+                if x in self.ui.graph_2dimg.getView().addedItems:
+                    _ = self.ui.graph_2dimg.getView().removeItem(x)
 
     def dir_searching_based_regex(self) -> None:
         current_search_prompt = self.ui.le_tv_name_narrower.text()
@@ -517,7 +538,7 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_calc5_refl_final.getPlotItem().addItem(self.graph5_norm_zero_line)
         _ = self.ui.graph_calc5_refl_final.getPlotItem().addLegend()
 
-    def spinbox_setvalue_without_emitting_signal(self, sb: QtWidgets.QSpinBox, value: int) -> None:
+    def spinbox_setvalue_without_emitting_signal(self, sb: QSpinBox, value: int) -> None:
         """Sets QSpinBox widgets value without signal emitting"""
         _ = sb.blockSignals(True)
         sb.setValue(value)
@@ -566,10 +587,16 @@ class TheMainWindow(QMainWindow):
                 w759_posx + init_ax1 : w759_posx + w759_sizx+ init_ax1 : 2,
             ].astype(np.uint16)
             self.arr_759_roi = cast(np.ndarray[tuple[int, int], np.dtype[np.uint16]], self.arr_759_roi)
-            self.arr_759_roi = sig.medfilt(self.arr_759_roi, kernel_size=(1, 3))
+            # self.arr_759_roi = sig.medfilt(self.arr_759_roi, kernel_size=(1, 3))
             self.ui.graph_759_roi.setImage(self.arr_759_roi, axes={"x":1, "y":0}, levelMode = "mono")
             self.ui.graph_759_plot.clear()
             self.ui.graph_759_plot_fit.clear()
+
+            for k in self.graph_2dimg_wave_curves:
+                #self.graph_2dimg_wave_curves[k][0][0] =  w759_posx + (float(k) - 759.37)/ self.ui.sb_waveperpixel.value()
+                self.graph_2dimg_wave_curves[k][0][0] = w759_posx + (float(k) - 759.37) # / self.ui.sb_waveperpixel.value()
+                self.graph_2dimg_wave_curves[k][0][1] = 0
+                self.graph_2dimg_wave_curves[k][0][2] = 0
 
         self.update_raw_from_sb()
 
@@ -711,20 +738,26 @@ class TheMainWindow(QMainWindow):
             pen=None,
             name="R-obje-left"
         )
-        tmppopt, _ = curve_fit(
+        self.params_fit759, _ = curve_fit(
             quadratic_func,
             xdata=tmpy.astype(np.float64), 
             ydata=tmp_near_pix_subpix,
         )
+        print(self.params_fit759)
 
         _ = self.ui.graph_759_plot_fit.getPlotItem().plot(
-            quadratic_func(np.arange(0, 2400, .5), *tmppopt),
-            np.arange(0, 2400, .5),
-            #pen=pg.mkPen(clrs[i], width=1, style=Qt.PenStyle.SolidLine)
+            quadratic_func(np.arange(0, 2400, 1), *self.params_fit759),
+            np.arange(0, 2400, 1),
         )
 
-        pci = pg.PlotCurveItem(x=quadratic_func(np.arange(0, 2400, .5), *tmppopt), y=np.arange(0, 2400, .5))
-        self.ui.graph_2dimg.getView().addItem(pci)
+
+        for k in self.graph_2dimg_wave_curves:
+            self.graph_2dimg_wave_curves[k][0][0] = self.params_fit759[0] + (float(k) - 759.37) # / self.ui.sb_waveperpixel.value()
+            self.graph_2dimg_wave_curves[k][0][1] = self.params_fit759[1]
+            self.graph_2dimg_wave_curves[k][0][2] = self.params_fit759[2]
+
+
+
 
 
     def handle_cb_calc5_norming(self) -> None:
@@ -754,7 +787,7 @@ class TheMainWindow(QMainWindow):
         _ = QShortcut(QKeySequence("Ctrl+O"),    self).activated.connect(self.short_cut_open_at_point)
         _ = QShortcut(QKeySequence("Ctrl+H"),    self).activated.connect(self.open_help_page)
         _ = QShortcut(QKeySequence("Ctrl+F"),    self).activated.connect(self.ui.cb_ft_filter.toggle)
-        _ = QShortcut(QKeySequence("Alt+F"),     self).activated.connect( lambda: self.ui.le_tv_name_narrower.setFocus())
+        _ = QShortcut(QKeySequence("Alt+F"),     self).activated.connect(self.ui.le_tv_name_narrower.setFocus)
 
     def init_actions(self) -> None:
         _ = self.ui.action_help.triggered.connect(self.open_help_page)
