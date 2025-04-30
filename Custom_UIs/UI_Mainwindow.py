@@ -95,12 +95,12 @@ class Ui_MainWindow(object):
         self.action_tabs_show_tab3.setObjectName("action_tabs_show_tab3")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.gridLayout_10 = QGridLayout(self.centralwidget)
-        self.gridLayout_10.setObjectName("gridLayout_10")
+        self.verticalLayout_7 = QVBoxLayout(self.centralwidget)
+        self.verticalLayout_7.setObjectName("verticalLayout_7")
         self.label = QLabel(self.centralwidget)
         self.label.setObjectName("label")
 
-        self.gridLayout_10.addWidget(self.label, 0, 0, 1, 1)
+        self.verticalLayout_7.addWidget(self.label)
 
         self.splitter = QSplitter(self.centralwidget)
         self.splitter.setObjectName("splitter")
@@ -661,7 +661,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 344, 525))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, -50, 344, 985))
         self.verticalLayout_8 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_8.setObjectName("verticalLayout_8")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -735,31 +735,55 @@ class Ui_MainWindow(object):
         _ = self.tabWidget.addTab(self.tab_2, "")
         self.tab_3 = QWidget()
         self.tab_3.setObjectName("tab_3")
-        self.verticalLayout_7 = QVBoxLayout(self.tab_3)
-        self.verticalLayout_7.setObjectName("verticalLayout_7")
+        self.verticalLayout_10 = QVBoxLayout(self.tab_3)
+        self.verticalLayout_10.setObjectName("verticalLayout_10")
         self.cb_calc3_calibrate_759 = QCheckBox(self.tab_3)
         self.cb_calc3_calibrate_759.setObjectName("cb_calc3_calibrate_759")
         self.cb_calc3_calibrate_759.setEnabled(False)
         self.cb_calc3_calibrate_759.setChecked(True)
 
-        self.verticalLayout_7.addWidget(self.cb_calc3_calibrate_759)
+        self.verticalLayout_10.addWidget(self.cb_calc3_calibrate_759)
 
-        self.graph_calc3_759_calib = PlotWidget(self.tab_3)
-        self.graph_calc3_759_calib.setObjectName("graph_calc3_759_calib")
+        self.graph_calc3_1red = PlotWidget(self.tab_3)
+        self.graph_calc3_1red.setObjectName("graph_calc3_1red")
         sizePolicy10 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         sizePolicy10.setHorizontalStretch(0)
         sizePolicy10.setVerticalStretch(200)
-        sizePolicy10.setHeightForWidth(self.graph_calc3_759_calib.sizePolicy().hasHeightForWidth())
-        self.graph_calc3_759_calib.setSizePolicy(sizePolicy10)
-        self.graph_calc3_759_calib.setMinimumSize(QSize(300, 200))
+        sizePolicy10.setHeightForWidth(self.graph_calc3_1red.sizePolicy().hasHeightForWidth())
+        self.graph_calc3_1red.setSizePolicy(sizePolicy10)
+        self.graph_calc3_1red.setMinimumSize(QSize(300, 200))
 
-        self.verticalLayout_7.addWidget(self.graph_calc3_759_calib)
+        self.verticalLayout_10.addWidget(self.graph_calc3_1red)
+
+        self.graph_calc3_2green = PlotWidget(self.tab_3)
+        self.graph_calc3_2green.setObjectName("graph_calc3_2green")
+        sizePolicy10.setHeightForWidth(self.graph_calc3_2green.sizePolicy().hasHeightForWidth())
+        self.graph_calc3_2green.setSizePolicy(sizePolicy10)
+        self.graph_calc3_2green.setMinimumSize(QSize(300, 200))
+
+        self.verticalLayout_10.addWidget(self.graph_calc3_2green)
+
+        self.______asdf = PlotWidget(self.tab_3)
+        self.______asdf.setObjectName("______asdf")
+        sizePolicy10.setHeightForWidth(self.______asdf.sizePolicy().hasHeightForWidth())
+        self.______asdf.setSizePolicy(sizePolicy10)
+        self.______asdf.setMinimumSize(QSize(300, 200))
+
+        self.verticalLayout_10.addWidget(self.______asdf)
+
+        self.graph_calc3_3blue = PlotWidget(self.tab_3)
+        self.graph_calc3_3blue.setObjectName("graph_calc3_3blue")
+        sizePolicy10.setHeightForWidth(self.graph_calc3_3blue.sizePolicy().hasHeightForWidth())
+        self.graph_calc3_3blue.setSizePolicy(sizePolicy10)
+        self.graph_calc3_3blue.setMinimumSize(QSize(300, 200))
+
+        self.verticalLayout_10.addWidget(self.graph_calc3_3blue)
 
         self.txt_calc3_cal759 = QTextBrowser(self.tab_3)
         self.txt_calc3_cal759.setObjectName("txt_calc3_cal759")
         self.txt_calc3_cal759.setMaximumSize(QSize(16777215, 80))
 
-        self.verticalLayout_7.addWidget(self.txt_calc3_cal759)
+        self.verticalLayout_10.addWidget(self.txt_calc3_cal759)
 
         _ = self.tabWidget.addTab(self.tab_3, "")
         self.tab_8 = QWidget()
@@ -904,7 +928,7 @@ class Ui_MainWindow(object):
 
         self.splitter.addWidget(self.gp_spectral_panel)
 
-        self.gridLayout_10.addWidget(self.splitter, 1, 0, 1, 1)
+        self.verticalLayout_7.addWidget(self.splitter)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
@@ -950,7 +974,7 @@ class Ui_MainWindow(object):
 
         self.tabWidget_2.setCurrentIndex(0)
         self.tw_midcol.setCurrentIndex(0)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(2)
 
         QMetaObject.connectSlotsByName(MainWindow)
 

@@ -109,8 +109,8 @@ class TheMainWindow(QMainWindow):
         _ = self.fsmodel.setRootPath(QDir.homePath())
 
         self.ui.tv_dir.setModel(self.fsmodel)
-        # self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath(QDir.homePath()))
-        self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath("/home/garid/test_alfa-20230529_091201/20230529_091201_0207367_0000.jpeg")) # TODO change before 
+        self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath(QDir.homePath()))
+        #self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath("/home/garid/test_alfa-20230529_091201/20230529_091201_0207367_0000.jpeg")) # TODO change before 
         _ = self.ui.tv_dir.doubleClicked.connect(self.call_tv_onItemDoubleClicked)
         self.short_cut_goto_parent_dir()
         # -----------------------------------------------------------------------------
@@ -193,6 +193,14 @@ class TheMainWindow(QMainWindow):
             "759.37": (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine))),
             "800":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine))),
             #"850":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem()),
+        }
+        self.graph_distributive_dn = {
+            "red_obje" : self.ui.graph_calc3_1red.getPlotItem().plot(   pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
+            "red_gray" : self.ui.graph_calc3_1red.getPlotItem().plot(   pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
+            "grn_obje" : self.ui.graph_calc3_2green.getPlotItem().plot( pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
+            "grn_gray" : self.ui.graph_calc3_2green.getPlotItem().plot( pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
+            "blu_obje" : self.ui.graph_calc3_3blue.getPlotItem().plot(  pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
+            "blu_gray" : self.ui.graph_calc3_3blue.getPlotItem().plot(  pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
         }
 
         # ----------------------------------------------------
@@ -372,7 +380,6 @@ class TheMainWindow(QMainWindow):
                     quadratic_func(np.arange(0, 2464, 1), *prms),
                     np.arange(0, 2464, 1),
                 )
-                print(prms)
             else:
                 if x in self.ui.graph_2dimg.getView().addedItems:
                     _ = self.ui.graph_2dimg.getView().removeItem(x)
@@ -438,17 +445,16 @@ class TheMainWindow(QMainWindow):
 
 
         # --------graph 3:  759 calibration curves ---------------------------------------------------------------------
-        _ = self.ui.graph_calc3_759_calib.getPlotItem().addLegend()
-        self.ui.graph_calc3_759_calib.getPlotItem().addItem(
-            pg.InfiniteLine(
-                pos=759.37 / 10**9,
-                movable=False, angle=90,
-                label="x={value:0.2f}nm",
-                labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}))
-
-        self.ui.graph_calc3_759_calib.getPlotItem().setLabel("left",   "Digital Number", units="DN")
-        self.ui.graph_calc3_759_calib.getPlotItem().setLabel("bottom", "Wavelength",     units="m") #, unitPrefix= "n")
-        self.ui.graph_calc3_759_calib.getPlotItem().setTitle("After 759nm calibration")
+        #_ = self.ui.graph_calc3_759_calib.getPlotItem().addLegend()                                                                  TODO 
+        #self.ui.graph_calc3_759_calib.getPlotItem().addItem(                                                                          TODO 
+        #    pg.InfiniteLine(                                                                                                          TODO 
+        #        pos=759.37 / 10**9,                                                                                                   TODO 
+        #        movable=False, angle=90,                                                                                              TODO 
+        #        label="x={value:0.2f}nm",                                                                                             TODO 
+        #        labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}))                       TODO 
+        #self.ui.graph_calc3_759_calib.getPlotItem().setLabel("left",   "Digital Number", units="DN")                                  TODO 
+        #self.ui.graph_calc3_759_calib.getPlotItem().setLabel("bottom", "Wavelength",     units="m") #, unitPrefix= "n")               TODO 
+        #self.ui.graph_calc3_759_calib.getPlotItem().setTitle("After 759nm calibration")                                               TODO 
 
         # --------graph 4:  rgb refl  ---------------------------------------------------------------------
         _ = self.ui.graph_calc4_refl_rgb.getPlotItem().addLegend()
@@ -868,7 +874,8 @@ class TheMainWindow(QMainWindow):
         self.ui.pbar_calc.setValue(25)
         self.ui.tabWidget.setCurrentIndex(1)
         time.sleep(.1)
-        # self.call_calibrate_and_calculate_calc3_759_calib()       TODO
+        #self.call_calibrate_and_calculate_calc3_759_calib()       # TODO
+        self.distribute_pixel_graph()
         self.ui.pbar_calc.setValue(50)
         self.ui.tabWidget.setCurrentIndex(2)
         time.sleep(.1)
@@ -889,6 +896,35 @@ class TheMainWindow(QMainWindow):
         self.ui.pbar_calc.setValue(100)
         self.ui.tabWidget.setCurrentIndex(5)
         time.sleep(.1)
+
+    def distribute_pixel_graph(self) -> None:
+        gray_roi_mid: NDArray[np.float64] = self.jp.data[
+            self.ui.sb_gray_posy.value() : self.ui.sb_gray_posy.value() + self.ui.sb_gray_sizy.value(),
+            self.ui.sb_midx_init.value() : self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()
+        ].astype(np.float64)
+        obje_roi_mid: NDArray[np.float64] = self.jp.data[
+            self.ui.sb_obje_posy.value() : self.ui.sb_obje_posy.value() + self.ui.sb_obje_sizy.value(),
+            self.ui.sb_midx_init.value() : self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()
+        ].astype(np.float64)
+
+        wv_gray_roi_mid: NDArray[np.float64] = self.wv[
+            self.ui.sb_gray_posy.value() : self.ui.sb_gray_posy.value() + self.ui.sb_gray_sizy.value(),
+            self.ui.sb_midx_init.value() : self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()
+        ]
+
+        wv_obje_roi_mid: NDArray[np.float64] = self.wv[
+            self.ui.sb_obje_posy.value() : self.ui.sb_obje_posy.value() + self.ui.sb_obje_sizy.value(),
+            self.ui.sb_midx_init.value() : self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()
+        ]
+
+        self.graph_distributive_dn["red_gray"].setData(wv_gray_roi_mid[1::2, 1::2].reshape(-1), gray_roi_mid[1::2, 1::2].reshape(-1))
+        self.graph_distributive_dn["red_obje"].setData(wv_obje_roi_mid[1::2, 1::2].reshape(-1), obje_roi_mid[1::2, 1::2].reshape(-1))
+
+        self.graph_distributive_dn["grn_gray"].setData(wv_gray_roi_mid[1::2, 0::2].reshape(-1), gray_roi_mid[1::2, 0::2].reshape(-1))
+        self.graph_distributive_dn["grn_obje"].setData(wv_obje_roi_mid[1::2, 0::2].reshape(-1), obje_roi_mid[1::2, 0::2].reshape(-1))
+
+        self.graph_distributive_dn["blu_gray"].setData(wv_gray_roi_mid[0::2, 0::2].reshape(-1), gray_roi_mid[0::2, 0::2].reshape(-1))
+        self.graph_distributive_dn["blu_obje"].setData(wv_obje_roi_mid[0::2, 0::2].reshape(-1), obje_roi_mid[0::2, 0::2].reshape(-1))
 
     def update_1_rawbayer_img_data_and_then_plot_below(self) -> None:
         self.ui.graph_2dimg.clear()
