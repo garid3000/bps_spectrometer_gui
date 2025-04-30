@@ -27,15 +27,14 @@ from PySide6.QtCore import QModelIndex, QDir, Qt, QPersistentModelIndex, QPointF
 from Custom_UIs.UI_Mainwindow import Ui_MainWindow
 from Custom_Libs.Lib_DataDirTree import DataDirTree
 from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import JpegProcessor, get_wavelength_array #, background
+from bps_raw_jpeg_processer.src.better_bps_raw_jpeg_processor import quadratic_func
+from bps_raw_jpeg_processer.src.pxlspec_to_pxlweb_formula import pxlspec_to_pxlweb_formula
 
 # ---------- pqgraph config -------------------------------------------------------------------------------------------
 pg.setConfigOption("background", "w")
 pg.setConfigOption("foreground", "k")
 
 logger = logging.getLogger(__name__)
-
-def quadratic_func(x, p0, p1, p2):
-    return p0 + p1 * x + p2 * x **2
 
 def open_file_externally(filepath: str) -> None:
     """Opens given file externally, without hanging current running python script."""
@@ -106,15 +105,18 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.cb_rawbayer_visual_demosiac.stateChanged.connect(self.update_1_rawbayer_img_data_and_then_plot_below)
 
         # --------------- initialize the file system ----------------------------------
-        self.fsmodel = FileSystemModel()                     # prev. QFileSystemModel()
+        self.fsmodel = FileSystemModel()
         _ = self.fsmodel.setRootPath(QDir.homePath())
 
         self.ui.tv_dir.setModel(self.fsmodel)
-        #self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath(QDir.homePath()))
+        # self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath(QDir.homePath()))
         self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath("/home/garid/test_alfa-20230529_091201/20230529_091201_0207367_0000.jpeg")) # TODO change before 
-        self.short_cut_goto_parent_dir()
         _ = self.ui.tv_dir.doubleClicked.connect(self.call_tv_onItemDoubleClicked)
-        _ = self.ui.cb_ft_filter.stateChanged.connect(self.toggle_filetype_visiblity)
+        self.short_cut_goto_parent_dir()
+        # -----------------------------------------------------------------------------
+        _ = self.ui.cb_ft_filter.stateChanged.connect(
+            lambda: self.fsmodel.setNameFilters((["*.jpeg"] if self.ui.cb_ft_filter.isChecked() else ["*"]))
+        )
         _ = self.ui.cb_calc5_norm.stateChanged.connect(self.handle_cb_calc5_norming)
         _ = self.ui.sb_calc5_norm_zero.valueChanged.connect(self.handle_cb_calc5_norming)
         _ = self.ui.sb_calc5_norm_one.valueChanged.connect(self.handle_cb_calc5_norming)
@@ -122,7 +124,6 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.pb_system_file_explorer.clicked.connect(self.open_directory_at_point)
         _ = self.ui.le_tv_name_narrower.textChanged.connect(self.dir_searching_based_regex)
         _ = self.ui.cb_parameter_history.currentTextChanged.connect(self.set_calculation_params_from_history_selection)
-
         _ = self.ui.hs_target_distance.valueChanged.connect(self.update_fov_on_webcam)
         # -----------------------------------------------------------------------------
         #self.jp.set_xWaveRng(self.ui.sb_midx_init.value())
@@ -169,7 +170,6 @@ class TheMainWindow(QMainWindow):
 
         # end init_all_6_roi ------------------------------------------------------------------------------------------
 
-        # --- graph_raw plot items
         _ = self.ui.graph_raw.getPlotItem().addLegend()
         self.graph_raw_lines = {
             "gray_r" : self.ui.graph_raw.getPlotItem().plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="R-gray"),
@@ -194,51 +194,6 @@ class TheMainWindow(QMainWindow):
             "800":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine))),
             #"850":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem()),
         }
-
-        # self.graph2_curve_bg_gray_le_r = self.ui.graph_calc2_bg_gray.getPlotItem().plot(symbol="o", symbolSize=9, symbolBrush=(255, 000, 000), pen=None, name="R-gray-left")
-        # self.graph2_curve_bg_gray_le_g = self.ui.graph_calc2_bg_gray.getPlotItem().plot(symbol="o", symbolSize=9, symbolBrush=(000, 255, 000), pen=None, name="G-gray-left")
-        # self.graph2_curve_bg_gray_le_b = self.ui.graph_calc2_bg_gray.getPlotItem().plot(symbol="o", symbolSize=9, symbolBrush=(000, 000, 255), pen=None, name="B-gray-left")
-        # self.graph2_curve_bg_gray_re_r = self.ui.graph_calc2_bg_gray.getPlotItem().plot(symbol="x", symbolSize=9, symbolBrush=(255, 000, 000), pen=None, name="R-gray-right")
-        # self.graph2_curve_bg_gray_re_g = self.ui.graph_calc2_bg_gray.getPlotItem().plot(symbol="x", symbolSize=9, symbolBrush=(000, 255, 000), pen=None, name="G-gray-right")
-        # self.graph2_curve_bg_gray_re_b = self.ui.graph_calc2_bg_gray.getPlotItem().plot(symbol="x", symbolSize=9, symbolBrush=(000, 000, 255), pen=None, name="B-gray-right")
-        # self.graph2_curve_bg_gray_mi_r = self.ui.graph_calc2_bg_gray.getPlotItem().plot(pen=pg.mkPen("r", width=0, style=Qt.PenStyle.SolidLine), name="Estimated-R-bg")
-        # self.graph2_curve_bg_gray_mi_g = self.ui.graph_calc2_bg_gray.getPlotItem().plot(pen=pg.mkPen("g", width=0, style=Qt.PenStyle.SolidLine), name="Estimated-G-bg")
-        # self.graph2_curve_bg_gray_mi_b = self.ui.graph_calc2_bg_gray.getPlotItem().plot(pen=pg.mkPen("b", width=0, style=Qt.PenStyle.SolidLine), name="Estimated-B-bg")
-
-        # self.graph2_curve_bg_obje_le_r = self.ui.graph_calc2_bg_obje.getPlotItem().plot(symbol="o", symbolSize=9, symbolBrush=(255, 000, 000), pen=None, name="R-obje-left")
-        # self.graph2_curve_bg_obje_le_g = self.ui.graph_calc2_bg_obje.getPlotItem().plot(symbol="o", symbolSize=9, symbolBrush=(000, 255, 000), pen=None, name="G-obje-left")
-        # self.graph2_curve_bg_obje_le_b = self.ui.graph_calc2_bg_obje.getPlotItem().plot(symbol="o", symbolSize=9, symbolBrush=(000, 000, 255), pen=None, name="B-obje-left")
-        # self.graph2_curve_bg_obje_ri_r = self.ui.graph_calc2_bg_obje.getPlotItem().plot(symbol="x", symbolSize=9, symbolBrush=(255, 000, 000), pen=None, name="R-obje-right")
-        # self.graph2_curve_bg_obje_ri_g = self.ui.graph_calc2_bg_obje.getPlotItem().plot(symbol="x", symbolSize=9, symbolBrush=(000, 255, 000), pen=None, name="G-obje-right")
-        # self.graph2_curve_bg_obje_ri_b = self.ui.graph_calc2_bg_obje.getPlotItem().plot(symbol="x", symbolSize=9, symbolBrush=(000, 000, 255), pen=None, name="B-obje-right")
-        # self.graph2_curve_bg_obje_mi_r = self.ui.graph_calc2_bg_obje.getPlotItem().plot(pen=pg.mkPen("r", width=0, style=Qt.PenStyle.SolidLine), name="Estimated-R-bg")
-        # self.graph2_curve_bg_obje_mi_g = self.ui.graph_calc2_bg_obje.getPlotItem().plot(pen=pg.mkPen("g", width=0, style=Qt.PenStyle.SolidLine), name="Estimated-G-bg")
-        # self.graph2_curve_bg_obje_mi_b = self.ui.graph_calc2_bg_obje.getPlotItem().plot(pen=pg.mkPen("b", width=0, style=Qt.PenStyle.SolidLine), name="Estimated-B-bg")
-
-
-        # self.graph3_curve_759_calib_gray_r    = self.ui.graph_calc3_759_calib.getPlotItem().plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="R-gray")
-        # self.graph3_curve_759_calib_gray_g    = self.ui.graph_calc3_759_calib.getPlotItem().plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-gray")
-        # self.graph3_curve_759_calib_gray_b    = self.ui.graph_calc3_759_calib.getPlotItem().plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="B-gray")
-        # self.graph3_curve_759_calib_obje_r    = self.ui.graph_calc3_759_calib.getPlotItem().plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DashLine),  name="R-object")
-        # self.graph3_curve_759_calib_obje_g    = self.ui.graph_calc3_759_calib.getPlotItem().plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DashLine),  name="G-object")
-        # self.graph3_curve_759_calib_obje_b    = self.ui.graph_calc3_759_calib.getPlotItem().plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DashLine),  name="B-object")
-        # self.graph3_curve_759_calib_gray_r_bg = self.ui.graph_calc3_759_calib.getPlotItem().plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DotLine),   name="BG: R-gray")
-        # self.graph3_curve_759_calib_gray_g_bg = self.ui.graph_calc3_759_calib.getPlotItem().plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DotLine),   name="BG: G-gray")
-        # self.graph3_curve_759_calib_gray_b_bg = self.ui.graph_calc3_759_calib.getPlotItem().plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DotLine),   name="BG: B-gray")
-        # self.graph3_curve_759_calib_obje_r_bg = self.ui.graph_calc3_759_calib.getPlotItem().plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DotLine),   name="BG: R-object")
-        # self.graph3_curve_759_calib_obje_g_bg = self.ui.graph_calc3_759_calib.getPlotItem().plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DotLine),   name="BG: G-object")
-        # self.graph3_curve_759_calib_obje_b_bg = self.ui.graph_calc3_759_calib.getPlotItem().plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DotLine),   name="BG: B-object")
-
-        # # graph3.5 for the sh
-        # self.graph3_5_gray2white_r = self.ui.graph_gray2white.getPlotItem().plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.DotLine),  name="red")
-        # self.graph3_5_gray2white_g = self.ui.graph_gray2white.getPlotItem().plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.DotLine),  name="green")
-        # self.graph3_5_gray2white_b = self.ui.graph_gray2white.getPlotItem().plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.DotLine),  name="blue")
-        # self.graph3_5_gray2white_k = self.ui.graph_gray2white.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine),  name="black")
-
-        # # -------------------------------------------------------------------------------------------------------------------------
-        # self.graph4_curve_relf_r = self.ui.graph_calc4_refl_rgb.getPlotItem().plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine), name="R-refl")
-        # self.graph4_curve_relf_g = self.ui.graph_calc4_refl_rgb.getPlotItem().plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine), name="G-refl")
-        # self.graph4_curve_relf_b = self.ui.graph_calc4_refl_rgb.getPlotItem().plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine), name="B-refl")
 
         # self.ui.graph_calc4_refl_rgb.getPlotItem().setLabels() # left="axis 1"
         self.p2 = pg.ViewBox()
@@ -277,17 +232,6 @@ class TheMainWindow(QMainWindow):
         #     #labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}
         # )
         #self.ui.graph_2dimg.getView().addItem(self.graph_759nm_line_for_2dimg)
-
-        # self.graph_desalted_graphs_sep_line_y0 = pg.InfiniteLine(pos=0, movable=False, angle=0)
-        # self.graph_desalted_graphs_sep_line_x0 = pg.InfiniteLine(pos=0, movable=False, angle=90)
-        # self.graph_desalted_graphs_sep_line_x1 = pg.InfiniteLine(pos=0, movable=False, angle=90)
-
-        # self.text_for_desalted_img_label0 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">BG-Gray</span></div>',   anchor=(0, 0), border="w", fill=(100, 100, 100, 100))
-        # self.text_for_desalted_img_label1 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">Gray</span></div>',      anchor=(0, 0), border="w", fill=(200,  50,  50, 100))
-        # self.text_for_desalted_img_label2 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">BG-Gray</span></div>',   anchor=(0, 0), border="w", fill=(100, 100, 100, 100))
-        # self.text_for_desalted_img_label3 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">BG-Object</span></div>', anchor=(0, 0), border="w", fill=(100, 100, 100, 100))
-        # self.text_for_desalted_img_label4 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">Object</span></div>',    anchor=(0, 0), border="w", fill=(50,   50, 200, 100))
-        # self.text_for_desalted_img_label5 = pg.TextItem(html='<div style="text-align: center"><span style="color: #FFF;">BG-Object</span></div>', anchor=(0, 0), border="w", fill=(100, 100, 100, 100))
 
         #   -----------------------------------------------------------------------------------------------------------
         # def init_1_webfov_roi(self) -> None:
@@ -375,26 +319,16 @@ class TheMainWindow(QMainWindow):
                 ("width", float),
             ],
         )
-        #   -----------------------------------------------------------------------------------------------------------
-        #self.iso = pg.IsocurveItem(level=0.8, pen='g')
-        #self.iso.setParentItem(self.ui.graph_2dimg.getImageItem())
-        #self.iso.setZValue(5)
-        #self.ui.sp_wv_shower.valueChanged.connect(
-            #lambda: self.iso.setLevel(self.ui.sp_wv_shower.value())
-        #)
-        #   -----------------------------------------------------------------------------------------------------------
 
-
+        # -------- init the others ------------------------------
         self.init_2d_graph_hide_the_original_roi_buttons()
         self.init_all_6_roi()
-        # self.init_1_webfov_roi()
         self.init_sb_signals_for_ROI_controls()
         self.init_all_pyqtgraph()
-
         self.init_keyboard_bindings()
         self.init_actions()
 
-        #self.update_physical_graph()
+        # self.update_physical_graph()
 
         self.init_physical_repr_graph()
         _ = self.ui.hs_physical_elv.valueChanged.connect(self.update_physical_graph)
@@ -460,17 +394,6 @@ class TheMainWindow(QMainWindow):
         self.roi_gray_main.setZValue(10)
         self.roi_wave759nm.setZValue(10)
 
-        #self.ui.graph_calc1_desalted_roi.getView().addItem(self.graph_desalted_graphs_sep_line_y0)
-        #self.ui.graph_calc1_desalted_roi.getView().addItem(self.graph_desalted_graphs_sep_line_x0)
-        #self.ui.graph_calc1_desalted_roi.getView().addItem(self.graph_desalted_graphs_sep_line_x1)
-
-        #self.ui.graph_calc1_desalted_roi.getView().addItem(self.text_for_desalted_img_label0)
-        #self.ui.graph_calc1_desalted_roi.getView().addItem(self.text_for_desalted_img_label1)
-        #self.ui.graph_calc1_desalted_roi.getView().addItem(self.text_for_desalted_img_label2)
-        #self.ui.graph_calc1_desalted_roi.getView().addItem(self.text_for_desalted_img_label3)
-        #self.ui.graph_calc1_desalted_roi.getView().addItem(self.text_for_desalted_img_label4)
-        #self.ui.graph_calc1_desalted_roi.getView().addItem(self.text_for_desalted_img_label5)
-
     def init_sb_signals_for_ROI_controls(self) -> None:
         _ = self.ui.sb_gray_posy.valueChanged.connect(self.update_raw_from_sb)
         _ = self.ui.sb_gray_sizy.valueChanged.connect(self.update_raw_from_sb)
@@ -496,11 +419,11 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.graph_calc2_bg_gray.getPlotItem().addLegend()
         _ = self.ui.graph_calc2_bg_obje.getPlotItem().addLegend()
 
-        self.ui.graph_calc2_bg_gray.getPlotItem().setLabel("left",   "Background", units="DN")
+        self.ui.graph_calc2_bg_gray.getPlotItem().setLabel("left", "Background", units="DN")
         self.ui.graph_calc2_bg_gray.getPlotItem().setLabel("bottom", "Wavelenght", units="m")
         self.ui.graph_calc2_bg_gray.getPlotItem().setTitle("Gray Region Background")
 
-        self.ui.graph_calc2_bg_obje.getPlotItem().setLabel("left",   "Background", units="DN")
+        self.ui.graph_calc2_bg_obje.getPlotItem().setLabel("left", "Background", units="DN")
         self.ui.graph_calc2_bg_obje.getPlotItem().setLabel("bottom", "Wavelenght", units="m")
         self.ui.graph_calc2_bg_obje.getPlotItem().setTitle("Object Region Background")
 
@@ -624,8 +547,8 @@ class TheMainWindow(QMainWindow):
 
     def update_fov_on_webcam(self) -> None:
         self.ui.l_target_distance.setText(f"Distance: {self.ui.hs_target_distance.value()}cm")
-        fov_pw1 = self.pxlspec_to_pxlweb_formula(self.ui.hs_target_distance.value(), self.ui.sb_obje_posy.value())
-        fov_pw2 = self.pxlspec_to_pxlweb_formula(self.ui.hs_target_distance.value(), self.ui.sb_obje_posy.value() + self.ui.sb_obje_sizy.value())
+        fov_pw1 = pxlspec_to_pxlweb_formula(self.ui.hs_target_distance.value(), self.ui.sb_obje_posy.value())
+        fov_pw2 = pxlspec_to_pxlweb_formula(self.ui.hs_target_distance.value(), self.ui.sb_obje_posy.value() + self.ui.sb_obje_sizy.value())
         self.roi_webcam_fov.setPos((310, fov_pw1))
         self.roi_webcam_fov.setSize((20, fov_pw2-fov_pw1))
 
@@ -801,12 +724,6 @@ class TheMainWindow(QMainWindow):
         except Exception as e:
             print(e)
 
-    def toggle_filetype_visiblity(self, a: int) -> None:
-        if a == 2:
-            self.fsmodel.setNameFilters((["*.jpeg"]))
-        else:
-            self.fsmodel.setNameFilters((["*"]))
-
     def init_keyboard_bindings(self) -> None:
         _ = QShortcut(QKeySequence("Ctrl+B"),    self).activated.connect(self.short_cut_goto_parent_dir)
         _ = QShortcut(QKeySequence("Backspace"), self).activated.connect(self.short_cut_goto_parent_dir)
@@ -821,8 +738,6 @@ class TheMainWindow(QMainWindow):
 
     def init_actions(self) -> None:
         _ = self.ui.action_help.triggered.connect(self.open_help_page)
-        # _ = self.ui.action_dir_cur_child_fold.connect( #lambda self.ui.tv_dir.collapse())
-        # _ = self.ui.action_dir_cur_child_unfold.connect(self.ui.tv_dir.)
         _ = self.ui.action_dir_goto_cur_child.triggered.connect(self.short_cut_goto_selected_child_dir)
         _ = self.ui.action_dir_goto_parent.triggered.connect(self.short_cut_goto_parent_dir)
         _ = self.ui.action_dir_ft_filter_toggle.triggered.connect(self.ui.cb_ft_filter.toggle)
@@ -862,7 +777,6 @@ class TheMainWindow(QMainWindow):
         """Open current directory"""
         sel_m_index = self.ui.tv_dir.rootIndex()
         tmpdirectory = self.fsmodel.filePath(sel_m_index)
-        # print(tmpdirectory)
         open_file_externally(tmpdirectory)
 
     def short_cut_preview_raw_jpeg(self) -> bool:
@@ -875,8 +789,8 @@ class TheMainWindow(QMainWindow):
             dlg = QMessageBox(self)
             dlg.setWindowTitle("Wrong File selected")
             dlg.setText(
-                "Selected item is not a file.\n" +
-                "If this is a folder press ENTER (or double mouseclick)" +
+                "Selected item is not a file.\n"
+                "If this is a folder press ENTER (or double mouseclick)"
                 "to enter this folder"
             )
             _ = dlg.exec()
@@ -885,7 +799,7 @@ class TheMainWindow(QMainWindow):
             dlg = QMessageBox(self)
             dlg.setWindowTitle("Wrong File selected")
             dlg.setText(
-                "Selected item is not (JPEG or Directory)\n" +
+                "Selected item is not (JPEG or Directory)\n"
                 "Please select JPEG or Directory"
             )
             _ = dlg.exec()
@@ -897,13 +811,10 @@ class TheMainWindow(QMainWindow):
         self.ui.tb_meta_json.setText(self.ddtree.metajsonText)
         logger.info(f"short_cut_preview_raw_jpeg: {self.ddtree.webcamFP=}")
 
-        webcam:np.ndarray[tuple[int, int, int], np.dtype[np.uint8]] = np.zeros((10, 10, 3), dtype=np.uint8)
+        webcam: np.ndarray[tuple[int, int, int], np.dtype[np.uint8]] = np.zeros((10, 10, 3), dtype=np.uint8)
         if self.ddtree.webcamFP is not None:
             try:
-                tmp = np.asarray(
-                    Image.open(self.ddtree.webcamFP),
-                    dtype=np.uint8
-                )
+                tmp = np.asarray(Image.open(self.ddtree.webcamFP), dtype=np.uint8)
                 assert tmp.ndim == 3
                 webcam = cast(np.ndarray[tuple[int, int, int], np.dtype[np.uint8]], tmp)
                 logger.debug(f"short_cut_preview_raw_jpeg: {webcam.dtype=}, {webcam.shape=}")
@@ -929,16 +840,15 @@ class TheMainWindow(QMainWindow):
         self.update_1_rawbayer_img_data_and_then_plot_below()
 
         # try to reset & repopulate paramHisotry combobox
-        self.repopulate_param_hist_combobox()
+        self.repopulate_param_history_combobox()
         return True
 
-    def repopulate_param_hist_combobox(self) -> None:
+    def repopulate_param_history_combobox(self) -> None:
         self.paramLogPath = os.path.join(self.ddtree.ddir, "output", "export_log.csv")
         self.dfParamHistory = self.read_param_history_file_and_handle_if_corrupted(self.paramLogPath)
         self.ui.cb_parameter_history.clear()
-        self.ui.cb_parameter_history.addItem("Current")                               # <-- current different
+        self.ui.cb_parameter_history.addItem("Current")
         self.ui.cb_parameter_history.addItems(self.dfParamHistory["date"].astype(str).tolist())
-
 
     def call_tv_onItemDoubleClicked(self, v: QModelIndex):
         tmp = self.fsmodel.filePath(v)
@@ -1032,7 +942,7 @@ class TheMainWindow(QMainWindow):
             )
         )
         self.write_export_log_calculation_parameters()
-        self.repopulate_param_hist_combobox()
+        self.repopulate_param_history_combobox()
 
         # set to latest history# after exporting finishes
         if (self.dfParamHistory.shape[0] != 0) and (self.ui.cb_parameter_history.count() >= 1):
@@ -1045,8 +955,6 @@ class TheMainWindow(QMainWindow):
             # wihtout blokcing singal here, export will
             # self.call_calibrate_and_calculate() twice
             # (once at begining, & then inside of self.ui.cb_parameter_history.setCurrentIndex(1))
-
-
 
     def set_calculation_params_from_history_selection(self) -> None:
         # when cb_parameter_history changes
@@ -1187,8 +1095,6 @@ class TheMainWindow(QMainWindow):
         )
         # self.ui.sb_waveperpixel
 
-    def pxlspec_to_pxlweb_formula(self, distance_in_cm: float, pxl_spec: int) -> float:
-        return ( -0.212 + 0.316 / (distance_in_cm + 0.258)) * pxl_spec + 2351.944 / (distance_in_cm + 8.423) + 519.806
 
     def init_physical_repr_graph(self) -> None:
         v = self.ui.graph_physical_orientation.ci.addViewBox()
