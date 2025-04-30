@@ -27,7 +27,7 @@ from PySide6.QtCore import QModelIndex, QDir, Qt, QPersistentModelIndex, QPointF
 from Custom_UIs.UI_Mainwindow import Ui_MainWindow
 from Custom_Libs.Lib_DataDirTree import DataDirTree
 from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import JpegProcessor, get_wavelength_array #, background
-from bps_raw_jpeg_processer.src.better_bps_raw_jpeg_processor import quadratic_func
+from bps_raw_jpeg_processer.src.better_bps_raw_jpeg_processor import quadratic_func, wavelength_array_2464x3280
 from bps_raw_jpeg_processer.src.pxlspec_to_pxlweb_formula import pxlspec_to_pxlweb_formula
 
 # ---------- pqgraph config -------------------------------------------------------------------------------------------
@@ -195,6 +195,15 @@ class TheMainWindow(QMainWindow):
             #"850":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem()),
         }
 
+        # ----------------------------------------------------
+        # self.iso = pg.IsocurveItem(level=0.8, pen='g')
+        # self.iso.setParentItem(self.ui.graph_2dimg.getImageItem())
+        # self.iso.setZValue(5)
+        # self.ui.sp_wv_shower.valueChanged.connect(
+        #    lambda: self.iso.setLevel(self.ui.sp_wv_shower.value())
+        # )
+
+
         # self.ui.graph_calc4_refl_rgb.getPlotItem().setLabels() # left="axis 1"
         self.p2 = pg.ViewBox()
         self.ui.graph_calc4_refl_rgb.getPlotItem().showAxis("right")
@@ -360,8 +369,8 @@ class TheMainWindow(QMainWindow):
                 if x not in self.ui.graph_2dimg.getView().addedItems:
                     _ = self.ui.graph_2dimg.getView().addItem(x)
                 x.setData(
-                    quadratic_func(np.arange(0, 2400, 1), *prms),
-                    np.arange(0, 2400, 1),
+                    quadratic_func(np.arange(0, 2464, 1), *prms),
+                    np.arange(0, 2464, 1),
                 )
                 print(prms)
             else:
@@ -615,11 +624,9 @@ class TheMainWindow(QMainWindow):
             self.graph_2dimg_wave_curves[k][0][1] = 0
             self.graph_2dimg_wave_curves[k][0][2] = 0
 
-        self.wv[:, :] = np.linspace(
-            759.37 + self.ui.sb_waveperpixel.value() * (-w759_posx - w759_sizx/2),
-            759.37 + self.ui.sb_waveperpixel.value() * (3280-w759_posx - w759_sizx/2),
-            3280
-        ).reshape(1, 3280)
+
+        self.wv[:, :] = wavelength_array_2464x3280(self.graph_2dimg_wave_curves["759.37"][0], self.ui.sb_waveperpixel.value())
+        # self.iso.setData(self.wv)
 
     def wavelength_calibration(self) -> None:
         # assume the self.arr_759_roi has already prepped (and median filtered)
@@ -693,8 +700,8 @@ class TheMainWindow(QMainWindow):
         print(self.params_fit759)
 
         _ = self.ui.graph_759_plot_fit.getPlotItem().plot(
-            quadratic_func(np.arange(0, 2400, 1), *self.params_fit759),
-            np.arange(0, 2400, 1),
+            quadratic_func(np.arange(0, 2464, 1, dtype=np.float64), *self.params_fit759),
+            np.arange(0, 2464, 1),
         )
 
 
@@ -703,14 +710,9 @@ class TheMainWindow(QMainWindow):
             self.graph_2dimg_wave_curves[k][0][1] = self.params_fit759[1]
             self.graph_2dimg_wave_curves[k][0][2] = self.params_fit759[2]
 
-
-        self.wv[:, :] = np.linspace(
-            759.37 + self.ui.sb_waveperpixel.value() * (-w759_posx - w759_sizx/2),
-            759.37 + self.ui.sb_waveperpixel.value() * (3280-w759_posx - w759_sizx/2),
-            3280
-        ).reshape(1, 3280)
-
-
+        self.wv[:, :] = wavelength_array_2464x3280(self.params_fit759, self.ui.sb_waveperpixel.value())
+        #self.iso.setData(self.wv)
+        #np.save("/tmp/wv.npy", self.wv)
 
     def handle_cb_calc5_norming(self) -> None:
         # print("i was clicked")
@@ -1092,7 +1094,6 @@ class TheMainWindow(QMainWindow):
                      "gray_y_init", "gray_y_size", "obje_y_init", "obje_y_size", "waveperpixel", "calc1_desalt", "calc2_background",
                      "calc3_calibrate", "calc5_norm", "calc5_norm_zero", "calc5_norm_one",]
         )
-        # self.ui.sb_waveperpixel
 
 
     def init_physical_repr_graph(self) -> None:
