@@ -109,8 +109,8 @@ class TheMainWindow(QMainWindow):
         _ = self.fsmodel.setRootPath(QDir.homePath())
 
         self.ui.tv_dir.setModel(self.fsmodel)
-        self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath(QDir.homePath()))
-        #self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath("/home/garid/test_alfa-20230529_091201/20230529_091201_0207367_0000.jpeg")) # TODO change before 
+        # self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath(QDir.homePath()))
+        self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath("/home/garid/test_alfa-20230529_091201/20230529_091201_0207367_0000.jpeg")) # TODO change before 
         _ = self.ui.tv_dir.doubleClicked.connect(self.call_tv_onItemDoubleClicked)
         self.short_cut_goto_parent_dir()
         # -----------------------------------------------------------------------------
@@ -165,6 +165,18 @@ class TheMainWindow(QMainWindow):
         self.roi_wave759nm = pg.ROI(
             pos=[self.ui.sb_roi759_posx.value(), self.ui.sb_roi759_posy.value()],
             size=pg.Point(self.ui.sb_roi759_sizx.value(), self.ui.sb_roi759_sizy.value()),
+            movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
+        )
+
+        self.roi_bgle = pg.ROI(
+            pos=[self.ui.sb_bgle_posx.value(), self.ui.sb_bgle_posy.value()],
+            size=pg.Point(self.ui.sb_bgle_sizx.value(), self.ui.sb_bgle_sizy.value()),
+            movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
+        )
+
+        self.roi_bgri = pg.ROI(
+            pos=[self.ui.sb_bgri_posx.value(), self.ui.sb_bgri_posy.value()],
+            size=pg.Point(self.ui.sb_bgri_sizx.value(), self.ui.sb_bgri_sizy.value()),
             movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
         )
 
@@ -358,14 +370,18 @@ class TheMainWindow(QMainWindow):
 
     def handle_when_tw_midcol_changed(self) -> None:
         # remove all items 
-        for x in [self.roi_obje_main, self.roi_gray_main, self.roi_wave759nm, self.roi_label_obje, self.roi_label_gray]:
+        for x in [self.roi_obje_main, self.roi_gray_main, self.roi_wave759nm, self.roi_label_obje, self.roi_label_gray, self.roi_bgle, self.roi_bgri]:
             if x in self.ui.graph_2dimg.getView().addedItems:
                 _ = self.ui.graph_2dimg.getView().removeItem(x)
 
         # add items based on which is on 
         if self.ui.tw_midcol.currentIndex() == 0:
             _ = self.ui.graph_2dimg.getView().addItem(self.roi_wave759nm)
-        if self.ui.tw_midcol.currentIndex() == 2:
+        elif self.ui.tw_midcol.currentIndex() == 1:
+            _ = self.ui.graph_2dimg.getView().addItem(self.roi_bgle)
+            _ = self.ui.graph_2dimg.getView().addItem(self.roi_bgri)
+
+        elif self.ui.tw_midcol.currentIndex() == 2:
             _ = self.ui.graph_2dimg.getView().addItem(self.roi_obje_main)
             _ = self.ui.graph_2dimg.getView().addItem(self.roi_gray_main)
             _ = self.ui.graph_2dimg.getView().addItem(self.roi_label_obje)
@@ -422,13 +438,27 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.sb_roi759_sizx.valueChanged.connect(self.update_raw_from_sb)
         _ = self.ui.sb_roi759_sizy.valueChanged.connect(self.update_raw_from_sb)
 
+        _ = self.ui.sb_bgle_posx.valueChanged.connect(self.update_raw_from_sb)
+        _ = self.ui.sb_bgle_posy.valueChanged.connect(self.update_raw_from_sb)
+        _ = self.ui.sb_bgle_sizx.valueChanged.connect(self.update_raw_from_sb)
+        _ = self.ui.sb_bgle_sizy.valueChanged.connect(self.update_raw_from_sb)
+        _ = self.ui.sb_bgri_posx.valueChanged.connect(self.update_raw_from_sb)
+        _ = self.ui.sb_bgri_posy.valueChanged.connect(self.update_raw_from_sb)
+        _ = self.ui.sb_bgri_sizx.valueChanged.connect(self.update_raw_from_sb)
+        _ = self.ui.sb_bgri_sizy.valueChanged.connect(self.update_raw_from_sb)
+
+
         _ = self.ui.sb_waveperpixel.valueChanged.connect(self.update_raw_roi_plot_when_sb_or_roi_moved)
 
         _ = self.roi_gray_main.sigRegionChanged.connect(lambda: self.handle_roi_change("gray"))
         _ = self.roi_obje_main.sigRegionChanged.connect(lambda: self.handle_roi_change("obje"))
         _ = self.roi_wave759nm.sigRegionChanged.connect(lambda: self.handle_roi_change("wave-759"))
         _ = self.ui.cb_759_channel.currentIndexChanged.connect(lambda: self.handle_roi_change("wave-759"))
+        _ = self.roi_bgle.sigRegionChanged.connect(lambda: self.handle_roi_change("bg-left"))
+        _ = self.roi_bgri.sigRegionChanged.connect(lambda: self.handle_roi_change("bg-right"))
+
         _ = self.ui.pb_wave_calib.clicked.connect(self.wavelength_calibration)
+
 
     def init_all_pyqtgraph(self) -> None:
         # -------------------------------------------------------------------------------------------------------------
@@ -512,7 +542,19 @@ class TheMainWindow(QMainWindow):
             self.spinbox_setvalue_without_emitting_signal(self.ui.sb_roi759_posy, w759_posy)
             self.spinbox_setvalue_without_emitting_signal(self.ui.sb_roi759_sizx, w759_sizx)
             self.spinbox_setvalue_without_emitting_signal(self.ui.sb_roi759_sizy, w759_sizy)
+        elif roi_label == "bg-left":
+            bgle_posx, bgle_posy, bgle_sizx, bgle_sizy = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_bgle.getState())
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bgle_posx, bgle_posx)
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bgle_posy, bgle_posy)
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bgle_sizx, bgle_sizx)
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bgle_sizy, bgle_sizy)
 
+        elif roi_label == "bg-right":
+            bgri_posx, bgri_posy, bgri_sizx, bgri_sizy = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_bgri.getState())
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bgri_posx, bgri_posx)
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bgri_posy, bgri_posy)
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bgri_sizx, bgri_sizx)
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bgri_sizy, bgri_sizy)
 
         self.update_raw_from_sb()
 
@@ -529,6 +571,8 @@ class TheMainWindow(QMainWindow):
         _ = self.roi_gray_main.blockSignals(True)
         _ = self.roi_obje_main.blockSignals(True)
         _ = self.roi_wave759nm.blockSignals(True)
+        _ = self.roi_bgle.blockSignals(True)
+        _ = self.roi_bgri.blockSignals(True)
 
         self.roi_gray_main.setPos(self.ui.sb_midx_init.value(), self.ui.sb_gray_posy.value())
         self.roi_gray_main.setSize((self.ui.sb_midx_size.value(), self.ui.sb_gray_sizy.value()))
@@ -539,9 +583,17 @@ class TheMainWindow(QMainWindow):
         self.roi_wave759nm.setPos(self.ui.sb_roi759_posx.value(), self.ui.sb_roi759_posy.value())
         self.roi_wave759nm.setSize((self.ui.sb_roi759_sizx.value(), self.ui.sb_roi759_sizy.value()))
 
+        self.roi_bgle.setPos(self.ui.sb_bgle_posx.value(), self.ui.sb_bgle_posy.value())
+        self.roi_bgle.setSize((self.ui.sb_bgle_sizx.value(), self.ui.sb_bgle_sizy.value()))
+
+        self.roi_bgri.setPos(self.ui.sb_bgri_posx.value(), self.ui.sb_bgri_posy.value())
+        self.roi_bgri.setSize((self.ui.sb_bgri_sizx.value(), self.ui.sb_bgri_sizy.value()))
+
         _ = self.roi_gray_main.blockSignals(False)
         _ = self.roi_obje_main.blockSignals(False)
         _ = self.roi_wave759nm.blockSignals(False)
+        _ = self.roi_bgle.blockSignals(False)
+        _ = self.roi_bgri.blockSignals(False)
 
         # change the label position
         self.roi_label_gray.setPos(self.ui.sb_midx_init.value(), self.ui.sb_gray_posy.value())
