@@ -261,7 +261,7 @@ class Ui_MainWindow(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 434, 246))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 444, 246))
         self.verticalLayout_4 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.horizontalLayout_2 = QHBoxLayout()
@@ -311,7 +311,14 @@ class Ui_MainWindow(object):
         self.pushButton = QPushButton(self.midcol_tab1_wave)
         self.pushButton.setObjectName("pushButton")
 
-        self.gridLayout_4.addWidget(self.pushButton, 0, 1, 1, 1)
+        self.gridLayout_4.addWidget(self.pushButton, 0, 2, 1, 1)
+
+        self.sp_wv_shower = QDoubleSpinBox(self.midcol_tab1_wave)
+        self.sp_wv_shower.setObjectName("sp_wv_shower")
+        self.sp_wv_shower.setMaximum(1000.000000000000000)
+        self.sp_wv_shower.setValue(759.370000000000005)
+
+        self.gridLayout_4.addWidget(self.sp_wv_shower, 0, 1, 1, 1)
 
         self.gridLayout_11.addLayout(self.gridLayout_4, 4, 1, 1, 1)
 
@@ -654,7 +661,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 349, 525))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 344, 525))
         self.verticalLayout_8 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_8.setObjectName("verticalLayout_8")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)

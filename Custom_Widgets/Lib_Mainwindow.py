@@ -89,6 +89,7 @@ class TheMainWindow(QMainWindow):
     help_html_path: str = os.path.join(QDir.currentPath(), "docs/help.html") # need change on the binary release?
     ddtree: DataDirTree = DataDirTree()
     jp: JpegProcessor = JpegProcessor()
+    wv: NDArray[np.float64] = np.zeros((2464, 3280), dtype=np.float64)
 
     paramLogPath: str = ""
     dfParamHistory: pd.DataFrame = pd.DataFrame()
@@ -131,7 +132,6 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.cb_invert_y_axis_of_rawbayer.stateChanged.connect(
             lambda: self.ui.graph_2dimg.getView().invertY(not self.ui.cb_invert_y_axis_of_rawbayer.isChecked())
         )
-
 
         # init_2d_graph_hide_the_original_roi_buttons -----------------------------------------------------------------
         self.roi_label_gray = pg.TextItem(
@@ -376,6 +376,14 @@ class TheMainWindow(QMainWindow):
             ],
         )
         #   -----------------------------------------------------------------------------------------------------------
+        #self.iso = pg.IsocurveItem(level=0.8, pen='g')
+        #self.iso.setParentItem(self.ui.graph_2dimg.getImageItem())
+        #self.iso.setZValue(5)
+        #self.ui.sp_wv_shower.valueChanged.connect(
+            #lambda: self.iso.setLevel(self.ui.sp_wv_shower.value())
+        #)
+        #   -----------------------------------------------------------------------------------------------------------
+
 
         self.init_2d_graph_hide_the_original_roi_buttons()
         self.init_all_6_roi()
@@ -567,36 +575,6 @@ class TheMainWindow(QMainWindow):
             self.spinbox_setvalue_without_emitting_signal(self.ui.sb_roi759_sizx, w759_sizx)
             self.spinbox_setvalue_without_emitting_signal(self.ui.sb_roi759_sizy, w759_sizy)
 
-            # changing the image
-            init_ax0, init_ax1 = 1, 1
-            if self.ui.cb_759_channel.currentText() == "red":
-                init_ax0, init_ax1 = 1, 1
-                self.ui.graph_759_roi.setColorMap(pg.colormap.get("CET-L13"))
-            elif self.ui.cb_759_channel.currentText() == "green":
-                init_ax0, init_ax1 = 0, 1
-                self.ui.graph_759_roi.setColorMap(pg.colormap.get("CET-L14"))
-            elif self.ui.cb_759_channel.currentText() == "green2":
-                init_ax0, init_ax1 = 1, 0
-                self.ui.graph_759_roi.setColorMap(pg.colormap.get("CET-L14"))
-            elif self.ui.cb_759_channel.currentText() == "blue":
-                init_ax0, init_ax1 = 0, 0
-                self.ui.graph_759_roi.setColorMap(pg.colormap.get("CET-L15"))
-
-            self.arr_759_roi: NDArray[np.uint16] = self.jp.data[
-                w759_posy + init_ax0 : w759_posy + w759_sizy+ init_ax0 : 2,
-                w759_posx + init_ax1 : w759_posx + w759_sizx+ init_ax1 : 2,
-            ].astype(np.uint16)
-            self.arr_759_roi = cast(np.ndarray[tuple[int, int], np.dtype[np.uint16]], self.arr_759_roi)
-            # self.arr_759_roi = sig.medfilt(self.arr_759_roi, kernel_size=(1, 3))
-            self.ui.graph_759_roi.setImage(self.arr_759_roi, axes={"x":1, "y":0}, levelMode = "mono")
-            self.ui.graph_759_plot.clear()
-            self.ui.graph_759_plot_fit.clear()
-
-            for k in self.graph_2dimg_wave_curves:
-                #self.graph_2dimg_wave_curves[k][0][0] =  w759_posx + (float(k) - 759.37)/ self.ui.sb_waveperpixel.value()
-                self.graph_2dimg_wave_curves[k][0][0] = w759_posx + (float(k) - 759.37) # / self.ui.sb_waveperpixel.value()
-                self.graph_2dimg_wave_curves[k][0][1] = 0
-                self.graph_2dimg_wave_curves[k][0][2] = 0
 
         self.update_raw_from_sb()
 
@@ -632,6 +610,8 @@ class TheMainWindow(QMainWindow):
         self.roi_label_obje.setPos(self.ui.sb_midx_init.value(), self.ui.sb_obje_posy.value())
 
         self.update_raw_roi_plot_when_sb_or_roi_moved()
+        self.update_759roi_when_sb_or_roi_moved()
+
 
         if not self.paramsChangingFromHistory:
             self.ui.cb_parameter_history.setCurrentIndex(0) # when change happens make it current
@@ -678,6 +658,46 @@ class TheMainWindow(QMainWindow):
         self.graph_raw_lines["obje_g"].setData(tmp_x, obje_roi_mid[1::2, 0::2].mean(axis=0, dtype=np.float64)) 
         self.graph_raw_lines["obje_G"].setData(tmp_x, obje_roi_mid[0::2, 1::2].mean(axis=0, dtype=np.float64)) 
         self.graph_raw_lines["obje_b"].setData(tmp_x, obje_roi_mid[0::2, 0::2].mean(axis=0, dtype=np.float64)) 
+
+
+    def update_759roi_when_sb_or_roi_moved(self) -> None:
+        w759_posx, w759_posy, w759_sizx, w759_sizy = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_wave759nm.getState())
+        # changing the image
+        init_ax0, init_ax1 = 1, 1
+        if self.ui.cb_759_channel.currentText() == "red":
+            init_ax0, init_ax1 = 1, 1
+            self.ui.graph_759_roi.setColorMap(pg.colormap.get("CET-L13"))
+        elif self.ui.cb_759_channel.currentText() == "green":
+            init_ax0, init_ax1 = 0, 1
+            self.ui.graph_759_roi.setColorMap(pg.colormap.get("CET-L14"))
+        elif self.ui.cb_759_channel.currentText() == "green2":
+            init_ax0, init_ax1 = 1, 0
+            self.ui.graph_759_roi.setColorMap(pg.colormap.get("CET-L14"))
+        elif self.ui.cb_759_channel.currentText() == "blue":
+            init_ax0, init_ax1 = 0, 0
+            self.ui.graph_759_roi.setColorMap(pg.colormap.get("CET-L15"))
+
+        self.arr_759_roi: NDArray[np.uint16] = self.jp.data[
+            w759_posy + init_ax0 : w759_posy + w759_sizy+ init_ax0 : 2,
+            w759_posx + init_ax1 : w759_posx + w759_sizx+ init_ax1 : 2,
+        ].astype(np.uint16)
+        self.arr_759_roi = cast(np.ndarray[tuple[int, int], np.dtype[np.uint16]], self.arr_759_roi)
+        # self.arr_759_roi = sig.medfilt(self.arr_759_roi, kernel_size=(1, 3))
+        self.ui.graph_759_roi.setImage(self.arr_759_roi, axes={"x":1, "y":0}, levelMode = "mono")
+        self.ui.graph_759_plot.clear()
+        self.ui.graph_759_plot_fit.clear()
+
+        for k in self.graph_2dimg_wave_curves:
+            #self.graph_2dimg_wave_curves[k][0][0] =  w759_posx + (float(k) - 759.37)/ self.ui.sb_waveperpixel.value()
+            self.graph_2dimg_wave_curves[k][0][0] = w759_posx + (float(k) - 759.37) # / self.ui.sb_waveperpixel.value()
+            self.graph_2dimg_wave_curves[k][0][1] = 0
+            self.graph_2dimg_wave_curves[k][0][2] = 0
+
+        self.wv[:, :] = np.linspace(
+            759.37 + self.ui.sb_waveperpixel.value() * (-w759_posx - w759_sizx/2),
+            759.37 + self.ui.sb_waveperpixel.value() * (3280-w759_posx - w759_sizx/2),
+            3280
+        ).reshape(1, 3280)
 
     def wavelength_calibration(self) -> None:
         # assume the self.arr_759_roi has already prepped (and median filtered)
@@ -762,6 +782,11 @@ class TheMainWindow(QMainWindow):
             self.graph_2dimg_wave_curves[k][0][2] = self.params_fit759[2]
 
 
+        self.wv[:, :] = np.linspace(
+            759.37 + self.ui.sb_waveperpixel.value() * (-w759_posx - w759_sizx/2),
+            759.37 + self.ui.sb_waveperpixel.value() * (3280-w759_posx - w759_sizx/2),
+            3280
+        ).reshape(1, 3280)
 
 
 

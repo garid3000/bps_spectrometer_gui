@@ -254,7 +254,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>434</width>
+             <width>444</width>
              <height>246</height>
             </rect>
            </property>
@@ -322,10 +322,20 @@
                 </property>
                </widget>
               </item>
-              <item row="0" column="1">
+              <item row="0" column="2">
                <widget class="QPushButton" name="pushButton">
                 <property name="text">
                  <string>_</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="1">
+               <widget class="QDoubleSpinBox" name="sp_wv_shower">
+                <property name="maximum">
+                 <double>1000.000000000000000</double>
+                </property>
+                <property name="value">
+                 <double>759.370000000000005</double>
                 </property>
                </widget>
               </item>
@@ -938,7 +948,7 @@
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>349</width>
+             <width>344</width>
              <height>525</height>
             </rect>
            </property>
