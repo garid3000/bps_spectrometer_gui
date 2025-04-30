@@ -611,8 +611,7 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_759_plot_fit.clear()
 
         for k in self.graph_2dimg_wave_curves:
-            #self.graph_2dimg_wave_curves[k][0][0] =  w759_posx + (float(k) - 759.37)/ self.ui.sb_waveperpixel.value()
-            self.graph_2dimg_wave_curves[k][0][0] = w759_posx + (float(k) - 759.37) # / self.ui.sb_waveperpixel.value()
+            self.graph_2dimg_wave_curves[k][0][0] = w759_posx + (float(k) - 759.37) / (self.ui.sb_waveperpixel.value() / 2)
             self.graph_2dimg_wave_curves[k][0][1] = 0
             self.graph_2dimg_wave_curves[k][0][2] = 0
 
@@ -700,7 +699,7 @@ class TheMainWindow(QMainWindow):
 
 
         for k in self.graph_2dimg_wave_curves:
-            self.graph_2dimg_wave_curves[k][0][0] = self.params_fit759[0] + (float(k) - 759.37) # / self.ui.sb_waveperpixel.value()
+            self.graph_2dimg_wave_curves[k][0][0] = self.params_fit759[0] + (float(k) - 759.37) / ( self.ui.sb_waveperpixel.value() / 2 )
             self.graph_2dimg_wave_curves[k][0][1] = self.params_fit759[1]
             self.graph_2dimg_wave_curves[k][0][2] = self.params_fit759[2]
 
