@@ -26,8 +26,8 @@ from PySide6.QtCore import QModelIndex, QDir, Qt, QPersistentModelIndex, QPointF
 # ---------- Custom libs ----------------------------------------------------------------------------------------------
 from Custom_UIs.UI_Mainwindow import Ui_MainWindow
 from Custom_Libs.Lib_DataDirTree import DataDirTree
-from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import JpegProcessor, get_wavelength_array #, background
-from bps_raw_jpeg_processer.src.better_bps_raw_jpeg_processor import quadratic_func, wavelength_array_2464x3280
+from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import JpegProcessor, get_wavelength_array
+from bps_raw_jpeg_processer.src.better_bps_raw_jpeg_processor import quadratic_func, wavelength_array_2464x3280, background_newest, background_new
 from bps_raw_jpeg_processer.src.pxlspec_to_pxlweb_formula import pxlspec_to_pxlweb_formula
 
 # ---------- pqgraph config -------------------------------------------------------------------------------------------
@@ -169,14 +169,14 @@ class TheMainWindow(QMainWindow):
         )
 
         self.roi_bgle = pg.ROI(
-            pos=[self.ui.sb_bgle_posx.value(), self.ui.sb_bgle_posy.value()],
-            size=pg.Point(self.ui.sb_bgle_sizx.value(), self.ui.sb_bgle_sizy.value()),
+            pos=[self.ui.sb_bgle_posx.value(), self.ui.sb_bg___posy.value()],
+            size=pg.Point(self.ui.sb_bgle_sizx.value(), self.ui.sb_bg___sizy.value()),
             movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
         )
 
         self.roi_bgri = pg.ROI(
-            pos=[self.ui.sb_bgri_posx.value(), self.ui.sb_bgri_posy.value()],
-            size=pg.Point(self.ui.sb_bgri_sizx.value(), self.ui.sb_bgri_sizy.value()),
+            pos=[self.ui.sb_bgri_posx.value(), self.ui.sb_bg___posy.value()],
+            size=pg.Point(self.ui.sb_bgri_sizx.value(), self.ui.sb_bg___sizy.value()),
             movable=True, scaleSnap=True, snapSize=2, translateSnap=True,
         )
 
@@ -422,6 +422,16 @@ class TheMainWindow(QMainWindow):
         _ = self.roi_wave759nm.addScaleHandle([0.5, 1], [0.5, 0])
         _ = self.roi_wave759nm.addScaleHandle([1, 0.5], [0, 0.5])
 
+        self.roi_bgle.addScaleHandle([0.5, 1], [0.5, 0])
+        self.roi_bgle.addScaleHandle([0.5, 0], [0.5, 1])
+        self.roi_bgle.addScaleHandle([1, 0.5], [0, 0.5])
+        self.roi_bgle.addScaleHandle([0, 0.5], [1, 0.5])
+
+        self.roi_bgri.addScaleHandle([0.5, 1], [0.5, 0])
+        self.roi_bgri.addScaleHandle([0.5, 0], [0.5, 1])
+        self.roi_bgri.addScaleHandle([1, 0.5], [0, 0.5])
+        self.roi_bgri.addScaleHandle([0, 0.5], [1, 0.5])
+
         self.roi_obje_main.setZValue(10)
         self.roi_gray_main.setZValue(10)
         self.roi_wave759nm.setZValue(10)
@@ -439,14 +449,11 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.sb_roi759_sizy.valueChanged.connect(self.update_raw_from_sb)
 
         _ = self.ui.sb_bgle_posx.valueChanged.connect(self.update_raw_from_sb)
-        _ = self.ui.sb_bgle_posy.valueChanged.connect(self.update_raw_from_sb)
+        _ = self.ui.sb_bg___posy.valueChanged.connect(self.update_raw_from_sb)
         _ = self.ui.sb_bgle_sizx.valueChanged.connect(self.update_raw_from_sb)
-        _ = self.ui.sb_bgle_sizy.valueChanged.connect(self.update_raw_from_sb)
+        _ = self.ui.sb_bg___sizy.valueChanged.connect(self.update_raw_from_sb)
         _ = self.ui.sb_bgri_posx.valueChanged.connect(self.update_raw_from_sb)
-        _ = self.ui.sb_bgri_posy.valueChanged.connect(self.update_raw_from_sb)
         _ = self.ui.sb_bgri_sizx.valueChanged.connect(self.update_raw_from_sb)
-        _ = self.ui.sb_bgri_sizy.valueChanged.connect(self.update_raw_from_sb)
-
 
         _ = self.ui.sb_waveperpixel.valueChanged.connect(self.update_raw_roi_plot_when_sb_or_roi_moved)
 
@@ -457,7 +464,8 @@ class TheMainWindow(QMainWindow):
         _ = self.roi_bgle.sigRegionChanged.connect(lambda: self.handle_roi_change("bg-left"))
         _ = self.roi_bgri.sigRegionChanged.connect(lambda: self.handle_roi_change("bg-right"))
 
-        _ = self.ui.pb_wave_calib.clicked.connect(self.wavelength_calibration)
+        _ = self.ui.pb_wave_calib.clicked.connect(self.callback_wavelength_calibration)
+        _ = self.ui.pb_bg_calc.clicked.connect(self.callback_bg_estimation)
 
 
     def init_all_pyqtgraph(self) -> None:
@@ -545,16 +553,16 @@ class TheMainWindow(QMainWindow):
         elif roi_label == "bg-left":
             bgle_posx, bgle_posy, bgle_sizx, bgle_sizy = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_bgle.getState())
             self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bgle_posx, bgle_posx)
-            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bgle_posy, bgle_posy)
             self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bgle_sizx, bgle_sizx)
-            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bgle_sizy, bgle_sizy)
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bg___posy, bgle_posy)
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bg___sizy, bgle_sizy)
 
         elif roi_label == "bg-right":
             bgri_posx, bgri_posy, bgri_sizx, bgri_sizy = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_bgri.getState())
             self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bgri_posx, bgri_posx)
-            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bgri_posy, bgri_posy)
             self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bgri_sizx, bgri_sizx)
-            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bgri_sizy, bgri_sizy)
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bg___posy, bgri_posy)
+            self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bg___sizy, bgri_sizy)
 
         self.update_raw_from_sb()
 
@@ -583,11 +591,11 @@ class TheMainWindow(QMainWindow):
         self.roi_wave759nm.setPos(self.ui.sb_roi759_posx.value(), self.ui.sb_roi759_posy.value())
         self.roi_wave759nm.setSize((self.ui.sb_roi759_sizx.value(), self.ui.sb_roi759_sizy.value()))
 
-        self.roi_bgle.setPos(self.ui.sb_bgle_posx.value(), self.ui.sb_bgle_posy.value())
-        self.roi_bgle.setSize((self.ui.sb_bgle_sizx.value(), self.ui.sb_bgle_sizy.value()))
+        self.roi_bgle.setPos(self.ui.sb_bgle_posx.value(), self.ui.sb_bg___posy.value())
+        self.roi_bgle.setSize((self.ui.sb_bgle_sizx.value(), self.ui.sb_bg___sizy.value()))
 
-        self.roi_bgri.setPos(self.ui.sb_bgri_posx.value(), self.ui.sb_bgri_posy.value())
-        self.roi_bgri.setSize((self.ui.sb_bgri_sizx.value(), self.ui.sb_bgri_sizy.value()))
+        self.roi_bgri.setPos(self.ui.sb_bgri_posx.value(), self.ui.sb_bg___posy.value())
+        self.roi_bgri.setSize((self.ui.sb_bgri_sizx.value(), self.ui.sb_bg___sizy.value()))
 
         _ = self.roi_gray_main.blockSignals(False)
         _ = self.roi_obje_main.blockSignals(False)
@@ -686,7 +694,7 @@ class TheMainWindow(QMainWindow):
         self.wv[:, :] = wavelength_array_2464x3280(self.graph_2dimg_wave_curves["759.37"][0], self.ui.sb_waveperpixel.value())
         # self.iso.setData(self.wv)
 
-    def wavelength_calibration(self) -> None:
+    def callback_wavelength_calibration(self) -> None:
         # assume the self.arr_759_roi has already prepped (and median filtered)
         cm = pg.colormap.get("turbo")
         clrs = cm.map(np.linspace(0, 1, self.arr_759_roi.shape[0]))
@@ -771,6 +779,60 @@ class TheMainWindow(QMainWindow):
         self.wv[:, :] = wavelength_array_2464x3280(self.params_fit759, self.ui.sb_waveperpixel.value())
         #self.iso.setData(self.wv)
         #np.save("/tmp/wv.npy", self.wv)
+
+    def callback_bg_estimation(self) -> None:
+        # assume the self.arr_759_roi has already prepped (and median filtered)
+        cm = pg.colormap.get("turbo")
+        clrs = cm.map(np.linspace(0, 1, self.ui.sb_bg___sizy.value()//2))
+        #arr0 = 
+
+        bgle_arr: NDArray[np.float64] = self.jp.data[
+            self.ui.sb_bg___posy.value() : self.ui.sb_bg___posy.value() + self.ui.sb_bg___sizy.value(),
+            self.ui.sb_bgle_posx.value() : self.ui.sb_bgle_posx.value() + self.ui.sb_bgle_sizx.value()
+        ].astype(np.float64)
+
+        bgri_arr: NDArray[np.float64] = self.jp.data[
+            self.ui.sb_bg___posy.value() : self.ui.sb_bg___posy.value() + self.ui.sb_bg___sizy.value(),
+            self.ui.sb_bgri_posx.value() : self.ui.sb_bgri_posx.value() + self.ui.sb_bgri_sizx.value()
+        ].astype(np.float64)
+
+
+        self.ui.graph_bg_r.getPlotItem().clear()
+        self.ui.graph_bg_g.getPlotItem().clear()
+        self.ui.graph_bg_G.getPlotItem().clear()
+        self.ui.graph_bg_b.getPlotItem().clear()
+
+        self.ui.pbar_bg_on_row.setMaximum(self.ui.sb_bg___sizy.value()//2)
+
+        x_pixels_ri = np.arange(self.ui.sb_bgri_posx.value(), self.ui.sb_bgri_posx.value() + self.ui.sb_bgri_sizx.value(), dtype=np.dtype(np.float64))
+        x_pixels_le = np.arange(self.ui.sb_bgle_posx.value(), self.ui.sb_bgle_posx.value() + self.ui.sb_bgle_sizx.value(), dtype=np.dtype(np.float64))
+
+        _ = self.ui.graph_bg_r.getPlotItem().plot(np.broadcast_to(x_pixels_le[1::2], (self.ui.sb_bg___sizy.value()//2,self.ui.sb_bgle_sizx.value()//2)).reshape(-1), bgle_arr[1::2, 1::2].reshape(-1), pen=None, symbol='o', symbolPen=None, symbolSize=3)
+        _ = self.ui.graph_bg_g.getPlotItem().plot(np.broadcast_to(x_pixels_le[0::2], (self.ui.sb_bg___sizy.value()//2,self.ui.sb_bgle_sizx.value()//2)).reshape(-1), bgle_arr[0::2, 1::2].reshape(-1), pen=None, symbol='o', symbolPen=None, symbolSize=3)
+        _ = self.ui.graph_bg_G.getPlotItem().plot(np.broadcast_to(x_pixels_le[1::2], (self.ui.sb_bg___sizy.value()//2,self.ui.sb_bgle_sizx.value()//2)).reshape(-1), bgle_arr[1::2, 0::2].reshape(-1), pen=None, symbol='o', symbolPen=None, symbolSize=3)
+        _ = self.ui.graph_bg_b.getPlotItem().plot(np.broadcast_to(x_pixels_le[0::2], (self.ui.sb_bg___sizy.value()//2,self.ui.sb_bgle_sizx.value()//2)).reshape(-1), bgle_arr[0::2, 0::2].reshape(-1), pen=None, symbol='o', symbolPen=None, symbolSize=3)
+        _ = self.ui.graph_bg_r.getPlotItem().plot(np.broadcast_to(x_pixels_ri[1::2], (self.ui.sb_bg___sizy.value()//2,self.ui.sb_bgri_sizx.value()//2)).reshape(-1), bgri_arr[1::2, 1::2].reshape(-1), pen=None, symbol='x', symbolPen=None, symbolSize=3)
+        _ = self.ui.graph_bg_g.getPlotItem().plot(np.broadcast_to(x_pixels_ri[0::2], (self.ui.sb_bg___sizy.value()//2,self.ui.sb_bgri_sizx.value()//2)).reshape(-1), bgri_arr[0::2, 1::2].reshape(-1), pen=None, symbol='x', symbolPen=None, symbolSize=3)
+        _ = self.ui.graph_bg_G.getPlotItem().plot(np.broadcast_to(x_pixels_ri[1::2], (self.ui.sb_bg___sizy.value()//2,self.ui.sb_bgri_sizx.value()//2)).reshape(-1), bgri_arr[1::2, 0::2].reshape(-1), pen=None, symbol='x', symbolPen=None, symbolSize=3)
+        _ = self.ui.graph_bg_b.getPlotItem().plot(np.broadcast_to(x_pixels_ri[0::2], (self.ui.sb_bg___sizy.value()//2,self.ui.sb_bgri_sizx.value()//2)).reshape(-1), bgri_arr[0::2, 0::2].reshape(-1), pen=None, symbol='x', symbolPen=None, symbolSize=3)
+
+        bg_popts = {
+            "r" : np.zeros((self.ui.sb_bg___sizy.value()//2, 4)),
+            "g" : np.zeros((self.ui.sb_bg___sizy.value()//2, 4)),
+            "b" : np.zeros((self.ui.sb_bg___sizy.value()//2, 4))
+        }
+
+        for rel_y_pxl in range(self.ui.sb_bg___sizy.value()//2):
+            self.ui.pbar_bg_on_row.setValue(rel_y_pxl)
+            bg_popts["r"][rel_y_pxl, :], _ = curve_fit(background_new, np.hstack([ x_pixels_le[1::2], x_pixels_ri[1::2] ]), np.hstack([ bgle_arr[1+2*rel_y_pxl, 1::2], bgri_arr[1+2*rel_y_pxl, 1::2] ]).astype(np.float64), p0 = [1, 1030, 200, 200], bounds=([0, 0, 100, 0], [200, 2000, 500, 400]),)
+            bg_popts["g"][rel_y_pxl, :], _ = curve_fit(background_new, np.hstack([ x_pixels_le[0::2], x_pixels_ri[1::2] ]), np.hstack([ bgle_arr[0+2*rel_y_pxl, 1::2], bgri_arr[0+2*rel_y_pxl, 1::2] ]).astype(np.float64), p0 = [1, 1030, 200, 200], bounds=([0, 0, 100, 0], [200, 2000, 500, 400]),)
+            #bg_popts["G"][rel_y_pxl, :], _ = curve_fit(background_new, np.hstack([ x_pixels_le[1::2], x_pixels_ri[0::2] ]), np.hstack([ bgle_arr[1+2*rel_y_pxl, 0::2], bgri_arr[1+2*rel_y_pxl, 0::2] ]).astype(np.float64), p0 = [1, 1030, 200, 200], bounds=([0, 0, 100, 0], [200, 2000, 500, 400]),)
+            bg_popts["b"][rel_y_pxl, :], _ = curve_fit(background_new, np.hstack([ x_pixels_le[0::2], x_pixels_ri[0::2] ]), np.hstack([ bgle_arr[0+2*rel_y_pxl, 0::2], bgri_arr[0+2*rel_y_pxl, 0::2] ]).astype(np.float64), p0 = [1, 1030, 200, 200], bounds=([0, 0, 100, 0], [200, 2000, 500, 400]),)
+
+            _ = self.ui.graph_bg_r.getPlotItem().plot(np.arange(x_pixels_le[0],  x_pixels_ri[-1]), background_new(np.arange(x_pixels_le[0],  x_pixels_ri[-1]), *bg_popts["r"][rel_y_pxl, :]), pen=pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.SolidLine))
+            _ = self.ui.graph_bg_g.getPlotItem().plot(np.arange(x_pixels_le[0],  x_pixels_ri[-1]), background_new(np.arange(x_pixels_le[0],  x_pixels_ri[-1]), *bg_popts["g"][rel_y_pxl, :]), pen=pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.SolidLine))
+            #_ = self.ui.graph_bg_G.getPlotItem().plot(np.arange(x_pixels_le[0],  x_pixels_ri[-1]), background_new(np.arange(x_pixels_le[0],  x_pixels_ri[-1]), *bg_popts["G"][rel_y_pxl, :]), pen=pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.SolidLine))
+            _ = self.ui.graph_bg_b.getPlotItem().plot(np.arange(x_pixels_le[0],  x_pixels_ri[-1]), background_new(np.arange(x_pixels_le[0],  x_pixels_ri[-1]), *bg_popts["b"][rel_y_pxl, :]), pen=pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.SolidLine))
 
     def handle_cb_calc5_norming(self) -> None:
         # print("i was clicked")
