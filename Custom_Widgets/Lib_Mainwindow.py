@@ -201,9 +201,9 @@ class TheMainWindow(QMainWindow):
             #"550":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem()),
             "600":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine))),
             #"650":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem()),
-            "700":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine))),
-            "759.37": (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine))),
-            "800":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine))),
+            "700":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem(pen=pg.mkPen("w", width=1, style=Qt.PenStyle.SolidLine))),
+            "759.37": (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem(pen=pg.mkPen("w", width=1, style=Qt.PenStyle.SolidLine))),
+            "800":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem(pen=pg.mkPen("w", width=1, style=Qt.PenStyle.SolidLine))),
             #"850":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem()),
         }
         self.graph_distributive_dn = {
