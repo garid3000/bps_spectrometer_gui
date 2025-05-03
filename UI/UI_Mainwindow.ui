@@ -255,20 +255,69 @@
              <x>0</x>
              <y>0</y>
              <width>444</width>
-             <height>246</height>
+             <height>248</height>
             </rect>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
             <item>
              <layout class="QHBoxLayout" name="horizontalLayout_2">
               <item>
-               <widget class="QCheckBox" name="cb_rawbayer_visual_demosiac">
-                <property name="text">
-                 <string>Demosiac Bayer (just for visual)</string>
-                </property>
-                <property name="checked">
-                 <bool>true</bool>
-                </property>
+               <widget class="QComboBox" name="cb_2dimg_key">
+                <item>
+                 <property name="text">
+                  <string>Raw bayer</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Raw bayer (Noise Filter)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Raw bayer (RGB)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Raw bayer (RGB + Demosiac)</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Red</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Green</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Blue</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Mask red</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Mask green</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Mask blue</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>Wavelength</string>
+                 </property>
+                </item>
                </widget>
               </item>
               <item>
@@ -306,7 +355,7 @@
         <item>
          <widget class="QTabWidget" name="tw_midcol">
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="midcol_tab1_wave">
            <attribute name="title">
