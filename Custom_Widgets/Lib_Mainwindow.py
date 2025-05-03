@@ -208,12 +208,12 @@ class TheMainWindow(QMainWindow):
             #"850":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem()),
         }
         self.graph_distributive_dn = {
-            "red_obje" : self.ui.graph_calc3_1red.getPlotItem().plot(   pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
-            "red_gray" : self.ui.graph_calc3_1red.getPlotItem().plot(   pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
-            "grn_obje" : self.ui.graph_calc3_2green.getPlotItem().plot( pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
-            "grn_gray" : self.ui.graph_calc3_2green.getPlotItem().plot( pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
-            "blu_obje" : self.ui.graph_calc3_3blue.getPlotItem().plot(  pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
-            "blu_gray" : self.ui.graph_calc3_3blue.getPlotItem().plot(  pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
+            "red_obje" : self.ui.graph_savgol_r.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
+            "red_gray" : self.ui.graph_savgol_r.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
+            "grn_obje" : self.ui.graph_savgol_g.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
+            "grn_gray" : self.ui.graph_savgol_g.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
+            "blu_obje" : self.ui.graph_savgol_b.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
+            "blu_gray" : self.ui.graph_savgol_b.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
         }
 
         # ----------------------------------------------------
@@ -261,6 +261,16 @@ class TheMainWindow(QMainWindow):
         #     #labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}
         # )
         #self.ui.graph_2dimg.getView().addItem(self.graph_759nm_line_for_2dimg)
+
+        #   -----------------------------------------------------------------------------------------------------------
+        self.ui.pb_savgol_calc.clicked.connect(self.callback_savgol)
+        self.ui.sb_savgol_wv_num.valueChanged.connect(
+            lambda: self.ui.sb_savgol_wv_step.setValue((self.ui.sb_savgol_wv1.value() - self.ui.sb_savgol_wv0.value())//(self.ui.sb_savgol_wv_num.value()-1))
+        )
+
+        #self.ui.sb_savgol_wv_step.valueChanged.connect(
+        #    lambda: self.ui.sb_savgol_wv_num.setValue((self.ui.sb_savgol_wv1.value() - self.ui.sb_savgol_wv0.value())//self.ui.sb_savgol_wv_step.value()+1)
+        #)
 
         #   -----------------------------------------------------------------------------------------------------------
         # def init_1_webfov_roi(self) -> None:
@@ -470,16 +480,16 @@ class TheMainWindow(QMainWindow):
 
     def init_all_pyqtgraph(self) -> None:
         # -------------------------------------------------------------------------------------------------------------
-        _ = self.ui.graph_calc2_bg_gray.getPlotItem().addLegend()
-        _ = self.ui.graph_calc2_bg_obje.getPlotItem().addLegend()
+        #_ = self.ui.graph_calc2_bg_gray.getPlotItem().addLegend()
+        #_ = self.ui.graph_calc2_bg_obje.getPlotItem().addLegend()
 
-        self.ui.graph_calc2_bg_gray.getPlotItem().setLabel("left", "Background", units="DN")
-        self.ui.graph_calc2_bg_gray.getPlotItem().setLabel("bottom", "Wavelenght", units="m")
-        self.ui.graph_calc2_bg_gray.getPlotItem().setTitle("Gray Region Background")
+        #self.ui.graph_calc2_bg_gray.getPlotItem().setLabel("left", "Background", units="DN")
+        #self.ui.graph_calc2_bg_gray.getPlotItem().setLabel("bottom", "Wavelenght", units="m")
+        #self.ui.graph_calc2_bg_gray.getPlotItem().setTitle("Gray Region Background")
 
-        self.ui.graph_calc2_bg_obje.getPlotItem().setLabel("left", "Background", units="DN")
-        self.ui.graph_calc2_bg_obje.getPlotItem().setLabel("bottom", "Wavelenght", units="m")
-        self.ui.graph_calc2_bg_obje.getPlotItem().setTitle("Object Region Background")
+        #self.ui.graph_calc2_bg_obje.getPlotItem().setLabel("left", "Background", units="DN")
+        #self.ui.graph_calc2_bg_obje.getPlotItem().setLabel("bottom", "Wavelenght", units="m")
+        #self.ui.graph_calc2_bg_obje.getPlotItem().setTitle("Object Region Background")
 
 
         # --------graph 3:  759 calibration curves ---------------------------------------------------------------------
@@ -550,6 +560,9 @@ class TheMainWindow(QMainWindow):
             self.spinbox_setvalue_without_emitting_signal(self.ui.sb_roi759_posy, w759_posy)
             self.spinbox_setvalue_without_emitting_signal(self.ui.sb_roi759_sizx, w759_sizx)
             self.spinbox_setvalue_without_emitting_signal(self.ui.sb_roi759_sizy, w759_sizy)
+
+            #self.jp.wavelength_array_2464x3280(self.graph_2dimg_wave_curves["759.37"][0], self.ui.sb_waveperpixel.value()) #this ?
+
         elif roi_label == "bg-left":
             bgle_posx, bgle_posy, bgle_sizx, bgle_sizy = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_bgle.getState())
             self.spinbox_setvalue_without_emitting_signal(self.ui.sb_bgle_posx, bgle_posx)
@@ -629,46 +642,8 @@ class TheMainWindow(QMainWindow):
 
 
     def update_raw_roi_plot_when_sb_or_roi_moved(self) -> None:
-        """update raw dn plot, when either spinbox or ROI dragged"""
-        #self.ui.cb_parameter_history.setCurrentIndex(0)
-        #tmp_x = get_wavelength_array(
-        #    init_pxl=0,
-        #    pxl_size=350,
-        #    waveperpixel=self.ui.sb_waveperpixel.value(),
-        #)
-
-        #gray_roi_mid: NDArray[np.uint16] = self.jp.data[
-        #    self.ui.sb_gray_posy.value() : self.ui.sb_gray_posy.value() + self.ui.sb_gray_sizy.value(),
-        #    self.ui.sb_midx_init.value() : self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()
-        #].astype(np.uint16)
-        #obje_roi_mid: NDArray[np.uint16] = self.jp.data[
-        #    self.ui.sb_obje_posy.value() : self.ui.sb_obje_posy.value() + self.ui.sb_obje_sizy.value(),
-        #    self.ui.sb_midx_init.value() : self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()
-        #].astype(np.uint16)
-        #assert isinstance(gray_roi_mid, np.ndarray) and (gray_roi_mid.dtype == np.uint16)
-        #assert isinstance(obje_roi_mid, np.ndarray) and (obje_roi_mid.dtype == np.uint16)
-
-        #self.graph_raw_lines["gray_r"].setData(tmp_x, gray_roi_mid[1::2, 1::2].mean(axis=0, dtype=np.float64)) 
-        #self.graph_raw_lines["gray_g"].setData(tmp_x, gray_roi_mid[1::2, 0::2].mean(axis=0, dtype=np.float64)) 
-        #self.graph_raw_lines["gray_G"].setData(tmp_x, gray_roi_mid[0::2, 1::2].mean(axis=0, dtype=np.float64)) 
-        #self.graph_raw_lines["gray_b"].setData(tmp_x, gray_roi_mid[0::2, 0::2].mean(axis=0, dtype=np.float64)) 
-        #self.graph_raw_lines["obje_r"].setData(tmp_x, obje_roi_mid[1::2, 1::2].mean(axis=0, dtype=np.float64)) 
-        #self.graph_raw_lines["obje_g"].setData(tmp_x, obje_roi_mid[1::2, 0::2].mean(axis=0, dtype=np.float64)) 
-        #self.graph_raw_lines["obje_G"].setData(tmp_x, obje_roi_mid[0::2, 1::2].mean(axis=0, dtype=np.float64)) 
-        #self.graph_raw_lines["obje_b"].setData(tmp_x, obje_roi_mid[0::2, 0::2].mean(axis=0, dtype=np.float64)) 
-        gray_roi_pxl = (
-            self.ui.sb_midx_init.value(),
-            self.ui.sb_gray_posy.value(),
-            self.ui.sb_midx_size.value(),
-            self.ui.sb_gray_sizy.value(),
-        )
-
-        obje_roi_pxl = (
-            self.ui.sb_midx_init.value(),
-            self.ui.sb_obje_posy.value(),
-            self.ui.sb_midx_size.value(),
-            self.ui.sb_obje_sizy.value(),
-        )
+        gray_roi_pxl = (self.ui.sb_midx_init.value(), self.ui.sb_gray_posy.value(), self.ui.sb_midx_size.value(), self.ui.sb_gray_sizy.value())
+        obje_roi_pxl = (self.ui.sb_midx_init.value(), self.ui.sb_obje_posy.value(), self.ui.sb_midx_size.value(), self.ui.sb_obje_sizy.value())
 
         self.graph_raw_lines["gray_r"].setData(self.jp.get_array("Wavelength", "Mask red",   gray_roi_pxl), self.jp.get_array("Raw bayer", "Mask red",   gray_roi_pxl)) 
         self.graph_raw_lines["gray_g"].setData(self.jp.get_array("Wavelength", "Mask green", gray_roi_pxl), self.jp.get_array("Raw bayer", "Mask green", gray_roi_pxl)) 
@@ -711,10 +686,6 @@ class TheMainWindow(QMainWindow):
             self.graph_2dimg_wave_curves[k][0][1] = 0
             self.graph_2dimg_wave_curves[k][0][2] = 0
 
-
-        #self.wv[:, :] = wavelength_array_2464x3280(self.graph_2dimg_wave_curves["759.37"][0], self.ui.sb_waveperpixel.value())
-        self.jp.wavelength_array_2464x3280(self.graph_2dimg_wave_curves["759.37"][0], self.ui.sb_waveperpixel.value())
-        # self.iso.setData(self.wv)
 
     def callback_wavelength_calibration(self) -> None:
         # assume the self.arr_759_roi has already prepped (and median filtered)
@@ -811,7 +782,7 @@ class TheMainWindow(QMainWindow):
 
         self.ui.graph_bg_r.getPlotItem().clear()
         self.ui.graph_bg_g.getPlotItem().clear()
-        self.ui.graph_bg_G.getPlotItem().clear()
+        #self.ui.graph_bg_G.getPlotItem().clear()
         self.ui.graph_bg_b.getPlotItem().clear()
 
         self.ui.pbar_bg_on_row.setMaximum(self.ui.sb_bg___sizy.value()//2)
@@ -849,6 +820,108 @@ class TheMainWindow(QMainWindow):
             # TODO where I should put Normalization
         except Exception as e:
             print(e)
+
+    def callback_savgol(self) -> None:
+        wv0, wv1, wv_num = self.ui.sb_savgol_wv0.value(), self.ui.sb_savgol_wv1.value(), self.ui.sb_savgol_wv_num.value()
+        half_window_width = self.ui.sb_savgol_poly_wv_window.value()
+        fullwave = np.linspace(wv0, wv1, wv_num, dtype=np.float64) # should be the putoutpu wavelength
+
+        self.ui.pbar_savgol_channel.setMaximum(3)
+        self.ui.pbar_savgol_iteration.setMaximum(wv_num)
+
+        savgol_output_dict = {
+            "r_obje": np.empty_like(fullwave, dtype=np.float64),
+            "g_obje": np.empty_like(fullwave, dtype=np.float64),
+            "G_obje": np.empty_like(fullwave, dtype=np.float64),
+            "b_obje": np.empty_like(fullwave, dtype=np.float64),
+            "r_gray": np.empty_like(fullwave, dtype=np.float64),
+            "g_gray": np.empty_like(fullwave, dtype=np.float64),
+            "G_gray": np.empty_like(fullwave, dtype=np.float64),
+            "b_gray": np.empty_like(fullwave, dtype=np.float64),
+        }
+
+
+        for j, chan in enumerate(("r", "g", "b")):
+            self.ui.pbar_savgol_channel.setValue(j+1)
+
+            for i, lmbd in enumerate(fullwave):
+                self.ui.pbar_savgol_iteration.setValue(i+1)
+                mask_obje_r = np.abs(wvln_obje_r - lmbd) < half_window_width
+                mask_obje_g = np.abs(wvln_obje_g - lmbd) < half_window_width
+                mask_obje_G = np.abs(wvln_obje_G - lmbd) < half_window_width
+                mask_obje_b = np.abs(wvln_obje_b - lmbd) < half_window_width
+
+                mask_gray_r = np.abs(wvln_gray_r - lmbd) < half_window_width
+                mask_gray_g = np.abs(wvln_gray_g - lmbd) < half_window_width
+                mask_gray_G = np.abs(wvln_gray_G - lmbd) < half_window_width
+                mask_gray_b = np.abs(wvln_gray_b - lmbd) < half_window_width
+
+                # ---------------------------------------------------------------------------#
+                wv_obje_r = wvln_obje_r[mask_obje_r]
+                wv_obje_g = wvln_obje_g[mask_obje_g]
+                wv_obje_G = wvln_obje_G[mask_obje_G]
+                wv_obje_b = wvln_obje_b[mask_obje_b]
+
+                wv_gray_r = wvln_gray_r[mask_gray_r]
+                wv_gray_g = wvln_gray_g[mask_gray_g]
+                wv_gray_G = wvln_gray_G[mask_gray_G]
+                wv_gray_b = wvln_gray_b[mask_gray_b]
+
+                # ---------------------------------------------------------------------------#
+                dn_obje_r = dn_obje_r_sub_est_bg[mask_obje_r]
+                dn_obje_g = dn_obje_g_sub_est_bg[mask_obje_g]
+                dn_obje_G = dn_obje_G_sub_est_bg[mask_obje_G]
+                dn_obje_b = dn_obje_b_sub_est_bg[mask_obje_b]
+
+                dn_gray_r = dn_gray_r_sub_est_bg[mask_gray_r]
+                dn_gray_g = dn_gray_g_sub_est_bg[mask_gray_g]
+                dn_gray_G = dn_gray_G_sub_est_bg[mask_gray_G]
+                dn_gray_b = dn_gray_b_sub_est_bg[mask_gray_b]
+
+                # ---------------------------------------------------------------------------#
+                z_obje_r = np.polyfit(wv_obje_r, dn_obje_r, 5)
+                z_obje_g = np.polyfit(wv_obje_g, dn_obje_g, 5)
+                z_obje_G = np.polyfit(wv_obje_G, dn_obje_G, 5)
+                z_obje_b = np.polyfit(wv_obje_b, dn_obje_b, 5)
+
+                z_gray_r = np.polyfit(wv_gray_r, dn_gray_r, 5)
+                z_gray_g = np.polyfit(wv_gray_g, dn_gray_g, 5)
+                z_gray_G = np.polyfit(wv_gray_G, dn_gray_G, 5)
+                z_gray_b = np.polyfit(wv_gray_b, dn_gray_b, 5)
+
+                # ---------------------------------------------------------------------------#
+
+                p_obje_r = np.poly1d(z_obje_r)
+                p_obje_g = np.poly1d(z_obje_g)
+                p_obje_G = np.poly1d(z_obje_G)
+                p_obje_b = np.poly1d(z_obje_b)
+
+                p_gray_r = np.poly1d(z_gray_r)
+                p_gray_g = np.poly1d(z_gray_g)
+                p_gray_G = np.poly1d(z_gray_G)
+                p_gray_b = np.poly1d(z_gray_b)
+
+                # ---------------------------------------------------------------------------#
+                fitted_poly_ouptut_obje_r = p_obje_r(fullwave)
+                fitted_poly_ouptut_obje_g = p_obje_g(fullwave)
+                fitted_poly_ouptut_obje_G = p_obje_G(fullwave)
+                fitted_poly_ouptut_obje_b = p_obje_b(fullwave)
+
+                fitted_poly_ouptut_gray_r = p_gray_r(fullwave)
+                fitted_poly_ouptut_gray_g = p_gray_g(fullwave)
+                fitted_poly_ouptut_gray_G = p_gray_G(fullwave)
+                fitted_poly_ouptut_gray_b = p_gray_b(fullwave)
+
+                # ---------------------------------------------------------------------------#
+                savgol_output_dict["r_obje"][i] = fitted_poly_ouptut_obje_r[i]
+                savgol_output_dict["g_obje"][i] = fitted_poly_ouptut_obje_g[i]
+                savgol_output_dict["G_obje"][i] = fitted_poly_ouptut_obje_G[i]
+                savgol_output_dict["b_obje"][i] = fitted_poly_ouptut_obje_b[i]
+
+                savgol_output_dict["r_gray"][i] = fitted_poly_ouptut_gray_r[i]
+                savgol_output_dict["g_gray"][i] = fitted_poly_ouptut_gray_g[i]
+                savgol_output_dict["G_gray"][i] = fitted_poly_ouptut_gray_G[i]
+                savgol_output_dict["b_gray"][i] = fitted_poly_ouptut_gray_b[i]
 
     def init_keyboard_bindings(self) -> None:
         _ = QShortcut(QKeySequence("Ctrl+B"),    self).activated.connect(self.short_cut_goto_parent_dir)
@@ -962,7 +1035,7 @@ class TheMainWindow(QMainWindow):
 
         self.ui.graph_webcam.setImage(webcam, axes={"x":1, "y":0, "c":2})
 
-        _ = self.jp.load_jpeg_file(self.jpeg_path, also_get_rgb_rerp=True)
+        _ = self.jp.load_jpeg_file(self.jpeg_path)
         self.update_1_rawbayer_img_data_and_then_plot_below()
 
         # try to reset & repopulate paramHisotry combobox
@@ -1077,7 +1150,7 @@ class TheMainWindow(QMainWindow):
             img=self.jp.arr[key].astype(np.float64),
             levels=(0, 1024),
             axes={"x":1, "y":0, "c":2} if (self.jp.arr[key].ndim == 3) else {"x":1, "y":0},
-            levelMode ="rgb" if (self.jp.arr[key].ndim == 3) else "mono"
+            levelMode ="rgba" if (self.jp.arr[key].ndim == 3) else "mono"
         )
         self.update_raw_from_sb()
 
@@ -1189,9 +1262,9 @@ class TheMainWindow(QMainWindow):
             "obje_y_init"      : [self.ui.sb_obje_posy.value()],
             "obje_y_size"      : [self.ui.sb_obje_sizy.value()],
             "waveperpixel"     : [self.ui.sb_waveperpixel.value()],
-            "calc1_desalt"     : [self.ui.cb_calc1_desalt.isChecked()],
-            "calc2_background" : [self.ui.cb_calc2_background.isChecked()],
-            "calc3_calibrate"  : [self.ui.cb_calc3_calibrate_759.isChecked()],
+            #"calc1_desalt"     : [self.ui.cb_calc1_desalt.isChecked()],
+            #"calc2_background" : [self.ui.cb_calc2_background.isChecked()],
+            #"calc3_calibrate"  : [self.ui.cb_calc3_calibrate_759.isChecked()],
             "calc5_norm"       : [self.ui.cb_calc5_norm.isChecked()],
             "calc5_norm_zero"  : [self.ui.sb_calc5_norm_zero.value()],
             "calc5_norm_one"   : [self.ui.sb_calc5_norm_one.value()],
