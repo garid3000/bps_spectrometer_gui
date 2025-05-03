@@ -27,7 +27,7 @@ from PySide6.QtCore import QModelIndex, QDir, Qt, QPersistentModelIndex, QPointF
 from Custom_UIs.UI_Mainwindow import Ui_MainWindow
 from Custom_Libs.Lib_DataDirTree import DataDirTree
 # from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import get_wavelength_array
-from bps_raw_jpeg_processer.src.better_bps_raw_jpeg_processor import quadratic_func, wavelength_array_2464x3280, background_newest, background_new, JpegProcessor
+from bps_raw_jpeg_processer.src.better_bps_raw_jpeg_processor import quadratic_func,  background_new, JpegProcessor #background_newest,
 from bps_raw_jpeg_processer.src.pxlspec_to_pxlweb_formula import pxlspec_to_pxlweb_formula
 
 # ---------- pqgraph config -------------------------------------------------------------------------------------------
@@ -133,6 +133,7 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.cb_invert_y_axis_of_rawbayer.stateChanged.connect(
             lambda: self.ui.graph_2dimg.getView().invertY(not self.ui.cb_invert_y_axis_of_rawbayer.isChecked())
         )
+        _ = self.ui.cb_2dimg_key.currentTextChanged.connect(self.update_1_rawbayer_img_data_and_then_plot_below)
 
         # init_2d_graph_hide_the_original_roi_buttons -----------------------------------------------------------------
         self.roi_label_gray = pg.TextItem(
@@ -658,24 +659,24 @@ class TheMainWindow(QMainWindow):
         gray_roi_pxl = (
             self.ui.sb_midx_init.value(),
             self.ui.sb_gray_posy.value(),
-            self.ui.sb_gray_sizy.value(),
             self.ui.sb_midx_size.value(),
+            self.ui.sb_gray_sizy.value(),
         )
 
         obje_roi_pxl = (
             self.ui.sb_midx_init.value(),
             self.ui.sb_obje_posy.value(),
-            self.ui.sb_obje_sizy.value(),
             self.ui.sb_midx_size.value(),
+            self.ui.sb_obje_sizy.value(),
         )
 
-        self.graph_raw_lines["gray_r"].setData(self.jp.get_array("Wavelength", "Red",   gray_roi_pxl), self.jp.get_array("Raw bayer", "Red",   gray_roi_pxl)) 
-        self.graph_raw_lines["gray_g"].setData(self.jp.get_array("Wavelength", "Green", gray_roi_pxl), self.jp.get_array("Raw bayer", "Green", gray_roi_pxl)) 
-        self.graph_raw_lines["gray_b"].setData(self.jp.get_array("Wavelength", "Blue",  gray_roi_pxl), self.jp.get_array("Raw bayer", "Blue",  gray_roi_pxl)) 
+        self.graph_raw_lines["gray_r"].setData(self.jp.get_array("Wavelength", "Mask red",   gray_roi_pxl), self.jp.get_array("Raw bayer", "Mask red",   gray_roi_pxl)) 
+        self.graph_raw_lines["gray_g"].setData(self.jp.get_array("Wavelength", "Mask green", gray_roi_pxl), self.jp.get_array("Raw bayer", "Mask green", gray_roi_pxl)) 
+        self.graph_raw_lines["gray_b"].setData(self.jp.get_array("Wavelength", "Mask blue",  gray_roi_pxl), self.jp.get_array("Raw bayer", "Mask blue",  gray_roi_pxl)) 
 
-        self.graph_raw_lines["obje_r"].setData(self.jp.get_array("Wavelength", "Red",   obje_roi_pxl), self.jp.get_array("Raw bayer", "Red",   obje_roi_pxl)) 
-        self.graph_raw_lines["obje_g"].setData(self.jp.get_array("Wavelength", "Green", obje_roi_pxl), self.jp.get_array("Raw bayer", "Green", obje_roi_pxl)) 
-        self.graph_raw_lines["obje_b"].setData(self.jp.get_array("Wavelength", "Blue",  obje_roi_pxl), self.jp.get_array("Raw bayer", "Blue",  obje_roi_pxl)) 
+        self.graph_raw_lines["obje_r"].setData(self.jp.get_array("Wavelength", "Mask red",   obje_roi_pxl), self.jp.get_array("Raw bayer", "Mask red",   obje_roi_pxl)) 
+        self.graph_raw_lines["obje_g"].setData(self.jp.get_array("Wavelength", "Mask green", obje_roi_pxl), self.jp.get_array("Raw bayer", "Mask green", obje_roi_pxl)) 
+        self.graph_raw_lines["obje_b"].setData(self.jp.get_array("Wavelength", "Mask blue",  obje_roi_pxl), self.jp.get_array("Raw bayer", "Mask blue",  obje_roi_pxl)) 
 
 
     def update_759roi_when_sb_or_roi_moved(self) -> None:
@@ -711,7 +712,8 @@ class TheMainWindow(QMainWindow):
             self.graph_2dimg_wave_curves[k][0][2] = 0
 
 
-        self.wv[:, :] = wavelength_array_2464x3280(self.graph_2dimg_wave_curves["759.37"][0], self.ui.sb_waveperpixel.value())
+        #self.wv[:, :] = wavelength_array_2464x3280(self.graph_2dimg_wave_curves["759.37"][0], self.ui.sb_waveperpixel.value())
+        self.jp.wavelength_array_2464x3280(self.graph_2dimg_wave_curves["759.37"][0], self.ui.sb_waveperpixel.value())
         # self.iso.setData(self.wv)
 
     def callback_wavelength_calibration(self) -> None:
@@ -796,26 +798,16 @@ class TheMainWindow(QMainWindow):
             self.graph_2dimg_wave_curves[k][0][1] = self.params_fit759[1]
             self.graph_2dimg_wave_curves[k][0][2] = self.params_fit759[2]
 
-        self.wv[:, :] = wavelength_array_2464x3280(self.params_fit759, self.ui.sb_waveperpixel.value())
+        #self.wv[:, :] = wavelength_array_2464x3280(self.params_fit759, self.ui.sb_waveperpixel.value())
+
+        self.jp.wavelength_array_2464x3280(self.params_fit759, self.ui.sb_waveperpixel.value())
         #self.iso.setData(self.wv)
         #np.save("/tmp/wv.npy", self.wv)
 
     def callback_bg_estimation(self) -> None:
         # assume the self.arr_759_roi has already prepped (and median filtered)
         cm = pg.colormap.get("turbo")
-        clrs = cm.map(np.linspace(0, 1, self.ui.sb_bg___sizy.value()//2))
-        #arr0 = 
-
-        #bgle_arr: NDArray[np.float64] = self.jp.data[
-        #    self.ui.sb_bg___posy.value() : self.ui.sb_bg___posy.value() + self.ui.sb_bg___sizy.value(),
-        #    self.ui.sb_bgle_posx.value() : self.ui.sb_bgle_posx.value() + self.ui.sb_bgle_sizx.value()
-        #].astype(np.float64)
-
-        #bgri_arr: NDArray[np.float64] = self.jp.data[
-        #    self.ui.sb_bg___posy.value() : self.ui.sb_bg___posy.value() + self.ui.sb_bg___sizy.value(),
-        #    self.ui.sb_bgri_posx.value() : self.ui.sb_bgri_posx.value() + self.ui.sb_bgri_sizx.value()
-        #].astype(np.float64)
-
+        clrs = cm.map(np.linspace(0, 1, self.ui.sb_bg___sizy.value()))
 
         self.ui.graph_bg_r.getPlotItem().clear()
         self.ui.graph_bg_g.getPlotItem().clear()
@@ -823,40 +815,29 @@ class TheMainWindow(QMainWindow):
         self.ui.graph_bg_b.getPlotItem().clear()
 
         self.ui.pbar_bg_on_row.setMaximum(self.ui.sb_bg___sizy.value()//2)
-
-        #x_pixels_ri = np.arange(self.ui.sb_bgri_posx.value(), self.ui.sb_bgri_posx.value() + self.ui.sb_bgri_sizx.value(), dtype=np.dtype(np.float64))
-        #x_pixels_le = np.arange(self.ui.sb_bgle_posx.value(), self.ui.sb_bgle_posx.value() + self.ui.sb_bgle_sizx.value(), dtype=np.dtype(np.float64))
         
-        bgle_roi_pxl = (self.ui.sb_bgle_posx.value(), self.ui.sb_bg___posy.value() self.ui.sb_bgle_sizx.value(), self.ui.sb_bg___sizy.value())
+        bgle_roi_pxl = (self.ui.sb_bgle_posx.value(), self.ui.sb_bg___posy.value(), self.ui.sb_bgle_sizx.value(), self.ui.sb_bg___sizy.value())
         bgri_roi_pxl = (self.ui.sb_bgri_posx.value(), self.ui.sb_bg___posy.value(), self.ui.sb_bgri_sizx.value(), self.ui.sb_bg___sizy.value())
         
+        _ = self.ui.graph_bg_r.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask red",   bgle_roi_pxl), self.jp.get_array("Raw bayer", "Mask red",   bgle_roi_pxl), pen=None, symbol='o', symbolPen=None, symbolSize=3)
+        _ = self.ui.graph_bg_g.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask green", bgle_roi_pxl), self.jp.get_array("Raw bayer", "Mask green", bgle_roi_pxl), pen=None, symbol='o', symbolPen=None, symbolSize=3)
+        _ = self.ui.graph_bg_b.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask blue",  bgle_roi_pxl), self.jp.get_array("Raw bayer", "Mask blue",  bgle_roi_pxl), pen=None, symbol='o', symbolPen=None, symbolSize=3)
+        _ = self.ui.graph_bg_r.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask red",   bgle_roi_pxl), self.jp.get_array("Raw bayer", "Mask red",   bgle_roi_pxl), pen=None, symbol='x', symbolPen=None, symbolSize=3)
+        _ = self.ui.graph_bg_g.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask green", bgle_roi_pxl), self.jp.get_array("Raw bayer", "Mask green", bgle_roi_pxl), pen=None, symbol='x', symbolPen=None, symbolSize=3)
+        _ = self.ui.graph_bg_b.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask blue",  bgle_roi_pxl), self.jp.get_array("Raw bayer", "Mask blue",  bgle_roi_pxl), pen=None, symbol='x', symbolPen=None, symbolSize=3)
 
-        #_ = self.ui.graph_bg_b.getPlotItem().plot(, pen=None, symbol='o', symbolPen=None, symbolSize=3)
-        #_ = self.ui.graph_bg_b.getPlotItem().plot(, pen=None, symbol='x', symbolPen=None, symbolSize=3)
-        _ = self.ui.graph_bg_r.getPlotItem().plot(self.jp.get_array("Wavelength", "Red",   bgle_roi_pxl), self.jp.get_array("Raw bayer", "Red",   bgle_roi_pxl), pen=None, symbol='o', symbolPen=None, symbolSize=3)
-        _ = self.ui.graph_bg_g.getPlotItem().plot(self.jp.get_array("Wavelength", "Green", bgle_roi_pxl), self.jp.get_array("Raw bayer", "Green", bgle_roi_pxl), pen=None, symbol='o', symbolPen=None, symbolSize=3)
-        _ = self.ui.graph_bg_b.getPlotItem().plot(self.jp.get_array("Wavelength", "Blue",  bgle_roi_pxl), self.jp.get_array("Raw bayer", "Blue",  bgle_roi_pxl), pen=None, symbol='o', symbolPen=None, symbolSize=3)
-        _ = self.ui.graph_bg_r.getPlotItem().plot(self.jp.get_array("Wavelength", "Red",   bgle_roi_pxl), self.jp.get_array("Raw bayer", "Red",   bgle_roi_pxl), pen=None, symbol='x', symbolPen=None, symbolSize=3)
-        _ = self.ui.graph_bg_g.getPlotItem().plot(self.jp.get_array("Wavelength", "Green", bgle_roi_pxl), self.jp.get_array("Raw bayer", "Green", bgle_roi_pxl), pen=None, symbol='x', symbolPen=None, symbolSize=3)
-        _ = self.ui.graph_bg_b.getPlotItem().plot(self.jp.get_array("Wavelength", "Blue",  bgle_roi_pxl), self.jp.get_array("Raw bayer", "Blue",  bgle_roi_pxl), pen=None, symbol='x', symbolPen=None, symbolSize=3)
+        self.jp.bg_pre_estimation_prep(bgle_roi_pxl, bgri_roi_pxl)
 
-        bg_popts = {
-            "r" : np.zeros((self.ui.sb_bg___sizy.value()//2, 4)),
-            "g" : np.zeros((self.ui.sb_bg___sizy.value()//2, 4)),
-            "b" : np.zeros((self.ui.sb_bg___sizy.value()//2, 4))
-        }
+        tmp_x = np.arange(self.ui.sb_bgle_posx.value(),  self.ui.sb_bgri_posx.value() + self.ui.sb_bgri_sizx.value(), dtype=np.float64)
 
-        for rel_y_pxl in range(self.ui.sb_bg___sizy.value()//2):
+        for rel_y_pxl in range(self.ui.sb_bg___sizy.value()):
             self.ui.pbar_bg_on_row.setValue(rel_y_pxl)
-            bg_popts["r"][rel_y_pxl, :], _ = curve_fit(background_new, np.hstack([ x_pixels_le[1::2], x_pixels_ri[1::2] ]), np.hstack([ bgle_arr[1+2*rel_y_pxl, 1::2], bgri_arr[1+2*rel_y_pxl, 1::2] ]).astype(np.float64), p0 = [1, 1030, 200, 200], bounds=([0, 0, 100, 0], [200, 2000, 500, 400]),)
-            bg_popts["g"][rel_y_pxl, :], _ = curve_fit(background_new, np.hstack([ x_pixels_le[0::2], x_pixels_ri[1::2] ]), np.hstack([ bgle_arr[0+2*rel_y_pxl, 1::2], bgri_arr[0+2*rel_y_pxl, 1::2] ]).astype(np.float64), p0 = [1, 1030, 200, 200], bounds=([0, 0, 100, 0], [200, 2000, 500, 400]),)
-            #bg_popts["G"][rel_y_pxl, :], _ = curve_fit(background_new, np.hstack([ x_pixels_le[1::2], x_pixels_ri[0::2] ]), np.hstack([ bgle_arr[1+2*rel_y_pxl, 0::2], bgri_arr[1+2*rel_y_pxl, 0::2] ]).astype(np.float64), p0 = [1, 1030, 200, 200], bounds=([0, 0, 100, 0], [200, 2000, 500, 400]),)
-            bg_popts["b"][rel_y_pxl, :], _ = curve_fit(background_new, np.hstack([ x_pixels_le[0::2], x_pixels_ri[0::2] ]), np.hstack([ bgle_arr[0+2*rel_y_pxl, 0::2], bgri_arr[0+2*rel_y_pxl, 0::2] ]).astype(np.float64), p0 = [1, 1030, 200, 200], bounds=([0, 0, 100, 0], [200, 2000, 500, 400]),)
+            py = self.ui.sb_bg___posy.value() + rel_y_pxl
+            self.jp.bg_curve_fit_on_any_row_any_channel(py)
 
-            _ = self.ui.graph_bg_r.getPlotItem().plot(np.arange(x_pixels_le[0],  x_pixels_ri[-1]), background_new(np.arange(x_pixels_le[0],  x_pixels_ri[-1]), *bg_popts["r"][rel_y_pxl, :]), pen=pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.SolidLine))
-            _ = self.ui.graph_bg_g.getPlotItem().plot(np.arange(x_pixels_le[0],  x_pixels_ri[-1]), background_new(np.arange(x_pixels_le[0],  x_pixels_ri[-1]), *bg_popts["g"][rel_y_pxl, :]), pen=pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.SolidLine))
-            #_ = self.ui.graph_bg_G.getPlotItem().plot(np.arange(x_pixels_le[0],  x_pixels_ri[-1]), background_new(np.arange(x_pixels_le[0],  x_pixels_ri[-1]), *bg_popts["G"][rel_y_pxl, :]), pen=pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.SolidLine))
-            _ = self.ui.graph_bg_b.getPlotItem().plot(np.arange(x_pixels_le[0],  x_pixels_ri[-1]), background_new(np.arange(x_pixels_le[0],  x_pixels_ri[-1]), *bg_popts["b"][rel_y_pxl, :]), pen=pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.SolidLine))
+            _ = self.ui.graph_bg_r.getPlotItem().plot(tmp_x, background_new(tmp_x, *self.jp.bg_popts["r"][py, :]), pen=pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.SolidLine))
+            _ = self.ui.graph_bg_g.getPlotItem().plot(tmp_x, background_new(tmp_x, *self.jp.bg_popts["g"][py, :]), pen=pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.SolidLine))
+            _ = self.ui.graph_bg_b.getPlotItem().plot(tmp_x, background_new(tmp_x, *self.jp.bg_popts["b"][py, :]), pen=pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.SolidLine))
 
     def handle_cb_calc5_norming(self) -> None:
         # print("i was clicked")
@@ -1036,40 +1017,68 @@ class TheMainWindow(QMainWindow):
         time.sleep(.1)
 
     def distribute_pixel_graph(self) -> None:
-        gray_roi_mid: NDArray[np.float64] = self.jp.data[
-            self.ui.sb_gray_posy.value() : self.ui.sb_gray_posy.value() + self.ui.sb_gray_sizy.value(),
-            self.ui.sb_midx_init.value() : self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()
-        ].astype(np.float64)
-        obje_roi_mid: NDArray[np.float64] = self.jp.data[
-            self.ui.sb_obje_posy.value() : self.ui.sb_obje_posy.value() + self.ui.sb_obje_sizy.value(),
-            self.ui.sb_midx_init.value() : self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()
-        ].astype(np.float64)
+        #gray_roi_mid: NDArray[np.float64] = self.jp.data[
+        #    self.ui.sb_gray_posy.value() : self.ui.sb_gray_posy.value() + self.ui.sb_gray_sizy.value(),
+        #    self.ui.sb_midx_init.value() : self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()
+        #].astype(np.float64)
+        #obje_roi_mid: NDArray[np.float64] = self.jp.data[
+        #    self.ui.sb_obje_posy.value() : self.ui.sb_obje_posy.value() + self.ui.sb_obje_sizy.value(),
+        #    self.ui.sb_midx_init.value() : self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()
+        #].astype(np.float64)
 
-        wv_gray_roi_mid: NDArray[np.float64] = self.wv[
-            self.ui.sb_gray_posy.value() : self.ui.sb_gray_posy.value() + self.ui.sb_gray_sizy.value(),
-            self.ui.sb_midx_init.value() : self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()
-        ]
+        #wv_gray_roi_mid: NDArray[np.float64] = self.wv[
+        #    self.ui.sb_gray_posy.value() : self.ui.sb_gray_posy.value() + self.ui.sb_gray_sizy.value(),
+        #    self.ui.sb_midx_init.value() : self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()
+        #]
 
-        wv_obje_roi_mid: NDArray[np.float64] = self.wv[
-            self.ui.sb_obje_posy.value() : self.ui.sb_obje_posy.value() + self.ui.sb_obje_sizy.value(),
-            self.ui.sb_midx_init.value() : self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()
-        ]
+        #wv_obje_roi_mid: NDArray[np.float64] = self.wv[
+        #    self.ui.sb_obje_posy.value() : self.ui.sb_obje_posy.value() + self.ui.sb_obje_sizy.value(),
+        #    self.ui.sb_midx_init.value() : self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()
+        #]
 
-        self.graph_distributive_dn["red_gray"].setData(wv_gray_roi_mid[1::2, 1::2].reshape(-1), gray_roi_mid[1::2, 1::2].reshape(-1))
-        self.graph_distributive_dn["red_obje"].setData(wv_obje_roi_mid[1::2, 1::2].reshape(-1), obje_roi_mid[1::2, 1::2].reshape(-1))
+        #self.graph_distributive_dn["red_gray"].setData(wv_gray_roi_mid[1::2, 1::2].reshape(-1), gray_roi_mid[1::2, 1::2].reshape(-1))
+        #self.graph_distributive_dn["red_obje"].setData(wv_obje_roi_mid[1::2, 1::2].reshape(-1), obje_roi_mid[1::2, 1::2].reshape(-1))
 
-        self.graph_distributive_dn["grn_gray"].setData(wv_gray_roi_mid[1::2, 0::2].reshape(-1), gray_roi_mid[1::2, 0::2].reshape(-1))
-        self.graph_distributive_dn["grn_obje"].setData(wv_obje_roi_mid[1::2, 0::2].reshape(-1), obje_roi_mid[1::2, 0::2].reshape(-1))
+        #self.graph_distributive_dn["grn_gray"].setData(wv_gray_roi_mid[1::2, 0::2].reshape(-1), gray_roi_mid[1::2, 0::2].reshape(-1))
+        #self.graph_distributive_dn["grn_obje"].setData(wv_obje_roi_mid[1::2, 0::2].reshape(-1), obje_roi_mid[1::2, 0::2].reshape(-1))
 
-        self.graph_distributive_dn["blu_gray"].setData(wv_gray_roi_mid[0::2, 0::2].reshape(-1), gray_roi_mid[0::2, 0::2].reshape(-1))
-        self.graph_distributive_dn["blu_obje"].setData(wv_obje_roi_mid[0::2, 0::2].reshape(-1), obje_roi_mid[0::2, 0::2].reshape(-1))
+        #self.graph_distributive_dn["blu_gray"].setData(wv_gray_roi_mid[0::2, 0::2].reshape(-1), gray_roi_mid[0::2, 0::2].reshape(-1))
+        #self.graph_distributive_dn["blu_obje"].setData(wv_obje_roi_mid[0::2, 0::2].reshape(-1), obje_roi_mid[0::2, 0::2].reshape(-1))
+
+        gray_roi_pxl = (
+            self.ui.sb_midx_init.value(),
+            self.ui.sb_gray_posy.value(),
+            self.ui.sb_midx_size.value(),
+            self.ui.sb_gray_sizy.value(),
+        )
+
+        obje_roi_pxl = (
+            self.ui.sb_midx_init.value(),
+            self.ui.sb_obje_posy.value(),
+            self.ui.sb_midx_size.value(),
+            self.ui.sb_obje_sizy.value(),
+        )
+        self.graph_distributive_dn["red_gray"].setData(self.jp.get_array("Wavelength", "Mask red",   gray_roi_pxl), self.jp.get_array("Raw bayer", "Mask red",   gray_roi_pxl)) 
+        self.graph_distributive_dn["red_obje"].setData(self.jp.get_array("Wavelength", "Mask red",   obje_roi_pxl), self.jp.get_array("Raw bayer", "Mask red",   obje_roi_pxl)) 
+
+        self.graph_distributive_dn["grn_gray"].setData(self.jp.get_array("Wavelength", "Mask green", gray_roi_pxl), self.jp.get_array("Raw bayer", "Mask green", gray_roi_pxl)) 
+        self.graph_distributive_dn["grn_obje"].setData(self.jp.get_array("Wavelength", "Mask green", obje_roi_pxl), self.jp.get_array("Raw bayer", "Mask green", obje_roi_pxl)) 
+
+        self.graph_distributive_dn["blu_gray"].setData(self.jp.get_array("Wavelength", "Mask blue",  gray_roi_pxl), self.jp.get_array("Raw bayer", "Mask blue",  gray_roi_pxl)) 
+        self.graph_distributive_dn["blu_obje"].setData(self.jp.get_array("Wavelength", "Mask blue",  obje_roi_pxl), self.jp.get_array("Raw bayer", "Mask blue",  obje_roi_pxl)) 
+
+
 
     def update_1_rawbayer_img_data_and_then_plot_below(self) -> None:
         self.ui.graph_2dimg.clear()
+        key = self.ui.cb_2dimg_key.currentText()
+        assert key in self.jp.arr.keys(), f"bad {key=}"
         self.ui.graph_2dimg.setImage(
-            #img=self.jp.rgb if not self.ui.cb_rawbayer_visual_demosiac.isChecked() else self.jp.rgb_demosiac,
+            img=self.jp.arr[key].astype(np.float64),
             levels=(0, 1024),
-            axes={"x":1, "y":0, "c":2})
+            axes={"x":1, "y":0, "c":2} if (self.jp.arr[key].ndim == 3) else {"x":1, "y":0},
+            levelMode ="rgb" if (self.jp.arr[key].ndim == 3) else "mono"
+        )
         self.update_raw_from_sb()
 
 

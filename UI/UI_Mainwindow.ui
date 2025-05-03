@@ -318,6 +318,11 @@
                   <string>Wavelength</string>
                  </property>
                 </item>
+                <item>
+                 <property name="text">
+                  <string>Background Est.</string>
+                 </property>
+                </item>
                </widget>
               </item>
               <item>

@@ -278,6 +278,7 @@ class Ui_MainWindow(object):
         self.cb_2dimg_key.addItem("")
         self.cb_2dimg_key.addItem("")
         self.cb_2dimg_key.addItem("")
+        self.cb_2dimg_key.addItem("")
         self.cb_2dimg_key.setObjectName("cb_2dimg_key")
 
         self.horizontalLayout_2.addWidget(self.cb_2dimg_key)
@@ -1247,6 +1248,7 @@ class Ui_MainWindow(object):
         self.cb_2dimg_key.setItemText(8, QCoreApplication.translate("MainWindow", "Mask green", None))
         self.cb_2dimg_key.setItemText(9, QCoreApplication.translate("MainWindow", "Mask blue", None))
         self.cb_2dimg_key.setItemText(10, QCoreApplication.translate("MainWindow", "Wavelength", None))
+        self.cb_2dimg_key.setItemText(11, QCoreApplication.translate("MainWindow", "Background Est.", None))
 
         self.cb_invert_y_axis_of_rawbayer.setText(QCoreApplication.translate("MainWindow", "Invert Y axis", None))
         self.cb_shows_calibrated_wl.setText(QCoreApplication.translate("MainWindow", "Show", None))
