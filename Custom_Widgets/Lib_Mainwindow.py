@@ -19,7 +19,7 @@ from scipy import signal as sig
 from scipy.optimize import curve_fit 
 
 # ---------- GUI libraries --------------------------------------------------------------------------------------------
-from PySide6.QtWidgets import QMainWindow, QWidget, QFileSystemModel, QMessageBox, QSpinBox, QApplication
+from PySide6.QtWidgets import  QMainWindow, QWidget, QFileSystemModel, QMessageBox, QSpinBox, QApplication
 from PySide6.QtGui import QKeySequence, QShortcut, QColor
 from PySide6.QtCore import QModelIndex, QDir, Qt, QPersistentModelIndex, QPointF, QObject
 
@@ -102,7 +102,11 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.pb_calibrate_calculate.clicked.connect(self.call_calibrate_and_calculate)
         _ = self.ui.pb_export.clicked.connect(self.short_cut_export_raw_jpeg)
         _ = self.ui.pb_dir_goto_parent.clicked.connect(self.short_cut_goto_parent_dir)
-        #_ = self.ui.cb_rawbayer_visual_demosiac.stateChanged.connect(self.update_1_rawbayer_img_data_and_then_plot_below)
+
+        _ = self.ui.clb_0_file2roi_dist.clicked.connect(lambda: self.handle_when_stages_changes(0))
+        _ = self.ui.clb_1_dist_to_curve.clicked.connect(lambda: self.handle_when_stages_changes(1))
+        _ = self.ui.clb_2_3curves_to_3refl.clicked.connect(lambda: self.handle_when_stages_changes(2))
+        _ = self.ui.clb_3_3refl_to_1refl.clicked.connect(lambda: self.handle_when_stages_changes(3))
 
         # --------------- initialize the file system ----------------------------------
         self.fsmodel = FileSystemModel()
@@ -215,19 +219,58 @@ class TheMainWindow(QMainWindow):
             "800":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem(pen=pg.mkPen("w", width=1, style=Qt.PenStyle.SolidLine))),
             #"850":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem()),
         }
-        self.graph_distributive_dn = {
+        self.graph_distributive_dn: dict[str, pg.PlotDataItem] = {
             "red_obje" : self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
             "grn_obje" : self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
             "blu_obje" : self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
             "red_gray" : self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
             "grn_gray" : self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
             "blu_gray" : self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
-            "R_gray_savgol_ith" :  self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
-            "G_gray_savgol_ith" :  self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
-            "B_gray_savgol_ith" :  self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
-            "R_obje_savgol_ith" :  self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
-            "G_obje_savgol_ith" :  self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
-            "B_obje_savgol_ith" :  self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
+            "R_gray_savgol_ith" :  self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=4, style=Qt.PenStyle.SolidLine)),
+            "G_gray_savgol_ith" :  self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=4, style=Qt.PenStyle.SolidLine)),
+            "B_gray_savgol_ith" :  self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=4, style=Qt.PenStyle.SolidLine)),
+            "R_obje_savgol_ith" :  self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=4, style=Qt.PenStyle.SolidLine)),
+            "G_obje_savgol_ith" :  self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=4, style=Qt.PenStyle.SolidLine)),
+            "B_obje_savgol_ith" :  self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=4, style=Qt.PenStyle.SolidLine)),
+            "R_gray_savgol_curve" :  self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
+            "G_gray_savgol_curve" :  self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
+            "B_gray_savgol_curve" :  self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
+            "R_obje_savgol_curve" :  self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
+            "G_obje_savgol_curve" :  self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
+            "B_obje_savgol_curve" :  self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
+        }
+
+        self.graph_curves: dict[str, pg.PlotDataItem] = {
+            "gray_R_dn_sub_bg": self.ui.graph_gray_curve_rgb.getPlotItem().plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine)),
+            "gray_G_dn_sub_bg": self.ui.graph_gray_curve_rgb.getPlotItem().plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine)),
+            "gray_B_dn_sub_bg": self.ui.graph_gray_curve_rgb.getPlotItem().plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine)),
+
+            "obje_R_dn_sub_bg": self.ui.graph_obje_curve_rgb.getPlotItem().plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine)),
+            "obje_G_dn_sub_bg": self.ui.graph_obje_curve_rgb.getPlotItem().plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine)),
+            "obje_B_dn_sub_bg": self.ui.graph_obje_curve_rgb.getPlotItem().plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine)),
+
+            "refl_R_dn_sub_bg": self.ui.graph_refl_curve_rgb.getPlotItem().plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine)),
+            "refl_G_dn_sub_bg": self.ui.graph_refl_curve_rgb.getPlotItem().plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine)),
+            "refl_B_dn_sub_bg": self.ui.graph_refl_curve_rgb.getPlotItem().plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine)),
+
+            #"red_obje" : self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
+            #"grn_obje" : self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
+            #"blu_obje" : self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
+            #"red_gray" : self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
+            #"grn_gray" : self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
+            #"blu_gray" : self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
+            #"R_gray_savgol_ith" :  self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=4, style=Qt.PenStyle.SolidLine)),
+            #"G_gray_savgol_ith" :  self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=4, style=Qt.PenStyle.SolidLine)),
+            #"B_gray_savgol_ith" :  self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=4, style=Qt.PenStyle.SolidLine)),
+            #"R_obje_savgol_ith" :  self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=4, style=Qt.PenStyle.SolidLine)),
+            #"G_obje_savgol_ith" :  self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=4, style=Qt.PenStyle.SolidLine)),
+            #"B_obje_savgol_ith" :  self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=4, style=Qt.PenStyle.SolidLine)),
+            #"R_gray_savgol_curve" :  self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
+            #"G_gray_savgol_curve" :  self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
+            #"B_gray_savgol_curve" :  self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
+            #"R_obje_savgol_curve" :  self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
+            #"G_obje_savgol_curve" :  self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
+            #"B_obje_savgol_curve" :  self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
         }
 
         # ----------------------------------------------------
@@ -463,6 +506,28 @@ class TheMainWindow(QMainWindow):
             else:
                 if x in self.ui.graph_2dimg.getView().addedItems:
                     _ = self.ui.graph_2dimg.getView().removeItem(x)
+
+    def handle_when_stages_changes(self, stages: int=0) -> None:
+        print(stages)
+        tmp0 = (
+            (3, 1, 3, 1, 3, 0, 0, 0, 0),
+            (0, 0, 0, 0, 3, 1, 3, 0, 0),
+            (0, 0, 0, 0, 0, 0, 3, 1, 3), # TODO
+            (0, 0, 0, 0, 0, 0, 3, 1, 3),
+        )
+
+        x = (self.ui.gb_panel_00_file, self.ui.gp_panel_05_jpeg_load,
+             self.ui.gp_panel_10_rawbayer, self.ui.gp_panel_15_roiselect,
+             self.ui.gp_panel_20_3roi_dist, self.ui.gp_panel_25_savgol,
+             self.ui.gp_panel_30_rgb_curves, self.ui.gp_panel_35_refl_calculate,
+             self.ui.gp_panel_40_3refl_to_1refl)
+
+        for ith, gb in enumerate(x):
+            if tmp0[stages][ith] != 0:
+                gb.show()
+            else:
+                gb.hide()
+
 
     def dir_searching_based_regex(self) -> None:
         current_search_prompt = self.ui.le_tv_name_narrower.text()
@@ -890,7 +955,7 @@ class TheMainWindow(QMainWindow):
         self.selected_ROI_spectrum["obje"].channel["B"].savgol_init(wv0, wv1, wv_num, window_width, poly_deg =5)
 
         for j, rgb_key in enumerate(("R", "G", "B")):
-            self.ui.pbar_savgol_channel.setValue(j+1)
+            self.ui.pbar_savgol_channel.setValue(j)
 
             for i in range(wv_num):
                 self.ui.pbar_savgol_iteration.setValue(i+1)
@@ -898,8 +963,18 @@ class TheMainWindow(QMainWindow):
                 wndw_wv_o, wndw_ft_o = self.selected_ROI_spectrum["obje"].channel[rgb_key].savgol_calc(i)
                 self.graph_distributive_dn[rgb_key + "_gray_savgol_ith"].setData(wndw_wv_g, wndw_ft_g)
                 self.graph_distributive_dn[rgb_key + "_obje_savgol_ith"].setData(wndw_wv_o, wndw_ft_o)
-                QApplication.processEvents() # update the each
 
+                self.graph_distributive_dn[rgb_key + "_gray_savgol_curve"].setData(self.selected_ROI_spectrum["gray"].channel[rgb_key].fullwave, self.selected_ROI_spectrum["gray"].channel[rgb_key].savgol_out_curve)
+                self.graph_distributive_dn[rgb_key + "_obje_savgol_curve"].setData(self.selected_ROI_spectrum["obje"].channel[rgb_key].fullwave, self.selected_ROI_spectrum["obje"].channel[rgb_key].savgol_out_curve)
+
+                self.graph_curves[f"gray_{rgb_key}_dn_sub_bg"].setData(self.selected_ROI_spectrum["gray"].channel[rgb_key].fullwave, self.selected_ROI_spectrum["gray"].channel[rgb_key].savgol_out_curve)
+                self.graph_curves[f"obje_{rgb_key}_dn_sub_bg"].setData(self.selected_ROI_spectrum["obje"].channel[rgb_key].fullwave, self.selected_ROI_spectrum["obje"].channel[rgb_key].savgol_out_curve)
+                refl =  self.selected_ROI_spectrum["obje"].channel[rgb_key].savgol_out_curve / self.selected_ROI_spectrum["gray"].channel[rgb_key].savgol_out_curve
+                self.graph_curves[f"refl_{rgb_key}_dn_sub_bg"].setData(self.selected_ROI_spectrum["obje"].channel[rgb_key].fullwave, refl)
+
+
+                QApplication.processEvents() # update the each
+        self.ui.pbar_savgol_channel.setValue(3)
             
 
     def init_keyboard_bindings(self) -> None:
