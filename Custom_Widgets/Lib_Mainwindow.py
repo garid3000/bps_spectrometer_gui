@@ -19,15 +19,14 @@ from scipy import signal as sig
 from scipy.optimize import curve_fit 
 
 # ---------- GUI libraries --------------------------------------------------------------------------------------------
-from PySide6.QtWidgets import QMainWindow, QWidget, QFileSystemModel, QMessageBox, QSpinBox
+from PySide6.QtWidgets import QMainWindow, QWidget, QFileSystemModel, QMessageBox, QSpinBox, QApplication
 from PySide6.QtGui import QKeySequence, QShortcut, QColor
 from PySide6.QtCore import QModelIndex, QDir, Qt, QPersistentModelIndex, QPointF, QObject
 
 # ---------- Custom libs ----------------------------------------------------------------------------------------------
 from Custom_UIs.UI_Mainwindow import Ui_MainWindow
 from Custom_Libs.Lib_DataDirTree import DataDirTree
-# from bps_raw_jpeg_processer.src.bps_raw_jpeg_processer import get_wavelength_array
-from bps_raw_jpeg_processer.src.better_bps_raw_jpeg_processor import quadratic_func,  background_new, JpegProcessor #background_newest,
+from bps_raw_jpeg_processer.src.better_bps_raw_jpeg_processor import quadratic_func,  background_new, JpegProcessor, ROI_spectrum
 from bps_raw_jpeg_processer.src.pxlspec_to_pxlweb_formula import pxlspec_to_pxlweb_formula
 
 # ---------- pqgraph config -------------------------------------------------------------------------------------------
@@ -89,6 +88,7 @@ class TheMainWindow(QMainWindow):
     ddtree: DataDirTree = DataDirTree()
     jp: JpegProcessor = JpegProcessor()
     wv: NDArray[np.float64] = np.zeros((2464, 3280), dtype=np.float64)
+    
 
     paramLogPath: str = ""
     dfParamHistory: pd.DataFrame = pd.DataFrame()
@@ -136,6 +136,14 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.cb_2dimg_key.currentTextChanged.connect(self.update_1_rawbayer_img_data_and_then_plot_below)
 
         # init_2d_graph_hide_the_original_roi_buttons -----------------------------------------------------------------
+        self.selected_ROI_spectrum: dict[str, ROI_spectrum] = {
+            "obje" : ROI_spectrum(),
+            "gray" : ROI_spectrum(),
+        } 
+        self.ui.pb_select_gray_roi.clicked.connect(lambda: self.callback_roi_load_to_analysis("gray"))
+        self.ui.pb_select_obje_roi.clicked.connect(lambda: self.callback_roi_load_to_analysis("obje"))
+
+
         self.roi_label_gray = pg.TextItem(
             html='<div style="text-align: center"><span style="color: #FFF;">Gray-ROI</span></div>',
             anchor=(0, 1),
@@ -208,12 +216,12 @@ class TheMainWindow(QMainWindow):
             #"850":    (np.array([0, 0, 0], dtype=np.float64), pg.PlotCurveItem()),
         }
         self.graph_distributive_dn = {
-            "red_obje" : self.ui.graph_savgol_r.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
-            "red_gray" : self.ui.graph_savgol_r.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
-            "grn_obje" : self.ui.graph_savgol_g.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
-            "grn_gray" : self.ui.graph_savgol_g.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
-            "blu_obje" : self.ui.graph_savgol_b.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
-            "blu_gray" : self.ui.graph_savgol_b.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
+            "red_obje" : self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
+            "grn_obje" : self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
+            "blu_obje" : self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
+            "red_gray" : self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
+            "grn_gray" : self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
+            "blu_gray" : self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
         }
 
         # ----------------------------------------------------
@@ -377,6 +385,45 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.cb_shows_calibrated_wl.checkStateChanged.connect(self.handle_when_to_show_calibrated_wavelenghts)
 
         self.handle_when_tw_midcol_changed() # just so it starts correctly
+
+
+    def callback_roi_load_to_analysis(self, key: str) -> None:
+        assert key in self.selected_ROI_spectrum.keys(), f"bad {key=} must be in { self.selected_ROI_spectrum.keys()}"
+
+        if key == "gray":
+            roi_geometry = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_gray_main.getState())
+        else: # key == "obje":
+            roi_geometry  = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_obje_main.getState())
+
+        self.selected_ROI_spectrum[key].channel["R"].set_data(
+            dn = self.jp.get_array("Raw bayer (Noise Filter)", "Mask red",   roi_geometry),
+            bg = self.jp.get_array("Background Est.", "Mask red",            roi_geometry),
+            wv = self.jp.get_array("Wavelength", "Mask red",                 roi_geometry),
+        )
+
+        self.selected_ROI_spectrum[key].channel["G"].set_data(
+            dn = self.jp.get_array("Raw bayer (Noise Filter)", "Mask green",   roi_geometry),
+            bg = self.jp.get_array("Background Est.", "Mask green",            roi_geometry),
+            wv = self.jp.get_array("Wavelength", "Mask green",                 roi_geometry),
+        )
+
+        self.selected_ROI_spectrum[key].channel["B"].set_data(
+            dn = self.jp.get_array("Raw bayer (Noise Filter)", "Mask blue",   roi_geometry),
+            bg = self.jp.get_array("Background Est.", "Mask blue",            roi_geometry),
+            wv = self.jp.get_array("Wavelength", "Mask blue",                 roi_geometry),
+        )
+
+        self.graph_distributive_dn["red_gray"].setData(self.selected_ROI_spectrum["gray"].channel["R"].spectra["wavelength"], self.selected_ROI_spectrum["gray"].channel["R"].spectra["raw-dn-val"]) 
+        self.graph_distributive_dn["red_obje"].setData(self.selected_ROI_spectrum["obje"].channel["R"].spectra["wavelength"], self.selected_ROI_spectrum["obje"].channel["R"].spectra["raw-dn-val"]) 
+
+        self.graph_distributive_dn["grn_gray"].setData(self.selected_ROI_spectrum["gray"].channel["G"].spectra["wavelength"], self.selected_ROI_spectrum["gray"].channel["G"].spectra["raw-dn-val"]) 
+        self.graph_distributive_dn["grn_obje"].setData(self.selected_ROI_spectrum["obje"].channel["G"].spectra["wavelength"], self.selected_ROI_spectrum["obje"].channel["G"].spectra["raw-dn-val"]) 
+
+        self.graph_distributive_dn["blu_gray"].setData(self.selected_ROI_spectrum["gray"].channel["B"].spectra["wavelength"], self.selected_ROI_spectrum["gray"].channel["B"].spectra["raw-dn-val"]) 
+        self.graph_distributive_dn["blu_obje"].setData(self.selected_ROI_spectrum["obje"].channel["B"].spectra["wavelength"], self.selected_ROI_spectrum["obje"].channel["B"].spectra["raw-dn-val"]) 
+
+
+
 
     def handle_when_tw_midcol_changed(self) -> None:
         # remove all items 
@@ -627,9 +674,6 @@ class TheMainWindow(QMainWindow):
         if not self.paramsChangingFromHistory:
             self.ui.cb_parameter_history.setCurrentIndex(0) # when change happens make it current
 
-        # say reflection is changed
-        #self.graph5_curve_relf.
-        #self.ui.graph_calc5_refl_final.clear()
 
         self.update_fov_on_webcam()
 
@@ -738,6 +782,7 @@ class TheMainWindow(QMainWindow):
                     movable=False, angle=90,
                     pen=pg.mkPen(clrs[i], width=1, style=Qt.PenStyle.SolidLine))
             )
+            QApplication.processEvents() # update the each
 
 
         self.ui.graph_759_plot_fit.getPlotItem().clear()
@@ -776,13 +821,11 @@ class TheMainWindow(QMainWindow):
         #np.save("/tmp/wv.npy", self.wv)
 
     def callback_bg_estimation(self) -> None:
-        # assume the self.arr_759_roi has already prepped (and median filtered)
         cm = pg.colormap.get("turbo")
         clrs = cm.map(np.linspace(0, 1, self.ui.sb_bg___sizy.value()))
 
         self.ui.graph_bg_r.getPlotItem().clear()
         self.ui.graph_bg_g.getPlotItem().clear()
-        #self.ui.graph_bg_G.getPlotItem().clear()
         self.ui.graph_bg_b.getPlotItem().clear()
 
         self.ui.pbar_bg_on_row.setMaximum(self.ui.sb_bg___sizy.value()//2)
@@ -793,9 +836,10 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.graph_bg_r.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask red",   bgle_roi_pxl), self.jp.get_array("Raw bayer", "Mask red",   bgle_roi_pxl), pen=None, symbol='o', symbolPen=None, symbolSize=3)
         _ = self.ui.graph_bg_g.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask green", bgle_roi_pxl), self.jp.get_array("Raw bayer", "Mask green", bgle_roi_pxl), pen=None, symbol='o', symbolPen=None, symbolSize=3)
         _ = self.ui.graph_bg_b.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask blue",  bgle_roi_pxl), self.jp.get_array("Raw bayer", "Mask blue",  bgle_roi_pxl), pen=None, symbol='o', symbolPen=None, symbolSize=3)
-        _ = self.ui.graph_bg_r.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask red",   bgle_roi_pxl), self.jp.get_array("Raw bayer", "Mask red",   bgle_roi_pxl), pen=None, symbol='x', symbolPen=None, symbolSize=3)
-        _ = self.ui.graph_bg_g.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask green", bgle_roi_pxl), self.jp.get_array("Raw bayer", "Mask green", bgle_roi_pxl), pen=None, symbol='x', symbolPen=None, symbolSize=3)
-        _ = self.ui.graph_bg_b.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask blue",  bgle_roi_pxl), self.jp.get_array("Raw bayer", "Mask blue",  bgle_roi_pxl), pen=None, symbol='x', symbolPen=None, symbolSize=3)
+
+        _ = self.ui.graph_bg_r.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask red",   bgri_roi_pxl), self.jp.get_array("Raw bayer", "Mask red",   bgri_roi_pxl), pen=None, symbol='x', symbolPen=None, symbolSize=3)
+        _ = self.ui.graph_bg_g.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask green", bgri_roi_pxl), self.jp.get_array("Raw bayer", "Mask green", bgri_roi_pxl), pen=None, symbol='x', symbolPen=None, symbolSize=3)
+        _ = self.ui.graph_bg_b.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask blue",  bgri_roi_pxl), self.jp.get_array("Raw bayer", "Mask blue",  bgri_roi_pxl), pen=None, symbol='x', symbolPen=None, symbolSize=3)
 
         self.jp.bg_pre_estimation_prep(bgle_roi_pxl, bgri_roi_pxl)
 
@@ -809,6 +853,8 @@ class TheMainWindow(QMainWindow):
             _ = self.ui.graph_bg_r.getPlotItem().plot(tmp_x, background_new(tmp_x, *self.jp.bg_popts["r"][py, :]), pen=pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.SolidLine))
             _ = self.ui.graph_bg_g.getPlotItem().plot(tmp_x, background_new(tmp_x, *self.jp.bg_popts["g"][py, :]), pen=pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.SolidLine))
             _ = self.ui.graph_bg_b.getPlotItem().plot(tmp_x, background_new(tmp_x, *self.jp.bg_popts["b"][py, :]), pen=pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.SolidLine))
+            QApplication.processEvents()
+
 
     def handle_cb_calc5_norming(self) -> None:
         # print("i was clicked")
@@ -846,82 +892,82 @@ class TheMainWindow(QMainWindow):
 
             for i, lmbd in enumerate(fullwave):
                 self.ui.pbar_savgol_iteration.setValue(i+1)
-                mask_obje_r = np.abs(wvln_obje_r - lmbd) < half_window_width
-                mask_obje_g = np.abs(wvln_obje_g - lmbd) < half_window_width
-                mask_obje_G = np.abs(wvln_obje_G - lmbd) < half_window_width
-                mask_obje_b = np.abs(wvln_obje_b - lmbd) < half_window_width
-
-                mask_gray_r = np.abs(wvln_gray_r - lmbd) < half_window_width
-                mask_gray_g = np.abs(wvln_gray_g - lmbd) < half_window_width
-                mask_gray_G = np.abs(wvln_gray_G - lmbd) < half_window_width
-                mask_gray_b = np.abs(wvln_gray_b - lmbd) < half_window_width
-
-                # ---------------------------------------------------------------------------#
-                wv_obje_r = wvln_obje_r[mask_obje_r]
-                wv_obje_g = wvln_obje_g[mask_obje_g]
-                wv_obje_G = wvln_obje_G[mask_obje_G]
-                wv_obje_b = wvln_obje_b[mask_obje_b]
-
-                wv_gray_r = wvln_gray_r[mask_gray_r]
-                wv_gray_g = wvln_gray_g[mask_gray_g]
-                wv_gray_G = wvln_gray_G[mask_gray_G]
-                wv_gray_b = wvln_gray_b[mask_gray_b]
-
-                # ---------------------------------------------------------------------------#
-                dn_obje_r = dn_obje_r_sub_est_bg[mask_obje_r]
-                dn_obje_g = dn_obje_g_sub_est_bg[mask_obje_g]
-                dn_obje_G = dn_obje_G_sub_est_bg[mask_obje_G]
-                dn_obje_b = dn_obje_b_sub_est_bg[mask_obje_b]
-
-                dn_gray_r = dn_gray_r_sub_est_bg[mask_gray_r]
-                dn_gray_g = dn_gray_g_sub_est_bg[mask_gray_g]
-                dn_gray_G = dn_gray_G_sub_est_bg[mask_gray_G]
-                dn_gray_b = dn_gray_b_sub_est_bg[mask_gray_b]
-
-                # ---------------------------------------------------------------------------#
-                z_obje_r = np.polyfit(wv_obje_r, dn_obje_r, 5)
-                z_obje_g = np.polyfit(wv_obje_g, dn_obje_g, 5)
-                z_obje_G = np.polyfit(wv_obje_G, dn_obje_G, 5)
-                z_obje_b = np.polyfit(wv_obje_b, dn_obje_b, 5)
-
-                z_gray_r = np.polyfit(wv_gray_r, dn_gray_r, 5)
-                z_gray_g = np.polyfit(wv_gray_g, dn_gray_g, 5)
-                z_gray_G = np.polyfit(wv_gray_G, dn_gray_G, 5)
-                z_gray_b = np.polyfit(wv_gray_b, dn_gray_b, 5)
-
-                # ---------------------------------------------------------------------------#
-
-                p_obje_r = np.poly1d(z_obje_r)
-                p_obje_g = np.poly1d(z_obje_g)
-                p_obje_G = np.poly1d(z_obje_G)
-                p_obje_b = np.poly1d(z_obje_b)
-
-                p_gray_r = np.poly1d(z_gray_r)
-                p_gray_g = np.poly1d(z_gray_g)
-                p_gray_G = np.poly1d(z_gray_G)
-                p_gray_b = np.poly1d(z_gray_b)
-
-                # ---------------------------------------------------------------------------#
-                fitted_poly_ouptut_obje_r = p_obje_r(fullwave)
-                fitted_poly_ouptut_obje_g = p_obje_g(fullwave)
-                fitted_poly_ouptut_obje_G = p_obje_G(fullwave)
-                fitted_poly_ouptut_obje_b = p_obje_b(fullwave)
-
-                fitted_poly_ouptut_gray_r = p_gray_r(fullwave)
-                fitted_poly_ouptut_gray_g = p_gray_g(fullwave)
-                fitted_poly_ouptut_gray_G = p_gray_G(fullwave)
-                fitted_poly_ouptut_gray_b = p_gray_b(fullwave)
-
-                # ---------------------------------------------------------------------------#
-                savgol_output_dict["r_obje"][i] = fitted_poly_ouptut_obje_r[i]
-                savgol_output_dict["g_obje"][i] = fitted_poly_ouptut_obje_g[i]
-                savgol_output_dict["G_obje"][i] = fitted_poly_ouptut_obje_G[i]
-                savgol_output_dict["b_obje"][i] = fitted_poly_ouptut_obje_b[i]
-
-                savgol_output_dict["r_gray"][i] = fitted_poly_ouptut_gray_r[i]
-                savgol_output_dict["g_gray"][i] = fitted_poly_ouptut_gray_g[i]
-                savgol_output_dict["G_gray"][i] = fitted_poly_ouptut_gray_G[i]
-                savgol_output_dict["b_gray"][i] = fitted_poly_ouptut_gray_b[i]
+#                mask_obje_r = np.abs(wvln_obje_r - lmbd) < half_window_width
+#                mask_obje_g = np.abs(wvln_obje_g - lmbd) < half_window_width
+#                mask_obje_G = np.abs(wvln_obje_G - lmbd) < half_window_width
+#                mask_obje_b = np.abs(wvln_obje_b - lmbd) < half_window_width
+#
+#                mask_gray_r = np.abs(wvln_gray_r - lmbd) < half_window_width
+#                mask_gray_g = np.abs(wvln_gray_g - lmbd) < half_window_width
+#                mask_gray_G = np.abs(wvln_gray_G - lmbd) < half_window_width
+#                mask_gray_b = np.abs(wvln_gray_b - lmbd) < half_window_width
+#
+#                # ---------------------------------------------------------------------------#
+#                wv_obje_r = wvln_obje_r[mask_obje_r]
+#                wv_obje_g = wvln_obje_g[mask_obje_g]
+#                wv_obje_G = wvln_obje_G[mask_obje_G]
+#                wv_obje_b = wvln_obje_b[mask_obje_b]
+#
+#                wv_gray_r = wvln_gray_r[mask_gray_r]
+#                wv_gray_g = wvln_gray_g[mask_gray_g]
+#                wv_gray_G = wvln_gray_G[mask_gray_G]
+#                wv_gray_b = wvln_gray_b[mask_gray_b]
+#
+#                # ---------------------------------------------------------------------------#
+#                dn_obje_r = dn_obje_r_sub_est_bg[mask_obje_r]
+#                dn_obje_g = dn_obje_g_sub_est_bg[mask_obje_g]
+#                dn_obje_G = dn_obje_G_sub_est_bg[mask_obje_G]
+#                dn_obje_b = dn_obje_b_sub_est_bg[mask_obje_b]
+#
+#                dn_gray_r = dn_gray_r_sub_est_bg[mask_gray_r]
+#                dn_gray_g = dn_gray_g_sub_est_bg[mask_gray_g]
+#                dn_gray_G = dn_gray_G_sub_est_bg[mask_gray_G]
+#                dn_gray_b = dn_gray_b_sub_est_bg[mask_gray_b]
+#
+#                # ---------------------------------------------------------------------------#
+#                z_obje_r = np.polyfit(wv_obje_r, dn_obje_r, 5)
+#                z_obje_g = np.polyfit(wv_obje_g, dn_obje_g, 5)
+#                z_obje_G = np.polyfit(wv_obje_G, dn_obje_G, 5)
+#                z_obje_b = np.polyfit(wv_obje_b, dn_obje_b, 5)
+#
+#                z_gray_r = np.polyfit(wv_gray_r, dn_gray_r, 5)
+#                z_gray_g = np.polyfit(wv_gray_g, dn_gray_g, 5)
+#                z_gray_G = np.polyfit(wv_gray_G, dn_gray_G, 5)
+#                z_gray_b = np.polyfit(wv_gray_b, dn_gray_b, 5)
+#
+#                # ---------------------------------------------------------------------------#
+#
+#                p_obje_r = np.poly1d(z_obje_r)
+#                p_obje_g = np.poly1d(z_obje_g)
+#                p_obje_G = np.poly1d(z_obje_G)
+#                p_obje_b = np.poly1d(z_obje_b)
+#
+#                p_gray_r = np.poly1d(z_gray_r)
+#                p_gray_g = np.poly1d(z_gray_g)
+#                p_gray_G = np.poly1d(z_gray_G)
+#                p_gray_b = np.poly1d(z_gray_b)
+#
+#                # ---------------------------------------------------------------------------#
+#                fitted_poly_ouptut_obje_r = p_obje_r(fullwave)
+#                fitted_poly_ouptut_obje_g = p_obje_g(fullwave)
+#                fitted_poly_ouptut_obje_G = p_obje_G(fullwave)
+#                fitted_poly_ouptut_obje_b = p_obje_b(fullwave)
+#
+#                fitted_poly_ouptut_gray_r = p_gray_r(fullwave)
+#                fitted_poly_ouptut_gray_g = p_gray_g(fullwave)
+#                fitted_poly_ouptut_gray_G = p_gray_G(fullwave)
+#                fitted_poly_ouptut_gray_b = p_gray_b(fullwave)
+#
+#                # ---------------------------------------------------------------------------#
+#                savgol_output_dict["r_obje"][i] = fitted_poly_ouptut_obje_r[i]
+#                savgol_output_dict["g_obje"][i] = fitted_poly_ouptut_obje_g[i]
+#                savgol_output_dict["G_obje"][i] = fitted_poly_ouptut_obje_G[i]
+#                savgol_output_dict["b_obje"][i] = fitted_poly_ouptut_obje_b[i]
+#
+#                savgol_output_dict["r_gray"][i] = fitted_poly_ouptut_gray_r[i]
+#                savgol_output_dict["g_gray"][i] = fitted_poly_ouptut_gray_g[i]
+#                savgol_output_dict["G_gray"][i] = fitted_poly_ouptut_gray_G[i]
+#                savgol_output_dict["b_gray"][i] = fitted_poly_ouptut_gray_b[i]
 
     def init_keyboard_bindings(self) -> None:
         _ = QShortcut(QKeySequence("Ctrl+B"),    self).activated.connect(self.short_cut_goto_parent_dir)
@@ -1067,7 +1113,7 @@ class TheMainWindow(QMainWindow):
         self.ui.tabWidget.setCurrentIndex(1)
         time.sleep(.1)
         #self.call_calibrate_and_calculate_calc3_759_calib()       # TODO
-        self.distribute_pixel_graph()
+        #self.distribute_pixel_graph()
         self.ui.pbar_calc.setValue(50)
         self.ui.tabWidget.setCurrentIndex(2)
         time.sleep(.1)
@@ -1089,56 +1135,28 @@ class TheMainWindow(QMainWindow):
         self.ui.tabWidget.setCurrentIndex(5)
         time.sleep(.1)
 
-    def distribute_pixel_graph(self) -> None:
-        #gray_roi_mid: NDArray[np.float64] = self.jp.data[
-        #    self.ui.sb_gray_posy.value() : self.ui.sb_gray_posy.value() + self.ui.sb_gray_sizy.value(),
-        #    self.ui.sb_midx_init.value() : self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()
-        #].astype(np.float64)
-        #obje_roi_mid: NDArray[np.float64] = self.jp.data[
-        #    self.ui.sb_obje_posy.value() : self.ui.sb_obje_posy.value() + self.ui.sb_obje_sizy.value(),
-        #    self.ui.sb_midx_init.value() : self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()
-        #].astype(np.float64)
-
-        #wv_gray_roi_mid: NDArray[np.float64] = self.wv[
-        #    self.ui.sb_gray_posy.value() : self.ui.sb_gray_posy.value() + self.ui.sb_gray_sizy.value(),
-        #    self.ui.sb_midx_init.value() : self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()
-        #]
-
-        #wv_obje_roi_mid: NDArray[np.float64] = self.wv[
-        #    self.ui.sb_obje_posy.value() : self.ui.sb_obje_posy.value() + self.ui.sb_obje_sizy.value(),
-        #    self.ui.sb_midx_init.value() : self.ui.sb_midx_init.value() + self.ui.sb_midx_size.value()
-        #]
-
-        #self.graph_distributive_dn["red_gray"].setData(wv_gray_roi_mid[1::2, 1::2].reshape(-1), gray_roi_mid[1::2, 1::2].reshape(-1))
-        #self.graph_distributive_dn["red_obje"].setData(wv_obje_roi_mid[1::2, 1::2].reshape(-1), obje_roi_mid[1::2, 1::2].reshape(-1))
-
-        #self.graph_distributive_dn["grn_gray"].setData(wv_gray_roi_mid[1::2, 0::2].reshape(-1), gray_roi_mid[1::2, 0::2].reshape(-1))
-        #self.graph_distributive_dn["grn_obje"].setData(wv_obje_roi_mid[1::2, 0::2].reshape(-1), obje_roi_mid[1::2, 0::2].reshape(-1))
-
-        #self.graph_distributive_dn["blu_gray"].setData(wv_gray_roi_mid[0::2, 0::2].reshape(-1), gray_roi_mid[0::2, 0::2].reshape(-1))
-        #self.graph_distributive_dn["blu_obje"].setData(wv_obje_roi_mid[0::2, 0::2].reshape(-1), obje_roi_mid[0::2, 0::2].reshape(-1))
-
-        gray_roi_pxl = (
-            self.ui.sb_midx_init.value(),
-            self.ui.sb_gray_posy.value(),
-            self.ui.sb_midx_size.value(),
-            self.ui.sb_gray_sizy.value(),
-        )
-
-        obje_roi_pxl = (
-            self.ui.sb_midx_init.value(),
-            self.ui.sb_obje_posy.value(),
-            self.ui.sb_midx_size.value(),
-            self.ui.sb_obje_sizy.value(),
-        )
-        self.graph_distributive_dn["red_gray"].setData(self.jp.get_array("Wavelength", "Mask red",   gray_roi_pxl), self.jp.get_array("Raw bayer", "Mask red",   gray_roi_pxl)) 
-        self.graph_distributive_dn["red_obje"].setData(self.jp.get_array("Wavelength", "Mask red",   obje_roi_pxl), self.jp.get_array("Raw bayer", "Mask red",   obje_roi_pxl)) 
-
-        self.graph_distributive_dn["grn_gray"].setData(self.jp.get_array("Wavelength", "Mask green", gray_roi_pxl), self.jp.get_array("Raw bayer", "Mask green", gray_roi_pxl)) 
-        self.graph_distributive_dn["grn_obje"].setData(self.jp.get_array("Wavelength", "Mask green", obje_roi_pxl), self.jp.get_array("Raw bayer", "Mask green", obje_roi_pxl)) 
-
-        self.graph_distributive_dn["blu_gray"].setData(self.jp.get_array("Wavelength", "Mask blue",  gray_roi_pxl), self.jp.get_array("Raw bayer", "Mask blue",  gray_roi_pxl)) 
-        self.graph_distributive_dn["blu_obje"].setData(self.jp.get_array("Wavelength", "Mask blue",  obje_roi_pxl), self.jp.get_array("Raw bayer", "Mask blue",  obje_roi_pxl)) 
+#    def distribute_pixel_graph(self) -> None:
+#        gray_roi_pxl = (
+#            self.ui.sb_midx_init.value(),
+#            self.ui.sb_gray_posy.value(),
+#            self.ui.sb_midx_size.value(),
+#            self.ui.sb_gray_sizy.value(),
+#        )
+#
+#        obje_roi_pxl = (
+#            self.ui.sb_midx_init.value(),
+#            self.ui.sb_obje_posy.value(),
+#            self.ui.sb_midx_size.value(),
+#            self.ui.sb_obje_sizy.value(),
+#        )
+#        self.graph_distributive_dn["red_gray"].setData(self.jp.get_array("Wavelength", "Mask red",   gray_roi_pxl), self.jp.get_array("Raw bayer", "Mask red",   gray_roi_pxl)) 
+#        self.graph_distributive_dn["red_obje"].setData(self.jp.get_array("Wavelength", "Mask red",   obje_roi_pxl), self.jp.get_array("Raw bayer", "Mask red",   obje_roi_pxl)) 
+#
+#        self.graph_distributive_dn["grn_gray"].setData(self.jp.get_array("Wavelength", "Mask green", gray_roi_pxl), self.jp.get_array("Raw bayer", "Mask green", gray_roi_pxl)) 
+#        self.graph_distributive_dn["grn_obje"].setData(self.jp.get_array("Wavelength", "Mask green", obje_roi_pxl), self.jp.get_array("Raw bayer", "Mask green", obje_roi_pxl)) 
+#
+#        self.graph_distributive_dn["blu_gray"].setData(self.jp.get_array("Wavelength", "Mask blue",  gray_roi_pxl), self.jp.get_array("Raw bayer", "Mask blue",  gray_roi_pxl)) 
+#        self.graph_distributive_dn["blu_obje"].setData(self.jp.get_array("Wavelength", "Mask blue",  obje_roi_pxl), self.jp.get_array("Raw bayer", "Mask blue",  obje_roi_pxl)) 
 
 
 
@@ -1148,9 +1166,9 @@ class TheMainWindow(QMainWindow):
         assert key in self.jp.arr.keys(), f"bad {key=}"
         self.ui.graph_2dimg.setImage(
             img=self.jp.arr[key].astype(np.float64),
-            levels=(0, 1024),
+            autoRange=True, #levels=(0, 1024),
             axes={"x":1, "y":0, "c":2} if (self.jp.arr[key].ndim == 3) else {"x":1, "y":0},
-            levelMode ="rgba" if (self.jp.arr[key].ndim == 3) else "mono"
+            levelMode ="mono", #levelMode ="rgba" if (self.jp.arr[key].ndim == 3) else "mono"
         )
         self.update_raw_from_sb()
 

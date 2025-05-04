@@ -52,7 +52,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow: QMainWindow) -> None:
         if not MainWindow.objectName():
             MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1159, 614)
+        MainWindow.resize(1489, 676)
         self.actionOpen_Directory = QAction(MainWindow)
         self.actionOpen_Directory.setObjectName("actionOpen_Directory")
         self.action_cur_jpeg_export = QAction(MainWindow)
@@ -95,20 +95,15 @@ class Ui_MainWindow(object):
         self.action_tabs_show_tab3.setObjectName("action_tabs_show_tab3")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        self.verticalLayout_7 = QVBoxLayout(self.centralwidget)
-        self.verticalLayout_7.setObjectName("verticalLayout_7")
+        self.gridLayout_20 = QGridLayout(self.centralwidget)
+        self.gridLayout_20.setObjectName("gridLayout_20")
         self.label = QLabel(self.centralwidget)
         self.label.setObjectName("label")
 
-        self.verticalLayout_7.addWidget(self.label)
+        self.gridLayout_20.addWidget(self.label, 0, 0, 1, 1)
 
         self.splitter = QSplitter(self.centralwidget)
         self.splitter.setObjectName("splitter")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.splitter.sizePolicy().hasHeightForWidth())
-        self.splitter.setSizePolicy(sizePolicy)
         self.splitter.setOrientation(Qt.Orientation.Horizontal)
         self.layoutWidget = QWidget(self.splitter)
         self.layoutWidget.setObjectName("layoutWidget")
@@ -148,11 +143,11 @@ class Ui_MainWindow(object):
 
         self.tv_dir = QTreeView(self.gb_dir_panel)
         self.tv_dir.setObjectName("tv_dir")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(10)
-        sizePolicy1.setHeightForWidth(self.tv_dir.sizePolicy().hasHeightForWidth())
-        self.tv_dir.setSizePolicy(sizePolicy1)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(10)
+        sizePolicy.setHeightForWidth(self.tv_dir.sizePolicy().hasHeightForWidth())
+        self.tv_dir.setSizePolicy(sizePolicy)
         font = QFont()
         font.setFamilies(["Monospace"])
         font.setPointSize(10)
@@ -228,11 +223,11 @@ class Ui_MainWindow(object):
 
         self.l_physical_distance = QLabel(self.tab_7)
         self.l_physical_distance.setObjectName("l_physical_distance")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.l_physical_distance.sizePolicy().hasHeightForWidth())
-        self.l_physical_distance.setSizePolicy(sizePolicy2)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.l_physical_distance.sizePolicy().hasHeightForWidth())
+        self.l_physical_distance.setSizePolicy(sizePolicy1)
 
         self.gridLayout_3.addWidget(self.l_physical_distance, 3, 0, 1, 2)
 
@@ -293,11 +288,11 @@ class Ui_MainWindow(object):
 
         self.graph_2dimg = ImageView(self.scrollAreaWidgetContents_2)
         self.graph_2dimg.setObjectName("graph_2dimg")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
-        sizePolicy3.setHorizontalStretch(200)
-        sizePolicy3.setVerticalStretch(200)
-        sizePolicy3.setHeightForWidth(self.graph_2dimg.sizePolicy().hasHeightForWidth())
-        self.graph_2dimg.setSizePolicy(sizePolicy3)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
+        sizePolicy2.setHorizontalStretch(200)
+        sizePolicy2.setVerticalStretch(200)
+        sizePolicy2.setHeightForWidth(self.graph_2dimg.sizePolicy().hasHeightForWidth())
+        self.graph_2dimg.setSizePolicy(sizePolicy2)
         self.graph_2dimg.setMinimumSize(QSize(400, 200))
 
         self.verticalLayout_4.addWidget(self.graph_2dimg)
@@ -351,11 +346,11 @@ class Ui_MainWindow(object):
 
         self.graph_759_roi = ImageView(self.midcol_tab1_wave)
         self.graph_759_roi.setObjectName("graph_759_roi")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Preferred)
-        sizePolicy4.setHorizontalStretch(1)
-        sizePolicy4.setVerticalStretch(1)
-        sizePolicy4.setHeightForWidth(self.graph_759_roi.sizePolicy().hasHeightForWidth())
-        self.graph_759_roi.setSizePolicy(sizePolicy4)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Preferred)
+        sizePolicy3.setHorizontalStretch(1)
+        sizePolicy3.setVerticalStretch(1)
+        sizePolicy3.setHeightForWidth(self.graph_759_roi.sizePolicy().hasHeightForWidth())
+        self.graph_759_roi.setSizePolicy(sizePolicy3)
         self.graph_759_roi.setMinimumSize(QSize(1, 1))
 
         self.verticalLayout_3.addWidget(self.graph_759_roi)
@@ -371,19 +366,19 @@ class Ui_MainWindow(object):
         self.gridLayout_9.setObjectName("gridLayout_9")
         self.graph_759_plot_fit = PlotWidget(self.midcol_tab1_wave)
         self.graph_759_plot_fit.setObjectName("graph_759_plot_fit")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy5.setHorizontalStretch(1)
-        sizePolicy5.setVerticalStretch(1)
-        sizePolicy5.setHeightForWidth(self.graph_759_plot_fit.sizePolicy().hasHeightForWidth())
-        self.graph_759_plot_fit.setSizePolicy(sizePolicy5)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy4.setHorizontalStretch(1)
+        sizePolicy4.setVerticalStretch(1)
+        sizePolicy4.setHeightForWidth(self.graph_759_plot_fit.sizePolicy().hasHeightForWidth())
+        self.graph_759_plot_fit.setSizePolicy(sizePolicy4)
         self.graph_759_plot_fit.setMinimumSize(QSize(1, 1))
 
         self.gridLayout_9.addWidget(self.graph_759_plot_fit, 1, 3, 1, 1)
 
         self.graph_759_plot = PlotWidget(self.midcol_tab1_wave)
         self.graph_759_plot.setObjectName("graph_759_plot")
-        sizePolicy5.setHeightForWidth(self.graph_759_plot.sizePolicy().hasHeightForWidth())
-        self.graph_759_plot.setSizePolicy(sizePolicy5)
+        sizePolicy4.setHeightForWidth(self.graph_759_plot.sizePolicy().hasHeightForWidth())
+        self.graph_759_plot.setSizePolicy(sizePolicy4)
         self.graph_759_plot.setMinimumSize(QSize(1, 1))
 
         self.gridLayout_9.addWidget(self.graph_759_plot, 1, 2, 1, 1)
@@ -430,15 +425,15 @@ class Ui_MainWindow(object):
         self.gridLayout_7.setObjectName("gridLayout_7")
         self.label_6 = QLabel(self.midcol_tab1_wave)
         self.label_6.setObjectName("label_6")
-        sizePolicy2.setHeightForWidth(self.label_6.sizePolicy().hasHeightForWidth())
-        self.label_6.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.label_6.sizePolicy().hasHeightForWidth())
+        self.label_6.setSizePolicy(sizePolicy1)
 
         self.gridLayout_7.addWidget(self.label_6, 0, 1, 1, 1)
 
         self.label_7 = QLabel(self.midcol_tab1_wave)
         self.label_7.setObjectName("label_7")
-        sizePolicy2.setHeightForWidth(self.label_7.sizePolicy().hasHeightForWidth())
-        self.label_7.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.label_7.sizePolicy().hasHeightForWidth())
+        self.label_7.setSizePolicy(sizePolicy1)
 
         self.gridLayout_7.addWidget(self.label_7, 0, 2, 1, 1)
 
@@ -499,29 +494,44 @@ class Ui_MainWindow(object):
         self.gridLayout_14.setObjectName("gridLayout_14")
         self.gridLayout_12 = QGridLayout()
         self.gridLayout_12.setObjectName("gridLayout_12")
+        self.graph_bg_b = PlotWidget(self.tab_13)
+        self.graph_bg_b.setObjectName("graph_bg_b")
+        sizePolicy4.setHeightForWidth(self.graph_bg_b.sizePolicy().hasHeightForWidth())
+        self.graph_bg_b.setSizePolicy(sizePolicy4)
+        self.graph_bg_b.setMinimumSize(QSize(1, 1))
+
+        self.gridLayout_12.addWidget(self.graph_bg_b, 1, 2, 1, 1)
+
         self.graph_bg_r = PlotWidget(self.tab_13)
         self.graph_bg_r.setObjectName("graph_bg_r")
-        sizePolicy5.setHeightForWidth(self.graph_bg_r.sizePolicy().hasHeightForWidth())
-        self.graph_bg_r.setSizePolicy(sizePolicy5)
+        sizePolicy4.setHeightForWidth(self.graph_bg_r.sizePolicy().hasHeightForWidth())
+        self.graph_bg_r.setSizePolicy(sizePolicy4)
         self.graph_bg_r.setMinimumSize(QSize(1, 1))
 
-        self.gridLayout_12.addWidget(self.graph_bg_r, 0, 0, 1, 1)
+        self.gridLayout_12.addWidget(self.graph_bg_r, 1, 0, 1, 1)
 
         self.graph_bg_g = PlotWidget(self.tab_13)
         self.graph_bg_g.setObjectName("graph_bg_g")
-        sizePolicy5.setHeightForWidth(self.graph_bg_g.sizePolicy().hasHeightForWidth())
-        self.graph_bg_g.setSizePolicy(sizePolicy5)
+        sizePolicy4.setHeightForWidth(self.graph_bg_g.sizePolicy().hasHeightForWidth())
+        self.graph_bg_g.setSizePolicy(sizePolicy4)
         self.graph_bg_g.setMinimumSize(QSize(1, 1))
 
-        self.gridLayout_12.addWidget(self.graph_bg_g, 1, 0, 1, 1)
+        self.gridLayout_12.addWidget(self.graph_bg_g, 1, 1, 1, 1)
 
-        self.graph_bg_b = PlotWidget(self.tab_13)
-        self.graph_bg_b.setObjectName("graph_bg_b")
-        sizePolicy5.setHeightForWidth(self.graph_bg_b.sizePolicy().hasHeightForWidth())
-        self.graph_bg_b.setSizePolicy(sizePolicy5)
-        self.graph_bg_b.setMinimumSize(QSize(1, 1))
+        self.label_20 = QLabel(self.tab_13)
+        self.label_20.setObjectName("label_20")
 
-        self.gridLayout_12.addWidget(self.graph_bg_b, 2, 0, 1, 1)
+        self.gridLayout_12.addWidget(self.label_20, 0, 0, 1, 1)
+
+        self.label_21 = QLabel(self.tab_13)
+        self.label_21.setObjectName("label_21")
+
+        self.gridLayout_12.addWidget(self.label_21, 0, 1, 1, 1)
+
+        self.label_22 = QLabel(self.tab_13)
+        self.label_22.setObjectName("label_22")
+
+        self.gridLayout_12.addWidget(self.label_22, 0, 2, 1, 1)
 
         self.gridLayout_14.addLayout(self.gridLayout_12, 0, 0, 1, 1)
 
@@ -534,24 +544,24 @@ class Ui_MainWindow(object):
         self.gridLayout_15.setObjectName("gridLayout_15")
         self.graph_bg_param_b = PlotWidget(self.tab_14)
         self.graph_bg_param_b.setObjectName("graph_bg_param_b")
-        sizePolicy5.setHeightForWidth(self.graph_bg_param_b.sizePolicy().hasHeightForWidth())
-        self.graph_bg_param_b.setSizePolicy(sizePolicy5)
+        sizePolicy4.setHeightForWidth(self.graph_bg_param_b.sizePolicy().hasHeightForWidth())
+        self.graph_bg_param_b.setSizePolicy(sizePolicy4)
         self.graph_bg_param_b.setMinimumSize(QSize(1, 1))
 
         self.gridLayout_15.addWidget(self.graph_bg_param_b, 0, 0, 1, 1)
 
         self.graph_bg_param_c = PlotWidget(self.tab_14)
         self.graph_bg_param_c.setObjectName("graph_bg_param_c")
-        sizePolicy5.setHeightForWidth(self.graph_bg_param_c.sizePolicy().hasHeightForWidth())
-        self.graph_bg_param_c.setSizePolicy(sizePolicy5)
+        sizePolicy4.setHeightForWidth(self.graph_bg_param_c.sizePolicy().hasHeightForWidth())
+        self.graph_bg_param_c.setSizePolicy(sizePolicy4)
         self.graph_bg_param_c.setMinimumSize(QSize(1, 1))
 
         self.gridLayout_15.addWidget(self.graph_bg_param_c, 2, 0, 1, 1)
 
         self.graph_bg_param_k = PlotWidget(self.tab_14)
         self.graph_bg_param_k.setObjectName("graph_bg_param_k")
-        sizePolicy5.setHeightForWidth(self.graph_bg_param_k.sizePolicy().hasHeightForWidth())
-        self.graph_bg_param_k.setSizePolicy(sizePolicy5)
+        sizePolicy4.setHeightForWidth(self.graph_bg_param_k.sizePolicy().hasHeightForWidth())
+        self.graph_bg_param_k.setSizePolicy(sizePolicy4)
         self.graph_bg_param_k.setMinimumSize(QSize(1, 1))
 
         self.gridLayout_15.addWidget(self.graph_bg_param_k, 1, 0, 1, 1)
@@ -599,8 +609,8 @@ class Ui_MainWindow(object):
 
         self.label_9 = QLabel(self.midcol_tab2_bgnd)
         self.label_9.setObjectName("label_9")
-        sizePolicy2.setHeightForWidth(self.label_9.sizePolicy().hasHeightForWidth())
-        self.label_9.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.label_9.sizePolicy().hasHeightForWidth())
+        self.label_9.setSizePolicy(sizePolicy1)
 
         self.gridLayout_10.addWidget(self.label_9, 0, 1, 1, 1)
 
@@ -614,8 +624,8 @@ class Ui_MainWindow(object):
 
         self.label_10 = QLabel(self.midcol_tab2_bgnd)
         self.label_10.setObjectName("label_10")
-        sizePolicy2.setHeightForWidth(self.label_10.sizePolicy().hasHeightForWidth())
-        self.label_10.setSizePolicy(sizePolicy2)
+        sizePolicy1.setHeightForWidth(self.label_10.sizePolicy().hasHeightForWidth())
+        self.label_10.setSizePolicy(sizePolicy1)
 
         self.gridLayout_10.addWidget(self.label_10, 0, 3, 1, 1)
 
@@ -660,38 +670,21 @@ class Ui_MainWindow(object):
         self.midcol_tab3_rois.setObjectName("midcol_tab3_rois")
         self.gridLayout_6 = QGridLayout(self.midcol_tab3_rois)
         self.gridLayout_6.setObjectName("gridLayout_6")
+        self.graph_raw = PlotWidget(self.midcol_tab3_rois)
+        self.graph_raw.setObjectName("graph_raw")
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(200)
+        sizePolicy5.setHeightForWidth(self.graph_raw.sizePolicy().hasHeightForWidth())
+        self.graph_raw.setSizePolicy(sizePolicy5)
+        self.graph_raw.setMinimumSize(QSize(400, 200))
+
+        self.gridLayout_6.addWidget(self.graph_raw, 0, 0, 1, 1)
+
         self.gb_control_panel = QGroupBox(self.midcol_tab3_rois)
         self.gb_control_panel.setObjectName("gb_control_panel")
         self.gridLayout_2 = QGridLayout(self.gb_control_panel)
         self.gridLayout_2.setObjectName("gridLayout_2")
-        self._l_8 = QLabel(self.gb_control_panel)
-        self._l_8.setObjectName("_l_8")
-        sizePolicy2.setHeightForWidth(self._l_8.sizePolicy().hasHeightForWidth())
-        self._l_8.setSizePolicy(sizePolicy2)
-
-        self.gridLayout_2.addWidget(self._l_8, 1, 1, 1, 1)
-
-        self._line = QFrame(self.gb_control_panel)
-        self._line.setObjectName("_line")
-        self._line.setFrameShape(QFrame.Shape.HLine)
-        self._line.setFrameShadow(QFrame.Shadow.Sunken)
-
-        self.gridLayout_2.addWidget(self._line, 3, 0, 1, 3)
-
-        self._l_4 = QLabel(self.gb_control_panel)
-        self._l_4.setObjectName("_l_4")
-        sizePolicy2.setHeightForWidth(self._l_4.sizePolicy().hasHeightForWidth())
-        self._l_4.setSizePolicy(sizePolicy2)
-
-        self.gridLayout_2.addWidget(self._l_4, 4, 2, 1, 1)
-
-        self._l_9 = QLabel(self.gb_control_panel)
-        self._l_9.setObjectName("_l_9")
-        sizePolicy2.setHeightForWidth(self._l_9.sizePolicy().hasHeightForWidth())
-        self._l_9.setSizePolicy(sizePolicy2)
-
-        self.gridLayout_2.addWidget(self._l_9, 1, 2, 1, 1)
-
         self._l_3 = QLabel(self.gb_control_panel)
         self._l_3.setObjectName("_l_3")
         palette = QPalette()
@@ -703,80 +696,12 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self._l_3, 8, 0, 1, 1)
 
-        self.sb_midx_size = QSpinBox(self.gb_control_panel)
-        self.sb_midx_size.setObjectName("sb_midx_size")
-        self.sb_midx_size.setEnabled(False)
-        self.sb_midx_size.setMaximum(9999)
-        self.sb_midx_size.setValue(700)
+        self._l_9 = QLabel(self.gb_control_panel)
+        self._l_9.setObjectName("_l_9")
+        sizePolicy1.setHeightForWidth(self._l_9.sizePolicy().hasHeightForWidth())
+        self._l_9.setSizePolicy(sizePolicy1)
 
-        self.gridLayout_2.addWidget(self.sb_midx_size, 2, 2, 1, 1)
-
-        self._l_1 = QLabel(self.gb_control_panel)
-        self._l_1.setObjectName("_l_1")
-        sizePolicy2.setHeightForWidth(self._l_1.sizePolicy().hasHeightForWidth())
-        self._l_1.setSizePolicy(sizePolicy2)
-        palette1 = QPalette()
-        brush1 = QBrush(QColor(0, 170, 0, 255))
-        brush1.setStyle(Qt.BrushStyle.SolidPattern)
-        palette1.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush1)
-        palette1.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush1)
-        self._l_1.setPalette(palette1)
-
-        self.gridLayout_2.addWidget(self._l_1, 2, 0, 1, 1)
-
-        self._l_11 = QLabel(self.gb_control_panel)
-        self._l_11.setObjectName("_l_11")
-        sizePolicy2.setHeightForWidth(self._l_11.sizePolicy().hasHeightForWidth())
-        self._l_11.setSizePolicy(sizePolicy2)
-
-        self.gridLayout_2.addWidget(self._l_11, 4, 1, 1, 1)
-
-        self._l_2 = QLabel(self.gb_control_panel)
-        self._l_2.setObjectName("_l_2")
-        palette2 = QPalette()
-        brush2 = QBrush(QColor(255, 0, 0, 255))
-        brush2.setStyle(Qt.BrushStyle.SolidPattern)
-        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush2)
-        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush2)
-        self._l_2.setPalette(palette2)
-
-        self.gridLayout_2.addWidget(self._l_2, 5, 0, 1, 1)
-
-        self.sb_obje_posy = QSpinBox(self.gb_control_panel)
-        self.sb_obje_posy.setObjectName("sb_obje_posy")
-        self.sb_obje_posy.setMinimum(0)
-        self.sb_obje_posy.setMaximum(20000)
-        self.sb_obje_posy.setSingleStep(2)
-        self.sb_obje_posy.setValue(1200)
-
-        self.gridLayout_2.addWidget(self.sb_obje_posy, 8, 1, 1, 1)
-
-        self.sb_gray_posy = QSpinBox(self.gb_control_panel)
-        self.sb_gray_posy.setObjectName("sb_gray_posy")
-        self.sb_gray_posy.setMinimum(0)
-        self.sb_gray_posy.setMaximum(20000)
-        self.sb_gray_posy.setSingleStep(2)
-        self.sb_gray_posy.setValue(1050)
-
-        self.gridLayout_2.addWidget(self.sb_gray_posy, 5, 1, 1, 1)
-
-        self.sb_obje_sizy = QSpinBox(self.gb_control_panel)
-        self.sb_obje_sizy.setObjectName("sb_obje_sizy")
-        self.sb_obje_sizy.setMinimum(0)
-        self.sb_obje_sizy.setMaximum(20000)
-        self.sb_obje_sizy.setSingleStep(2)
-        self.sb_obje_sizy.setValue(50)
-
-        self.gridLayout_2.addWidget(self.sb_obje_sizy, 8, 2, 1, 1)
-
-        self.sb_gray_sizy = QSpinBox(self.gb_control_panel)
-        self.sb_gray_sizy.setObjectName("sb_gray_sizy")
-        self.sb_gray_sizy.setMinimum(0)
-        self.sb_gray_sizy.setMaximum(20000)
-        self.sb_gray_sizy.setSingleStep(2)
-        self.sb_gray_sizy.setValue(50)
-
-        self.gridLayout_2.addWidget(self.sb_gray_sizy, 5, 2, 1, 1)
+        self.gridLayout_2.addWidget(self._l_9, 1, 2, 1, 1)
 
         self.line_3 = QFrame(self.gb_control_panel)
         self.line_3.setObjectName("line_3")
@@ -794,24 +719,147 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.sb_midx_init, 2, 1, 1, 1)
 
+        self._line = QFrame(self.gb_control_panel)
+        self._line.setObjectName("_line")
+        self._line.setFrameShape(QFrame.Shape.HLine)
+        self._line.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.gridLayout_2.addWidget(self._line, 3, 0, 1, 3)
+
+        self._l_2 = QLabel(self.gb_control_panel)
+        self._l_2.setObjectName("_l_2")
+        palette1 = QPalette()
+        brush1 = QBrush(QColor(255, 0, 0, 255))
+        brush1.setStyle(Qt.BrushStyle.SolidPattern)
+        palette1.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush1)
+        palette1.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush1)
+        self._l_2.setPalette(palette1)
+
+        self.gridLayout_2.addWidget(self._l_2, 5, 0, 1, 1)
+
+        self._l_8 = QLabel(self.gb_control_panel)
+        self._l_8.setObjectName("_l_8")
+        sizePolicy1.setHeightForWidth(self._l_8.sizePolicy().hasHeightForWidth())
+        self._l_8.setSizePolicy(sizePolicy1)
+
+        self.gridLayout_2.addWidget(self._l_8, 1, 1, 1, 1)
+
+        self.sb_midx_size = QSpinBox(self.gb_control_panel)
+        self.sb_midx_size.setObjectName("sb_midx_size")
+        self.sb_midx_size.setEnabled(False)
+        self.sb_midx_size.setMaximum(9999)
+        self.sb_midx_size.setValue(700)
+
+        self.gridLayout_2.addWidget(self.sb_midx_size, 2, 2, 1, 1)
+
+        self.sb_gray_posy = QSpinBox(self.gb_control_panel)
+        self.sb_gray_posy.setObjectName("sb_gray_posy")
+        self.sb_gray_posy.setMinimum(0)
+        self.sb_gray_posy.setMaximum(20000)
+        self.sb_gray_posy.setSingleStep(2)
+        self.sb_gray_posy.setValue(1050)
+
+        self.gridLayout_2.addWidget(self.sb_gray_posy, 5, 1, 1, 1)
+
+        self.sb_obje_posy = QSpinBox(self.gb_control_panel)
+        self.sb_obje_posy.setObjectName("sb_obje_posy")
+        self.sb_obje_posy.setMinimum(0)
+        self.sb_obje_posy.setMaximum(20000)
+        self.sb_obje_posy.setSingleStep(2)
+        self.sb_obje_posy.setValue(1200)
+
+        self.gridLayout_2.addWidget(self.sb_obje_posy, 8, 1, 1, 1)
+
+        self._l_4 = QLabel(self.gb_control_panel)
+        self._l_4.setObjectName("_l_4")
+        sizePolicy1.setHeightForWidth(self._l_4.sizePolicy().hasHeightForWidth())
+        self._l_4.setSizePolicy(sizePolicy1)
+
+        self.gridLayout_2.addWidget(self._l_4, 4, 2, 1, 1)
+
+        self._l_1 = QLabel(self.gb_control_panel)
+        self._l_1.setObjectName("_l_1")
+        sizePolicy1.setHeightForWidth(self._l_1.sizePolicy().hasHeightForWidth())
+        self._l_1.setSizePolicy(sizePolicy1)
+        palette2 = QPalette()
+        brush2 = QBrush(QColor(0, 170, 0, 255))
+        brush2.setStyle(Qt.BrushStyle.SolidPattern)
+        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush2)
+        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush2)
+        self._l_1.setPalette(palette2)
+
+        self.gridLayout_2.addWidget(self._l_1, 2, 0, 1, 1)
+
+        self._l_11 = QLabel(self.gb_control_panel)
+        self._l_11.setObjectName("_l_11")
+        sizePolicy1.setHeightForWidth(self._l_11.sizePolicy().hasHeightForWidth())
+        self._l_11.setSizePolicy(sizePolicy1)
+
+        self.gridLayout_2.addWidget(self._l_11, 4, 1, 1, 1)
+
+        self.sb_gray_sizy = QSpinBox(self.gb_control_panel)
+        self.sb_gray_sizy.setObjectName("sb_gray_sizy")
+        self.sb_gray_sizy.setMinimum(0)
+        self.sb_gray_sizy.setMaximum(20000)
+        self.sb_gray_sizy.setSingleStep(2)
+        self.sb_gray_sizy.setValue(50)
+
+        self.gridLayout_2.addWidget(self.sb_gray_sizy, 5, 2, 1, 1)
+
+        self.sb_obje_sizy = QSpinBox(self.gb_control_panel)
+        self.sb_obje_sizy.setObjectName("sb_obje_sizy")
+        self.sb_obje_sizy.setMinimum(0)
+        self.sb_obje_sizy.setMaximum(20000)
+        self.sb_obje_sizy.setSingleStep(2)
+        self.sb_obje_sizy.setValue(50)
+
+        self.gridLayout_2.addWidget(self.sb_obje_sizy, 8, 2, 1, 1)
+
+        self.pb_select_gray_roi = QPushButton(self.gb_control_panel)
+        self.pb_select_gray_roi.setObjectName("pb_select_gray_roi")
+
+        self.gridLayout_2.addWidget(self.pb_select_gray_roi, 5, 3, 1, 1)
+
+        self.pb_select_obje_roi = QPushButton(self.gb_control_panel)
+        self.pb_select_obje_roi.setObjectName("pb_select_obje_roi")
+
+        self.gridLayout_2.addWidget(self.pb_select_obje_roi, 8, 3, 1, 1)
+
         self.gridLayout_6.addWidget(self.gb_control_panel, 1, 0, 1, 1)
-
-        self.graph_raw = PlotWidget(self.midcol_tab3_rois)
-        self.graph_raw.setObjectName("graph_raw")
-        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.MinimumExpanding)
-        sizePolicy6.setHorizontalStretch(0)
-        sizePolicy6.setVerticalStretch(200)
-        sizePolicy6.setHeightForWidth(self.graph_raw.sizePolicy().hasHeightForWidth())
-        self.graph_raw.setSizePolicy(sizePolicy6)
-        self.graph_raw.setMinimumSize(QSize(400, 200))
-
-        self.gridLayout_6.addWidget(self.graph_raw, 0, 0, 1, 1)
 
         _ = self.tw_midcol.addTab(self.midcol_tab3_rois, "")
 
         self.verticalLayout.addWidget(self.tw_midcol)
 
         self.splitter.addWidget(self.gp_webcam_meta)
+        self.groupBox = QGroupBox(self.splitter)
+        self.groupBox.setObjectName("groupBox")
+        self.gridLayout_21 = QGridLayout(self.groupBox)
+        self.gridLayout_21.setObjectName("gridLayout_21")
+        self.gridLayout_17 = QGridLayout()
+        self.gridLayout_17.setObjectName("gridLayout_17")
+        self.graph_gray_roi_spectra = PlotWidget(self.groupBox)
+        self.graph_gray_roi_spectra.setObjectName("graph_gray_roi_spectra")
+        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
+        sizePolicy6.setHorizontalStretch(0)
+        sizePolicy6.setVerticalStretch(200)
+        sizePolicy6.setHeightForWidth(self.graph_gray_roi_spectra.sizePolicy().hasHeightForWidth())
+        self.graph_gray_roi_spectra.setSizePolicy(sizePolicy6)
+        self.graph_gray_roi_spectra.setMinimumSize(QSize(300, 200))
+
+        self.gridLayout_17.addWidget(self.graph_gray_roi_spectra, 3, 0, 1, 1)
+
+        self.graph_obje_roi_spectra = PlotWidget(self.groupBox)
+        self.graph_obje_roi_spectra.setObjectName("graph_obje_roi_spectra")
+        sizePolicy6.setHeightForWidth(self.graph_obje_roi_spectra.sizePolicy().hasHeightForWidth())
+        self.graph_obje_roi_spectra.setSizePolicy(sizePolicy6)
+        self.graph_obje_roi_spectra.setMinimumSize(QSize(300, 200))
+
+        self.gridLayout_17.addWidget(self.graph_obje_roi_spectra, 1, 0, 1, 1)
+
+        self.gridLayout_21.addLayout(self.gridLayout_17, 1, 0, 1, 1)
+
+        self.splitter.addWidget(self.groupBox)
         self.gp_spectral_panel = QGroupBox(self.splitter)
         self.gp_spectral_panel.setObjectName("gp_spectral_panel")
         self.formLayout = QFormLayout(self.gp_spectral_panel)
@@ -838,7 +886,7 @@ class Ui_MainWindow(object):
         self.scrollArea.setWidgetResizable(True)
         self.scrollAreaWidgetContents = QWidget()
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
-        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 342, 909))
+        self.scrollAreaWidgetContents.setGeometry(QRect(0, 0, 340, 525))
         self.verticalLayout_8 = QVBoxLayout(self.scrollAreaWidgetContents)
         self.verticalLayout_8.setObjectName("verticalLayout_8")
         self.tabWidget = QTabWidget(self.scrollAreaWidgetContents)
@@ -945,37 +993,6 @@ class Ui_MainWindow(object):
         self.gridLayout_18.addWidget(self.sb_savgol_wv_step, 2, 1, 1, 1)
 
         self.gridLayout_19.addLayout(self.gridLayout_18, 0, 0, 1, 1)
-
-        self.gridLayout_17 = QGridLayout()
-        self.gridLayout_17.setObjectName("gridLayout_17")
-        self.graph_savgol_r = PlotWidget(self.tab_3)
-        self.graph_savgol_r.setObjectName("graph_savgol_r")
-        sizePolicy9 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy9.setHorizontalStretch(0)
-        sizePolicy9.setVerticalStretch(200)
-        sizePolicy9.setHeightForWidth(self.graph_savgol_r.sizePolicy().hasHeightForWidth())
-        self.graph_savgol_r.setSizePolicy(sizePolicy9)
-        self.graph_savgol_r.setMinimumSize(QSize(300, 200))
-
-        self.gridLayout_17.addWidget(self.graph_savgol_r, 0, 0, 1, 1)
-
-        self.graph_savgol_g = PlotWidget(self.tab_3)
-        self.graph_savgol_g.setObjectName("graph_savgol_g")
-        sizePolicy9.setHeightForWidth(self.graph_savgol_g.sizePolicy().hasHeightForWidth())
-        self.graph_savgol_g.setSizePolicy(sizePolicy9)
-        self.graph_savgol_g.setMinimumSize(QSize(300, 200))
-
-        self.gridLayout_17.addWidget(self.graph_savgol_g, 1, 0, 1, 1)
-
-        self.graph_savgol_b = PlotWidget(self.tab_3)
-        self.graph_savgol_b.setObjectName("graph_savgol_b")
-        sizePolicy9.setHeightForWidth(self.graph_savgol_b.sizePolicy().hasHeightForWidth())
-        self.graph_savgol_b.setSizePolicy(sizePolicy9)
-        self.graph_savgol_b.setMinimumSize(QSize(300, 200))
-
-        self.gridLayout_17.addWidget(self.graph_savgol_b, 2, 0, 1, 1)
-
-        self.gridLayout_19.addLayout(self.gridLayout_17, 1, 0, 1, 1)
 
         _ = self.tabWidget.addTab(self.tab_3, "")
         self.tab_8 = QWidget()
@@ -1125,7 +1142,7 @@ class Ui_MainWindow(object):
 
         self.splitter.addWidget(self.gp_spectral_panel)
 
-        self.verticalLayout_7.addWidget(self.splitter)
+        self.gridLayout_20.addWidget(self.splitter, 1, 0, 1, 1)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.statusbar = QStatusBar(MainWindow)
@@ -1133,7 +1150,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName("menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1159, 19))
+        self.menubar.setGeometry(QRect(0, 0, 1489, 19))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
         self.menuDirectory_operations = QMenu(self.menuFile)
@@ -1170,7 +1187,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.tabWidget_2.setCurrentIndex(0)
-        self.tw_midcol.setCurrentIndex(1)
+        self.tw_midcol.setCurrentIndex(2)
         self.tabWidget_3.setCurrentIndex(0)
         self.tabWidget.setCurrentIndex(0)
 
@@ -1272,6 +1289,9 @@ class Ui_MainWindow(object):
         self.label_4.setText(QCoreApplication.translate("MainWindow", "pos", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", "size", None))
         self.tw_midcol.setTabText(self.tw_midcol.indexOf(self.midcol_tab1_wave), QCoreApplication.translate("MainWindow", "Wavelength Calibration", None))
+        self.label_20.setText(QCoreApplication.translate("MainWindow", "Red", None))
+        self.label_21.setText(QCoreApplication.translate("MainWindow", "Green", None))
+        self.label_22.setText(QCoreApplication.translate("MainWindow", "Blue", None))
         self.tabWidget_3.setTabText(self.tabWidget_3.indexOf(self.tab_13), QCoreApplication.translate("MainWindow", "Tab 1", None))
         self.tabWidget_3.setTabText(self.tabWidget_3.indexOf(self.tab_14), QCoreApplication.translate("MainWindow", "Tab 2", None))
         self.label_11.setText(QCoreApplication.translate("MainWindow", "pos", None))
@@ -1282,29 +1302,32 @@ class Ui_MainWindow(object):
         self.pb_bg_calc.setText(QCoreApplication.translate("MainWindow", "Calc", None))
         self.tw_midcol.setTabText(self.tw_midcol.indexOf(self.midcol_tab2_bgnd), QCoreApplication.translate("MainWindow", "Background Est", None))
         self.gb_control_panel.setTitle("")
-        self._l_8.setText(QCoreApplication.translate("MainWindow", "Start (pixel)", None))
-        self._l_4.setText(QCoreApplication.translate("MainWindow", "Height (in pixel)", None))
-        self._l_9.setText(QCoreApplication.translate("MainWindow", "Width (in pixel)", None))
         self._l_3.setText(QCoreApplication.translate("MainWindow", "Vert. Object Pixel Range", None))
-        self._l_1.setText(QCoreApplication.translate("MainWindow", "Hor. (center)", None))
-        self._l_11.setText(QCoreApplication.translate("MainWindow", "Top (pixel)", None))
-        self._l_2.setText(QCoreApplication.translate("MainWindow", "Vert. Gray Pixel Range", None))
+        self._l_9.setText(QCoreApplication.translate("MainWindow", "Width (in pixel)", None))
         # if QT_CONFIG(tooltip)
-        self.sb_obje_posy.setToolTip(QCoreApplication.translate("MainWindow", '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_vert_obje_top.png"/></p></body></html>', None))
+        self.sb_midx_init.setToolTip(QCoreApplication.translate("MainWindow", '<html><head/><body><p><img src=":/newPrefix/raw_bayer_horizontal_center_start.png"/></p></body></html>', None))
         # endif // QT_CONFIG(tooltip)
+        self._l_2.setText(QCoreApplication.translate("MainWindow", "Vert. Gray Pixel Range", None))
+        self._l_8.setText(QCoreApplication.translate("MainWindow", "Start (pixel)", None))
         # if QT_CONFIG(tooltip)
         self.sb_gray_posy.setToolTip(QCoreApplication.translate("MainWindow", '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_vert_gray_top.png"/></p></body></html>', None))
         # endif // QT_CONFIG(tooltip)
         # if QT_CONFIG(tooltip)
-        self.sb_obje_sizy.setToolTip(QCoreApplication.translate("MainWindow", '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_vert_obje_height.png"/></p></body></html>', None))
+        self.sb_obje_posy.setToolTip(QCoreApplication.translate("MainWindow", '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_vert_obje_top.png"/></p></body></html>', None))
         # endif // QT_CONFIG(tooltip)
+        self._l_4.setText(QCoreApplication.translate("MainWindow", "Height (in pixel)", None))
+        self._l_1.setText(QCoreApplication.translate("MainWindow", "Hor. (center)", None))
+        self._l_11.setText(QCoreApplication.translate("MainWindow", "Top (pixel)", None))
         # if QT_CONFIG(tooltip)
         self.sb_gray_sizy.setToolTip(QCoreApplication.translate("MainWindow", '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_vert_gray_height.png"/></p></body></html>', None))
         # endif // QT_CONFIG(tooltip)
         # if QT_CONFIG(tooltip)
-        self.sb_midx_init.setToolTip(QCoreApplication.translate("MainWindow", '<html><head/><body><p><img src=":/newPrefix/raw_bayer_horizontal_center_start.png"/></p></body></html>', None))
+        self.sb_obje_sizy.setToolTip(QCoreApplication.translate("MainWindow", '<html><head/><body><p><img src=":/newPrefix/raw_bayer_base_vert_obje_height.png"/></p></body></html>', None))
         # endif // QT_CONFIG(tooltip)
+        self.pb_select_gray_roi.setText(QCoreApplication.translate("MainWindow", "Take Gray", None))
+        self.pb_select_obje_roi.setText(QCoreApplication.translate("MainWindow", "Take Object", None))
         self.tw_midcol.setTabText(self.tw_midcol.indexOf(self.midcol_tab3_rois), QCoreApplication.translate("MainWindow", "ROI geometry", None))
+        self.groupBox.setTitle(QCoreApplication.translate("MainWindow", "GroupBox", None))
         self.gp_spectral_panel.setTitle(QCoreApplication.translate("MainWindow", "Spectral Reflection Calculation", None))
         self.pb_calibrate_calculate.setText(QCoreApplication.translate("MainWindow", "Calculate (Ctrl+R)", None))
         self.label_15.setText(QCoreApplication.translate("MainWindow", "SavGol Window (nm)", None))
