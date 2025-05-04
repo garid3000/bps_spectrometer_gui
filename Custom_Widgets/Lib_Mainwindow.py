@@ -222,6 +222,12 @@ class TheMainWindow(QMainWindow):
             "red_gray" : self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
             "grn_gray" : self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
             "blu_gray" : self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
+            "R_gray_savgol_ith" :  self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
+            "G_gray_savgol_ith" :  self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
+            "B_gray_savgol_ith" :  self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
+            "R_obje_savgol_ith" :  self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
+            "G_obje_savgol_ith" :  self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
+            "B_obje_savgol_ith" :  self.ui.graph_obje_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine)),
         }
 
         # ----------------------------------------------------
@@ -388,6 +394,7 @@ class TheMainWindow(QMainWindow):
 
 
     def callback_roi_load_to_analysis(self, key: str) -> None:
+
         assert key in self.selected_ROI_spectrum.keys(), f"bad {key=} must be in { self.selected_ROI_spectrum.keys()}"
 
         if key == "gray":
@@ -869,105 +876,31 @@ class TheMainWindow(QMainWindow):
 
     def callback_savgol(self) -> None:
         wv0, wv1, wv_num = self.ui.sb_savgol_wv0.value(), self.ui.sb_savgol_wv1.value(), self.ui.sb_savgol_wv_num.value()
-        half_window_width = self.ui.sb_savgol_poly_wv_window.value()
-        fullwave = np.linspace(wv0, wv1, wv_num, dtype=np.float64) # should be the putoutpu wavelength
+        window_width = self.ui.sb_savgol_poly_wv_window.value()
+        #fullwave = np.linspace(wv0, wv1, wv_num, dtype=np.float64) # should be the putoutpu wavelength
 
         self.ui.pbar_savgol_channel.setMaximum(3)
         self.ui.pbar_savgol_iteration.setMaximum(wv_num)
 
-        savgol_output_dict = {
-            "r_obje": np.empty_like(fullwave, dtype=np.float64),
-            "g_obje": np.empty_like(fullwave, dtype=np.float64),
-            "G_obje": np.empty_like(fullwave, dtype=np.float64),
-            "b_obje": np.empty_like(fullwave, dtype=np.float64),
-            "r_gray": np.empty_like(fullwave, dtype=np.float64),
-            "g_gray": np.empty_like(fullwave, dtype=np.float64),
-            "G_gray": np.empty_like(fullwave, dtype=np.float64),
-            "b_gray": np.empty_like(fullwave, dtype=np.float64),
-        }
+        self.selected_ROI_spectrum["gray"].channel["R"].savgol_init(wv0, wv1, wv_num, window_width, poly_deg =5)
+        self.selected_ROI_spectrum["gray"].channel["G"].savgol_init(wv0, wv1, wv_num, window_width, poly_deg =5)
+        self.selected_ROI_spectrum["gray"].channel["B"].savgol_init(wv0, wv1, wv_num, window_width, poly_deg =5)
+        self.selected_ROI_spectrum["obje"].channel["R"].savgol_init(wv0, wv1, wv_num, window_width, poly_deg =5)
+        self.selected_ROI_spectrum["obje"].channel["G"].savgol_init(wv0, wv1, wv_num, window_width, poly_deg =5)
+        self.selected_ROI_spectrum["obje"].channel["B"].savgol_init(wv0, wv1, wv_num, window_width, poly_deg =5)
 
-
-        for j, chan in enumerate(("r", "g", "b")):
+        for j, rgb_key in enumerate(("R", "G", "B")):
             self.ui.pbar_savgol_channel.setValue(j+1)
 
-            for i, lmbd in enumerate(fullwave):
+            for i in range(wv_num):
                 self.ui.pbar_savgol_iteration.setValue(i+1)
-#                mask_obje_r = np.abs(wvln_obje_r - lmbd) < half_window_width
-#                mask_obje_g = np.abs(wvln_obje_g - lmbd) < half_window_width
-#                mask_obje_G = np.abs(wvln_obje_G - lmbd) < half_window_width
-#                mask_obje_b = np.abs(wvln_obje_b - lmbd) < half_window_width
-#
-#                mask_gray_r = np.abs(wvln_gray_r - lmbd) < half_window_width
-#                mask_gray_g = np.abs(wvln_gray_g - lmbd) < half_window_width
-#                mask_gray_G = np.abs(wvln_gray_G - lmbd) < half_window_width
-#                mask_gray_b = np.abs(wvln_gray_b - lmbd) < half_window_width
-#
-#                # ---------------------------------------------------------------------------#
-#                wv_obje_r = wvln_obje_r[mask_obje_r]
-#                wv_obje_g = wvln_obje_g[mask_obje_g]
-#                wv_obje_G = wvln_obje_G[mask_obje_G]
-#                wv_obje_b = wvln_obje_b[mask_obje_b]
-#
-#                wv_gray_r = wvln_gray_r[mask_gray_r]
-#                wv_gray_g = wvln_gray_g[mask_gray_g]
-#                wv_gray_G = wvln_gray_G[mask_gray_G]
-#                wv_gray_b = wvln_gray_b[mask_gray_b]
-#
-#                # ---------------------------------------------------------------------------#
-#                dn_obje_r = dn_obje_r_sub_est_bg[mask_obje_r]
-#                dn_obje_g = dn_obje_g_sub_est_bg[mask_obje_g]
-#                dn_obje_G = dn_obje_G_sub_est_bg[mask_obje_G]
-#                dn_obje_b = dn_obje_b_sub_est_bg[mask_obje_b]
-#
-#                dn_gray_r = dn_gray_r_sub_est_bg[mask_gray_r]
-#                dn_gray_g = dn_gray_g_sub_est_bg[mask_gray_g]
-#                dn_gray_G = dn_gray_G_sub_est_bg[mask_gray_G]
-#                dn_gray_b = dn_gray_b_sub_est_bg[mask_gray_b]
-#
-#                # ---------------------------------------------------------------------------#
-#                z_obje_r = np.polyfit(wv_obje_r, dn_obje_r, 5)
-#                z_obje_g = np.polyfit(wv_obje_g, dn_obje_g, 5)
-#                z_obje_G = np.polyfit(wv_obje_G, dn_obje_G, 5)
-#                z_obje_b = np.polyfit(wv_obje_b, dn_obje_b, 5)
-#
-#                z_gray_r = np.polyfit(wv_gray_r, dn_gray_r, 5)
-#                z_gray_g = np.polyfit(wv_gray_g, dn_gray_g, 5)
-#                z_gray_G = np.polyfit(wv_gray_G, dn_gray_G, 5)
-#                z_gray_b = np.polyfit(wv_gray_b, dn_gray_b, 5)
-#
-#                # ---------------------------------------------------------------------------#
-#
-#                p_obje_r = np.poly1d(z_obje_r)
-#                p_obje_g = np.poly1d(z_obje_g)
-#                p_obje_G = np.poly1d(z_obje_G)
-#                p_obje_b = np.poly1d(z_obje_b)
-#
-#                p_gray_r = np.poly1d(z_gray_r)
-#                p_gray_g = np.poly1d(z_gray_g)
-#                p_gray_G = np.poly1d(z_gray_G)
-#                p_gray_b = np.poly1d(z_gray_b)
-#
-#                # ---------------------------------------------------------------------------#
-#                fitted_poly_ouptut_obje_r = p_obje_r(fullwave)
-#                fitted_poly_ouptut_obje_g = p_obje_g(fullwave)
-#                fitted_poly_ouptut_obje_G = p_obje_G(fullwave)
-#                fitted_poly_ouptut_obje_b = p_obje_b(fullwave)
-#
-#                fitted_poly_ouptut_gray_r = p_gray_r(fullwave)
-#                fitted_poly_ouptut_gray_g = p_gray_g(fullwave)
-#                fitted_poly_ouptut_gray_G = p_gray_G(fullwave)
-#                fitted_poly_ouptut_gray_b = p_gray_b(fullwave)
-#
-#                # ---------------------------------------------------------------------------#
-#                savgol_output_dict["r_obje"][i] = fitted_poly_ouptut_obje_r[i]
-#                savgol_output_dict["g_obje"][i] = fitted_poly_ouptut_obje_g[i]
-#                savgol_output_dict["G_obje"][i] = fitted_poly_ouptut_obje_G[i]
-#                savgol_output_dict["b_obje"][i] = fitted_poly_ouptut_obje_b[i]
-#
-#                savgol_output_dict["r_gray"][i] = fitted_poly_ouptut_gray_r[i]
-#                savgol_output_dict["g_gray"][i] = fitted_poly_ouptut_gray_g[i]
-#                savgol_output_dict["G_gray"][i] = fitted_poly_ouptut_gray_G[i]
-#                savgol_output_dict["b_gray"][i] = fitted_poly_ouptut_gray_b[i]
+                wndw_wv_g, wndw_ft_g = self.selected_ROI_spectrum["gray"].channel[rgb_key].savgol_calc(i)
+                wndw_wv_o, wndw_ft_o = self.selected_ROI_spectrum["obje"].channel[rgb_key].savgol_calc(i)
+                self.graph_distributive_dn[rgb_key + "_gray_savgol_ith"].setData(wndw_wv_g, wndw_ft_g)
+                self.graph_distributive_dn[rgb_key + "_obje_savgol_ith"].setData(wndw_wv_o, wndw_ft_o)
+                QApplication.processEvents() # update the each
+
+            
 
     def init_keyboard_bindings(self) -> None:
         _ = QShortcut(QKeySequence("Ctrl+B"),    self).activated.connect(self.short_cut_goto_parent_dir)
