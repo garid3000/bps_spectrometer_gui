@@ -1067,38 +1067,96 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_6.addItem(self.verticalSpacer_6)
 
-        self.graph_weight = PlotWidget(self.gp_panel_35_refl_calculate)
-        self.graph_weight.setObjectName("graph_weight")
+        self.graph_3to1_weight = PlotWidget(self.gp_panel_35_refl_calculate)
+        self.graph_3to1_weight.setObjectName("graph_3to1_weight")
         sizePolicy9 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         sizePolicy9.setHorizontalStretch(0)
         sizePolicy9.setVerticalStretch(200)
-        sizePolicy9.setHeightForWidth(self.graph_weight.sizePolicy().hasHeightForWidth())
-        self.graph_weight.setSizePolicy(sizePolicy9)
-        self.graph_weight.setMinimumSize(QSize(50, 50))
+        sizePolicy9.setHeightForWidth(self.graph_3to1_weight.sizePolicy().hasHeightForWidth())
+        self.graph_3to1_weight.setSizePolicy(sizePolicy9)
+        self.graph_3to1_weight.setMinimumSize(QSize(50, 50))
 
-        self.verticalLayout_6.addWidget(self.graph_weight)
+        self.verticalLayout_6.addWidget(self.graph_3to1_weight)
 
         self.gridLayout_19 = QGridLayout()
         self.gridLayout_19.setObjectName("gridLayout_19")
-        self.doubleSpinBox = QDoubleSpinBox(self.gp_panel_35_refl_calculate)
-        self.doubleSpinBox.setObjectName("doubleSpinBox")
+        self.sb_3to1_a1 = QDoubleSpinBox(self.gp_panel_35_refl_calculate)
+        self.sb_3to1_a1.setObjectName("sb_3to1_a1")
+        self.sb_3to1_a1.setMaximum(999.899999999999977)
+        self.sb_3to1_a1.setSingleStep(0.050000000000000)
+        self.sb_3to1_a1.setValue(1.000000000000000)
 
-        self.gridLayout_19.addWidget(self.doubleSpinBox, 0, 0, 1, 1)
+        self.gridLayout_19.addWidget(self.sb_3to1_a1, 1, 3, 1, 1)
 
-        self.doubleSpinBox_2 = QDoubleSpinBox(self.gp_panel_35_refl_calculate)
-        self.doubleSpinBox_2.setObjectName("doubleSpinBox_2")
+        self.label = QLabel(self.gp_panel_35_refl_calculate)
+        self.label.setObjectName("label")
 
-        self.gridLayout_19.addWidget(self.doubleSpinBox_2, 0, 1, 1, 1)
+        self.gridLayout_19.addWidget(self.label, 1, 0, 1, 1)
 
-        self.doubleSpinBox_3 = QDoubleSpinBox(self.gp_panel_35_refl_calculate)
-        self.doubleSpinBox_3.setObjectName("doubleSpinBox_3")
+        self.sb_3to1_a3 = QDoubleSpinBox(self.gp_panel_35_refl_calculate)
+        self.sb_3to1_a3.setObjectName("sb_3to1_a3")
+        self.sb_3to1_a3.setMaximum(999.899999999999977)
+        self.sb_3to1_a3.setSingleStep(0.050000000000000)
+        self.sb_3to1_a3.setValue(1.000000000000000)
 
-        self.gridLayout_19.addWidget(self.doubleSpinBox_3, 0, 2, 1, 1)
+        self.gridLayout_19.addWidget(self.sb_3to1_a3, 3, 3, 1, 1)
 
-        self.doubleSpinBox_4 = QDoubleSpinBox(self.gp_panel_35_refl_calculate)
-        self.doubleSpinBox_4.setObjectName("doubleSpinBox_4")
+        self.sb_3to1_w1 = QDoubleSpinBox(self.gp_panel_35_refl_calculate)
+        self.sb_3to1_w1.setObjectName("sb_3to1_w1")
+        self.sb_3to1_w1.setMinimum(200.000000000000000)
+        self.sb_3to1_w1.setMaximum(1000.000000000000000)
+        self.sb_3to1_w1.setValue(500.000000000000000)
 
-        self.gridLayout_19.addWidget(self.doubleSpinBox_4, 1, 0, 1, 1)
+        self.gridLayout_19.addWidget(self.sb_3to1_w1, 1, 1, 1, 1)
+
+        self.sb_3to1_a2 = QDoubleSpinBox(self.gp_panel_35_refl_calculate)
+        self.sb_3to1_a2.setObjectName("sb_3to1_a2")
+        self.sb_3to1_a2.setMaximum(999.899999999999977)
+        self.sb_3to1_a2.setSingleStep(0.050000000000000)
+        self.sb_3to1_a2.setValue(1.000000000000000)
+
+        self.gridLayout_19.addWidget(self.sb_3to1_a2, 2, 3, 1, 1)
+
+        self.sb_3to1_w2 = QDoubleSpinBox(self.gp_panel_35_refl_calculate)
+        self.sb_3to1_w2.setObjectName("sb_3to1_w2")
+        self.sb_3to1_w2.setMinimum(200.000000000000000)
+        self.sb_3to1_w2.setMaximum(1000.000000000000000)
+        self.sb_3to1_w2.setValue(612.000000000000000)
+
+        self.gridLayout_19.addWidget(self.sb_3to1_w2, 2, 1, 1, 1)
+
+        self.label_24 = QLabel(self.gp_panel_35_refl_calculate)
+        self.label_24.setObjectName("label_24")
+
+        self.gridLayout_19.addWidget(self.label_24, 2, 0, 1, 1)
+
+        self.label_26 = QLabel(self.gp_panel_35_refl_calculate)
+        self.label_26.setObjectName("label_26")
+
+        self.gridLayout_19.addWidget(self.label_26, 1, 2, 1, 1)
+
+        self.label_25 = QLabel(self.gp_panel_35_refl_calculate)
+        self.label_25.setObjectName("label_25")
+
+        self.gridLayout_19.addWidget(self.label_25, 3, 0, 1, 1)
+
+        self.sb_3to1_w3 = QDoubleSpinBox(self.gp_panel_35_refl_calculate)
+        self.sb_3to1_w3.setObjectName("sb_3to1_w3")
+        self.sb_3to1_w3.setMinimum(200.000000000000000)
+        self.sb_3to1_w3.setMaximum(1000.000000000000000)
+        self.sb_3to1_w3.setValue(800.000000000000000)
+
+        self.gridLayout_19.addWidget(self.sb_3to1_w3, 3, 1, 1, 1)
+
+        self.label_27 = QLabel(self.gp_panel_35_refl_calculate)
+        self.label_27.setObjectName("label_27")
+
+        self.gridLayout_19.addWidget(self.label_27, 2, 2, 1, 1)
+
+        self.label_28 = QLabel(self.gp_panel_35_refl_calculate)
+        self.label_28.setObjectName("label_28")
+
+        self.gridLayout_19.addWidget(self.label_28, 3, 2, 1, 1)
 
         self.verticalLayout_6.addLayout(self.gridLayout_19)
 
@@ -1114,6 +1172,16 @@ class Ui_MainWindow(object):
         self.splitter.addWidget(self.gp_panel_35_refl_calculate)
         self.groupBox = QGroupBox(self.splitter)
         self.groupBox.setObjectName("groupBox")
+        self.verticalLayout_10 = QVBoxLayout(self.groupBox)
+        self.verticalLayout_10.setObjectName("verticalLayout_10")
+        self.graph_refl_curve_weighted = PlotWidget(self.groupBox)
+        self.graph_refl_curve_weighted.setObjectName("graph_refl_curve_weighted")
+        sizePolicy7.setHeightForWidth(self.graph_refl_curve_weighted.sizePolicy().hasHeightForWidth())
+        self.graph_refl_curve_weighted.setSizePolicy(sizePolicy7)
+        self.graph_refl_curve_weighted.setMinimumSize(QSize(300, 200))
+
+        self.verticalLayout_10.addWidget(self.graph_refl_curve_weighted)
+
         self.splitter.addWidget(self.groupBox)
         self.gp_panel_40_3refl_to_1refl = QGroupBox(self.splitter)
         self.gp_panel_40_3refl_to_1refl.setObjectName("gp_panel_40_3refl_to_1refl")
@@ -1494,6 +1562,12 @@ class Ui_MainWindow(object):
         self.pb_savgol_calc.setText(QCoreApplication.translate("MainWindow", "Savgol", None))
         self.gp_panel_30_rgb_curves.setTitle(QCoreApplication.translate("MainWindow", "Spectrum (Curves)", None))
         self.gp_panel_35_refl_calculate.setTitle(QCoreApplication.translate("MainWindow", "GroupBox", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", "\u03bb\u2081", None))
+        self.label_24.setText(QCoreApplication.translate("MainWindow", "\u03bb\u2082", None))
+        self.label_26.setText(QCoreApplication.translate("MainWindow", "\u03b1\u2081", None))
+        self.label_25.setText(QCoreApplication.translate("MainWindow", "\u03bb\u2083", None))
+        self.label_27.setText(QCoreApplication.translate("MainWindow", "\u03b1\u2082", None))
+        self.label_28.setText(QCoreApplication.translate("MainWindow", "\u03b1\u2083", None))
         self.pb_select_obje_roi_3.setText(QCoreApplication.translate("MainWindow", "Take Object", None))
         self.groupBox.setTitle(QCoreApplication.translate("MainWindow", "GroupBox", None))
         self.gp_panel_40_3refl_to_1refl.setTitle(QCoreApplication.translate("MainWindow", "Spectral Reflection Calculation", None))

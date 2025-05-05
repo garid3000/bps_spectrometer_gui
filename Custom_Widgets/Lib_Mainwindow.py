@@ -1,5 +1,5 @@
 # ---------- Base libraries -------------------------------------------------------------------------------------------
-from typing import cast
+from typing import cast, Callable
 import os
 import logging
 import subprocess
@@ -26,7 +26,7 @@ from PySide6.QtCore import QModelIndex, QDir, Qt, QPersistentModelIndex, QPointF
 # ---------- Custom libs ----------------------------------------------------------------------------------------------
 from Custom_UIs.UI_Mainwindow import Ui_MainWindow
 from Custom_Libs.Lib_DataDirTree import DataDirTree
-from bps_raw_jpeg_processer.src.better_bps_raw_jpeg_processor import quadratic_func,  background_new, JpegProcessor, ROI_spectrum
+from bps_raw_jpeg_processer.src.better_bps_raw_jpeg_processor import quadratic_func, sigmoid_func,  background_new, JpegProcessor, Three_channel_spectra
 from bps_raw_jpeg_processer.src.pxlspec_to_pxlweb_formula import pxlspec_to_pxlweb_formula
 
 # ---------- pqgraph config -------------------------------------------------------------------------------------------
@@ -107,14 +107,43 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.clb_1_dist_to_curve.clicked.connect(lambda: self.handle_when_stages_changes(1))
         _ = self.ui.clb_2_3curves_to_3refl.clicked.connect(lambda: self.handle_when_stages_changes(2))
         _ = self.ui.clb_3_3refl_to_1refl.clicked.connect(lambda: self.handle_when_stages_changes(3))
+        # -------------------------------------------------------------------------------------------
+        _ = self.ui.sb_3to1_a1.valueChanged.connect(self.handle_when_3to1_sb_changes)
+        _ = self.ui.sb_3to1_a2.valueChanged.connect(self.handle_when_3to1_sb_changes)
+        _ = self.ui.sb_3to1_a3.valueChanged.connect(self.handle_when_3to1_sb_changes)
+        _ = self.ui.sb_3to1_w1.valueChanged.connect(self.handle_when_3to1_sb_changes)
+        _ = self.ui.sb_3to1_w2.valueChanged.connect(self.handle_when_3to1_sb_changes)
+        _ = self.ui.sb_3to1_w3.valueChanged.connect(self.handle_when_3to1_sb_changes)
+
+        self.graph_3to1_weights = {
+            "r" : self.ui.graph_3to1_weight.getPlotItem().plot(pen=pg.mkPen("r", width=2, style=Qt.PenStyle.SolidLine), name="R"),
+            "g" : self.ui.graph_3to1_weight.getPlotItem().plot(pen=pg.mkPen("g", width=2, style=Qt.PenStyle.SolidLine), name="G"),
+            "b" : self.ui.graph_3to1_weight.getPlotItem().plot(pen=pg.mkPen("b", width=2, style=Qt.PenStyle.SolidLine), name="B"),
+            #"759.4nm": self.ui.graph_raw.addItem(pg.InfiniteLine(pos=759.37, movable=False, angle=90, label="x={value:0.2f}nm", labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True})),
+        }
+        self.graph_3to1_callable: dict[str, Callable[[NDArray[np.float64]], NDArray[np.float64]]] = {
+            "r" : lambda wv: wv,
+            "g" : lambda wv: wv,
+            "b" : lambda wv: wv,
+        }
+
+        self.graph_rgb_weighted = {
+            "r" : self.ui.graph_refl_curve_weighted.getPlotItem().plot(pen=pg.mkPen("r", width=2, style=Qt.PenStyle.DashLine), name="R"),
+            "g" : self.ui.graph_refl_curve_weighted.getPlotItem().plot(pen=pg.mkPen("g", width=2, style=Qt.PenStyle.DashLine), name="G"),
+            "b" : self.ui.graph_refl_curve_weighted.getPlotItem().plot(pen=pg.mkPen("b", width=2, style=Qt.PenStyle.DashLine), name="B"),
+            "k" : self.ui.graph_refl_curve_weighted.getPlotItem().plot(pen=pg.mkPen("k", width=1, style=Qt.PenStyle.SolidLine), name="B"),
+            #"759.4nm": self.ui.graph_raw.addItem(pg.InfiniteLine(pos=759.37, movable=False, angle=90, label="x={value:0.2f}nm", labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True})),
+        }
+
+        # -----------------------------------------------------------------------------
 
         # --------------- initialize the file system ----------------------------------
         self.fsmodel = FileSystemModel()
         _ = self.fsmodel.setRootPath(QDir.homePath())
 
         self.ui.tv_dir.setModel(self.fsmodel)
-        # self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath(QDir.homePath()))
-        self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath("/home/garid/test_alfa-20230529_091201/20230529_091201_0207367_0000.jpeg")) # TODO change before 
+        self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath(QDir.homePath()))
+        #self.ui.tv_dir.setRootIndex(self.fsmodel.setRootPath("/home/garid/test_alfa-20230529_091201/20230529_091201_0207367_0000.jpeg")) # TODO change before 
         _ = self.ui.tv_dir.doubleClicked.connect(self.call_tv_onItemDoubleClicked)
         self.short_cut_goto_parent_dir()
         # -----------------------------------------------------------------------------
@@ -130,9 +159,6 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.cb_parameter_history.currentTextChanged.connect(self.set_calculation_params_from_history_selection)
         _ = self.ui.hs_target_distance.valueChanged.connect(self.update_fov_on_webcam)
         # -----------------------------------------------------------------------------
-        #self.jp.set_xWaveRng(self.ui.sb_midx_init.value())
-        #self.jp.set_yGrayRng((self.ui.sb_gray_posy.value(), self.ui.sb_gray_posy.value() + self.ui.sb_gray_sizy.value())) # noqa
-        #self.jp.set_yObjeRng((self.ui.sb_obje_posy.value(), self.ui.sb_obje_posy.value() + self.ui.sb_obje_sizy.value())) # noqa
         self.ui.graph_2dimg.getView().invertY(not self.ui.cb_invert_y_axis_of_rawbayer.isChecked())
         _ = self.ui.cb_invert_y_axis_of_rawbayer.stateChanged.connect(
             lambda: self.ui.graph_2dimg.getView().invertY(not self.ui.cb_invert_y_axis_of_rawbayer.isChecked())
@@ -140,9 +166,10 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.cb_2dimg_key.currentTextChanged.connect(self.update_1_rawbayer_img_data_and_then_plot_below)
 
         # init_2d_graph_hide_the_original_roi_buttons -----------------------------------------------------------------
-        self.selected_ROI_spectrum: dict[str, ROI_spectrum] = {
-            "obje" : ROI_spectrum(),
-            "gray" : ROI_spectrum(),
+        self.selected_ROI_spectrum: dict[str, Three_channel_spectra] = {
+            "obje" : Three_channel_spectra(),
+            "gray" : Three_channel_spectra(),
+            "refl" : Three_channel_spectra(),
         } 
         self.ui.pb_select_gray_roi.clicked.connect(lambda: self.callback_roi_load_to_analysis("gray"))
         self.ui.pb_select_obje_roi.clicked.connect(lambda: self.callback_roi_load_to_analysis("obje"))
@@ -434,7 +461,31 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.cb_shows_calibrated_wl.checkStateChanged.connect(self.handle_when_to_show_calibrated_wavelenghts)
 
         self.handle_when_tw_midcol_changed() # just so it starts correctly
+        self.handle_when_3to1_sb_changes() # just setting
 
+
+    def handle_when_3to1_sb_changes(self) -> None:
+        w1, a1 = self.ui.sb_3to1_w1.value(), self.ui.sb_3to1_a1.value()
+        w2, a2 = self.ui.sb_3to1_w2.value(), self.ui.sb_3to1_a2.value()
+        w3, a3 = self.ui.sb_3to1_w3.value(), self.ui.sb_3to1_a3.value()
+        self.graph_3to1_callable["b"] = lambda wv:                            sigmoid_func(wv, w1, -a1)     + sigmoid_func(wv, w3, a3)/ 3
+        self.graph_3to1_callable["g"] = lambda wv: sigmoid_func(wv, w1, a1) + sigmoid_func(wv, w2, -a2) - 1 + sigmoid_func(wv, w3, a3)/ 3 
+        self.graph_3to1_callable["r"] = lambda wv: sigmoid_func(wv, w2, a2) + sigmoid_func(wv, w3, -a3) - 1 + sigmoid_func(wv, w3, a3)/ 3
+
+        tmpx = np.arange(400, 900, 0.1, dtype=np.float64)
+        self.graph_3to1_weights["r"].setData(tmpx, self.graph_3to1_callable["r"](tmpx))
+        self.graph_3to1_weights["g"].setData(tmpx, self.graph_3to1_callable["g"](tmpx))
+        self.graph_3to1_weights["b"].setData(tmpx, self.graph_3to1_callable["b"](tmpx))
+
+        _ = self.ui.graph_3to1_weight.getPlotItem().addLegend()
+        out_refl = np.zeros_like(self.selected_ROI_spectrum["refl"].channel["R"].savgol_out_curve)
+        for rgb_key in ("R", "G", "B"):
+            wv = self.selected_ROI_spectrum["refl"].channel[rgb_key].fullwave
+            tmp = self.graph_3to1_callable[rgb_key.lower()](self.selected_ROI_spectrum["refl"].channel[rgb_key].fullwave) * self.selected_ROI_spectrum["refl"].channel[rgb_key].savgol_out_curve
+            self.graph_rgb_weighted[rgb_key.lower()].setData(wv,tmp)
+            out_refl[:] = out_refl[:] + tmp[:]
+
+        self.graph_rgb_weighted["k"].setData(wv, out_refl) # TODO cahnge wv
 
     def callback_roi_load_to_analysis(self, key: str) -> None:
 
@@ -598,31 +649,6 @@ class TheMainWindow(QMainWindow):
 
 
     def init_all_pyqtgraph(self) -> None:
-        # -------------------------------------------------------------------------------------------------------------
-        #_ = self.ui.graph_calc2_bg_gray.getPlotItem().addLegend()
-        #_ = self.ui.graph_calc2_bg_obje.getPlotItem().addLegend()
-
-        #self.ui.graph_calc2_bg_gray.getPlotItem().setLabel("left", "Background", units="DN")
-        #self.ui.graph_calc2_bg_gray.getPlotItem().setLabel("bottom", "Wavelenght", units="m")
-        #self.ui.graph_calc2_bg_gray.getPlotItem().setTitle("Gray Region Background")
-
-        #self.ui.graph_calc2_bg_obje.getPlotItem().setLabel("left", "Background", units="DN")
-        #self.ui.graph_calc2_bg_obje.getPlotItem().setLabel("bottom", "Wavelenght", units="m")
-        #self.ui.graph_calc2_bg_obje.getPlotItem().setTitle("Object Region Background")
-
-
-        # --------graph 3:  759 calibration curves ---------------------------------------------------------------------
-        #_ = self.ui.graph_calc3_759_calib.getPlotItem().addLegend()                                                                  TODO 
-        #self.ui.graph_calc3_759_calib.getPlotItem().addItem(                                                                          TODO 
-        #    pg.InfiniteLine(                                                                                                          TODO 
-        #        pos=759.37 / 10**9,                                                                                                   TODO 
-        #        movable=False, angle=90,                                                                                              TODO 
-        #        label="x={value:0.2f}nm",                                                                                             TODO 
-        #        labelOpts={"position":200, "color": (200,200,100), "fill": (200,200,200,50), "movable": True}))                       TODO 
-        #self.ui.graph_calc3_759_calib.getPlotItem().setLabel("left",   "Digital Number", units="DN")                                  TODO 
-        #self.ui.graph_calc3_759_calib.getPlotItem().setLabel("bottom", "Wavelength",     units="m") #, unitPrefix= "n")               TODO 
-        #self.ui.graph_calc3_759_calib.getPlotItem().setTitle("After 759nm calibration")                                               TODO 
-
         # --------graph 4:  rgb refl  ---------------------------------------------------------------------
         _ = self.ui.graph_calc4_refl_rgb.getPlotItem().addLegend()
         self.ui.graph_calc4_refl_rgb.getPlotItem().addItem(
@@ -953,6 +979,9 @@ class TheMainWindow(QMainWindow):
         self.selected_ROI_spectrum["obje"].channel["R"].savgol_init(wv0, wv1, wv_num, window_width, poly_deg =5)
         self.selected_ROI_spectrum["obje"].channel["G"].savgol_init(wv0, wv1, wv_num, window_width, poly_deg =5)
         self.selected_ROI_spectrum["obje"].channel["B"].savgol_init(wv0, wv1, wv_num, window_width, poly_deg =5)
+        self.selected_ROI_spectrum["refl"].channel["R"].savgol_init(wv0, wv1, wv_num, window_width, poly_deg =5)
+        self.selected_ROI_spectrum["refl"].channel["G"].savgol_init(wv0, wv1, wv_num, window_width, poly_deg =5)
+        self.selected_ROI_spectrum["refl"].channel["B"].savgol_init(wv0, wv1, wv_num, window_width, poly_deg =5)
 
         for j, rgb_key in enumerate(("R", "G", "B")):
             self.ui.pbar_savgol_channel.setValue(j)
@@ -969,8 +998,10 @@ class TheMainWindow(QMainWindow):
 
                 self.graph_curves[f"gray_{rgb_key}_dn_sub_bg"].setData(self.selected_ROI_spectrum["gray"].channel[rgb_key].fullwave, self.selected_ROI_spectrum["gray"].channel[rgb_key].savgol_out_curve)
                 self.graph_curves[f"obje_{rgb_key}_dn_sub_bg"].setData(self.selected_ROI_spectrum["obje"].channel[rgb_key].fullwave, self.selected_ROI_spectrum["obje"].channel[rgb_key].savgol_out_curve)
-                refl =  self.selected_ROI_spectrum["obje"].channel[rgb_key].savgol_out_curve / self.selected_ROI_spectrum["gray"].channel[rgb_key].savgol_out_curve
-                self.graph_curves[f"refl_{rgb_key}_dn_sub_bg"].setData(self.selected_ROI_spectrum["obje"].channel[rgb_key].fullwave, refl)
+
+                self.selected_ROI_spectrum["refl"].channel[rgb_key].savgol_out_curve = self.selected_ROI_spectrum["obje"].channel[rgb_key].savgol_out_curve / self.selected_ROI_spectrum["gray"].channel[rgb_key].savgol_out_curve
+
+                self.graph_curves[f"refl_{rgb_key}_dn_sub_bg"].setData(self.selected_ROI_spectrum["refl"].channel[rgb_key].fullwave, self.selected_ROI_spectrum["refl"].channel[rgb_key].savgol_out_curve)
 
 
                 QApplication.processEvents() # update the each
