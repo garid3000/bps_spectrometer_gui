@@ -598,19 +598,27 @@ class TheMainWindow(QMainWindow):
 
     def init_all_6_roi(self) -> None:
         _ = self.roi_obje_main.addScaleHandle([0.5, 1], [0.5, 0])
+        _ = self.roi_obje_main.addScaleHandle([0.5, 0], [0.5, 1])
+        _ = self.roi_obje_main.addScaleHandle([1, 0.5], [0, 0.5])
+        _ = self.roi_obje_main.addScaleHandle([0, 0.5], [1, 0.5])
+
         _ = self.roi_gray_main.addScaleHandle([0.5, 1], [0.5, 0])
+        _ = self.roi_gray_main.addScaleHandle([0.5, 0], [0.5, 1])
+        _ = self.roi_gray_main.addScaleHandle([1, 0.5], [0, 0.5])
+        _ = self.roi_gray_main.addScaleHandle([0, 0.5], [1, 0.5])
+
         _ = self.roi_wave759nm.addScaleHandle([0.5, 1], [0.5, 0])
         _ = self.roi_wave759nm.addScaleHandle([1, 0.5], [0, 0.5])
 
-        self.roi_bgle.addScaleHandle([0.5, 1], [0.5, 0])
-        self.roi_bgle.addScaleHandle([0.5, 0], [0.5, 1])
-        self.roi_bgle.addScaleHandle([1, 0.5], [0, 0.5])
-        self.roi_bgle.addScaleHandle([0, 0.5], [1, 0.5])
+        _ = self.roi_bgle.addScaleHandle([0.5, 1], [0.5, 0])
+        _ = self.roi_bgle.addScaleHandle([0.5, 0], [0.5, 1])
+        _ = self.roi_bgle.addScaleHandle([1, 0.5], [0, 0.5])
+        _ = self.roi_bgle.addScaleHandle([0, 0.5], [1, 0.5])
 
-        self.roi_bgri.addScaleHandle([0.5, 1], [0.5, 0])
-        self.roi_bgri.addScaleHandle([0.5, 0], [0.5, 1])
-        self.roi_bgri.addScaleHandle([1, 0.5], [0, 0.5])
-        self.roi_bgri.addScaleHandle([0, 0.5], [1, 0.5])
+        _ = self.roi_bgri.addScaleHandle([0.5, 1], [0.5, 0])
+        _ = self.roi_bgri.addScaleHandle([0.5, 0], [0.5, 1])
+        _ = self.roi_bgri.addScaleHandle([1, 0.5], [0, 0.5])
+        _ = self.roi_bgri.addScaleHandle([0, 0.5], [1, 0.5])
 
         self.roi_obje_main.setZValue(10)
         self.roi_gray_main.setZValue(10)
