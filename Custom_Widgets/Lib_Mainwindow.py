@@ -103,10 +103,11 @@ class TheMainWindow(QMainWindow):
         _ = self.ui.pb_export.clicked.connect(self.short_cut_export_raw_jpeg)
         _ = self.ui.pb_dir_goto_parent.clicked.connect(self.short_cut_goto_parent_dir)
 
-        _ = self.ui.clb_0_file2roi_dist.clicked.connect(lambda: self.handle_when_stages_changes(0))
-        _ = self.ui.clb_1_dist_to_curve.clicked.connect(lambda: self.handle_when_stages_changes(1))
-        _ = self.ui.clb_2_3curves_to_3refl.clicked.connect(lambda: self.handle_when_stages_changes(2))
+        _ = self.ui.clb_0_file2roi_3dist.clicked.connect(lambda: self.handle_when_stages_changes(0))
+        _ = self.ui.clb_1_3dist_to_3curv.clicked.connect(lambda: self.handle_when_stages_changes(1))
+        _ = self.ui.clb_2_3curv_to_3refl.clicked.connect(lambda: self.handle_when_stages_changes(2))
         _ = self.ui.clb_3_3refl_to_1refl.clicked.connect(lambda: self.handle_when_stages_changes(3))
+
         # -------------------------------------------------------------------------------------------
         _ = self.ui.sb_3to1_a1.valueChanged.connect(self.handle_when_3to1_sb_changes)
         _ = self.ui.sb_3to1_a2.valueChanged.connect(self.handle_when_3to1_sb_changes)
@@ -567,9 +568,11 @@ class TheMainWindow(QMainWindow):
             (0, 0, 0, 0, 0, 0, 3, 1, 3),
         )
 
-        x = (self.ui.gb_panel_00_file, self.ui.gp_panel_05_jpeg_load,
-             self.ui.gp_panel_10_rawbayer, self.ui.gp_panel_15_roiselect,
-             self.ui.gp_panel_20_3roi_dist, self.ui.gp_panel_25_savgol,
+        self.ui.clb_0_file2roi_3dist.style()
+
+        x = (self.ui.gb_panel_00_file,       self.ui.gp_panel_05_jpeg_load,
+             self.ui.gp_panel_10_rawbayer,   self.ui.gp_panel_15_roiselect,
+             self.ui.gp_panel_20_3roi_dist,  self.ui.gp_panel_25_savgol,
              self.ui.gp_panel_30_rgb_curves, self.ui.gp_panel_35_refl_calculate,
              self.ui.gp_panel_40_3refl_to_1refl)
 
@@ -1096,6 +1099,8 @@ class TheMainWindow(QMainWindow):
             )
             _ = dlg.exec()
             return False
+        # -------------------------------------------------------------- #
+        self.ui.pbar_loading_file.setMaximum(0)
 
         self.jpeg_path = tmppath
         self.dir_path = os.path.dirname(self.jpeg_path)
@@ -1128,11 +1133,28 @@ class TheMainWindow(QMainWindow):
 
         self.ui.graph_webcam.setImage(webcam, axes={"x":1, "y":0, "c":2})
 
-        _ = self.jp.load_jpeg_file(self.jpeg_path)
-        self.update_1_rawbayer_img_data_and_then_plot_below()
+        self.ui.pbar_loading_file.setMaximum(7)
+        self.ui.pbar_loading_file.setMaximum(1)
 
-        # try to reset & repopulate paramHisotry combobox
+        _ = self.jp.load_jpeg_file(self.jpeg_path)
+        self.ui.pbar_loading_file.setMaximum(2)
+
+        self.jp.get_median_filtered_raw_bayer()
+        self.ui.pbar_loading_file.setMaximum(3)
+
+        self.jp.get_rgb_bayer_repr()
+        self.ui.pbar_loading_file.setMaximum(4)
+
+        self.jp.get_rgb_demosicac()
+        self.ui.pbar_loading_file.setMaximum(5)
+
+        self.ui.cb_2dimg_key.setCurrentText("Raw bayer (RGB + Demosiac)")
+        self.update_1_rawbayer_img_data_and_then_plot_below()
+        self.ui.pbar_loading_file.setMaximum(6)
+
         self.repopulate_param_history_combobox()
+        self.ui.pbar_loading_file.setMaximum(7)
+
         return True
 
     def repopulate_param_history_combobox(self) -> None:

@@ -54,7 +54,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow: QMainWindow) -> None:
         if not MainWindow.objectName():
             MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(2828, 763)
+        MainWindow.resize(3136, 757)
         self.actionOpen_Directory = QAction(MainWindow)
         self.actionOpen_Directory.setObjectName("actionOpen_Directory")
         self.action_cur_jpeg_export = QAction(MainWindow)
@@ -111,26 +111,26 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_3.addWidget(self.label_23)
 
-        self.clb_0_file2roi_dist = QCommandLinkButton(self.centralwidget)
-        self.clb_0_file2roi_dist.setObjectName("clb_0_file2roi_dist")
+        self.clb_0_file2roi_3dist = QCommandLinkButton(self.centralwidget)
+        self.clb_0_file2roi_3dist.setObjectName("clb_0_file2roi_3dist")
         sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.clb_0_file2roi_dist.sizePolicy().hasHeightForWidth())
-        self.clb_0_file2roi_dist.setSizePolicy(sizePolicy1)
+        sizePolicy1.setHeightForWidth(self.clb_0_file2roi_3dist.sizePolicy().hasHeightForWidth())
+        self.clb_0_file2roi_3dist.setSizePolicy(sizePolicy1)
 
-        self.horizontalLayout_3.addWidget(self.clb_0_file2roi_dist)
+        self.horizontalLayout_3.addWidget(self.clb_0_file2roi_3dist)
 
-        self.clb_1_dist_to_curve = QCommandLinkButton(self.centralwidget)
-        self.clb_1_dist_to_curve.setObjectName("clb_1_dist_to_curve")
-        self.clb_1_dist_to_curve.setIconSize(QSize(50, 20))
+        self.clb_1_3dist_to_3curv = QCommandLinkButton(self.centralwidget)
+        self.clb_1_3dist_to_3curv.setObjectName("clb_1_3dist_to_3curv")
+        self.clb_1_3dist_to_3curv.setIconSize(QSize(50, 20))
 
-        self.horizontalLayout_3.addWidget(self.clb_1_dist_to_curve)
+        self.horizontalLayout_3.addWidget(self.clb_1_3dist_to_3curv)
 
-        self.clb_2_3curves_to_3refl = QCommandLinkButton(self.centralwidget)
-        self.clb_2_3curves_to_3refl.setObjectName("clb_2_3curves_to_3refl")
+        self.clb_2_3curv_to_3refl = QCommandLinkButton(self.centralwidget)
+        self.clb_2_3curv_to_3refl.setObjectName("clb_2_3curv_to_3refl")
 
-        self.horizontalLayout_3.addWidget(self.clb_2_3curves_to_3refl)
+        self.horizontalLayout_3.addWidget(self.clb_2_3curv_to_3refl)
 
         self.clb_3_3refl_to_1refl = QCommandLinkButton(self.centralwidget)
         self.clb_3_3refl_to_1refl.setObjectName("clb_3_3refl_to_1refl")
@@ -223,8 +223,7 @@ class Ui_MainWindow(object):
         self.hs_target_distance.setMaximum(400)
         self.hs_target_distance.setSingleStep(10)
         self.hs_target_distance.setSliderPosition(100)
-        self.hs_target_distance.setOrientation(Qt.Orientation.Horizontal)
-        self.hs_target_distance.setTickPosition(QSlider.TickPosition.TicksBothSides)
+        self.hs_target_distance.setTickPosition(QSlider.TickPosition.NoTicks)
         self.hs_target_distance.setTickInterval(20)
 
         self.horizontalLayout.addWidget(self.hs_target_distance)
@@ -249,7 +248,6 @@ class Ui_MainWindow(object):
         self.hs_physical_elv.setMinimum(-90)
         self.hs_physical_elv.setMaximum(0)
         self.hs_physical_elv.setValue(-45)
-        self.hs_physical_elv.setOrientation(Qt.Orientation.Horizontal)
 
         self.gridLayout_3.addWidget(self.hs_physical_elv, 2, 1, 1, 1)
 
@@ -257,7 +255,6 @@ class Ui_MainWindow(object):
         self.hs_physical_height.setObjectName("hs_physical_height")
         self.hs_physical_height.setMaximum(300)
         self.hs_physical_height.setValue(150)
-        self.hs_physical_height.setOrientation(Qt.Orientation.Horizontal)
 
         self.gridLayout_3.addWidget(self.hs_physical_height, 1, 1, 1, 1)
 
@@ -282,18 +279,24 @@ class Ui_MainWindow(object):
         self.gp_panel_05_jpeg_load.setObjectName("gp_panel_05_jpeg_load")
         self.gridLayout_24 = QGridLayout(self.gp_panel_05_jpeg_load)
         self.gridLayout_24.setObjectName("gridLayout_24")
+        self.pb_loading_file = QCommandLinkButton(self.gp_panel_05_jpeg_load)
+        self.pb_loading_file.setObjectName("pb_loading_file")
+
+        self.gridLayout_24.addWidget(self.pb_loading_file, 2, 0, 1, 1)
+
+        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_24.addItem(self.verticalSpacer_2, 3, 0, 1, 1)
+
         self.verticalSpacer = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
         self.gridLayout_24.addItem(self.verticalSpacer, 0, 0, 1, 1)
 
-        self.pb_select_gray_roi_4 = QCommandLinkButton(self.gp_panel_05_jpeg_load)
-        self.pb_select_gray_roi_4.setObjectName("pb_select_gray_roi_4")
+        self.pbar_loading_file = QProgressBar(self.gp_panel_05_jpeg_load)
+        self.pbar_loading_file.setObjectName("pbar_loading_file")
+        self.pbar_loading_file.setValue(24)
 
-        self.gridLayout_24.addWidget(self.pb_select_gray_roi_4, 1, 0, 1, 1)
-
-        self.verticalSpacer_2 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
-
-        self.gridLayout_24.addItem(self.verticalSpacer_2, 2, 0, 1, 1)
+        self.gridLayout_24.addWidget(self.pbar_loading_file, 1, 0, 1, 1)
 
         self.splitter.addWidget(self.gp_panel_05_jpeg_load)
         self.gp_panel_10_rawbayer = QGroupBox(self.splitter)
@@ -305,7 +308,7 @@ class Ui_MainWindow(object):
         self.scrollArea_2.setWidgetResizable(True)
         self.scrollAreaWidgetContents_2 = QWidget()
         self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
-        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 418, 248))
+        self.scrollAreaWidgetContents_2.setGeometry(QRect(0, 0, 422, 248))
         self.verticalLayout_4 = QVBoxLayout(self.scrollAreaWidgetContents_2)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.horizontalLayout_2 = QHBoxLayout()
@@ -743,6 +746,9 @@ class Ui_MainWindow(object):
         brush.setStyle(Qt.BrushStyle.SolidPattern)
         palette.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush)
         palette.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush)
+        brush1 = QBrush(QColor(190, 190, 190, 255))
+        brush1.setStyle(Qt.BrushStyle.SolidPattern)
+        palette.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush1)
         self._l_1.setPalette(palette)
 
         self.gridLayout_2.addWidget(self._l_1, 2, 0, 1, 1)
@@ -757,7 +763,7 @@ class Ui_MainWindow(object):
 
         self._line = QFrame(self.gb_control_panel)
         self._line.setObjectName("_line")
-        self._line.setFrameShape(QFrame.Shape.HLine)
+        self._line.setFrameShape(QFrame.Shape.VLine)
         self._line.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.gridLayout_2.addWidget(self._line, 3, 0, 1, 3)
@@ -808,10 +814,11 @@ class Ui_MainWindow(object):
         self._l_3 = QLabel(self.gb_control_panel)
         self._l_3.setObjectName("_l_3")
         palette1 = QPalette()
-        brush1 = QBrush(QColor(0, 0, 255, 255))
-        brush1.setStyle(Qt.BrushStyle.SolidPattern)
-        palette1.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush1)
-        palette1.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush1)
+        brush2 = QBrush(QColor(0, 0, 255, 255))
+        brush2.setStyle(Qt.BrushStyle.SolidPattern)
+        palette1.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush2)
+        palette1.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush2)
+        palette1.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush1)
         self._l_3.setPalette(palette1)
 
         self.gridLayout_2.addWidget(self._l_3, 8, 0, 1, 1)
@@ -826,17 +833,18 @@ class Ui_MainWindow(object):
         self._l_2 = QLabel(self.gb_control_panel)
         self._l_2.setObjectName("_l_2")
         palette2 = QPalette()
-        brush2 = QBrush(QColor(255, 0, 0, 255))
-        brush2.setStyle(Qt.BrushStyle.SolidPattern)
-        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush2)
-        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush2)
+        brush3 = QBrush(QColor(255, 0, 0, 255))
+        brush3.setStyle(Qt.BrushStyle.SolidPattern)
+        palette2.setBrush(QPalette.ColorGroup.Active, QPalette.ColorRole.WindowText, brush3)
+        palette2.setBrush(QPalette.ColorGroup.Inactive, QPalette.ColorRole.WindowText, brush3)
+        palette2.setBrush(QPalette.ColorGroup.Disabled, QPalette.ColorRole.WindowText, brush1)
         self._l_2.setPalette(palette2)
 
         self.gridLayout_2.addWidget(self._l_2, 5, 0, 1, 1)
 
         self.line_3 = QFrame(self.gb_control_panel)
         self.line_3.setObjectName("line_3")
-        self.line_3.setFrameShape(QFrame.Shape.HLine)
+        self.line_3.setFrameShape(QFrame.Shape.VLine)
         self.line_3.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.gridLayout_2.addWidget(self.line_3, 9, 0, 1, 3)
@@ -930,6 +938,10 @@ class Ui_MainWindow(object):
         self.gp_panel_25_savgol.setObjectName("gp_panel_25_savgol")
         self.gridLayout_20 = QGridLayout(self.gp_panel_25_savgol)
         self.gridLayout_20.setObjectName("gridLayout_20")
+        self.verticalSpacer_8 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_20.addItem(self.verticalSpacer_8, 0, 0, 1, 1)
+
         self.gridLayout_18 = QGridLayout()
         self.gridLayout_18.setObjectName("gridLayout_18")
         self.label_15 = QLabel(self.gp_panel_25_savgol)
@@ -1027,7 +1039,11 @@ class Ui_MainWindow(object):
 
         self.gridLayout_18.addWidget(self.pb_savgol_calc, 6, 0, 2, 1)
 
-        self.gridLayout_20.addLayout(self.gridLayout_18, 0, 0, 1, 1)
+        self.gridLayout_20.addLayout(self.gridLayout_18, 1, 0, 1, 1)
+
+        self.verticalSpacer_9 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_20.addItem(self.verticalSpacer_9, 2, 0, 1, 1)
 
         self.splitter.addWidget(self.gp_panel_25_savgol)
         self.gp_panel_30_rgb_curves = QGroupBox(self.splitter)
@@ -1349,7 +1365,7 @@ class Ui_MainWindow(object):
 
         self.line_2 = QFrame(self.gp_panel_40_3refl_to_1refl)
         self.line_2.setObjectName("line_2")
-        self.line_2.setFrameShape(QFrame.Shape.HLine)
+        self.line_2.setFrameShape(QFrame.Shape.VLine)
         self.line_2.setFrameShadow(QFrame.Shadow.Sunken)
 
         self.formLayout.setWidget(6, QFormLayout.ItemRole.SpanningRole, self.line_2)
@@ -1360,6 +1376,9 @@ class Ui_MainWindow(object):
         self.formLayout.setWidget(2, QFormLayout.ItemRole.LabelRole, self.spinBox)
 
         self.splitter.addWidget(self.gp_panel_40_3refl_to_1refl)
+        self.groupBox_2 = QGroupBox(self.splitter)
+        self.groupBox_2.setObjectName("groupBox_2")
+        self.splitter.addWidget(self.groupBox_2)
 
         self.verticalLayout_5.addWidget(self.splitter)
 
@@ -1370,7 +1389,7 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName("menubar")
-        self.menubar.setGeometry(QRect(0, 0, 2828, 19))
+        self.menubar.setGeometry(QRect(0, 0, 3136, 19))
         self.menuFile = QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
         self.menuDirectory_operations = QMenu(self.menuFile)
@@ -1407,7 +1426,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.tabWidget_2.setCurrentIndex(0)
-        self.tw_midcol.setCurrentIndex(2)
+        self.tw_midcol.setCurrentIndex(1)
         self.tabWidget_3.setCurrentIndex(0)
         self.tabWidget.setCurrentIndex(0)
 
@@ -1438,9 +1457,9 @@ class Ui_MainWindow(object):
         self.action_tabs_show_tab2.setText(QCoreApplication.translate("MainWindow", "Spectrum-Raw Tab (Ctrl+2) or (Alt+2)", None))
         self.action_tabs_show_tab3.setText(QCoreApplication.translate("MainWindow", "Spectrum-Reflectance Tab (Ctrl+3) or (Alt+3)", None))
         self.label_23.setText(QCoreApplication.translate("MainWindow", "Stages", None))
-        self.clb_0_file2roi_dist.setText(QCoreApplication.translate("MainWindow", "1. FIle and ROI selection", None))
-        self.clb_1_dist_to_curve.setText(QCoreApplication.translate("MainWindow", "2. Spectral Curves creation", None))
-        self.clb_2_3curves_to_3refl.setText(QCoreApplication.translate("MainWindow", "3. Refl calculation", None))
+        self.clb_0_file2roi_3dist.setText(QCoreApplication.translate("MainWindow", "1. FIle and ROI selection", None))
+        self.clb_1_3dist_to_3curv.setText(QCoreApplication.translate("MainWindow", "2. Spectral Curves creation", None))
+        self.clb_2_3curv_to_3refl.setText(QCoreApplication.translate("MainWindow", "3. Refl calculation", None))
         self.clb_3_3refl_to_1refl.setText(QCoreApplication.translate("MainWindow", "Joining 3 curves", None))
         self.gb_panel_00_file.setTitle(QCoreApplication.translate("MainWindow", "GroupBox", None))
         # if QT_CONFIG(tooltip)
@@ -1479,7 +1498,7 @@ class Ui_MainWindow(object):
         self.l_physical_distance.setText(QCoreApplication.translate("MainWindow", "Distance:", None))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.tab_7), QCoreApplication.translate("MainWindow", "Tab 2", None))
         self.gp_panel_05_jpeg_load.setTitle(QCoreApplication.translate("MainWindow", "GroupBox", None))
-        self.pb_select_gray_roi_4.setText(QCoreApplication.translate("MainWindow", "Load", None))
+        self.pb_loading_file.setText(QCoreApplication.translate("MainWindow", "Load", None))
         self.gp_panel_10_rawbayer.setTitle(QCoreApplication.translate("MainWindow", "Raw-Bayer Image: ROI (Region of Interest) selection", None))
         self.cb_2dimg_key.setItemText(0, QCoreApplication.translate("MainWindow", "Raw bayer", None))
         self.cb_2dimg_key.setItemText(1, QCoreApplication.translate("MainWindow", "Raw bayer (Noise Filter)", None))
@@ -1596,6 +1615,7 @@ class Ui_MainWindow(object):
         )
         # endif // QT_CONFIG(tooltip)
         self.label_2.setText(QCoreApplication.translate("MainWindow", "Export Parameter History:", None))
+        self.groupBox_2.setTitle(QCoreApplication.translate("MainWindow", "GroupBox", None))
         self.menuFile.setTitle(QCoreApplication.translate("MainWindow", "Operation", None))
         self.menuDirectory_operations.setTitle(QCoreApplication.translate("MainWindow", "Directory Movements", None))
         self.menuType_Here.setTitle(QCoreApplication.translate("MainWindow", "Type Here", None))
