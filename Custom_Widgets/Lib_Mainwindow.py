@@ -984,26 +984,30 @@ class TheMainWindow(QMainWindow):
             fitted_py_th_bg_curve_g.setData(tmp_x, background_new(tmp_x, *self.jp.bg_popts["g"][py, :]))  #  pen=pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.SolidLine)
             fitted_py_th_bg_curve_b.setData(tmp_x, background_new(tmp_x, *self.jp.bg_popts["b"][py, :]))  #  pen=pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.SolidLine)
 
-            all_py = np.arange(0, 2464, 1)
-
-            self.graph_bg_each_abck_row[ "bg_prm_a-b" ].setData(all_py, self.jp.bg_popts["b"][:, 0])
-            self.graph_bg_each_abck_row[ "bg_prm_a-g" ].setData(all_py, self.jp.bg_popts["g"][:, 0])
-            self.graph_bg_each_abck_row[ "bg_prm_a-r" ].setData(all_py, self.jp.bg_popts["r"][:, 0])
-
-            self.graph_bg_each_abck_row[ "bg_prm_b-b" ].setData(all_py, self.jp.bg_popts["b"][:, 1])
-            self.graph_bg_each_abck_row[ "bg_prm_b-g" ].setData(all_py, self.jp.bg_popts["g"][:, 1])
-            self.graph_bg_each_abck_row[ "bg_prm_b-r" ].setData(all_py, self.jp.bg_popts["r"][:, 1])
-
-            self.graph_bg_each_abck_row[ "bg_prm_k-b" ].setData(all_py, self.jp.bg_popts["b"][:, 2])
-            self.graph_bg_each_abck_row[ "bg_prm_k-g" ].setData(all_py, self.jp.bg_popts["g"][:, 2])
-            self.graph_bg_each_abck_row[ "bg_prm_k-r" ].setData(all_py, self.jp.bg_popts["r"][:, 2])
-
-            self.graph_bg_each_abck_row[ "bg_prm_c-b" ].setData(all_py, self.jp.bg_popts["b"][:, 3])
-            self.graph_bg_each_abck_row[ "bg_prm_c-g" ].setData(all_py, self.jp.bg_popts["g"][:, 3])
-            self.graph_bg_each_abck_row[ "bg_prm_c-r" ].setData(all_py, self.jp.bg_popts["r"][:, 3])
-
-
             QApplication.processEvents()
+
+
+        # ---------------------------------------------------------------------------------------------- # 
+        all_py = np.arange(0, 2464, 1)
+        self.graph_bg_each_abck_row[ "bg_prm_a-b" ].setData(all_py, self.jp.bg_popts["b"][:, 0])
+        self.graph_bg_each_abck_row[ "bg_prm_a-g" ].setData(all_py, self.jp.bg_popts["g"][:, 0])
+        self.graph_bg_each_abck_row[ "bg_prm_a-r" ].setData(all_py, self.jp.bg_popts["r"][:, 0])
+
+        self.graph_bg_each_abck_row[ "bg_prm_b-b" ].setData(all_py, self.jp.bg_popts["b"][:, 1])
+        self.graph_bg_each_abck_row[ "bg_prm_b-g" ].setData(all_py, self.jp.bg_popts["g"][:, 1])
+        self.graph_bg_each_abck_row[ "bg_prm_b-r" ].setData(all_py, self.jp.bg_popts["r"][:, 1])
+
+        self.graph_bg_each_abck_row[ "bg_prm_k-b" ].setData(all_py, self.jp.bg_popts["b"][:, 2])
+        self.graph_bg_each_abck_row[ "bg_prm_k-g" ].setData(all_py, self.jp.bg_popts["g"][:, 2])
+        self.graph_bg_each_abck_row[ "bg_prm_k-r" ].setData(all_py, self.jp.bg_popts["r"][:, 2])
+
+        self.graph_bg_each_abck_row[ "bg_prm_c-b" ].setData(all_py, self.jp.bg_popts["b"][:, 3])
+        self.graph_bg_each_abck_row[ "bg_prm_c-g" ].setData(all_py, self.jp.bg_popts["g"][:, 3])
+        self.graph_bg_each_abck_row[ "bg_prm_c-r" ].setData(all_py, self.jp.bg_popts["r"][:, 3])
+
+        # ---------------------------------------------------------------------------------------------- # 
+        self.jp.bg_curve_fit_on_fitted_abkc_params()
+        self.jp.bg_calculate_all_channel_bg_estimation()
 
 
     def handle_cb_calc5_norming(self) -> None:
