@@ -26,7 +26,7 @@ from PySide6.QtCore import QModelIndex, QDir, Qt, QPersistentModelIndex, QPointF
 # ---------- Custom libs ----------------------------------------------------------------------------------------------
 from Custom_UIs.UI_Mainwindow import Ui_MainWindow
 from Custom_Libs.Lib_DataDirTree import DataDirTree
-from bps_raw_jpeg_processer.src.better_bps_raw_jpeg_processor import quadratic_func, sigmoid_func,  background_new, JpegProcessor, Three_channel_spectra
+from bps_raw_jpeg_processer.src.better_bps_raw_jpeg_processor import quadratic_func, sigmoid_func,  JpegProcessor, Three_channel_spectra, background_newest #, background_new, 
 from bps_raw_jpeg_processer.src.pxlspec_to_pxlweb_formula import pxlspec_to_pxlweb_formula
 
 # ---------- pqgraph config -------------------------------------------------------------------------------------------
@@ -137,6 +137,49 @@ class TheMainWindow(QMainWindow):
         }
 
         # -----------------------------------------------------------------------------
+
+        self.graph_bg: dict[str, pg.PlotDataItem] = {
+            "bgle_r" : self.ui.graph_bg_r.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=2),
+            "bgle_g" : self.ui.graph_bg_g.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=2),
+            "bgle_b" : self.ui.graph_bg_b.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=2),
+
+            "bgri_r" : self.ui.graph_bg_r.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=2),
+            "bgri_g" : self.ui.graph_bg_g.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=2),
+            "bgri_b" : self.ui.graph_bg_b.getPlotItem().plot(pen=None, symbol='x', symbolPen=None, symbolSize=2),
+
+            "fitt_r" : self.ui.graph_bg_r.getPlotItem().plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine)),
+            "fitt_g" : self.ui.graph_bg_g.getPlotItem().plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine)),
+            "fitt_b" : self.ui.graph_bg_b.getPlotItem().plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine)),
+        }
+
+        self.graph_bg_each_abck_row: dict[str, pg.PlotDataItem] = {
+            "bg_prm_b-b" : self.ui.graph_bg_param_b.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
+            "bg_prm_b-g" : self.ui.graph_bg_param_b.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
+            "bg_prm_b-r" : self.ui.graph_bg_param_b.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
+            "bg_prm_a-b" : self.ui.graph_bg_param_a.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
+            "bg_prm_a-g" : self.ui.graph_bg_param_a.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
+            "bg_prm_a-r" : self.ui.graph_bg_param_a.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
+            "bg_prm_c-b" : self.ui.graph_bg_param_c.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
+            "bg_prm_c-g" : self.ui.graph_bg_param_c.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
+            "bg_prm_c-r" : self.ui.graph_bg_param_c.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
+            "bg_prm_k-b" : self.ui.graph_bg_param_k.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
+            "bg_prm_k-g" : self.ui.graph_bg_param_k.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
+            "bg_prm_k-r" : self.ui.graph_bg_param_k.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
+            #"" :  self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=4, style=Qt.PenStyle.SolidLine)),
+
+            "bg_prm_b-b_fitted" : self.ui.graph_bg_param_b.getPlotItem().plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine)),
+            "bg_prm_b-g_fitted" : self.ui.graph_bg_param_b.getPlotItem().plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine)),
+            "bg_prm_b-r_fitted" : self.ui.graph_bg_param_b.getPlotItem().plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine)),
+            "bg_prm_a-b_fitted" : self.ui.graph_bg_param_a.getPlotItem().plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine)),
+            "bg_prm_a-g_fitted" : self.ui.graph_bg_param_a.getPlotItem().plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine)),
+            "bg_prm_a-r_fitted" : self.ui.graph_bg_param_a.getPlotItem().plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine)),
+            "bg_prm_c-b_fitted" : self.ui.graph_bg_param_c.getPlotItem().plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine)),
+            "bg_prm_c-g_fitted" : self.ui.graph_bg_param_c.getPlotItem().plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine)),
+            "bg_prm_c-r_fitted" : self.ui.graph_bg_param_c.getPlotItem().plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine)),
+            "bg_prm_k-b_fitted" : self.ui.graph_bg_param_k.getPlotItem().plot(pen=pg.mkPen("b", width=1, style=Qt.PenStyle.SolidLine)),
+            "bg_prm_k-g_fitted" : self.ui.graph_bg_param_k.getPlotItem().plot(pen=pg.mkPen("g", width=1, style=Qt.PenStyle.SolidLine)),
+            "bg_prm_k-r_fitted" : self.ui.graph_bg_param_k.getPlotItem().plot(pen=pg.mkPen("r", width=1, style=Qt.PenStyle.SolidLine)),
+        }
 
         # --------------- initialize the file system ----------------------------------
         self.fsmodel = FileSystemModel()
@@ -498,19 +541,19 @@ class TheMainWindow(QMainWindow):
             roi_geometry  = self.get_posx_posy_sizex_sizy_cleaner_carefuler_way(self.roi_obje_main.getState())
 
         self.selected_ROI_spectrum[key].channel["R"].set_data(
-            dn = self.jp.get_array("Raw bayer (Noise Filter)", "Mask red",   roi_geometry),
+            dn = self.jp.get_array("Raw bayer (Noise Filter)", "Mask red",   roi_geometry) - self.jp.get_array("Background Est.", "Mask red",   roi_geometry),
             bg = self.jp.get_array("Background Est.", "Mask red",            roi_geometry),
             wv = self.jp.get_array("Wavelength", "Mask red",                 roi_geometry),
         )
 
         self.selected_ROI_spectrum[key].channel["G"].set_data(
-            dn = self.jp.get_array("Raw bayer (Noise Filter)", "Mask green",   roi_geometry),
+            dn = self.jp.get_array("Raw bayer (Noise Filter)", "Mask green",   roi_geometry)- self.jp.get_array("Background Est.", "Mask green",   roi_geometry),
             bg = self.jp.get_array("Background Est.", "Mask green",            roi_geometry),
             wv = self.jp.get_array("Wavelength", "Mask green",                 roi_geometry),
         )
 
         self.selected_ROI_spectrum[key].channel["B"].set_data(
-            dn = self.jp.get_array("Raw bayer (Noise Filter)", "Mask blue",   roi_geometry),
+            dn = self.jp.get_array("Raw bayer (Noise Filter)", "Mask blue",   roi_geometry)- self.jp.get_array("Background Est.", "Mask blue",   roi_geometry),
             bg = self.jp.get_array("Background Est.", "Mask blue",            roi_geometry),
             wv = self.jp.get_array("Wavelength", "Mask blue",                 roi_geometry),
         )
@@ -933,9 +976,6 @@ class TheMainWindow(QMainWindow):
         cm = pg.colormap.get("turbo")
         clrs = cm.map(np.linspace(0, 1, self.ui.sb_bg___sizy.value()))
 
-        self.ui.graph_bg_r.getPlotItem().clear()
-        self.ui.graph_bg_g.getPlotItem().clear()
-        self.ui.graph_bg_b.getPlotItem().clear()
 
         self.ui.pbar_bg_on_row.setMaximum(self.ui.sb_bg___sizy.value())
         
@@ -943,49 +983,35 @@ class TheMainWindow(QMainWindow):
         bgri_roi_pxl = (self.ui.sb_bgri_posx.value(), self.ui.sb_bg___posy.value(), self.ui.sb_bgri_sizx.value(), self.ui.sb_bg___sizy.value())
         
         tmp_x = np.arange(self.ui.sb_bgle_posx.value(),  self.ui.sb_bgri_posx.value() + self.ui.sb_bgri_sizx.value(), dtype=np.float64)
-        #tmp_y = np.arange(self.ui.sb_bg___posy.value(),  self.ui.sb_bg___posy.value() + self.ui.sb_bg___sizy.value(), dtype=np.float64)
-
-        _ = self.ui.graph_bg_r.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask red",   bgle_roi_pxl), self.jp.get_array("Raw bayer", "Mask red",   bgle_roi_pxl), pen=None, symbol='o', symbolPen=None, symbolSize=3)
-        _ = self.ui.graph_bg_g.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask green", bgle_roi_pxl), self.jp.get_array("Raw bayer", "Mask green", bgle_roi_pxl), pen=None, symbol='o', symbolPen=None, symbolSize=3)
-        _ = self.ui.graph_bg_b.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask blue",  bgle_roi_pxl), self.jp.get_array("Raw bayer", "Mask blue",  bgle_roi_pxl), pen=None, symbol='o', symbolPen=None, symbolSize=3)
-
-        _ = self.ui.graph_bg_r.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask red",   bgri_roi_pxl), self.jp.get_array("Raw bayer", "Mask red",   bgri_roi_pxl), pen=None, symbol='x', symbolPen=None, symbolSize=3)
-        _ = self.ui.graph_bg_g.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask green", bgri_roi_pxl), self.jp.get_array("Raw bayer", "Mask green", bgri_roi_pxl), pen=None, symbol='x', symbolPen=None, symbolSize=3)
-        _ = self.ui.graph_bg_b.getPlotItem().plot(self.jp.get_array("x_pxl", "Mask blue",  bgri_roi_pxl), self.jp.get_array("Raw bayer", "Mask blue",  bgri_roi_pxl), pen=None, symbol='x', symbolPen=None, symbolSize=3)
-
-        fitted_py_th_bg_curve_r = self.ui.graph_bg_r.getPlotItem().plot()
-        fitted_py_th_bg_curve_g = self.ui.graph_bg_g.getPlotItem().plot()
-        fitted_py_th_bg_curve_b = self.ui.graph_bg_b.getPlotItem().plot()
 
         self.jp.bg_pre_estimation_prep(bgle_roi_pxl, bgri_roi_pxl)
 
-        self.graph_bg_each_abck_row: dict[str, pg.PlotDataItem] = {
-            "bg_prm_b-b" : self.ui.graph_bg_param_b.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
-            "bg_prm_b-g" : self.ui.graph_bg_param_b.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
-            "bg_prm_b-r" : self.ui.graph_bg_param_b.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
-            "bg_prm_a-b" : self.ui.graph_bg_param_a.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
-            "bg_prm_a-g" : self.ui.graph_bg_param_a.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
-            "bg_prm_a-r" : self.ui.graph_bg_param_a.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
-            "bg_prm_c-b" : self.ui.graph_bg_param_c.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
-            "bg_prm_c-g" : self.ui.graph_bg_param_c.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
-            "bg_prm_c-r" : self.ui.graph_bg_param_c.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
-            "bg_prm_k-b" : self.ui.graph_bg_param_k.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(255, 40, 40)),
-            "bg_prm_k-g" : self.ui.graph_bg_param_k.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 255, 40)),
-            "bg_prm_k-r" : self.ui.graph_bg_param_k.getPlotItem().plot(pen=None, symbol='o', symbolPen=None, symbolSize=3, symbolBrush=(40, 40, 255)),
-            #"" :  self.ui.graph_gray_roi_spectra.getPlotItem().plot(pen=pg.mkPen("k", width=4, style=Qt.PenStyle.SolidLine)),
-        }
 
         for rel_y_pxl in range(self.ui.sb_bg___sizy.value()):
             self.ui.pbar_bg_on_row.setValue(rel_y_pxl)
             py = self.ui.sb_bg___posy.value() + rel_y_pxl
             self.jp.bg_curve_fit_on_any_row_any_channel(py)
 
-            fitted_py_th_bg_curve_r.setData(tmp_x, background_new(tmp_x, *self.jp.bg_popts["r"][py, :]))  #  pen=pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.SolidLine)
-            fitted_py_th_bg_curve_g.setData(tmp_x, background_new(tmp_x, *self.jp.bg_popts["g"][py, :]))  #  pen=pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.SolidLine)
-            fitted_py_th_bg_curve_b.setData(tmp_x, background_new(tmp_x, *self.jp.bg_popts["b"][py, :]))  #  pen=pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.SolidLine)
+            bgle_roi_py_th_row = (self.ui.sb_bgle_posx.value(), py, self.ui.sb_bgle_sizx.value(), 2)
+            bgri_roi_py_th_row = (self.ui.sb_bgri_posx.value(), py, self.ui.sb_bgri_sizx.value(), 2)
+
+            tmp_pen = pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.SolidLine)
+            tmp_pen1 = pg.mkPen(clrs[rel_y_pxl], width=1, style=Qt.PenStyle.NoPen)
+
+            self.graph_bg["bgle_r"].setData(self.jp.get_array("x_pxl", "Mask red",   bgle_roi_py_th_row), self.jp.get_array("Raw bayer", "Mask red",   bgle_roi_py_th_row), pen=tmp_pen1)
+            self.graph_bg["bgle_g"].setData(self.jp.get_array("x_pxl", "Mask green", bgle_roi_py_th_row), self.jp.get_array("Raw bayer", "Mask green", bgle_roi_py_th_row), pen=tmp_pen1)
+            self.graph_bg["bgle_b"].setData(self.jp.get_array("x_pxl", "Mask blue",  bgle_roi_py_th_row), self.jp.get_array("Raw bayer", "Mask blue",  bgle_roi_py_th_row), pen=tmp_pen1)
+
+            self.graph_bg["bgri_r"].setData(self.jp.get_array("x_pxl", "Mask red",   bgri_roi_py_th_row), self.jp.get_array("Raw bayer", "Mask red",   bgri_roi_py_th_row), pen=tmp_pen1)
+            self.graph_bg["bgri_g"].setData(self.jp.get_array("x_pxl", "Mask green", bgri_roi_py_th_row), self.jp.get_array("Raw bayer", "Mask green", bgri_roi_py_th_row), pen=tmp_pen1)
+            self.graph_bg["bgri_b"].setData(self.jp.get_array("x_pxl", "Mask blue",  bgri_roi_py_th_row), self.jp.get_array("Raw bayer", "Mask blue",  bgri_roi_py_th_row), pen=tmp_pen1)
+
+            self.graph_bg["fitt_r"].setData(tmp_x, np.clip(background_newest(tmp_x, *self.jp.bg_popts["r"][py, :]), 0, 1024), pen=tmp_pen)
+            self.graph_bg["fitt_g"].setData(tmp_x, np.clip(background_newest(tmp_x, *self.jp.bg_popts["g"][py, :]), 0, 1024), pen=tmp_pen)
+            self.graph_bg["fitt_b"].setData(tmp_x, np.clip(background_newest(tmp_x, *self.jp.bg_popts["b"][py, :]), 0, 1024), pen=tmp_pen)
 
             QApplication.processEvents()
-
+            print(py)
 
         # ---------------------------------------------------------------------------------------------- # 
         all_py = np.arange(0, 2464, 1)
@@ -1001,13 +1027,30 @@ class TheMainWindow(QMainWindow):
         self.graph_bg_each_abck_row[ "bg_prm_k-g" ].setData(all_py, self.jp.bg_popts["g"][:, 2])
         self.graph_bg_each_abck_row[ "bg_prm_k-r" ].setData(all_py, self.jp.bg_popts["r"][:, 2])
 
-        self.graph_bg_each_abck_row[ "bg_prm_c-b" ].setData(all_py, self.jp.bg_popts["b"][:, 3])
-        self.graph_bg_each_abck_row[ "bg_prm_c-g" ].setData(all_py, self.jp.bg_popts["g"][:, 3])
-        self.graph_bg_each_abck_row[ "bg_prm_c-r" ].setData(all_py, self.jp.bg_popts["r"][:, 3])
+        #self.graph_bg_each_abck_row[ "bg_prm_c-b" ].setData(all_py, self.jp.bg_popts["b"][:, 3])
+        #self.graph_bg_each_abck_row[ "bg_prm_c-g" ].setData(all_py, self.jp.bg_popts["g"][:, 3])
+        #self.graph_bg_each_abck_row[ "bg_prm_c-r" ].setData(all_py, self.jp.bg_popts["r"][:, 3])
 
         # ---------------------------------------------------------------------------------------------- # 
-        self.jp.bg_curve_fit_on_fitted_abkc_params()
-        self.jp.bg_calculate_all_channel_bg_estimation()
+        #self.jp.bg_curve_fit_on_fitted_abkc_params()
+
+
+        # quadratic_func(y_with_mx1_shape, *self.bg_popts_more[f"{channel}-a-p012"])
+        #y_with_mx1_shape = np.arange(1000, 2000, 1)
+        #self.graph_bg_each_abck_row["bg_prm_b-b_fitted"].setData(y_with_mx1_shape, quadratic_func(y_with_mx1_shape, *self.jp.bg_popts_more[f"b-a-p012"]))
+        #self.graph_bg_each_abck_row["bg_prm_b-g_fitted"].setData(y_with_mx1_shape, quadratic_func(y_with_mx1_shape, *self.jp.bg_popts_more[f"g-a-p012"]))
+        #self.graph_bg_each_abck_row["bg_prm_b-r_fitted"].setData(y_with_mx1_shape, quadratic_func(y_with_mx1_shape, *self.jp.bg_popts_more[f"r-a-p012"]))
+        #self.graph_bg_each_abck_row["bg_prm_a-b_fitted"].setData(y_with_mx1_shape, quadratic_func(y_with_mx1_shape, *self.jp.bg_popts_more[f"b-a-p012"]))
+        #self.graph_bg_each_abck_row["bg_prm_a-g_fitted"].setData(y_with_mx1_shape, quadratic_func(y_with_mx1_shape, *self.jp.bg_popts_more[f"g-a-p012"]))
+        #self.graph_bg_each_abck_row["bg_prm_a-r_fitted"].setData(y_with_mx1_shape, quadratic_func(y_with_mx1_shape, *self.jp.bg_popts_more[f"r-a-p012"]))
+        #self.graph_bg_each_abck_row["bg_prm_c-b_fitted"].setData(y_with_mx1_shape, quadratic_func(y_with_mx1_shape, *self.jp.bg_popts_more[f"b-a-p012"]))
+        #self.graph_bg_each_abck_row["bg_prm_c-g_fitted"].setData(y_with_mx1_shape, quadratic_func(y_with_mx1_shape, *self.jp.bg_popts_more[f"g-a-p012"]))
+        #self.graph_bg_each_abck_row["bg_prm_c-r_fitted"].setData(y_with_mx1_shape, quadratic_func(y_with_mx1_shape, *self.jp.bg_popts_more[f"r-a-p012"]))
+        #self.graph_bg_each_abck_row["bg_prm_k-b_fitted"].setData(y_with_mx1_shape, quadratic_func(y_with_mx1_shape, *self.jp.bg_popts_more[f"b-a-p012"]))
+        #self.graph_bg_each_abck_row["bg_prm_k-g_fitted"].setData(y_with_mx1_shape, quadratic_func(y_with_mx1_shape, *self.jp.bg_popts_more[f"g-a-p012"]))
+        #self.graph_bg_each_abck_row["bg_prm_k-r_fitted"].setData(y_with_mx1_shape, quadratic_func(y_with_mx1_shape, *self.jp.bg_popts_more[f"r-a-p012"]))
+
+        #self.jp.bg_calculate_all_channel_bg_estimation()
 
 
     def handle_cb_calc5_norming(self) -> None:
@@ -1178,27 +1221,30 @@ class TheMainWindow(QMainWindow):
 
         self.ui.graph_webcam.setImage(webcam, axes={"x":1, "y":0, "c":2})
 
-        self.ui.pbar_loading_file.setMaximum(7)
-        self.ui.pbar_loading_file.setMaximum(1)
+        self.ui.pbar_loading_file.setMaximum(8)
+        self.ui.pbar_loading_file.setValue(1)
 
         _ = self.jp.load_jpeg_file(self.jpeg_path)
-        self.ui.pbar_loading_file.setMaximum(2)
+        self.ui.pbar_loading_file.setValue(2)
 
         self.jp.get_median_filtered_raw_bayer()
-        self.ui.pbar_loading_file.setMaximum(3)
+        self.ui.pbar_loading_file.setValue(3)
 
         self.jp.get_rgb_bayer_repr()
-        self.ui.pbar_loading_file.setMaximum(4)
+        self.ui.pbar_loading_file.setValue(4)
 
         self.jp.get_rgb_demosicac()
-        self.ui.pbar_loading_file.setMaximum(5)
+        self.ui.pbar_loading_file.setValue(5)
 
-        self.ui.cb_2dimg_key.setCurrentText("Raw bayer (RGB + Demosiac)")
+        self.jp.get_rgb_demosicac_from_filtererd()
+        self.ui.pbar_loading_file.setValue(6)
+
+        self.ui.cb_2dimg_key.setCurrentText("Raw bayer (RGB + Demosiac + Filter)")
         self.update_1_rawbayer_img_data_and_then_plot_below()
-        self.ui.pbar_loading_file.setMaximum(6)
+        self.ui.pbar_loading_file.setValue(7)
 
         self.repopulate_param_history_combobox()
-        self.ui.pbar_loading_file.setMaximum(7)
+        self.ui.pbar_loading_file.setValue(8)
 
         return True
 
@@ -1248,31 +1294,6 @@ class TheMainWindow(QMainWindow):
         self.ui.pbar_calc.setValue(100)
         self.ui.tabWidget.setCurrentIndex(5)
         time.sleep(.1)
-
-#    def distribute_pixel_graph(self) -> None:
-#        gray_roi_pxl = (
-#            self.ui.sb_midx_init.value(),
-#            self.ui.sb_gray_posy.value(),
-#            self.ui.sb_midx_size.value(),
-#            self.ui.sb_gray_sizy.value(),
-#        )
-#
-#        obje_roi_pxl = (
-#            self.ui.sb_midx_init.value(),
-#            self.ui.sb_obje_posy.value(),
-#            self.ui.sb_midx_size.value(),
-#            self.ui.sb_obje_sizy.value(),
-#        )
-#        self.graph_distributive_dn["red_gray"].setData(self.jp.get_array("Wavelength", "Mask red",   gray_roi_pxl), self.jp.get_array("Raw bayer", "Mask red",   gray_roi_pxl)) 
-#        self.graph_distributive_dn["red_obje"].setData(self.jp.get_array("Wavelength", "Mask red",   obje_roi_pxl), self.jp.get_array("Raw bayer", "Mask red",   obje_roi_pxl)) 
-#
-#        self.graph_distributive_dn["grn_gray"].setData(self.jp.get_array("Wavelength", "Mask green", gray_roi_pxl), self.jp.get_array("Raw bayer", "Mask green", gray_roi_pxl)) 
-#        self.graph_distributive_dn["grn_obje"].setData(self.jp.get_array("Wavelength", "Mask green", obje_roi_pxl), self.jp.get_array("Raw bayer", "Mask green", obje_roi_pxl)) 
-#
-#        self.graph_distributive_dn["blu_gray"].setData(self.jp.get_array("Wavelength", "Mask blue",  gray_roi_pxl), self.jp.get_array("Raw bayer", "Mask blue",  gray_roi_pxl)) 
-#        self.graph_distributive_dn["blu_obje"].setData(self.jp.get_array("Wavelength", "Mask blue",  obje_roi_pxl), self.jp.get_array("Raw bayer", "Mask blue",  obje_roi_pxl)) 
-
-
 
     def update_1_rawbayer_img_data_and_then_plot_below(self) -> None:
         self.ui.graph_2dimg.clear()
@@ -1361,10 +1382,10 @@ class TheMainWindow(QMainWindow):
 
         self.ui.sb_midx_init.setValue(      self.dfParamHistory["midx_init"].astype(int).iloc[selected_row_num])
         self.ui.sb_midx_size.setValue(      self.dfParamHistory["midx_size"].astype(int).iloc[selected_row_num])
-        # self.ui.sb_lefx_init_rel.setValue(  self.dfParamHistory["lefx_init_rel"].astype(int).iloc[selected_row_num])
-        # self.ui.sb_lefx_size.setValue(      self.dfParamHistory["lefx_size"].astype(int).iloc[selected_row_num])
-        # self.ui.sb_rigx_init_rel.setValue(  self.dfParamHistory["rigx_init_rel"].astype(int).iloc[selected_row_num])
-        # self.ui.sb_rigx_size.setValue(      self.dfParamHistory["rigx_size"].astype(int).iloc[selected_row_num])
+        # self.ui.sb_lefx_init_rel.setValue(self.dfParamHistory["lefx_init_rel"].astype(int).iloc[selected_row_num])
+        # self.ui.sb_lefx_size.setValue(    self.dfParamHistory["lefx_size"].astype(int).iloc[selected_row_num])
+        # self.ui.sb_rigx_init_rel.setValue(self.dfParamHistory["rigx_init_rel"].astype(int).iloc[selected_row_num])
+        # self.ui.sb_rigx_size.setValue(    self.dfParamHistory["rigx_size"].astype(int).iloc[selected_row_num])
         self.ui.sb_gray_posy.setValue(    self.dfParamHistory["gray_y_init"].astype(int).iloc[selected_row_num])
         self.ui.sb_gray_sizy.setValue(    self.dfParamHistory["gray_y_size"].astype(int).iloc[selected_row_num])
         self.ui.sb_obje_posy.setValue(    self.dfParamHistory["obje_y_init"].astype(int).iloc[selected_row_num])
@@ -1385,18 +1406,11 @@ class TheMainWindow(QMainWindow):
             "date"             : [datetime.now().strftime("%Y/%m/%d-%H:%M:%S")],
             "midx_init"        : [self.ui.sb_midx_init.value()],
             "midx_size"        : [700],
-            # "lefx_init_rel"    : [self.ui.sb_lefx_init_rel.value()],
-            # "lefx_size"        : [self.ui.sb_lefx_size.value()],
-            # "rigx_init_rel"    : [self.ui.sb_rigx_init_rel.value()],
-            # "rigx_size"        : [self.ui.sb_rigx_size.value()],
             "gray_y_init"      : [self.ui.sb_gray_posy.value()],
             "gray_y_size"      : [self.ui.sb_gray_sizy.value()],
             "obje_y_init"      : [self.ui.sb_obje_posy.value()],
             "obje_y_size"      : [self.ui.sb_obje_sizy.value()],
             "waveperpixel"     : [self.ui.sb_waveperpixel.value()],
-            #"calc1_desalt"     : [self.ui.cb_calc1_desalt.isChecked()],
-            #"calc2_background" : [self.ui.cb_calc2_background.isChecked()],
-            #"calc3_calibrate"  : [self.ui.cb_calc3_calibrate_759.isChecked()],
             "calc5_norm"       : [self.ui.cb_calc5_norm.isChecked()],
             "calc5_norm_zero"  : [self.ui.sb_calc5_norm_zero.value()],
             "calc5_norm_one"   : [self.ui.sb_calc5_norm_one.value()],

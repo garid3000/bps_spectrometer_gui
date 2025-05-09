@@ -326,6 +326,7 @@ class Ui_MainWindow(object):
         self.cb_2dimg_key.addItem("")
         self.cb_2dimg_key.addItem("")
         self.cb_2dimg_key.addItem("")
+        self.cb_2dimg_key.addItem("")
         self.cb_2dimg_key.setObjectName("cb_2dimg_key")
 
         self.horizontalLayout_2.addWidget(self.cb_2dimg_key)
@@ -546,15 +547,20 @@ class Ui_MainWindow(object):
         self.verticalLayout_11.setObjectName("verticalLayout_11")
         self.gridLayout_12 = QGridLayout()
         self.gridLayout_12.setObjectName("gridLayout_12")
-        self.label_22 = QLabel(self.tab_13)
-        self.label_22.setObjectName("label_22")
+        self.label_20 = QLabel(self.tab_13)
+        self.label_20.setObjectName("label_20")
 
-        self.gridLayout_12.addWidget(self.label_22, 0, 2, 1, 1)
+        self.gridLayout_12.addWidget(self.label_20, 1, 0, 1, 1)
 
         self.label_21 = QLabel(self.tab_13)
         self.label_21.setObjectName("label_21")
 
-        self.gridLayout_12.addWidget(self.label_21, 0, 1, 1, 1)
+        self.gridLayout_12.addWidget(self.label_21, 1, 1, 1, 1)
+
+        self.label_22 = QLabel(self.tab_13)
+        self.label_22.setObjectName("label_22")
+
+        self.gridLayout_12.addWidget(self.label_22, 1, 2, 1, 1)
 
         self.graph_bg_r = PlotWidget(self.tab_13)
         self.graph_bg_r.setObjectName("graph_bg_r")
@@ -562,20 +568,7 @@ class Ui_MainWindow(object):
         self.graph_bg_r.setSizePolicy(sizePolicy5)
         self.graph_bg_r.setMinimumSize(QSize(1, 1))
 
-        self.gridLayout_12.addWidget(self.graph_bg_r, 1, 0, 1, 1)
-
-        self.graph_bg_b = PlotWidget(self.tab_13)
-        self.graph_bg_b.setObjectName("graph_bg_b")
-        sizePolicy5.setHeightForWidth(self.graph_bg_b.sizePolicy().hasHeightForWidth())
-        self.graph_bg_b.setSizePolicy(sizePolicy5)
-        self.graph_bg_b.setMinimumSize(QSize(1, 1))
-
-        self.gridLayout_12.addWidget(self.graph_bg_b, 1, 2, 1, 1)
-
-        self.label_20 = QLabel(self.tab_13)
-        self.label_20.setObjectName("label_20")
-
-        self.gridLayout_12.addWidget(self.label_20, 0, 0, 1, 1)
+        self.gridLayout_12.addWidget(self.graph_bg_r, 2, 0, 1, 1)
 
         self.graph_bg_g = PlotWidget(self.tab_13)
         self.graph_bg_g.setObjectName("graph_bg_g")
@@ -583,7 +576,15 @@ class Ui_MainWindow(object):
         self.graph_bg_g.setSizePolicy(sizePolicy5)
         self.graph_bg_g.setMinimumSize(QSize(1, 1))
 
-        self.gridLayout_12.addWidget(self.graph_bg_g, 1, 1, 1, 1)
+        self.gridLayout_12.addWidget(self.graph_bg_g, 2, 1, 1, 1)
+
+        self.graph_bg_b = PlotWidget(self.tab_13)
+        self.graph_bg_b.setObjectName("graph_bg_b")
+        sizePolicy5.setHeightForWidth(self.graph_bg_b.sizePolicy().hasHeightForWidth())
+        self.graph_bg_b.setSizePolicy(sizePolicy5)
+        self.graph_bg_b.setMinimumSize(QSize(1, 1))
+
+        self.gridLayout_12.addWidget(self.graph_bg_b, 2, 2, 1, 1)
 
         self.verticalLayout_11.addLayout(self.gridLayout_12)
 
@@ -1435,7 +1436,7 @@ class Ui_MainWindow(object):
 
         self.tabWidget_2.setCurrentIndex(0)
         self.tw_midcol.setCurrentIndex(1)
-        self.tabWidget_3.setCurrentIndex(1)
+        self.tabWidget_3.setCurrentIndex(0)
         self.tabWidget.setCurrentIndex(0)
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -1512,14 +1513,15 @@ class Ui_MainWindow(object):
         self.cb_2dimg_key.setItemText(1, QCoreApplication.translate("MainWindow", "Raw bayer (Noise Filter)", None))
         self.cb_2dimg_key.setItemText(2, QCoreApplication.translate("MainWindow", "Raw bayer (RGB)", None))
         self.cb_2dimg_key.setItemText(3, QCoreApplication.translate("MainWindow", "Raw bayer (RGB + Demosiac)", None))
-        self.cb_2dimg_key.setItemText(4, QCoreApplication.translate("MainWindow", "Red", None))
-        self.cb_2dimg_key.setItemText(5, QCoreApplication.translate("MainWindow", "Green", None))
-        self.cb_2dimg_key.setItemText(6, QCoreApplication.translate("MainWindow", "Blue", None))
-        self.cb_2dimg_key.setItemText(7, QCoreApplication.translate("MainWindow", "Mask red", None))
-        self.cb_2dimg_key.setItemText(8, QCoreApplication.translate("MainWindow", "Mask green", None))
-        self.cb_2dimg_key.setItemText(9, QCoreApplication.translate("MainWindow", "Mask blue", None))
-        self.cb_2dimg_key.setItemText(10, QCoreApplication.translate("MainWindow", "Wavelength", None))
-        self.cb_2dimg_key.setItemText(11, QCoreApplication.translate("MainWindow", "Background Est.", None))
+        self.cb_2dimg_key.setItemText(4, QCoreApplication.translate("MainWindow", "Raw bayer (RGB + Demosiac + Filter)", None))
+        self.cb_2dimg_key.setItemText(5, QCoreApplication.translate("MainWindow", "Red", None))
+        self.cb_2dimg_key.setItemText(6, QCoreApplication.translate("MainWindow", "Green", None))
+        self.cb_2dimg_key.setItemText(7, QCoreApplication.translate("MainWindow", "Blue", None))
+        self.cb_2dimg_key.setItemText(8, QCoreApplication.translate("MainWindow", "Mask red", None))
+        self.cb_2dimg_key.setItemText(9, QCoreApplication.translate("MainWindow", "Mask green", None))
+        self.cb_2dimg_key.setItemText(10, QCoreApplication.translate("MainWindow", "Mask blue", None))
+        self.cb_2dimg_key.setItemText(11, QCoreApplication.translate("MainWindow", "Wavelength", None))
+        self.cb_2dimg_key.setItemText(12, QCoreApplication.translate("MainWindow", "Background Est.", None))
 
         self.cb_invert_y_axis_of_rawbayer.setText(QCoreApplication.translate("MainWindow", "Invert Y axis", None))
         self.cb_shows_calibrated_wl.setText(QCoreApplication.translate("MainWindow", "Show", None))
@@ -1539,9 +1541,9 @@ class Ui_MainWindow(object):
         self.label_4.setText(QCoreApplication.translate("MainWindow", "pos", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", "size", None))
         self.tw_midcol.setTabText(self.tw_midcol.indexOf(self.midcol_tab1_wave), QCoreApplication.translate("MainWindow", "Wavelength Calibration", None))
-        self.label_22.setText(QCoreApplication.translate("MainWindow", "Blue", None))
-        self.label_21.setText(QCoreApplication.translate("MainWindow", "Green", None))
         self.label_20.setText(QCoreApplication.translate("MainWindow", "Red", None))
+        self.label_21.setText(QCoreApplication.translate("MainWindow", "Green", None))
+        self.label_22.setText(QCoreApplication.translate("MainWindow", "Blue", None))
         self.tabWidget_3.setTabText(self.tabWidget_3.indexOf(self.tab_13), QCoreApplication.translate("MainWindow", "Tab 1", None))
         self.tabWidget_3.setTabText(self.tabWidget_3.indexOf(self.tab_14), QCoreApplication.translate("MainWindow", "Tab 2", None))
         self.label_11.setText(QCoreApplication.translate("MainWindow", "pos", None))
