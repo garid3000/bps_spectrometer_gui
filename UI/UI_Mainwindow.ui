@@ -906,8 +906,80 @@
             </item>
             <item row="0" column="1">
              <layout class="QGridLayout" name="gridLayout_10">
+              <item row="1" column="1">
+               <widget class="QSpinBox" name="sb_bg_0_posx">
+                <property name="maximum">
+                 <number>4000</number>
+                </property>
+                <property name="singleStep">
+                 <number>2</number>
+                </property>
+                <property name="value">
+                 <number>1000</number>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="0">
+               <widget class="QLabel" name="label_12">
+                <property name="text">
+                 <string>size</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="4">
+               <widget class="QLabel" name="label_10">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="text">
+                 <string>Y</string>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="2">
+               <widget class="QSpinBox" name="sb_bg_1_sizx">
+                <property name="maximum">
+                 <number>400</number>
+                </property>
+                <property name="singleStep">
+                 <number>2</number>
+                </property>
+                <property name="value">
+                 <number>300</number>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="1">
+               <widget class="QSpinBox" name="sb_bg_0_sizx">
+                <property name="maximum">
+                 <number>400</number>
+                </property>
+                <property name="singleStep">
+                 <number>2</number>
+                </property>
+                <property name="value">
+                 <number>300</number>
+                </property>
+               </widget>
+              </item>
+              <item row="2" column="4">
+               <widget class="QSpinBox" name="sb_bg___sizy">
+                <property name="maximum">
+                 <number>4000</number>
+                </property>
+                <property name="singleStep">
+                 <number>2</number>
+                </property>
+                <property name="value">
+                 <number>508</number>
+                </property>
+               </widget>
+              </item>
               <item row="1" column="2">
-               <widget class="QSpinBox" name="sb_bgri_posx">
+               <widget class="QSpinBox" name="sb_bg_1_posx">
                 <property name="maximum">
                  <number>4000</number>
                 </property>
@@ -919,15 +991,8 @@
                 </property>
                </widget>
               </item>
-              <item row="1" column="0">
-               <widget class="QLabel" name="label_11">
-                <property name="text">
-                 <string>pos</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QSpinBox" name="sb_bgle_posx">
+              <item row="1" column="4">
+               <widget class="QSpinBox" name="sb_bg___posy">
                 <property name="maximum">
                  <number>4000</number>
                 </property>
@@ -935,7 +1000,7 @@
                  <number>2</number>
                 </property>
                 <property name="value">
-                 <number>1000</number>
+                 <number>1156</number>
                 </property>
                </widget>
               </item>
@@ -959,34 +1024,15 @@
                 </property>
                </widget>
               </item>
-              <item row="2" column="3">
-               <widget class="QSpinBox" name="sb_bg___sizy">
-                <property name="maximum">
-                 <number>4000</number>
-                </property>
-                <property name="singleStep">
-                 <number>2</number>
-                </property>
-                <property name="value">
-                 <number>508</number>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="3">
-               <widget class="QLabel" name="label_10">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
+              <item row="1" column="0">
+               <widget class="QLabel" name="label_11">
                 <property name="text">
-                 <string>Y</string>
+                 <string>pos</string>
                 </property>
                </widget>
               </item>
               <item row="1" column="3">
-               <widget class="QSpinBox" name="sb_bg___posy">
+               <widget class="QSpinBox" name="sb_bg_2_posx">
                 <property name="maximum">
                  <number>4000</number>
                 </property>
@@ -994,40 +1040,27 @@
                  <number>2</number>
                 </property>
                 <property name="value">
-                 <number>1156</number>
+                 <number>2200</number>
                 </property>
                </widget>
               </item>
-              <item row="2" column="0">
-               <widget class="QLabel" name="label_12">
+              <item row="2" column="3">
+               <widget class="QSpinBox" name="sb_bg_2_sizx">
+                <property name="maximum">
+                 <number>400</number>
+                </property>
+                <property name="singleStep">
+                 <number>2</number>
+                </property>
+                <property name="value">
+                 <number>300</number>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="3">
+               <widget class="QLabel" name="label_29">
                 <property name="text">
-                 <string>size</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QSpinBox" name="sb_bgle_sizx">
-                <property name="maximum">
-                 <number>400</number>
-                </property>
-                <property name="singleStep">
-                 <number>2</number>
-                </property>
-                <property name="value">
-                 <number>300</number>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="2">
-               <widget class="QSpinBox" name="sb_bgri_sizx">
-                <property name="maximum">
-                 <number>400</number>
-                </property>
-                <property name="singleStep">
-                 <number>2</number>
-                </property>
-                <property name="value">
-                 <number>300</number>
+                 <string>X (Right)</string>
                 </property>
                </widget>
               </item>
